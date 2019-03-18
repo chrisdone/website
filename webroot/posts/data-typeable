@@ -1,0 +1,339 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Typeable and Data in Haskell</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Typeable and Data in Haskell</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p><a href="hackage.haskell.org/package/base-4.6.0.1/docs/Data-Typeable.html">Data.Typeable</a> and <a href="https://hackage.haskell.org/package/base-4.6.0.1/docs/Data-Data.html">Data.Data</a> are rather mysterious. Starting out as a Haskell newbie you see them once in a while and wonder what use they are. Their Haddock pages are pretty opaque and scary in places. Here’s a quick rundown I thought I’d write to get people up to speed nice and quick so that they can start using it.<sup><a href="#fn1" class="footnoteRef" id="fnref1">1</a></sup></p>
+<p>It’s really rather beautiful as a way to do generic programming in Haskell. The general approach is that you don’t know what data types are being given to you, but you want to work upon them almost as if you did. The technique is simple when broken down.</p>
+<h2 id="requirements">Requirements</h2>
+<p>First, there is a class exported by each module. The class <code>Typeable</code> and the class <code>Data</code>. Your data types have to be instances of these if you want to use the generic programming methods on them.</p>
+<p>Happily, we don’t have to write these instances ourselves (and in GHC 7.8 it is actually not possible to do so): GHC provides the extension <code>DeriveDataTypeable</code>, which you can enable by adding <code>{-# LANGUAGE DeriveDataTypeable #-}</code> to the top of your file, or providing <code>-XDeriveDataTypeable</code> to <code>ghc</code>.</p>
+<p>Now you can derive instances of both:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">X</span> <span class="fu">=</span> <span class="dt">X</span>
+  <span class="kw">deriving</span> (<span class="dt">Data</span>,<span class="dt">Typeable</span>)</code></pre>
+<p>Now we can start doing generic operations upon <code>X</code>.</p>
+<h2 id="the-typeable-class">The Typeable class</h2>
+<p>As a simple starter, we can trivially print the type of any instance of <code>Typeable</code>. What are some existing instances of <code>Typeable</code>? Let’s ask GHCi:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; <span class="fu">:</span>i <span class="dt">Typeable</span>
+<span class="kw">class</span> <span class="dt">Typeable</span> a <span class="kw">where</span><span class="ot"> typeOf ::</span> a <span class="ot">-&gt;</span> <span class="dt">TypeRep</span>
+<span class="kw">instance</span> [overlap ok] (<span class="dt">Typeable1</span> s, <span class="dt">Typeable</span> a) <span class="ot">=&gt;</span> <span class="dt">Typeable</span> (s a)
+<span class="kw">instance</span> [overlap ok] <span class="dt">Typeable</span> <span class="dt">TypeRep</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Typeable</span> <span class="dt">TyCon</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Typeable</span> <span class="dt">Ordering</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Typeable</span> <span class="dt">Integer</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Typeable</span> <span class="dt">Int</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Typeable</span> <span class="dt">Float</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Typeable</span> <span class="dt">Double</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Typeable</span> <span class="dt">Char</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Typeable</span> <span class="dt">Bool</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Typeable</span> ()</code></pre>
+<p>That’s the basic Prelude types and the Typeable library’s own types.</p>
+<p>There’s only one method in the <code>Typeable</code> class:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">typeOf ::</span> a <span class="ot">-&gt;</span> <span class="dt">TypeRep</span></code></pre>
+<p>The <code>TypeRep</code> value has some useful normal instances:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; <span class="fu">:</span>i <span class="dt">TypeRep</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Eq</span> <span class="dt">TypeRep</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Ord</span> <span class="dt">TypeRep</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Show</span> <span class="dt">TypeRep</span>
+<span class="kw">instance</span> [overlap ok] <span class="dt">Typeable</span> <span class="dt">TypeRep</span></code></pre>
+<h2 id="use-case-1-print-the-type-of-something">Use-case 1: Print the type of something</h2>
+<p>So we can use this function on a <code>Char</code> value, for example, and GHCi can print it:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; <span class="fu">:</span>t typeOf <span class="ch">'a'</span>
+typeOf <span class="ch">'a'</span><span class="ot"> ::</span> <span class="dt">TypeRep</span>
+λ&gt; typeOf <span class="ch">'a'</span>
+<span class="dt">Char</span></code></pre>
+<p>This is mostly useful for debugging, but can also be useful when writing generic encoders or any tool which needs an identifier to be associated with some generic value.</p>
+<h2 id="use-case-2-compare-the-types-of-two-things">Use-case 2: Compare the types of two things</h2>
+<p>We can also compare two type representations:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; typeOf <span class="ch">'a'</span> <span class="fu">==</span> typeOf <span class="ch">'b'</span>
+<span class="dt">True</span>
+λ&gt; typeOf <span class="ch">'a'</span> <span class="fu">==</span> typeOf ()
+<span class="dt">False</span></code></pre>
+<p>Any code which needs to allow any old type to be passed into it, but which has some interest in sometimes enforcing or triggering on a specific type can use this to compare them.</p>
+<h2 id="use-case-3-reifying-from-generic-to-concrete">Use-case 3: Reifying from generic to concrete</h2>
+<p>A common thing to need to do is when given a generic value, is to sometimes, if the type is right, actually work with the value as the concrete type, not a polymorphic type. For example, a printing function:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">char ::</span> <span class="dt">Typeable</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">String</span></code></pre>
+<p>The specification for this function is: if given an <code>Char</code>, return its string representation, otherwise, return <code>&quot;unknown&quot;</code>. To do this, we need a function that will convert from a polymorphic value to a concrete one:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">cast ::</span> (<span class="dt">Typeable</span> a, <span class="dt">Typeable</span> b) <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> b</code></pre>
+<p>This function from <code>Data.Typeable</code> will do just that. Now we can implement <code>char</code>:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; <span class="kw">let</span> char x <span class="fu">=</span> <span class="kw">case</span> cast x <span class="kw">of</span>
+                  <span class="dt">Just</span> (<span class="ot">x ::</span> <span class="dt">Char</span>) <span class="ot">-&gt;</span> show x
+                  <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="st">&quot;unknown&quot;</span>
+λ&gt; char <span class="ch">'a'</span>
+<span class="st">&quot;'a'&quot;</span>
+λ&gt; char <span class="dv">5</span>
+<span class="st">&quot;unknown&quot;</span>
+λ&gt; char ()
+<span class="st">&quot;unknown&quot;</span></code></pre>
+<h2 id="the-data-class">The Data class</h2>
+<p>That’s more or less where the interesting practical applications of the <code>Typeable</code> class ends. But it becomes more interesting once you have that, the <code>Data</code> class can take advantage of it. The <code>Data</code> class is much more interesting. The point is to be able to look into a data type’s constructors, its fields and traverse across or fold over them. Let’s take a look at the class.</p>
+<p>Again, there are some basic instances provided:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Data</span> a <span class="ot">=&gt;</span> <span class="dt">Data</span> [a]
+<span class="kw">instance</span> <span class="dt">Data</span> <span class="dt">Ordering</span>
+<span class="kw">instance</span> <span class="dt">Data</span> a <span class="ot">=&gt;</span> <span class="dt">Data</span> (<span class="dt">Maybe</span> a)
+<span class="kw">instance</span> <span class="dt">Data</span> <span class="dt">Integer</span>
+<span class="kw">instance</span> <span class="dt">Data</span> <span class="dt">Int</span>
+<span class="kw">instance</span> <span class="dt">Data</span> <span class="dt">Float</span>
+<span class="kw">instance</span> (<span class="dt">Data</span> a, <span class="dt">Data</span> b) <span class="ot">=&gt;</span> <span class="dt">Data</span> (<span class="dt">Either</span> a b)
+<span class="kw">instance</span> <span class="dt">Data</span> <span class="dt">Double</span>
+<span class="kw">instance</span> <span class="dt">Data</span> <span class="dt">Char</span>
+<span class="kw">instance</span> <span class="dt">Data</span> <span class="dt">Bool</span></code></pre>
+<p>It’s a rather big class, so I’ll just cover some methods that demonstrate the key use-cases.</p>
+<h2 id="use-case-1-get-the-data-type">Use-case 1: Get the data type</h2>
+<p>Similar to the <code>TypeRep</code>, you can use <code>dataTypeOf</code> to get a unique representation of a data type:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">dataTypeOf ::</span> <span class="dt">Data</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">DataType</span></code></pre>
+<p>For example:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; dataTypeOf (<span class="dt">Just</span> <span class="ch">'a'</span>)
+<span class="dt">DataType</span> {tycon <span class="fu">=</span> <span class="st">&quot;Prelude.Maybe&quot;</span>, datarep <span class="fu">=</span> <span class="dt">AlgRep</span> [<span class="dt">Nothing</span>,<span class="dt">Just</span>]}</code></pre>
+<p>There aren’t any other interesting instances for this type, but we’ll look at uses for this type later. Representations (so-called <code>FooRep</code>) tend to be references from which you can reify into more concrete values.</p>
+<h2 id="use-case-2-inspecting-a-data-type">Use-case 2: Inspecting a data type</h2>
+<p>The most common thing to want to do is to get a list of constructors that a type contains. So, the <code>Maybe</code> type contains two.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; <span class="fu">:</span>t dataTypeConstrs
+<span class="ot">dataTypeConstrs ::</span> <span class="dt">DataType</span> <span class="ot">-&gt;</span> [<span class="dt">Constr</span>]
+λ&gt; dataTypeConstrs (dataTypeOf (<span class="dt">Nothing</span><span class="ot"> ::</span> <span class="dt">Maybe</span> ()))
+[<span class="dt">Nothing</span>,<span class="dt">Just</span>]</code></pre>
+<p>We’ll look at what we can do with constructors later.</p>
+<p>It’s also surprisingly common to want to see what the constructor is at a particular index. We could write this function ourself, but there’s already one provided:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; indexConstr (dataTypeOf (<span class="dt">Nothing</span><span class="ot"> ::</span> <span class="dt">Maybe</span> ())) <span class="dv">2</span>
+<span class="dt">Just</span></code></pre>
+<p>Sometimes you want to know whether a data type is algebraic (in other words, does it have constructors and is it not one of the built-in types like Int/Float/etc)?</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; isAlgType (dataTypeOf (<span class="dt">Just</span> <span class="ch">'a'</span>))
+<span class="dt">True</span>
+λ&gt; isAlgType (dataTypeOf <span class="ch">'a'</span>)
+<span class="dt">False</span></code></pre>
+<div class="figure">
+</div>
+<h2 id="use-case-3-get-the-constructor-of-a-value">Use-case 3: Get the constructor of a value</h2>
+<p>We have the method</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">toConstr ::</span> a <span class="ot">-&gt;</span> <span class="dt">Constr</span></code></pre>
+<p>Which given any instance of <code>Data</code> will yield a constructor.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; <span class="fu">:</span>i <span class="dt">Constr</span>
+<span class="kw">data</span> <span class="dt">Constr</span>
+<span class="kw">instance</span> <span class="dt">Eq</span> <span class="dt">Constr</span>
+<span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">Constr</span></code></pre>
+<p>You can’t do much with a constructor as-is, but compare and print it:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; toConstr (<span class="dt">Just</span> <span class="ch">'a'</span>)
+<span class="dt">Just</span>
+λ&gt; toConstr (<span class="dt">Just</span> <span class="ch">'a'</span>) <span class="fu">==</span> toConstr (<span class="dt">Nothing</span><span class="ot"> ::</span> <span class="dt">Maybe</span> <span class="dt">Char</span>)
+<span class="dt">False</span></code></pre>
+<p>However, those operations by themselves can be useful.</p>
+<p>By the way, we can also get back the <code>DataRep</code> of a constructor:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; constrType (toConstr (<span class="dt">Just</span> <span class="ch">'a'</span>))
+<span class="dt">DataType</span> {tycon <span class="fu">=</span> <span class="st">&quot;Prelude.Maybe&quot;</span>, datarep <span class="fu">=</span> <span class="dt">AlgRep</span> [<span class="dt">Nothing</span>,<span class="dt">Just</span>]}</code></pre>
+<h2 id="use-case-4-get-fields-of-a-constructor">Use-case 4: Get fields of a constructor</h2>
+<p>Another typical thing to want to do is to use the field names of a constructor. So for example:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; <span class="kw">data</span> <span class="dt">X</span> <span class="fu">=</span> <span class="dt">X</span> {<span class="ot"> foo ::</span> <span class="dt">Int</span>,<span class="ot"> bar ::</span> <span class="dt">Char</span> } <span class="kw">deriving</span> (<span class="dt">Typeable</span>,<span class="dt">Data</span>)
+λ&gt; toConstr (<span class="dt">X</span> <span class="dv">0</span> <span class="ch">'a'</span>)
+<span class="dt">X</span>
+λ&gt; constrFields (toConstr (<span class="dt">X</span> <span class="dv">0</span> <span class="ch">'a'</span>))
+[<span class="st">&quot;foo&quot;</span>,<span class="st">&quot;bar&quot;</span>]</code></pre>
+<p>It’s a good use-case for serializing and debugging.</p>
+<h2 id="use-case-5-make-a-real-value-from-its-constructor">Use-case 5: Make a real value from its constructor</h2>
+<p>It’s actually possible to produce a value from its constructor. We have this function</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">fromConstr ::</span> <span class="dt">Data</span> a <span class="ot">=&gt;</span> <span class="dt">Constr</span> <span class="ot">-&gt;</span> a</code></pre>
+<p>Example:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; fromConstr (toConstr (<span class="dt">Nothing</span><span class="ot"> ::</span> <span class="dt">Maybe</span> ()))<span class="ot"> ::</span> <span class="dt">Maybe</span> ()
+<span class="dt">Nothing</span></code></pre>
+<p>But what do you do when the constructor has fields? No sweat. We have this function:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">fromConstrB ::</span> forall a<span class="fu">.</span> <span class="dt">Data</span> a
+            <span class="ot">=&gt;</span> (forall d<span class="fu">.</span> <span class="dt">Data</span> d <span class="ot">=&gt;</span> d) <span class="ot">-&gt;</span> <span class="dt">Constr</span> <span class="ot">-&gt;</span> a</code></pre>
+<div class="figure">
+
+</div>
+<p>Haskell beginners: Don’t fear the rank-N type. What it’s saying is merely that the <code>fromConstrB</code> function determines what the type of <code>d</code> will be by itself, by looking at <code>Constr</code>. It’s not provided externally by the caller, as it would be if the <code>forall d.</code> were at the same level as the <code>a</code>. Think of it like scope. <code>let a = d in let d = …</code> doesn’t make sense: the <code>d</code> is in a lower scope. That means we can’t just write:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">fromConstrB (<span class="dv">5</span><span class="ot"> ::</span> <span class="dt">Int</span>) (toConstr (<span class="dt">Just</span> <span class="dv">1</span><span class="ot"> ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span>))<span class="ot"> ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span></code></pre>
+<p>The <code>Int</code> cannot unify with the <code>d</code> because the quantification is one level lower. It basically doesn’t exist outside of the <code>(forall d. Data d =&gt; d)</code> (nor can it escape). That’s okay, though. There is a type-class constraint which lets us be generic. We already have a function producing a value of that type:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; <span class="fu">:</span>t fromConstr (toConstr (<span class="dv">1</span><span class="ot"> ::</span> <span class="dt">Int</span>))
+fromConstr (toConstr (<span class="dv">1</span><span class="ot"> ::</span> <span class="dt">Int</span>))<span class="ot"> ::</span> <span class="dt">Data</span> a <span class="ot">=&gt;</span> a</code></pre>
+<p>So we can just use that:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; fromConstrB (fromConstr (toConstr (<span class="dv">1</span><span class="ot"> ::</span> <span class="dt">Int</span>)))
+               (toConstr (<span class="dt">Just</span> <span class="dv">1</span><span class="ot"> ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span>))<span class="ot"> ::</span> <span class="dt">Maybe</span> <span class="dt">Int</span>
+<span class="dt">Just</span> <span class="dv">1</span></code></pre>
+<p>Tada! But wait… What if there’re <em>more</em> fields? How do we provide more than one, and of different types?</p>
+<p>Enter <code>fromConstrM</code>:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">fromConstrM ::</span> forall m a<span class="fu">.</span> (<span class="dt">Monad</span> m, <span class="dt">Data</span> a)
+            <span class="ot">=&gt;</span> (forall d<span class="fu">.</span> <span class="dt">Data</span> d <span class="ot">=&gt;</span> m d) <span class="ot">-&gt;</span> <span class="dt">Constr</span> <span class="ot">-&gt;</span> m a</code></pre>
+<p>Because it’s monadic we can use a state monad to keep an index! Observe:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; <span class="fu">:</span>t execState
+<span class="ot">execState ::</span> <span class="dt">State</span> s a <span class="ot">-&gt;</span> s <span class="ot">-&gt;</span> s
+λ&gt; <span class="fu">:</span>t execState (modify (<span class="fu">+</span><span class="dv">1</span>))
+execState (modify (<span class="fu">+</span><span class="dv">1</span>))<span class="ot"> ::</span> <span class="dt">Num</span> s <span class="ot">=&gt;</span> s <span class="ot">-&gt;</span> s
+λ&gt; <span class="fu">:</span>t execState (forM_ [<span class="dv">1</span><span class="fu">..</span><span class="dv">5</span>] (const (modify (<span class="fu">+</span><span class="dv">1</span>))))
+execState (forM_ [<span class="dv">1</span><span class="fu">..</span><span class="dv">5</span>] (const (modify (<span class="fu">+</span><span class="dv">1</span>))))<span class="ot"> ::</span> <span class="dt">Num</span> s <span class="ot">=&gt;</span> s<span class="ot">-&gt;</span> s
+λ&gt; execState (forM_ [<span class="dv">1</span><span class="fu">..</span><span class="dv">5</span>] (const (modify (<span class="fu">+</span><span class="dv">1</span>)))) <span class="dv">5</span>
+<span class="dv">10</span></code></pre>
+<p>Let’s put this to use with <code>fromConstrM</code>:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; evalState
+     (fromConstrM
+       (<span class="kw">do</span> i <span class="ot">&lt;-</span> get
+           modify (<span class="fu">+</span><span class="dv">1</span>)
+           return
+             (<span class="kw">case</span> i <span class="kw">of</span>
+               <span class="dv">0</span> <span class="ot">-&gt;</span> fromConstr (toConstr (<span class="dv">5</span><span class="ot">::</span><span class="dt">Int</span>))
+               <span class="dv">1</span> <span class="ot">-&gt;</span> fromConstr (toConstr <span class="ch">'b'</span>)))
+       (toConstr (<span class="dt">Foo</span> <span class="dv">4</span> <span class="ch">'a'</span>)))
+     <span class="dv">0</span><span class="ot"> ::</span> <span class="dt">Foo</span>
+<span class="dt">Foo</span> <span class="dv">5</span> <span class="ch">'b'</span>
+λ&gt;</code></pre>
+<p>In other words, keep an index starting at 0. Increase it each iteration that <code>fromConstrM</code> does. When we’re at index 0, return an <code>Int</code>, when we’re at index 1, return a <code>Char</code>. Easy! Right?</p>
+<div class="figure">
+
+</div>
+<h2 id="use-case-6-mapping-over-data-structures-generically">Use-case 6: mapping over data structures generically</h2>
+<p>A common thing to want is to map over a value in a structure-preserving way, but changing its values. For that we have <code>gmapT</code>:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">gmapT ::</span> forall a<span class="fu">.</span> <span class="dt">Data</span> a
+      <span class="ot">=&gt;</span> (forall b<span class="fu">.</span> <span class="dt">Data</span> b <span class="ot">=&gt;</span> b <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> a</code></pre>
+<p>Similar to <code>fromConstr*</code>, there is a rank-n type <code>b</code> that refers to each type in the constructor of type <code>a</code>. It’s easy enough to use:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; gmapT
+     (\d <span class="ot">-&gt;</span>
+        <span class="kw">case</span> cast d <span class="kw">of</span>
+          <span class="dt">Nothing</span> <span class="ot">-&gt;</span> d
+          <span class="dt">Just</span> x <span class="ot">-&gt;</span>
+            fromJust (cast (<span class="kw">if</span> isUpper x <span class="kw">then</span> <span class="ch">'!'</span> <span class="kw">else</span> x)))
+     (<span class="dt">Foo</span> <span class="dv">4</span> <span class="ch">'a'</span>)
+<span class="dt">Foo</span> <span class="dv">4</span> <span class="ch">'a'</span>
+λ&gt; gmapT
+     (\d <span class="ot">-&gt;</span>
+        <span class="kw">case</span> cast d <span class="kw">of</span>
+          <span class="dt">Nothing</span> <span class="ot">-&gt;</span> d
+          <span class="dt">Just</span> x <span class="ot">-&gt;</span>
+            fromJust (cast (<span class="kw">if</span> isUpper x <span class="kw">then</span> <span class="ch">'!'</span> <span class="kw">else</span> x)))
+     (<span class="dt">Foo</span> <span class="dv">4</span> <span class="ch">'A'</span>)
+<span class="dt">Foo</span> <span class="dv">4</span> <span class="ch">'!'</span></code></pre>
+<p>Here I’m doing a little check on any field in the constructor of type <code>Char</code> and if it’s upper case, replacing it with <code>!</code>, otherwise leaving it as-is. The first trick is to use the <code>cast</code> function we used earlier to reify the generic <code>d</code> into something real (<code>Char</code>). The second trick is to cast our concrete <code>Char</code> back into a generic <code>d</code> type.</p>
+<p>Just like <code>fromConstrM</code> earlier, if you want to operate on exact indices of the constructor rather than going by type, you can use <code>gmapM</code> and use a state monad to do the same thing as we did before.</p>
+<h2 id="use-case-7-generating-from-data-structures-generically">Use-case 7: generating from data structures generically</h2>
+<p>Another slightly different use-case is to walk over the values of a data structure, collecting the result. You can do this with <code>gmapM</code> and a state monad or a writer, but there’s a handy function already to do this:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">gmapQ ::</span> forall a<span class="fu">.</span> <span class="dt">Data</span> a <span class="ot">=&gt;</span> (forall d<span class="fu">.</span> <span class="dt">Data</span> d <span class="ot">=&gt;</span> d <span class="ot">-&gt;</span> u) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> [u]</code></pre>
+<p>Trivial example:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; gmapQ (\d <span class="ot">-&gt;</span> toConstr d) (<span class="dt">Foo</span> <span class="dv">5</span> <span class="ch">'a'</span>)
+[<span class="dv">5</span>,<span class="ch">'a'</span>]</code></pre>
+<p>A more useful example can be found in <a href="https://github.com/chrisdone/structured-haskell-mode/blob/18c011978acfca30bac800d0ac0e9e31e653c440/src/Main.hs#L96">structured-haskell-mode</a> which walks over the Haskell syntax tree and collects source spans into a flat list. Another decent example is in <a href="https://github.com/chrisdone/present/blob/master/src/Present.hs#L75">the present package</a>. There’s also an example in <a href="https://github.com/faylang/fay/blob/master/src/Fay/Convert.hs#L54">Fay</a> to encode types to JSON with a specific Fay-runtime-specific encoding.</p>
+<h2 id="printer-example">Printer example</h2>
+<p>Here’s a trivial (not very good, but something I wrote once) generic printer:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">gshows ::</span> <span class="dt">Data</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">ShowS</span>
+gshows <span class="fu">=</span> render <span class="ot">`extQ`</span> (shows<span class="ot"> ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">ShowS</span>) <span class="kw">where</span>
+  render t
+    <span class="fu">|</span> isTuple <span class="fu">=</span> showChar <span class="ch">'('</span>
+              <span class="fu">.</span> drop <span class="dv">1</span>
+              <span class="fu">.</span> commaSlots
+              <span class="fu">.</span> showChar <span class="ch">')'</span>
+    <span class="fu">|</span> isNull <span class="fu">=</span> showString <span class="st">&quot;[]&quot;</span>
+    <span class="fu">|</span> isList <span class="fu">=</span> showChar <span class="ch">'['</span>
+             <span class="fu">.</span> drop <span class="dv">1</span>
+             <span class="fu">.</span> listSlots
+             <span class="fu">.</span> showChar <span class="ch">']'</span>
+    <span class="fu">|</span> otherwise <span class="fu">=</span> showChar <span class="ch">'('</span>
+                <span class="fu">.</span> constructor
+                <span class="fu">.</span> slots
+                <span class="fu">.</span> showChar <span class="ch">')'</span>
+
+    <span class="kw">where</span> constructor <span class="fu">=</span> showString <span class="fu">.</span> showConstr <span class="fu">.</span> toConstr <span class="fu">$</span> t
+          slots <span class="fu">=</span> foldr (<span class="fu">.</span>) id <span class="fu">.</span> gmapQ ((showChar <span class="ch">' '</span> <span class="fu">.</span>) <span class="fu">.</span> gshows) <span class="fu">$</span> t
+          commaSlots <span class="fu">=</span> foldr (<span class="fu">.</span>) id <span class="fu">.</span> gmapQ ((showChar <span class="ch">','</span> <span class="fu">.</span>) <span class="fu">.</span> gshows) <span class="fu">$</span> t
+          listSlots <span class="fu">=</span> foldr (<span class="fu">.</span>) id <span class="fu">.</span> init <span class="fu">.</span> gmapQ ((showChar <span class="ch">','</span> <span class="fu">.</span>) <span class="fu">.</span> gshows) <span class="fu">$</span> t
+          isTuple <span class="fu">=</span> all (<span class="fu">==</span><span class="ch">','</span>) (filter (not <span class="fu">.</span> flip elem <span class="st">&quot;()&quot;</span>) (constructor <span class="st">&quot;&quot;</span>))
+          isNull <span class="fu">=</span> null (filter (not <span class="fu">.</span> flip elem <span class="st">&quot;[]&quot;</span>) (constructor <span class="st">&quot;&quot;</span>))
+          isList <span class="fu">=</span> constructor <span class="st">&quot;&quot;</span> <span class="fu">==</span> <span class="st">&quot;(:)&quot;</span></code></pre>
+<p>I wrote it because the GHC API doesn’t have <code>Show</code> instances for most of its data types, so it’s rather hard to actually inspect <em>any</em> data types that you’re working with in the REPL. It has instances for pretty printing, but pretty printing confuses presentation with data.</p>
+<p>Example:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; <span class="kw">data</span> <span class="dt">Foo</span> <span class="fu">=</span> <span class="dt">Foo</span> <span class="dt">Char</span> <span class="dt">Int</span> <span class="kw">deriving</span> (<span class="dt">Data</span>,<span class="dt">Typeable</span>)
+λ&gt; gshow ([<span class="dt">Just</span> <span class="dv">2</span>],<span class="ch">'c'</span>,<span class="dt">Foo</span> <span class="ch">'a'</span> <span class="dv">5</span>)
+<span class="st">&quot;([(Just (2))],('c'),(Foo ('a') (5)))&quot;</span></code></pre>
+<p>Note: no <code>Show</code> instance for <code>Foo</code>.</p>
+<h2 id="summary">Summary</h2>
+<p>We’ve briefly covered how to query types, how to cast them, how to walk over them or generate from them. There’re other things one can do, but those are the main things. The real trick is understanding how to make the types work and that comes with a bit of experience. Fiddle around with the concepts above and you should gain an intution for what is possible with this library. See also: <a href="https://hackage.haskell.org/package/syb-0.4.1/docs/Data-Generics-Aliases.html">Data.Generics.Aliases</a>.</p>
+<p>Hope it helps!</p>
+<div class="footnotes">
+<hr></hr>
+<ol>
+<li id="fn1"><p>I’ll migrate this to the HaskellWiki when it doesn’t look so, uh, shall we say, unattractive.<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+<footer>
+  © 2014-04-22 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

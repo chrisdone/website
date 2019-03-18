@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Stream fusion and composability (Java 8 and Haskell) for newbies</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Stream fusion and composability (Java 8 and Haskell) for newbies</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>In an online discussion, when Java 8 released their stream API, written about <a href="https://www.deadcoderising.com/java-8-no-more-loops/">here</a>, you can write e.g.</p>
+<pre class="sourceCode java"><code class="sourceCode java"><span class="kw">public</span> List&lt;Article&gt; <span class="fu">getAllJavaArticles</span>() {
+    <span class="kw">return</span> articles.<span class="fu">stream</span>()
+        .<span class="fu">filter</span>(article -&gt; article.<span class="fu">getTags</span>().<span class="fu">contains</span>(<span class="st">&quot;Java&quot;</span>))
+        .<span class="fu">collect</span>(Collectors.<span class="fu">toList</span>());
+}</code></pre>
+<p>Someone asked, “But my question: would the streams be faster than loops? Or is the only benefit better readability?” Someone answered that the benefit is that streams compose and loops don’t. What does composable mean here? Below is my answer, using two languages I know, JavaScript and Haskell.</p>
+<p>Composable in this context means: To be able to compose two things into one without redundancy or overhead. For example, consider you want to map a function <code>f</code> over an array <code>arr</code> to produce a new array, you might do this:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> arr2 = [];
+<span class="kw">for</span> (<span class="kw">var</span> i = <span class="dv">0</span>; i &lt; <span class="ot">arr</span>.<span class="fu">length</span>; i++)
+    <span class="ot">arr2</span>.<span class="fu">push</span>(<span class="fu">f</span>(arr[i]));</code></pre>
+<p>If you want to filter the array based on a predicate <code>p</code>, you might do this:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> arr3 = [];
+<span class="kw">for</span> (<span class="kw">var</span> i = <span class="dv">0</span>; i &lt; <span class="ot">arr2</span>.<span class="fu">length</span>; i++)
+    <span class="kw">if</span> (<span class="fu">p</span>(arr2[i]))
+        <span class="ot">arr3</span>.<span class="fu">push</span>(arr2[i]);</code></pre>
+<p>Or maybe you want to take all elements until a a predicate <code>p2</code> is not satisfied:</p>
+<pre class="sourceCode javascript"><code class="sourceCode javascript"><span class="kw">var</span> arr4 = [];
+<span class="kw">for</span> (<span class="kw">var</span> i = <span class="dv">0</span>; i &lt; <span class="ot">arr3</span>.<span class="fu">length</span>; i++)
+    <span class="kw">if</span> (<span class="fu">p2</span>(arr3[i]))
+        <span class="ot">arr4</span>.<span class="fu">push</span>(arr3[i]);
+    <span class="kw">else</span>
+        <span class="kw">break</span>;</code></pre>
+<p>Now, if you want to do that all in one process you have a few options:</p>
+<ul>
+<li>Put them all one after the other verbatim as I’ve written above. Redundant, a maintenance issue and inefficient.</li>
+<li>Merge them all into one clever loop. Also redundant (re-implementing the same concept of mapping, filtering and taking), error prone (it’s easy to get manual loops wrong, especially merging several concepts together), and a maintenance burden.</li>
+<li>Put them each into a method on your language’s Array type as <code>map()</code>, <code>filter()</code>, and <code>takeWhile()</code> and then write <code>arr.map(f).filter(p).takeWhile(p2)</code>. Good abstraction, very low maintenance because the functions are black boxes. But inefficient.</li>
+</ul>
+<p>An ideal stream API will give you the last point, but be able to understand concepts like mapping and filtering and know how to merge them together into an efficient loop. This is called stream fusion, which you can google if you want to know more.</p>
+<p>I don’t know Java but I can give a Haskell example:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">map f <span class="fu">.</span> filter p <span class="fu">.</span> takeWhile p2</code></pre>
+<p>(Note: In Haskell the operations separated by <code>.</code> are run right to left, like <code>map f (filter p (takeWhile p2 …))</code>.)</p>
+<p>If I compile this with GHC, e.g.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">main <span class="fu">=</span> print ((map f <span class="fu">.</span> filter p <span class="fu">.</span> takeWhile p2) [<span class="dv">1</span><span class="fu">..</span><span class="dv">10</span>])
+  <span class="kw">where</span> p2 <span class="fu">=</span> (<span class="fu">&lt;</span><span class="dv">5</span>)
+        p <span class="fu">=</span> even
+        f <span class="fu">=</span> (<span class="fu">+</span><span class="dv">2</span>)</code></pre>
+<p>and look at the reduced output called Core, a language the compiler generates code for before generating assembly or byte code, the <code>map f . filter p</code> are both compiled into a single loop (Core output is verbose, so I collapsed it into this more readable form). This just walks over the list, checks whether the item is even, if so, keeps it and adds 2 to it, otherwise skips that item:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">mainzugo xs <span class="fu">=</span>
+  <span class="kw">case</span> xs <span class="kw">of</span>
+    [] <span class="ot">-&gt;</span> []
+    (x<span class="fu">:</span>ys) <span class="ot">-&gt;</span>
+      <span class="kw">case</span> even x <span class="kw">of</span>
+        <span class="dt">False</span> <span class="ot">-&gt;</span> mainzugo ys
+        <span class="dt">True</span> <span class="ot">-&gt;</span> x <span class="fu">+</span> <span class="dv">2</span> <span class="fu">:</span> mainzugo ys</code></pre>
+<p>Which is pretty nifty. Furthermore, if you fold (also called reducing) e.g.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">foldr (<span class="fu">+</span>) <span class="dv">0</span> <span class="fu">.</span> map f <span class="fu">.</span> filter p</code></pre>
+<p>Then that whole thing is also compiled into one loop:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">mainzugo xs <span class="fu">=</span>
+  <span class="kw">case</span> xs <span class="kw">of</span>
+    [] <span class="ot">-&gt;</span> <span class="dv">0</span>
+    (x<span class="fu">:</span>ys) <span class="ot">-&gt;</span>
+      <span class="kw">case</span> even x <span class="kw">of</span>
+        <span class="dt">False</span> <span class="ot">-&gt;</span> mainzugo ys
+        <span class="dt">True</span> <span class="ot">-&gt;</span> (x <span class="fu">+</span> <span class="dv">2</span>) <span class="fu">+</span> mainzugo ys</code></pre>
+<p>There’re limits to what can compose with what, though.</p>
+
+<footer>
+  © 2015-06-11 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

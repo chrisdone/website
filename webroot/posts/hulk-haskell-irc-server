@@ -1,0 +1,346 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Hulk: A Haskell IRC server</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Hulk: A Haskell IRC server</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>Hulk is an working-and-work-in-progress IRC server. <a href="https://github.com/chrisdone/hulk/">Github repo.</a></p>
+<h2 id="motivation">Motivation</h2>
+<p>Last Wednesday night I whipped up <a href="https://github.com/chrisdone/hulk/tree/f1f8c662acfecbe7bb325ea1c1cda8f4284f0524">a simple IRC server in Haskell in about four hours</a>. We have been long time sick of the poor quality of the Skype Linux implementation, which was, on the dev team, our main point of communication. We agreed something like IRC would be good, so I thought it would be easy in Haskell to make such a thing, and it was; the next day we were chatting on it!</p>
+<h2 id="good-timing">Good Timing</h2>
+<p>I noticed that <a href="https://catonmat.net/">Peteris Krumins</a> made a blog on Thursday about <a href="http://catonmat.net/blog/simple-haskell-tcp-server">how to write a TCP server in Haskell.</a> I thought, “That’s good timing!” I also use the <a href="hhttp://hackage.haskell.org/packages/archive/network/latest/doc/html/Network.html">Network</a> module and <a href="http://hackage.haskell.org/packages/archive/base/latest/doc/html/Control-Concurrent.html">Control.Concurrent</a>, and do pretty much everything he is demonstrating in the blog. So it seems like Hulk is a nice “real-world” demonstration of a non-simple TCP server in Haskell.</p>
+<h2 id="requirements">Requirements</h2>
+<p>Our requirements for a server are quite narrow:</p>
+<ul>
+<li>It needs to be internal, so it has a mandatory login system (using the Crypto package for salted SHA1 passwords). This not optional right now.</li>
+<li>We don’t care about flooding, IRC standards for nicknames, message length of 512 bytes, lack of a specific encoding support, etc. The server supports UTF8 everything.</li>
+<li>I will be adding history, a la Skype and MSN Messenger, which stores a log of all IRC activity and sends the ones of concern to you when you re-connect.</li>
+<li>I will also add OpenSSL support using <a href="https://hackage.haskell.org/packages/archive/HsOpenSSL/0.9/doc/html/OpenSSL-Session.html#g:2">the HsOpenSSL package which seemingly makes the whole process trivial.</a></li>
+</ul>
+<p>We also pipe some feeds to it like tickets, Git commits, site issues, etc.</p>
+<h2 id="a-brief-overview">A Brief Overview</h2>
+<h3 id="general-haskell-projects">General Haskell Projects</h3>
+<p>In the spirit with which Peteris writes I thought that I might describe the design of the project a little bit.</p>
+<pre><code>$ ls
+auth  history	  hulk.conf  README    src
+dist  hulk.cabal  LICENSE    Setup.hs  txt</code></pre>
+<p>It’s good Haskell practice to start any project with <code>cabal init</code> which asks you a series of questions and generates a <code>.cabal</code> file for you. Common practice is to put source in the <code>src</code> dir, and have your Project in a sub-directory matching the project name:</p>
+<pre><code>$ ls src
+Control  Data  GeneratePass.hs	Hulk  Main.hs</code></pre>
+<p>Code that isn’t specific to the particular project but could be used anywhere should go in appropriate modules such as <code>Control.*</code>, <code>Data.*</code>, etc. It occurs commonly that you will need this code in other projects and because the dependency between these modules and your main project’s modules is only in one direction you can simply copy the files over to your new project.</p>
+<h3 id="hulks-module-hierarchy">Hulk’s module hierarchy</h3>
+<pre><code>Control.Monad.IO
+Data.String
+Hulk
+  Hulk.Auth
+  Hulk.Client
+  Hulk.Config
+  Hulk.Event
+  Hulk.Options
+  Hulk.Providers
+  Hulk.Server
+  Hulk.Types
+Main</code></pre>
+<p>The first two just contain utilities that I tend to use often. The <code>Main</code> module is the main entry point, then control goes to <code>Hulk.Server</code> which starts listening on the right port, accepting connections and handling/sending messages to/from clients.</p>
+<h3 id="purity-vs-impurity">Purity vs Impurity</h3>
+<p>In order to handle messages and reply to them from clients, the <code>Hulk.Client</code> module is used. The code in Hulk.Client is entirely pure, and it is the bulk of the project. This is an intentional effort. The original program I whipped up used a bunch of MVars and was basically an imperative program, and about as confusing.</p>
+<center>
+<img src="https://img684.imageshack.us/img684/4484/spiderskullisland480x27.jpg" title="Spider Skull Island from Venture Bros">
+</center>
+
+<p>Another “good practice” is for Haskell programs to be like a well-oiled super villain base. On the edge is where all the explosions happen, and inside is where the bad guys sit and drink Orzo and control everything.</p>
+<blockquote>
+<p><img style="float:right;margin-left:10px;margin-bottom:5px;" src="https://img593.imageshack.us/img593/1179/3202x.jpg" title="Henchmen"> Impure code is like the wreckless henchmen who always wreck everything, and double-cross you at every opportunity. Pure code is the evil genius who devises the master plan, tells the henchmen what to do, and keeps them in separate living quarters.</p>
+</blockquote>
+<p>It’s also common to put all your types into one module named <code>Types</code>, as you tend to use types from every module and this avoids circular dependency problems in the long run.</p>
+<h3 id="flow-of-the-program">Flow of the program</h3>
+<p>The main entry point to the project is in <code>Main</code>, as it should be:</p>
+<pre><code>{-# OPTIONS -Wall #-}
+module Main where
+
+import Network
+import System.Console.CmdArgs
+import System.Posix
+
+import Hulk.Config  (getConfig)
+import Hulk.Options (options,optionsConf)
+import Hulk.Server  (start)
+import Hulk.Types   ()
+
+main :: IO ()
+main = withSocketsDo $ do
+  _ &lt;- installHandler sigPIPE Ignore Nothing
+  cmdArgs options &gt;&gt;= getConfig . optionsConf &gt;&gt;= start</code></pre>
+<p>I initialise the sockets subsystem for Windows and then install a handler for <code>SIGPIPE</code>, because that signal is sent in Unix when a program attempts to write to a socket that has been closed. Both Windows and Unix have their novel design choices. Go figure.</p>
+<p>I’m using the <a href="https://hackage.haskell.org/package/cmdargs">CmdArgs library</a>, <a href="http://neilmitchell.blogspot.com/2010/08/cmdargs-example.html">tutorial here by the author, Neil Mitchell</a>, which I am pleased is becoming part of my standard project repertoire.</p>
+<p>I define my options merely as a way to specify the configuration file, for now.</p>
+<pre><code>{-# LANGUAGE DeriveDataTypeable, RecordWildCards, ScopedTypeVariables #-}
+{-# OPTIONS -Wall -fno-warn-missing-signatures #-}
+module Hulk.Options (Options
+                    ,options
+                    ,optionsConf) where
+
+import System.Console.CmdArgs
+
+data Options = Options
+  { conf      :: FilePath
+  } deriving (Show,Data,Typeable)
+
+options = Options
+  { conf = def &amp;= opt &quot;hulk.conf&quot; &amp;= help &quot;The config file.&quot;
+  }
+  &amp;= summary &quot;Hulk IRC Daemon (C) Chris Done 2011&quot;
+  &amp;= help &quot;Runs an IRC server based on the provided configuration file.&quot;</code></pre>
+<p>And I read the config file with <a href="https://hackage.haskell.org/package/ConfigFile">the great ConfigFile library</a>:</p>
+<pre><code>{-# OPTIONS -Wall -fno-warn-missing-signatures -fno-warn-name-shadowing #-}
+module Hulk.Config
+    (Config(..)
+    ,getConfig)
+    where
+
+import Data.Word
+import Data.ConfigFile
+
+import Hulk.Types
+
+getConfig :: FilePath -&gt; IO Config
+getConfig conf = do
+  contents &lt;- readFile conf
+  let config = do
+        c &lt;- readstring emptyCP contents
+        hostname &lt;- get c &quot;LISTEN&quot; &quot;hostname&quot;
+        listen &lt;- get c &quot;LISTEN&quot; &quot;port&quot;
+        motd &lt;- get c &quot;STRINGS&quot; &quot;motd_file&quot;
+        preface &lt;- get c &quot;STRINGS&quot; &quot;preface_file&quot;
+        passwd &lt;- get c &quot;AUTH&quot; &quot;passwd_file&quot;
+        key &lt;- get c &quot;AUTH&quot; &quot;passwd_key&quot;
+        return Config { configListen = fromIntegral (listen::Word16)
+                      , configMotd = Just motd
+                      , configHostname = hostname
+                      , configPasswd = passwd
+                      , configPasswdKey = key
+                      , configPreface = Just preface
+                      }
+  case config of
+    Left cperr -&gt; error $ show cperr
+    Right config -&gt; return config</code></pre>
+<p>The reading process is merely a simple monad that either returns the <code>Config</code> object or an error. I choose to just throw an error when there’s an issue. I use this library for pretty much every project I use, it really is an essential library.</p>
+<p>An alternative way to express the code above is to <code>runReaderT</code>, define a function like <code>get' = ask &gt;&gt;= flip get</code> and then you can express the above with Applicative operators <code>(&lt;$&gt;)</code> and <code>(&lt;*&gt;)</code>.</p>
+<p>This module will read a file like this:</p>
+<pre><code>[LISTEN]
+port = 6667
+hostname = cn-done
+
+[STRINGS]
+motd_file = txt/MOTD
+preface_file = txt/PREFACE
+
+[AUTH]
+passwd_file = auth/passwd</code></pre>
+<h3 id="server-starter">Server starter</h3>
+<p>I start the server by using the <code>listenOn</code> function, covered in Peteris’s post, and accept connections, setting the buffering to <code>NoBuffering</code>. This turns out to be rather important; as Peteris mentions, this avoids surprises with buffering, which is something I experienced when testing out <code>LineBuffering</code> in this project. In certain situations unknown to me, access to handles locks up.</p>
+<pre><code>-- | Start an IRC server with the given configuration.
+start :: Config -&gt; IO ()
+start config = withSocketsDo $ do
+  hSetBuffering stdout LineBuffering
+  listenSock &lt;- listenOn $ PortNumber (configListen config)
+  envar &lt;- newMVar Env { envClients = M.empty
+                       , envNicks = M.empty
+                       , envChannels = M.empty }
+  forever $ do
+    (handle,host,_port) &lt;- accept listenSock
+    hSetBuffering handle NoBuffering
+    let conn = Conn { connRef = newRef handle
+                    , connHostname = host
+                    , connServerName = configHostname config
+                    }
+    _ &lt;- forkIO $ handleClient config handle envar conn
+    return ()</code></pre>
+<h3 id="connection-handling">Connection handling</h3>
+<p>I fork a new thread per handle. No big deal. I have one value, <code>envar</code>, of type <code>MVar Env</code>, which stores the state of the whole server. It can only be accessed by one thread at a time, that’s why I put it on an <code>MVar</code>. The definition of <code>Env</code> is:</p>
+<pre><code>data Env = Env {
+   envClients :: Map Ref Client
+  ,envNicks :: Map Nick Ref
+  ,envChannels :: Map ChannelName Channel
+}</code></pre>
+<p>where</p>
+<pre><code>newtype Ref = Ref { unRef :: Handle }
+    deriving (Show,Eq)</code></pre>
+<p><code>Ref</code> is merely a wrapper for Handles, to avoid me accidentally using a handle. It is only used as a unique reference to a client.</p>
+<p>In the new thread I have a handler which receives newlines from the client:</p>
+<pre><code>-- | Handle a client connection.
+handleClient :: Config -&gt; Handle -&gt; MVar Env -&gt; Conn -&gt; IO ()
+handleClient config handle env conn = do
+  let runHandle = runClientHandler config env handle conn
+  runHandle $ makeLine CONNECT []
+  fix $ \loop -&gt; do
+    line &lt;- catch (Right &lt;$&gt; UTF8.hGetLine handle) (return . Left)
+    case filter (not.newline) &lt;$&gt; line of
+      Right []   -&gt; loop
+      Right line -&gt; do runHandle (line++&quot;\r&quot;); loop
+      Left _err  -&gt; runHandle $ makeLine DISCONNECT [&quot;Connection lost.&quot;]
+
+  where newline c = c=='\n' || c=='\r'</code></pre>
+<p>I get a line which is Right, or fail and return what’s Left. The case of getLine failing is when the socket is closed. I ignore messages only containing newline characters, and the middle case is actually getting a valid line which I pass to <code>runHandle</code> that runs the pure client handler, then <code>loop</code>s again.</p>
+<h3 id="client-handler">Client handler</h3>
+<p>To run the client handler, I have the following function:</p>
+<pre><code>-- | Handle a received line from the client.
+runClientHandler :: Config -&gt; MVar Env -&gt; Handle -&gt; Conn -&gt; String -&gt; IO ()
+runClientHandler config env handle conn line = do
+  modifyMVar_ env $ \env -&gt; do
+    (replies,env) &lt;- runReaderT (runHulkIO $ handleLine env conn line) config
+    mapM_ (handleReplies handle) replies
+    return env</code></pre>
+<p>It passes the program state (<code>env</code>) and the current connection info (<code>conn</code>) to the function <code>handleLine</code>, which is the single export from <code>Hulk.Client</code>, which is a transformer over an arbitrary monad. Technically, in this case I’m running it inside a <code>readerT</code> on <code>IO</code>, so it’s not actually pure. The <code>handleLine</code> action returns a bunch of replies/instructions for the <code>Server</code> module to perform and a new state (<code>env</code>).</p>
+<p>When I said that the <code>Hulk.Client</code> module was pure, I meant that it is abstracted over whether it is pure or impure, and therefore can be treated as pure for testing and developing, and when running the server, runs in IO, but only 0.1% of the code uses IO. Also, when I said “arbitrary monad”, I meant any monad implementing the <code>MonadProvider</code> class.</p>
+<pre><code>class Monad m =&gt; MonadProvider m where
+  providePreface   :: m (Maybe String)
+  provideMotd      :: m (Maybe String)
+  provideKey       :: m String
+  providePasswords :: m String</code></pre>
+<p>Meaning that these are the only “impure” things I need when running the program. I need to read the preface, motd, key, and password files on demand. In the <code>IO</code> case, I simply read the file. In the pure case, I can stick it in a <code>Reader</code> or <code>Identity</code> monad and the whole computation is thus pure.</p>
+<p>What’s the benefit? This means I can run arbitrary parts of the computation trivially, and make pure test suites out of it. QuickCheck my IRCd, anyone? The main benefits are not to have to worry about conflicting simultaneous threads, and being able to run any function from the module with whatever state one desires.</p>
+<h3 id="client-replies">Client replies</h3>
+<p>The <code>Client</code> module replies with one of the following:</p>
+<pre><code>data Reply = MessageReply Ref Message | LogReply String | Close</code></pre>
+<ul>
+<li><code>MessageReply</code>: Send this <code>Message</code> to the given handle (<code>Ref</code>).</li>
+<li><code>LogReply</code>: Log this <code>String</code>.</li>
+<li><code>Close</code>: Close the current connection.</li>
+</ul>
+<p>I find this separation of IO and logic to be useful.</p>
+<h3 id="the-irc-monad-stack">The IRC monad stack</h3>
+<p>The rest of the project lies in <code>Hulk.Client</code> and is academic/straight-forward. I will explain the <code>IRC</code> monad, though:</p>
+<pre><code>newtype IRC m a = IRC {
+    runIRC :: ReaderT Conn (WriterT [Reply] (StateT Env m)) a
+  }
+  deriving (Monad
+           ,Functor
+           ,MonadWriter [Reply]
+           ,MonadState Env
+           ,MonadReader Conn)</code></pre>
+<ul>
+<li>I output replies, hence the <code>MonadWriter [Reply]</code>.</li>
+<li>I read the connection info (<code>Conn</code>), but I <em>don’t/shouldn’t</em> modify it or write to it.</li>
+<li>I <em>do</em> read/modify the <code>Env</code>, which is the whole server state.</li>
+<li>Finally, it is parametrized over an arbitrary monad, but the functions in <code>Client</code> constrain to <code>MonadProvider</code>.</li>
+</ul>
+<p>This is called <a href="https://book.realworldhaskell.org/read/monad-transformers.html">a monad transformer stack</a>. <a href="http://en.wikibooks.org/wiki/Haskell/Monad_transformers">Haskell Wikibook on transformers</a></p>
+<h3 id="examples">Examples</h3>
+<p>Example of a <code>MessageReply</code>:</p>
+<pre><code>-- | Send a message reply.
+reply :: Monad m =&gt; Ref -&gt; Message -&gt; IRC m ()
+reply ref msg = do
+  outgoing $ encode msg
+  tell . return $ MessageReply ref msg</code></pre>
+<p>Examples of <code>LogReply</code>:</p>
+<pre><code>-- | Log an outgoing line.
+outgoing :: Monad m =&gt; String -&gt; IRC m ()
+outgoing = log . (&quot;-&gt; &quot; ++)
+
+-- | Log a line.
+log :: Monad m =&gt; String -&gt; IRC m ()
+log = tell . return . LogReply</code></pre>
+<p>Example of the <code>StateT</code>:</p>
+<pre><code>-- | Modify the nicks mapping.
+modifyNicks :: Monad m =&gt; (Map Nick Ref -&gt; Map Nick Ref) -&gt; IRC m ()
+modifyNicks f = modify $ \env -&gt; env { envNicks = f (envNicks env) }</code></pre>
+<p>Example of using the <code>Conn</code> object from the <code>ReaderT</code>:</p>
+<pre><code>-- | Make a new IRC message from the server.
+newServerMsg :: Monad m =&gt; String -&gt; [String] -&gt; IRC m Message
+newServerMsg cmd ps = do
+  hostname &lt;- asks connServerName
+  return $ Message {
+    msg_prefix = Just $ Server hostname
+   ,msg_command = cmd
+   ,msg_params = ps
+  }</code></pre>
+<h2 id="summary">Summary</h2>
+<p>That’s all, folks! I hope this is useful to some people thinking of writing their first Haskell daemon project.</p>
+<p>Haskell is the only language I know in which I can write 400~ lines of code without running it and then run it and have it work as expected.</p>
+
+<footer>
+  © 2011-01-30 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

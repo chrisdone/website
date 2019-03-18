@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Making HaskellDB slightly more type-safe</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Making HaskellDB slightly more type-safe</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>I was just discussing HaskellDB’s major flaws with Oliver Charles and I noted that one <em>huge</em> problem is that the type of <code>update</code> does not restrict the record given to make the update. Its type is</p>
+<pre><code>update :: (ShowLabels s, ToPrimExprs s)
+       =&gt; Database             -- ^ Database.
+       -&gt; Table r              -- ^ Entity.
+       -&gt; (Rel r -&gt; Expr Bool) -- ^ Predicate.
+       -&gt; (Rel r -&gt; Record s)  -- ^ Updates.
+       -&gt; IO ()</code></pre>
+<p>which is straight-forward enough. The problem is the “updates” argument, which will allow me to write a bogus field that does not belong to <code>r</code>, like</p>
+<pre><code>update mytable
+       (\row -&gt; row!field .==. whatever)
+       (\row -&gt; badfield &lt;&lt;- whatever)</code></pre>
+<p>This problem actually bit me in the ass in production once before. That is not an exciting bug to have.</p>
+<p>So I thought, we need to prove that for the type above, <code>s &lt;: r</code> (read as “s is a <a href="https://en.wikipedia.org/wiki/Subtype_polymorphism">subtype</a> of r”). How do we express that? How about a type class.</p>
+<p>The type-class can be</p>
+<pre><code>class Subset sub super</code></pre>
+<p>But how to implement it? Well, we need to say that for every <code>field</code> of sub, that <code>field</code> is also a field of <code>super</code>. That’s made easy for us, because HaskellDB already has a <code>HasField field record</code> class for exactly that!</p>
+<pre><code>instance (HasField field super,Subset sub super) =&gt;
+         Subset (RecCons field typ sub) super</code></pre>
+<p>This is similar to traversing a list at the value level, with <code>RecCons field type sub</code> like a pattern-match on the current element. You can read it as:</p>
+<blockquote>
+<p><code>sub</code> is a subset of <code>super</code>, if <code>super</code> has the <code>field</code> of the head of the list, and the tail is a subset of super</p>
+</blockquote>
+<p>So far so good. Now we need a base case, to cover the last element of the list:</p>
+<pre><code>instance Subset RecNil super</code></pre>
+<p>And we’re done. Update now becomes</p>
+<pre><code>update :: (Subset s r,ShowLabels s, ToPrimExprs s)
+       =&gt; Database             -- ^ Database.
+       -&gt; Table r              -- ^ Entity.
+       -&gt; (Rel r -&gt; Expr Bool) -- ^ Predicate.
+       -&gt; (Rel r -&gt; Record s)  -- ^ Updates.
+       -&gt; IO ()</code></pre>
+<p>Testing this on my codebase actually found a bug in which I was using the wrong field!</p>
+<p>I will send this to the maintainer of HaskellDB as it’s a glaring bug waiting to happen to someone.</p>
+
+<footer>
+  © 2012-08-25 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Attempto Controlled English</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Attempto Controlled English</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p><a href="https://en.wikipedia.org/wiki/Attempto_Controlled_English">Attempto Controlled English</a> is a formally defined unambiguous language which is a subset of the English language. It’s pretty sweet.</p>
+<p>I’ve known about it for some time, but I never fiddled with it because the standard implementation setup is rather elaborate. I wanted a nice, simple package in Haskell which would define a parser and a printer only, much like haskell-src-exts does. That way I can use ACE to parse some simple English for all sorts of purposes<sup><a href="#fn1" class="footnoteRef" id="fnref1">1</a></sup>, with a simple familiar API that I can peruse on Hackage. Partly it’s also a good learning experience.</p>
+<p>So I went through the paper The Syntax of Attempto Controlled English to see whether it was comprehensive enough to write a parsec parser out of. It was! I first wrote a <a href="https://github.com/chrisdone/ace/blob/master/src/ACE/Tokenizer.hs">tokenizer</a> in with Attoparsec and <a href="https://github.com/chrisdone/ace/blob/master/test/Main.hs#L39">wrote some tests</a>. From those tokens I produced a set of <a href="https://github.com/chrisdone/ace/blob/master/src/ACE/Combinators.hs">combinators</a> for Parsec, then I wrote a <a href="https://github.com/chrisdone/ace/blob/master/src/ACE/Parsers.hs">parser</a>. While writing the parser I produced a set of <a href="https://github.com/chrisdone/ace/blob/master/test/Main.hs#L67">test-cases</a> for each grammar production. Finally, I wrote a <a href="https://github.com/chrisdone/ace/blob/master/src/ACE/Pretty.hs">pretty printer</a>, and <a href="https://github.com/chrisdone/ace/blob/master/test/Main.hs#L599">wrote some tests</a> to check that <code>print . parse . print . parse = id</code>.</p>
+<p>Newbies to Haskell parsing might find it an interesting use-case because it tokenizes with <a href="https://hackage.haskell.org/package/attoparsec">Attoparsec</a> (from Text) and then parses its own token type (<a href="http://hackage.haskell.org/package/ace-0.3/docs/ACE-Types-Tokens.html">Token</a>) with <a href="http://hackage.haskell.org/package/parsec">Parsec</a>. A common difficulty is to avoid parsing from <code>String</code> in Parsec, which most tutorials use as their demonstration.</p>
+<p>The Hackage package is <a href="https://hackage.haskell.org/package/ace">here</a>. I find the documentation interesting to browse. I tried to include helpful examples for the production rules. You shouldn’t have to know syntax theory to use this library.</p>
+<p>Here is an ACE sample. We can parse the sentence “a &lt;noun&gt; &lt;intrans-verb&gt;” like this:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; parsed specification <span class="st">&quot;a &lt;noun&gt; &lt;intrans-verb&gt;.&quot;</span>
+<span class="dt">Right</span> (<span class="dt">Specification</span> (<span class="dt">SentenceCoord</span> (<span class="dt">SentenceCoord_1</span> (<span class="dt">SentenceCoord_2</span>
+(<span class="dt">SentenceCoord_3</span> (<span class="dt">TopicalizedSentenceComposite</span> (<span class="dt">CompositeSentence</span>
+(<span class="dt">Sentence</span> (<span class="dt">NPCoordUnmarked</span> (<span class="dt">UnmarkedNPCoord</span> (<span class="dt">NP</span> (<span class="dt">SpecifyDeterminer</span> <span class="dt">A</span>)
+(<span class="dt">N'</span> <span class="dt">Nothing</span> (<span class="dt">N</span> <span class="st">&quot;&lt;noun&gt;&quot;</span>) <span class="dt">Nothing</span> <span class="dt">Nothing</span> <span class="dt">Nothing</span>)) <span class="dt">Nothing</span>))
+(<span class="dt">VPCoordVP</span> (<span class="dt">VP</span> (<span class="dt">V'</span> <span class="dt">Nothing</span> (<span class="dt">ComplVIV</span> (<span class="dt">IntransitiveV</span> <span class="st">&quot;&lt;intrans-verb&gt;&quot;</span>))
+[])))))) <span class="dt">Nothing</span>) <span class="dt">Nothing</span>) <span class="dt">Nothing</span>) <span class="dt">Nothing</span>) <span class="dt">Nothing</span>)</code></pre>
+<p>Anything to do with vocabulary is written as <code>&lt;foo&gt;</code>. The parser actually takes <a href="https://hackage.haskell.org/package/ace-0.3/docs/ACE-Parsers.html#t:ACEParser">a record of parsers</a> so that you can provide your own parsers for each type of word. These words are not of interest to the grammar, and your particular domain might support different types of words.</p>
+<p>If we pretty print the parsed phrase, we get:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; fmap pretty (parsed specification <span class="st">&quot;a &lt;noun&gt; &lt;intrans-verb&gt;.&quot;</span>)
+<span class="dt">Right</span> <span class="st">&quot;a &lt;noun&gt; &lt;intrans-verb&gt;.&quot;</span></code></pre>
+<p>I.e. we get back what we put in. I also wrote a HTML printer. A more complicated sentence demonstrates the output:</p>
+<blockquote>
+<p>for each &lt;noun&gt; &lt;var&gt; if a &lt;noun&gt; that &lt;trans-verb&gt; some &lt;noun&gt; and &lt;proper-name&gt;’s &lt;noun&gt; &lt;trans-verb&gt; 2 &lt;noun&gt; then some &lt;noun&gt; &lt;intrans-verb&gt; and some &lt;noun&gt; &lt;distrans-verb&gt; a &lt;intrans-adj&gt; &lt;noun&gt; &lt;proper-name&gt;’s &lt;noun&gt; &lt;adverb&gt;.</p>
+</blockquote>
+<p>Can be printed with</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">fmap (renderHtml <span class="fu">.</span> toMarkup) <span class="fu">.</span> parsed specification</code></pre>
+<p>and the output is:</p>
+<blockquote><p>
+<span title="specification" class="ace-specification"><span title="sentence-or" class="ace-sentence-or"><span title="sentence-and" class="ace-sentence-and"><span title="sentence-or" class="ace-sentence-or"><span title="sentence-and" class="ace-sentence-and"><span title="universal-topic" class="ace-universal-topic"><span title="universal-quantor" class="ace-universal-quantor"><span title="universal-quantor" class="ace-universal-quantor">for each</span></span> <span title="n_" class="ace-n_"><span title="n" class="ace-n">&lt;noun&gt;</span> <span title="appos-coord" class="ace-appos-coord"><span title="apposition" class="ace-apposition"><span title="variable" class="ace-variable">&lt;var&gt;</span></span></span></span></span> <span title="sentence-or" class="ace-sentence-or"><span title="sentence-and" class="ace-sentence-and"><span title="sentence-or" class="ace-sentence-or"><span title="sentence-and" class="ace-sentence-and"><span title="conditional" class="ace-conditional"><span title="if-if" class="ace-if-if">if </span><span title="sentence-or" class="ace-sentence-or"><span title="sentence-and" class="ace-sentence-and"><span title="sentence-or" class="ace-sentence-or"><span title="sentence-and" class="ace-sentence-and"><span title="sentence" class="ace-sentence"><span title="npcoord" class="ace-npcoord"><span title="np" class="ace-np"><span title="specifier" class="ace-specifier"><span title="determiner" class="ace-determiner">a</span></span> <span title="n_" class="ace-n_"><span title="n" class="ace-n">&lt;noun&gt;</span> <span title="relative-clause-coord" class="ace-relative-clause-coord"><span title="relative-clause" class="ace-relative-clause"><span title="relative-clause-that" class="ace-relative-clause-that">that </span><span title="vp-coord" class="ace-vp-coord"><span title="vp" class="ace-vp"><span title="v_" class="ace-v_"><span title="compl-v" class="ace-compl-v"><span title="transitive-v" class="ace-transitive-v">&lt;trans-verb&gt;</span> <span title="npcoord" class="ace-npcoord"><span title="np" class="ace-np"><span title="specifier" class="ace-specifier"><span title="determiner" class="ace-determiner">some</span></span> <span title="n_" class="ace-n_"><span title="n" class="ace-n">&lt;noun&gt;</span></span></span><span title="unmarked-npcoord-and" class="ace-unmarked-npcoord-and"> and </span><span title="np" class="ace-np"><span title="specifier" class="ace-specifier"><span title="possessive-np-coord" class="ace-possessive-np-coord"><span title="proper-name" class="ace-proper-name">&lt;proper-name&gt;</span><span title="genitive-tail" class="ace-genitive-tail"><span title="genitive-tail" class="ace-genitive-tail"><span title="saxon-genitive-marker" class="ace-saxon-genitive-marker">'s</span></span></span></span></span> <span title="n_" class="ace-n_"><span title="n" class="ace-n">&lt;noun&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span> <span title="vp-coord" class="ace-vp-coord"><span title="vp" class="ace-vp"><span title="v_" class="ace-v_"><span title="compl-v" class="ace-compl-v"><span title="transitive-v" class="ace-transitive-v">&lt;trans-verb&gt;</span> <span title="npcoord" class="ace-npcoord"><span title="np" class="ace-np"><span title="specifier" class="ace-specifier"><span title="number-p" class="ace-number-p">2</span></span> <span title="n_" class="ace-n_"><span title="n" class="ace-n">&lt;noun&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span><span title="if-then" class="ace-if-then"> then </span><span title="sentence-or" class="ace-sentence-or"><span title="sentence-and" class="ace-sentence-and"><span title="sentence-or" class="ace-sentence-or"><span title="sentence-and" class="ace-sentence-and"><span title="sentence" class="ace-sentence"><span title="npcoord" class="ace-npcoord"><span title="np" class="ace-np"><span title="specifier" class="ace-specifier"><span title="determiner" class="ace-determiner">some</span></span> <span title="n_" class="ace-n_"><span title="n" class="ace-n">&lt;noun&gt;</span></span></span></span> <span title="vp-coord" class="ace-vp-coord"><span title="vp" class="ace-vp"><span title="v_" class="ace-v_"><span title="compl-v" class="ace-compl-v"><span title="intransitive-v" class="ace-intransitive-v">&lt;intrans-verb&gt;</span></span></span></span></span></span><span title="sentence-op" class="ace-sentence-op"> and </span><span title="sentence-and" class="ace-sentence-and"><span title="sentence" class="ace-sentence"><span title="npcoord" class="ace-npcoord"><span title="np" class="ace-np"><span title="specifier" class="ace-specifier"><span title="determiner" class="ace-determiner">some</span></span> <span title="n_" class="ace-n_"><span title="n" class="ace-n">&lt;noun&gt;</span></span></span></span> <span title="vp-coord" class="ace-vp-coord"><span title="vp" class="ace-vp"><span title="v_" class="ace-v_"><span title="compl-v" class="ace-compl-v"><span title="distransitive-v" class="ace-distransitive-v">&lt;distrans-verb&gt;</span> <span title="npcoord" class="ace-npcoord"><span title="np" class="ace-np"><span title="specifier" class="ace-specifier"><span title="determiner" class="ace-determiner">a</span></span> <span title="n_" class="ace-n_"><span title="adjective-coord" class="ace-adjective-coord"><span title="intransitive-adjective" class="ace-intransitive-adjective">&lt;intrans-adj&gt;</span></span> <span title="n" class="ace-n">&lt;noun&gt;</span></span></span></span> <span title="npcoord" class="ace-npcoord"><span title="np" class="ace-np"><span title="specifier" class="ace-specifier"><span title="possessive-np-coord" class="ace-possessive-np-coord"><span title="proper-name" class="ace-proper-name">&lt;proper-name&gt;</span><span title="genitive-tail" class="ace-genitive-tail"><span title="genitive-tail" class="ace-genitive-tail"><span title="saxon-genitive-marker" class="ace-saxon-genitive-marker">'s</span></span></span></span></span> <span title="n_" class="ace-n_"><span title="n" class="ace-n">&lt;noun&gt;</span></span></span></span></span> <span title="v-modifier" class="ace-v-modifier"><span title="adverb-coord" class="ace-adverb-coord"><span title="adverb" class="ace-adverb">&lt;adverb&gt;</span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span></span><span title="period" class="ace-period">.</span></span>
+</p></blockquote>
+
+<p>The colors and parenthesizing embellishments are just to demonstrate what can be done. I’m not sure this output would actually be readable in reality.</p>
+<p>This is a good start. I’m going to leave it for now and come back to it later. The next steps are: (1) write more tests, (2) add feature restrictions and related type information in the AST, (3) add a couple sample vocabularies, (4) implement the interrogative (useful for query programs) and imperative moods (useful for writing instructions, e.g. text-based games).</p>
+<div class="footnotes">
+<hr></hr>
+<ol>
+<li id="fn1"><p>Specifically, I want to use this to experiment with translating it to logic-language databases and queries, and from that produce interactive tutorials, and perhaps experiment with a MUD-like game that utilizes it.<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+<footer>
+  © 2014-02-24 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,339 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Teaching: A good (and bad) example</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Teaching: A good (and bad) example</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>Rather than write a bunch of prose about how I think teaching should be done, this time I’ll simply comment an existing example. Needless to say, I am a proponent of <a href="https://en.wikipedia.org/wiki/Socratic_method">the Socratic method</a>. As I begin more work in the area of education, I’ll refer back to this page.</p>
+<p>One day, a newbie asked on an IRC channel a Haskell question. Here is a highly editorialized and commentaried version of the conversation, correcting typos and patching out the names. I tried to also group conversations so they’re a bit less interleaved.</p>
+<p>It doesn’t really matter who is who, but I wanted to include a real log to show that there are real examples of this all the time. It demonstrates some points about teaching that I think are important. I’ve used names for some philosophers I admire. There isn’t (really) any meaning to the assignments.</p>
+<h1 id="the-dialogue">The Dialogue</h1>
+<p>The play starts out with an unknown person joining the channel and asking for help:</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: Hey guys, quick question for you. I am working on expanding my Haskell skills by doing some challenges at https://www.hackerrank.com, and I am having issues with one thing that I think has got to be much easier than I am making it.</li>
+<li><strong>Huizi</strong>: Reading and parsing <code>STDIN</code>.</li>
+</ul>
+</blockquote>
+<p>The canvas is prepared. It’s not clear what exactly they are having trouble with. What’s the first thing you should do? Ask them questions.</p>
+<blockquote>
+<ul>
+<li><strong>Socrates</strong>: Do you want to avoid direct spoilers?</li>
+<li><strong>Aristophanes</strong>: Huizi: Sure, can you give a specific example of something you’d like to do?</li>
+</ul>
+</blockquote>
+<p>Questions begin. This is a good start.</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: So, say I am expecting a string of <code>&quot;2 3&quot;</code>, how would I convert that to a <code>[Int]</code>?</li>
+</ul>
+</blockquote>
+<p>A very specific, easy to investigate question is proposed. What’s the best approach to proceed? First, establish the person’s experience.</p>
+<blockquote>
+<ul>
+<li><strong>Aristophanes</strong>: <code>map read . lines</code></li>
+<li><strong>Aristophanes</strong>: Err.</li>
+<li><strong>Laozi</strong>: <code>map read . words &lt;$&gt; readLine</code></li>
+<li><strong>Confucius</strong>: You mean <code>words</code>.</li>
+<li><strong>Confucius</strong>: And <code>getLine</code>, not <code>readLine</code>.</li>
+<li><strong>Socrates</strong>: Huizi, scratch that question about direct spoilers. The answer’s been given verbatim.</li>
+</ul>
+</blockquote>
+<p>Sadly, the response is not helpful. It is unempathic, presumptuous and muddled. Naturally, the learner is confused by this noise.</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: What is the <code>.</code> in there for?</li>
+</ul>
+</blockquote>
+<p>And their struggle continues:</p>
+<blockquote>
+<ul>
+<li><strong>Confucius</strong>: Huizi: Function composition.</li>
+<li><strong>Laozi</strong>: <code>:t (.)</code></li>
+<li><strong>Minerva</strong>: <code>(b -&gt; c) -&gt; (a -&gt; b) -&gt; a -&gt; c</code></li>
+</ul>
+</blockquote>
+<p>So far, the poor learner has been subjected to line noise. But it doesn’t go unnoticed:</p>
+<blockquote>
+<ul>
+<li><strong>Socrates</strong>: Hmm, newbie handling in here isn’t as awesome as back in 2008. Rather clumsy. [winking]</li>
+<li><strong>Socrates</strong>: Huizi, how much Haskell do you know already?</li>
+</ul>
+</blockquote>
+<p>Amusingly, nor does the criticism, starting a separate meta-discussion:</p>
+<blockquote>
+<ul>
+<li><strong>Laozi</strong>: Socrates: What exactly is not satisfactory to you?</li>
+<li><strong>Confucius</strong>: Socrates: I doubt this is actually the puzzle Huizi is trying to solve. [tongue in cheek]</li>
+</ul>
+</blockquote>
+<p>The important reply of the earlier question comes:</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: I have ran through a lot of sample projects, involving list manipulation.</li>
+<li><strong>Huizi</strong>: So, I would still consider myself a noob.</li>
+</ul>
+</blockquote>
+<p>In other words, this is a complete Haskell newbie who needs to read more material, or, if they are to be taught here, it should be done with care and patience.</p>
+<blockquote>
+<ul>
+<li><strong>Confucius</strong>: Huizi: Another way is to write something like <code>main = do xs &lt;- getLine; let ns = map read (words xs); …</code> use <code>ns</code> here …</li>
+</ul>
+</blockquote>
+<p>Oddly, the spoilering continues. The learner has already stated that they’re going through exercises. The channel is persisting in trying to spoil the learning process and it does so clumsily. The meta-discussion continues:</p>
+<blockquote>
+<ul>
+<li><strong>Socrates</strong>: Laozi, the part where you give a complete newbie some spoiler code that mixes function composition with <code>Applicative</code> operators? [wink]</li>
+<li><strong>Confucius</strong>: Yeah, if I was going to use <code>fmap</code>, I’d just write <code>fmap</code> here.</li>
+<li><strong>Confucius</strong>: I only ever use <code>&lt;$&gt;</code> if I’m also using <code>&lt;*&gt;</code>.</li>
+</ul>
+</blockquote>
+<p>The learner expresses bad insights typical of someone unfamiliar with a topic:</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: But I can work with the language. Just anything with reading input or output just feels unnatural in the language.</li>
+<li><strong>Huizi</strong>: But that’s likely because it is unnatural for functional programming languages.</li>
+<li><strong>Confucius</strong>: Huizi: Eh, it’s not so bad, you just need to get used to it.</li>
+</ul>
+</blockquote>
+<p>A strange selfish approach to teaching is expressed in reply to criticism in the meta-discussion:</p>
+<blockquote>
+<ul>
+<li><strong>Laozi</strong>: Socrates: They are free to ask for more help, I don’t like starting off assuming no knowledge, it’s too much work for me.</li>
+<li><strong>Socrates</strong>: Laozi, you make it sound like an occupation. [smile]</li>
+<li><strong>Laozi</strong>: Socrates: 0K starting. [money job joke]</li>
+</ul>
+</blockquote>
+<p>Amusingly, the shoot-first-ask-questions-later practitioner second-guesses themself:</p>
+<blockquote>
+<ul>
+<li><strong>Laozi</strong>: Also, is it spoiler code? Is the actual task to parse in some numbers?</li>
+<li><strong>Confucius</strong>: Huizi: Have a look at the code that I wrote.</li>
+</ul>
+</blockquote>
+<p>Incensed by the learner’s bad learner insights, a pure-functional-vs-state lecture begins:</p>
+<blockquote>
+<ul>
+<li><strong>Aristophanes</strong>: Huizi: It’s only “unnatural” in the sense that it’s a different approach than imperative languages, and that’s the approach you already know.</li>
+<li><strong>Huizi</strong>: No, its unnatural in the sense that functional programming languages have this sense of no outside state… reading from <code>STDIN</code> kind of “breaks” that whole ideology.</li>
+</ul>
+</blockquote>
+<p>Meanwhile, an interaction with the learner is resumed:</p>
+<blockquote>
+<ul>
+<li><strong>Socrates</strong>: Huizi, are you just going off the reading material on that challenge site so far?</li>
+<li><strong>Nasreddin</strong>: Huizi: FWIW, parsing numbers from strings is explained on page 400 in Real World Haskell: http://book.realworldhaskell.org/read/</li>
+<li><strong>Huizi</strong>: Socrates: No, I was using ‘learnhaskell’ sites.</li>
+</ul>
+</blockquote>
+<p>The lecture continues:</p>
+<blockquote>
+<ul>
+<li><strong>Confucius</strong>: Huizi: A do-block can be used to glue a bunch of IO actions together into a larger one. Inside a do-block, <code>v &lt;- x</code> means “execute the action <code>x</code>, and call its result v”. If <code>x</code> has type <code>IO t</code>, then <code>v</code> will have type <code>t</code>.</li>
+<li><strong>Aristophanes</strong>: Huizi: The whole “no sense of outside state” thing is basically a myth.</li>
+<li><strong>Confucius</strong>: Huizi: In the end, main will be one of these IO actions, and will be executed in a compiled Haskell program.</li>
+</ul>
+</blockquote>
+<p>The learner soldiers on trying to solve their actual problem:</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: Yeah, I was trying to use <code>read</code>, I just kept getting errors.</li>
+</ul>
+</blockquote>
+<p>More lecturing:</p>
+<blockquote>
+<ul>
+<li><strong>Confucius</strong>: <code>getLine :: IO String</code> is an IO action which when executed, will request a line of text from <code>stdin</code>, and produce that as its result.</li>
+</ul>
+</blockquote>
+<p>Actual interaction with the learner tries to make some headway:</p>
+<blockquote>
+<ul>
+<li><strong>Socrates</strong>: Huizi, what was your use of <code>read</code> like? You can type small Haskell expressions in here by prefixing it with “&gt;”.</li>
+<li><strong>Socrates</strong>: &gt; <code>1 + 2</code></li>
+<li><strong>Minerva</strong>: <code>3</code></li>
+</ul>
+</blockquote>
+<p>Lecture <em>still</em> continues:</p>
+<blockquote>
+<ul>
+<li><strong>Confucius</strong>: Huizi: It’s important to distinguish execution (of IO actions) from evaluation, which is the process of reducing expressions to values in order to be able to match them against patterns.</li>
+<li><strong>Confucius</strong>: When people say that Haskell is pure or referentially transparent or stateless or whatever, they’re talking about evaluation.</li>
+</ul>
+</blockquote>
+<p>The learner is now trying to diagnose their problem and voicing their discoveries:</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: Looks like the main issue I was having is that I was using <code>splitOn ' '</code>, instead of words.</li>
+</ul>
+</blockquote>
+<p>This is the first obvious clue to a misstep the newbie has made. Can you see their mistake? If not, you’ll learn something, too. Now the task is to help them realize it. Meanwhile, a little bit more meta discussion:</p>
+<blockquote>
+<ul>
+<li><strong>Socrates</strong>: Confucius, does your approach of throwing stuff at people and seeing what sticks without any feedback normally work? It seems strange to me.</li>
+<li><strong>Confucius</strong>: Socrates: I am hoping for feedback here.</li>
+</ul>
+</blockquote>
+<p>The learner is starting to reason through the issue more:</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: <code>splitOn</code> must have a different output type.</li>
+<li><strong>Socrates</strong>: Huizi, what’s the type of <code>splitOn</code>? Is that from <code>Data.List.Split</code>?</li>
+<li><strong>Huizi</strong>: Yeah.</li>
+<li><strong>Socrates</strong>: <code>:t splitOn</code> <em>– Does lambdabot have it in scope?</em></li>
+<li><strong>Minerva</strong>: <code>Eq a =&gt; [a] -&gt; [a] -&gt; [[a]]</code></li>
+<li><strong>Socrates</strong>: Aha!</li>
+</ul>
+</blockquote>
+<p>A strange lecture-only perspective is professed, which I’ll address later:</p>
+<blockquote>
+<ul>
+<li><strong>Confucius</strong>: Socrates: But I figure I might as well put everything on the table even if I get none.</li>
+<li><strong>Confucius</strong>: Huizi: Does that stuff make sense?</li>
+</ul>
+</blockquote>
+<p>Attempting to continue with the issue at hand, a play is made to try to help the learner see what’s wrong:</p>
+<blockquote>
+<ul>
+<li><strong>Socrates</strong>: Huizi, you can still use <code>splitOn</code> for this problem (even though <code>words</code> might be more convenient), can you see the change to make in your call?</li>
+<li><strong>Huizi</strong>: <code>:t words</code></li>
+<li><strong>Minerva</strong>: <code>String -&gt; [String]</code></li>
+<li><strong>Socrates</strong>: Huizi, check this out:</li>
+<li><strong>Socrates</strong>: <code>:t ' '</code></li>
+<li><strong>Minerva</strong>: <code>Char</code></li>
+<li><strong>Socrates</strong>: <code>:t &quot; &quot;</code></li>
+<li><strong>Minerva</strong>: <code>[Char]</code></li>
+</ul>
+</blockquote>
+<p>But the learner’s still confused, but asking questions, which is good:</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: So basically I end up with an output of <code>[[Char]]</code> with words, and <code>[[a]]</code> with <code>splitOn</code>. Right?</li>
+<li><strong>Huizi</strong>: But since the input to <code>splitOn</code> is from the <code>getLine</code>, does it not consider itself a <code>[Char]</code> type?</li>
+<li><strong>Socrates</strong>: Huizi, that’s right, <code>splitOn</code> returns a list of lists of anything <code>[a]</code>, <code>words</code> returns a list of lists of characters <code>[Char]</code>.</li>
+<li><strong>Nasreddin</strong>: Huizi: <code>splitOn</code> would give <code>[[Char]]</code> if it was fed <code>[Char]</code></li>
+</ul>
+</blockquote>
+<p>Leading the learner isn’t working yet, so it’s time to show the issue:</p>
+<blockquote>
+<ul>
+<li><strong>Socrates</strong>: Huizi, it does – I think the <em>first</em> argument to <code>splitOn</code> is your problem here, right? Is this the error message you got?</li>
+<li><strong>Socrates</strong>: <code>&gt; splitOn ' ' &quot;hello world&quot;</code></li>
+<li><strong>Minerva</strong>: Couldn’t match expected type ‘[Char]’ with actual type ‘Char’</li>
+<li><strong>Confucius</strong>: <code>&gt; splitOn &quot; &quot; &quot;hello world&quot;</code></li>
+<li><strong>Minerva</strong>: <code>[&quot;hello&quot;,&quot;world&quot;]</code></li>
+</ul>
+</blockquote>
+<p>Here comes the epiphany!</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: Ohhhhhh.</li>
+<li><strong>Socrates</strong>: [smile]</li>
+<li><strong>Huizi</strong>: I feel silly.</li>
+</ul>
+</blockquote>
+<p>Then they try it out:</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: <code>&gt; splitOn &quot;o w&quot; &quot;hello world&quot;</code></li>
+<li><strong>Minerva</strong>: <code>[&quot;hell&quot;,&quot;orld&quot;]</code></li>
+</ul>
+</blockquote>
+<p>Now they describe the problem they had with full understanding:</p>
+<blockquote>
+<ul>
+<li><strong>Huizi</strong>: Ok, so I am splitting the list wherever it finds the sequence in that list.</li>
+<li><strong>Socrates</strong>: Yup.</li>
+<li><strong>Huizi</strong>: <code>&gt; splitOn [2,3] [1,2,3,4,5,6]</code></li>
+<li><strong>Minerva</strong>: <code>[[1],[4,5,6]]</code></li>
+<li><strong>Huizi</strong>: Perfect, thanks guys.</li>
+<li><strong>Socrates</strong>: Welcome!</li>
+</ul>
+</blockquote>
+<p>End of conversation.</p>
+
+<footer>
+  © 2014-07-19 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

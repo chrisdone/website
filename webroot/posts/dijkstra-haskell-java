@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Dijkstra on Haskell and Java</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Dijkstra on Haskell and Java</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>In 2001, Edsger W. Dijkstra wrote a letter to the Budget Council of The University of Texas. A <a href="https://www.cs.utexas.edu/users/EWD/OtherDocs/To%20the%20Budget%20Council%20concerning%20Haskell.pdf">PDF is available here</a>, I’ve typed it up so that everyone can read it. Sadly, <a href="http://www.cs.utexas.edu/undergraduate-program/courses/312-introduction-programming">the curriculum was changed to Java</a>. Relatedly, the algorithmic language Scheme was replaced by Python in MIT’s The Structure and Interpretation of Computer Programs version <a href="http://student.mit.edu/catalog/search.cgi?search=6.01">6.01</a>.</p>
+<h2 id="to-the-members-of-the-budget-council">To the members of the Budget Council</h2>
+<p>I write to you because of a rumor of efforts to replace in the introductory programming course of our undergraduate curriculum the functional programming language Haskell by the imperative language Java, and because I think that in this case the Budget Council has to take responsibility lest the decision be taken at the wrong level.</p>
+<p>You see, it is no minor matter. Colleagues from outside the state (still!) often wonder how I can survive in a place like Austin, Texas, automatically assuming that Texas’s solid conservatism guarantees equally solid mediocrity. My usual answer is something like “Don’t worry. The CS Department is quite an enlightened place, for instance for introductory programming we introduce our freshmen to Haskell”; they react first almost with disbelief, and then with envy —usually it turns out that their undergraduate curriculum has not recovered from the transition from Pascal to something like C++ or Java.</p>
+<p>A very practical reason for preferring functional programming in a freshman course is that most students already have a certain familiarity with imperative programming. Facing them with the novelty of functional programming immediately drives home the message that there is more to programming than they thought. And quickly they will observe that functional programming elegantly admits solutions that are very hard (or impossible) to formulate with the programming vehicle of their high school days.</p>
+<p>A fundamental reason for the preference is that functional programs are much more readily appreciated as mathematical objects than imperative ones, so that you can teach what rigorous reasoning about programs amounts to. The additional advantage of functional programming with “lazy evaluation” is that it provides an environment that discourages operational reasoning<sup><a href="#fn1" class="footnoteRef" id="fnref1">1</a></sup><sup><a href="#fn2" class="footnoteRef" id="fnref2">2</a></sup>.</p>
+<p>Finally, in the specific comparison of Haskell versus Java, Haskell, though not perfect, is of a quality that is several orders of magnitude higher than Java, which is a mess (and needed an extensive advertizing campaign and aggressive salesmanship for its commercial acceptance). It is bad enough that, on the whole, industry accepts designs of well-identified lousiness as “de facto” standards. Personally I think that the University should keep the healthier alternatives alive.</p>
+<p>It is not only the violin that shapes the violinist, we are all shaped by the tools we train ourselves to use, and in this respect programming languages have a devious influence: they shape our thinking habits. This circumstance makes the choice of first programming language so important. One would like to use the introductory course as a means of creating a culture that can serve as a basis for computing science curriculum, rather than be forced to start with a lot of unlearning (if that is possible at all: what has become our past, forever remains so). The choice implies a grave responsibility towards our undergraduate students, and that is why it can not be left to a random chairman of something but has to be done by the Budget Council. This is not something that can be left to the civil servants or the politicians; here statesmen are needed.</p>
+<p>Austin, 12 April 2001</p>
+<p>Edsger W. Dijkstra</p>
+<div class="footnotes">
+<hr></hr>
+<ol>
+<li id="fn1"><p><a href="https://www.cs.utexas.edu/~EWD/transcriptions/EWD10xx/EWD1036.html">On the cruelty of really teaching computing science</a><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p><a href="https://www.cs.utexas.edu/~EWD/transcriptions/EWD10xx/EWD1012.html">Real mathematicians don’t prove</a><a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+
+<footer>
+  © 2014-01-08 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

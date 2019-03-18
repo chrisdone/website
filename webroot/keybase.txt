@@ -1,0 +1,75 @@
+==================================================================
+https://keybase.io/chrisdone
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://chrisdone.com
+  * I am chrisdone (https://keybase.io/chrisdone) on keybase.
+  * I have a public key with fingerprint 9835 B294 BCC5 D487 5922  0A5B F106 28A4 B702 5382
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "01201cfeff28076febf9416c689210399ae5b02c7ff81b94f404d3404b8aded4ca380a",
+      "fingerprint": "9835b294bcc5d48759220a5bf10628a4b7025382",
+      "host": "keybase.io",
+      "key_id": "f10628a4b7025382",
+      "kid": "0101b86d664500dfe2bcefab37494575a86642901fd66d8737cb3419a35e80e56ed70a",
+      "uid": "1858721c134b9547bedd5162ac2e6319",
+      "username": "chrisdone"
+    },
+    "service": {
+      "hostname": "chrisdone.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 1
+  },
+  "ctime": 1526461707,
+  "expire_in": 157680000,
+  "prev": "9e2179f769d694956497acbbd6efe884e6c62f41055eadf3a14aa19c6c353ca6",
+  "seqno": 11,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.77
+Comment: https://keybase.io/crypto
+
+yMNuAnicbVJtUBVVGL6QgQIKg2QW+ME6NFhA+/0B4ZBBEzADNcQMkM16dvcs7FV2
+r3svhDhMDEzhD69fRROXtAzuhHyM6dzpkhUCgYpYA2hSRFACQWY0V0ekEGiXyT9N
+58c5c973eZ7zvO95e9Y+Ygny8wXENnr9c6r8+rtcJZaChXvBBxBBk/YjiQeQPXDl
+gHslaHfwexQJSURQDEcxUYayjLMoQ8tQkDkSo0Wa5XAMJTgOQEpAcZGRZRYTOFIm
+UVIijE1ggQQlUgQEiwIkDpEVtRDqNl1RHYYsxxKUgHOkIIqURLIMxeE4CihBxlAa
+ZwEpMChOESxuEIs0u8kwzAnADhMUzYgZF37F3v/gH/pGMYGlJZomKRSVZIgLIpSB
+QDAkR1IMBVgjg3MoJhsQiWUIRhQIEuMAQUEWhRQNJWbFd8mKHMZSLINjIkaQAkeR
+jAAlicJoHIg4pAmMM4F2qKugGBposUhX7JKmQqQiDjHCpYoIzc6apfwXkiBqxQbb
+pmsOTdT2Gqkih8NmTzSpjv02E/sGFPh/VXhBUSWjkwajFOp2RVORRMxAig7FlMUo
+nCZpjEGZOASW2RQd8oqJoBiaRY1lvgNLzf5DHGM4maE5ieZIjqJJjgGiIEg0lCHL
+ktD4YVwmMZSiIJBkAmAkABgn0iJBESKgEbOufapmaGOGT1BoaNqVQhU4SnSj6u6u
+XassfkGWgEf9zRGzBK0Jezh4ZFvo0vaM6nh9W97s2/oV91BS59zdCEL8fSjvTHDT
+EeidAcV80JblTday8+HTqv74VGV93I/WiqoRq9+4zzesdZRGa+019z/OC4/Z0VLN
+hJxV2sCSbyw/Sq59a47fxV/puPYgM7C6nq/xnzqZ9mVEn6dXlba3rs6YnG0/kb82
+Iqpo+KvBAY8vbXaNI/izo/fef705PpAtSAs6FH0Q/fy5DSnihfaLfPpEJnv9h96r
+Q6ejYVUtINJkvxHB3Xrpr+/avr3xtfP5iXpn5O2PFtu8sfM/iRMNT6V+4r/wXs9v
+3+x2L/evfqe3NTugLZQL3dT66RcKkuvOSc9XX0zOGd93ynVi53RkeOrl2NnDg87N
+wegpJ7n0zPjd3tFM1yuvDngamonJlpaNnUrZE4PzZZ1D3lFr1su30/HCY022wCfz
+kLCsSmdByOaZ7g+/zx9LSbnYkXC1KOPsusj2EaZmObNu8qC3LmaEik8vr2M3Xlpf
+FVVsn4vfeT7w3PXj/dO/PF2YfedWji93puE12J30a0XPNiK5VjjWl7rQVeuqxpvD
+re7Fnw9lXws7Uu+6kP/n6f52tfyDy0mjVv+ptPV/7OyYqE12jvFZnc9uPTl+62hj
+TOULu+fPLFbFhNz3WNzwsRt/DwzkNgfc2ZK5TnI1Pgj3DHvPeRJS+8pvNnW/NByG
+73jzZt+qw1uTN7z7D8MkyRI=
+=u7c2
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/chrisdone
+
+==================================================================

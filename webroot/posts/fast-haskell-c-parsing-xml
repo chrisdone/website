@@ -1,0 +1,556 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Fast Haskell: Competing with C at parsing XML</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Fast Haskell: Competing with C at parsing XML</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>In this post we’re going to look at parsing XML in Haskell, how it compares with an efficient C parser, and steps you can take in Haskell to build a fast library from the ground up. We’re going to get fairly detailed and get our hands dirty.</p>
+<!-- establish context -->
+
+<h2 id="a-new-kid-on-the-block">A new kid on the block</h2>
+<p>A few weeks ago Neil Mitchell posted <a href="https://neilmitchell.blogspot.co.uk/2016/12/new-xml-parser-hexml.html">a blog post</a> about a new XML library that he’d written. The parser is written in C, and the API is written in Haskell which uses the C library. He writes that it’s very fast:</p>
+<blockquote>
+<p>Hexml has been designed for speed. In the very limited benchmarks I’ve done it is typically just over 2x faster at parsing than Pugixml, where Pugixml is the gold standard for fast XML DOM parsers. In my uses it has turned XML parsing from a bottleneck to an irrelevance, so it works for me.</p>
+</blockquote>
+<p>In order to achieve that speed, he cheats by not performing operations he doesn’t care about:</p>
+<blockquote>
+<p>To gain that speed, Hexml cheats. Primarily it doesn’t do entity expansion, so <code>&amp;amp;</code> remains as <code>&amp;amp;</code> in the output. It also doesn’t handle <code>CData</code> sections (but that’s because I’m lazy) and comment locations are not remembered. It also doesn’t deal with most of the XML standard, ignoring the <code>DOCTYPE</code> stuff. [..] I only work on UTF8, which for the bits of UTF8 I care about, is the same as ASCII - I don’t need to do any character decoding.</p>
+</blockquote>
+<p>Cheating is fine when you describe in detail how you cheat. That’s just changing the rules of the game!</p>
+<!-- why this is of interest to me -->
+
+<h2 id="but-c-has-problems">But C has problems</h2>
+<p>This post caught my attention because it seemed to me a pity to use C. Whether you use Haskell, Python, or whatever, there are a few problems with dropping down to C from your high-level language:</p>
+<ul>
+<li>The program is more likely to segfault. I’ll take an exception over a segfault any day!</li>
+<li>The program opens itself up to possible exploitation due to lack of memory safety.</li>
+<li>If people want to extend your software, they have to use C, and not your high-level language.</li>
+<li>Portability (i.e. Windows) is a pain in the arse with C.</li>
+</ul>
+<p>Sure enough, it wasn’t long before <a href="https://www.reddit.com/r/haskell/comments/5i2mg1/new_xml_parser_hexml/db5os2h/">Austin Seipp posted a rundown of bugs in the C code</a>:</p>
+<blockquote>
+<p>At the moment, sorry to say – I wouldn’t use this library to parse any arbitrary XML, since it could be considered hostile, and get me owned. Using American Fuzzy Lop, just after a few minutes, I’ve already found around ~30 unique crashes.</p>
+</blockquote>
+<p>But C is really fast right? Like 100s of times faster than Haskell! It’s worth the risk.</p>
+<h2 id="but-but-c-is-fast">But-but C is fast!</h2>
+<p>Let’s benchmark it. We’re going to parse a 4KB, a 31KB and a 211KB XML file.</p>
+<p>Using the <a href="https://www.serpentine.com/criterion/">Criterion benchmarking package</a>, we can compare Hexml against the pretty old Haskell <code>xml</code> package…</p>
+<div class="figure">
+<img src="https://i.imgur.com/jhDkKEn.png" ><p class="caption"></p>
+</div>
+<pre><code>File   hexml    xml
+4KB    6.26 μs  1.94 ms (1940 μs)
+31KB   9.41 μs  13.6 ms (13600 μs)
+211KB  260  μs  25.9 ms (25900 μs)</code></pre>
+<p>Ouch! Those numbers don’t look good. The xml package is 100-300x times slower.</p>
+<p>Okay, I’m being unfair. The xml package isn’t known for speed. Its package description is simply <code>A simple XML library.</code> Let’s compare with the hexpat package. That one has this in its description:</p>
+<blockquote>
+<p>The design goals are speed, speed, speed, interface simplicity and modularity.</p>
+</blockquote>
+<p>So that’s probably more representing the best in Haskell XML parsers. It’s also based on the C expat library, which is supposed to be fast.</p>
+<div class="figure">
+<img src="https://i.imgur.com/PznIjRs.png" ><p class="caption"></p>
+</div>
+<pre><code>File   hexml     hexpat
+4KB    6.395 μs  320.3 μs
+31KB   9.474 μs  378.3 μs
+211KB  256.2 μs  25.68 ms</code></pre>
+<p>That’s a bit better. We’re now between 40-100x slower than Hexml. I’d prefer 10x slower, but it’s a more reasonable outcome. The hexpat package handles: keeping location information, reasonable parse errors, the complete XML standard. Hexml doesn’t do any of that.</p>
+<p>Let’s set us a challenge. Can we match or beat the Hexml package in plain old Haskell? This is an itch that got under my skin. I emailed Neil and he was fine with it:</p>
+<blockquote>
+<p>I don’t think it’s unfair or attacky to use Hexml as the baseline - I’d welcome it!</p>
+</blockquote>
+<p>I’ll walk you through my approach. I called my library <a href="https://github.com/chrisdone/xeno">Xeno</a> (for obvious reasons).</p>
+<h2 id="start-with-the-simplest-thing-possible">Start with the simplest thing possible</h2>
+<p>…and make sure it’s fast. Here’s the first thing I wrote, to see how fast it was to walk across a file compared with Hexml.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Xeno</span> (parse) <span class="kw">where</span>
+<span class="kw">import</span>           Data.ByteString (ByteString)
+<span class="kw">import</span> <span class="kw">qualified</span> Data.ByteString <span class="kw">as</span> S
+<span class="kw">import</span>           Data.Word
+
+<span class="co">-- | Parse an XML document.</span>
+<span class="ot">parse ::</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> ()
+parse str <span class="fu">=</span>
+  parseTags <span class="dv">0</span>
+  <span class="kw">where</span>
+    parseTags index <span class="fu">=</span>
+      <span class="kw">case</span> elemIndexFrom <span class="dv">60</span> str index <span class="kw">of</span>
+        <span class="dt">Nothing</span> <span class="ot">-&gt;</span>
+          ()
+        <span class="dt">Just</span> fromLt <span class="ot">-&gt;</span>
+          <span class="kw">case</span> elemIndexFrom <span class="dv">62</span> str fromLt <span class="kw">of</span>
+            <span class="dt">Nothing</span> <span class="ot">-&gt;</span> ()
+            <span class="dt">Just</span> fromGt <span class="ot">-&gt;</span> <span class="kw">do</span>
+              parseTags (fromGt <span class="fu">+</span> <span class="dv">1</span>)
+
+<span class="co">-- | Get index of an element starting from offset.</span>
+<span class="ot">elemIndexFrom ::</span> <span class="dt">Word8</span> <span class="ot">-&gt;</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Int</span>
+elemIndexFrom c str offset <span class="fu">=</span> fmap (<span class="fu">+</span> offset) (S.elemIndex c (S.drop offset str))
+<span class="ot">{-# INLINE elemIndexFrom #-}</span></code></pre>
+<p>The numbers 60 and 62 are <code>&lt;</code> and <code>&gt;</code>. In XML the only characters that matter are <code>&lt;</code> and <code>&gt;</code> (if you don’t care about entities). <code>&lt;</code> and <code>&gt;</code> can’t appear inside speech marks (attributes). They are the only important things to search for. Results:</p>
+<pre><code>File   hexml     xeno
+4KB    6.395 μs  2.630 μs
+42KB   37.55 μs  7.814 μs</code></pre>
+<p>So the baseline performance of walking across the file in jumps is quite fast! Why is it fast? Let’s look at that for a minute:</p>
+<ul>
+<li>The <code>ByteString</code> data type is a safe wrapper around a vector of bytes. It’s underneath equivalent to <code>char*</code> in C.</li>
+<li>With that in mind, <a href="https://hackage.haskell.org/package/bytestring-0.10.8.1/docs/Data-ByteString.html#v:elemIndex">the <code>S.elemIndex</code> function</a> is implemented using the standard C function <code>memchr(3)</code>. As we all know, <code>memchr</code> jumps across your file in large word boundaries or even using SIMD operations, meaning it’s bloody fast. But the <code>elemIndex</code> function itself is safe.</li>
+</ul>
+<p>So we’re effectively doing a <code>for(..) { s=memchr(s,..) }</code> loop over the file.</p>
+<h2 id="keep-an-eye-on-the-allocations">Keep an eye on the allocations</h2>
+<p>Using the <a href="https://github.com/fpco/weigh#readme">weigh package</a> for memory allocation tracking, we can also look at allocations of our code right now:</p>
+<pre><code>Case         Bytes  GCs  Check
+4kb parse    1,168    0  OK
+42kb parse   1,560    0  OK
+52kb parse   1,168    0  OK
+182kb parse  1,168    0  OK</code></pre>
+<p>We see that it’s constant. Okay, it varies by a few bytes, but it doesn’t increase linearly or anything. That’s good! One thing that stood out to me, is that didn’t we pay for allocation of the <code>Maybe</code> values. For a 1000x <code>&lt;</code> and <code>&gt;</code> characters, we should have 1000 allocations of <code>Just</code>/<code>Nothing</code>. Let’s go down that rabbit hole for a second.</p>
+<h2 id="looking-at-the-core">Looking at the Core</h2>
+<p>Well, if you compile the source like this</p>
+<pre><code>stack ghc -- -O2 -ddump-simpl Xeno.hs</code></pre>
+<p>You’ll see a dump of the real <a href="https://stackoverflow.com/questions/6121146/reading-ghc-core">Core</a> code that is generated after the Haskell code is desugared, and before it’s compiled to machine code. At this stage you can already see optimizations based on inlining, common-sub-expression elimination, deforestation, and other things.</p>
+<p>The output is rather large. Core is verbose, and fast code tends to be longer. <a href="https://gist.github.com/chrisdone/7aea4748c6fd0f1854d341b5676a4a97">Here is the output</a>, but you don’t have to understand it. Just note that there’s no mention of Maybe, Just or Nothing in there. It skips that altogether. See <a href="https://gist.github.com/chrisdone/7aea4748c6fd0f1854d341b5676a4a97#file-1core-hs-L38-L48">here specifically</a>. There is a call to <code>memchr</code>, then there is an <code>eqAddr</code> comparison with <code>NULL</code>, to see whether the <code>memchr</code> is done or not. But we’re <a href="https://gist.github.com/chrisdone/7aea4748c6fd0f1854d341b5676a4a97#file-1core-hs-L146">still doing safety checks</a> so that the resulting code is safe.</p>
+<h2 id="inlining-counts">Inlining counts</h2>
+<p>The curious reader might have noticed that <code>INLINE</code> line in my first code sample.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">{-# INLINE elemIndexFrom #-}</span></code></pre>
+<p>Without the INLINE, the whole function is twice as slow and has linear allocation.</p>
+<pre><code>Case        Bytes  GCs  Check
+4kb parse   1,472    0  OK
+42kb parse  1,160    0  OK
+52kb parse  1,160    0  OK
+
+benchmarking 4KB/xeno
+time                 2.512 μs   (2.477 μs .. 2.545 μs)
+benchmarking 211KB/xeno
+time                 129.9 μs   (128.7 μs .. 131.2 μs)
+benchmarking 31KB/xeno
+time                 1.930 μs   (1.909 μs .. 1.958 μs)</code></pre>
+<p>versus:</p>
+<pre><code>Case         Bytes  GCs  Check
+4kb parse   12,416    0  OK
+42kb parse  30,080    0  OK
+52kb parse  46,208    0  OK
+
+benchmarking 4KB/xeno
+time                 5.258 μs   (5.249 μs .. 5.266 μs)
+benchmarking 211KB/xeno
+time                 265.9 μs   (262.4 μs .. 271.4 μs)
+benchmarking 31KB/xeno
+time                 3.212 μs   (3.209 μs .. 3.218 μs)</code></pre>
+<p>Always pay attention to things like this. You don’t want to put INLINE on everything. Sometimes it adds slowdown, most times it makes no difference. So check with your benchmark suite.</p>
+<h2 id="loop-unrolling-manually">Loop unrolling manually</h2>
+<p>Some things need to be done manually. I added comment parsing to our little function:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">+</span>        <span class="dt">Just</span> fromLt <span class="ot">-&gt;</span> checkOpenComment (fromLt <span class="fu">+</span> <span class="dv">1</span>)
+<span class="fu">+</span>    checkOpenComment index <span class="fu">=</span>
+<span class="fu">+</span>      <span class="kw">if</span> S.isPrefixOf <span class="st">&quot;!--&quot;</span> (S.drop index str)
+<span class="fu">+</span>         <span class="kw">then</span> findCommentEnd (index <span class="fu">+</span> <span class="dv">3</span>)
+<span class="fu">+</span>         <span class="kw">else</span> findLt index
+<span class="fu">+</span>    findCommentEnd index <span class="fu">=</span>
+<span class="fu">+</span>      <span class="kw">case</span> elemIndexFrom commentChar str index <span class="kw">of</span>
+<span class="fu">+</span>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> () <span class="co">-- error!</span>
+<span class="fu">+</span>        <span class="dt">Just</span> fromDash <span class="ot">-&gt;</span>
+<span class="fu">+</span>          <span class="kw">if</span> S.isPrefixOf <span class="st">&quot;-&gt;&quot;</span> (S.drop (fromDash <span class="fu">+</span> <span class="dv">1</span>) str)
+<span class="fu">+</span>             <span class="kw">then</span> findGt (fromDash <span class="fu">+</span> <span class="dv">2</span>)
+<span class="fu">+</span>             <span class="kw">else</span> findCommentEnd (fromDash <span class="fu">+</span> <span class="dv">1</span>)</code></pre>
+<p>And it became 2x slower:</p>
+<pre><code>benchmarking 4KB/xeno
+time                 2.512 μs   (2.477 μs .. 2.545 μs)</code></pre>
+<p>to</p>
+<pre><code>benchmarking 4KB/xeno
+time                 4.296 μs   (4.240 μs .. 4.348 μs)</code></pre>
+<p>So I changed the <code>S.isPrefixOf</code> to be unrolled to <code>S.index</code> calls, like this:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">-</span>      <span class="kw">if</span> S.isPrefixOf <span class="st">&quot;!--&quot;</span> (S.drop index str)
+<span class="fu">-</span>         <span class="kw">then</span> findCommentEnd (index <span class="fu">+</span> <span class="dv">3</span>)
+<span class="fu">-</span>         <span class="kw">else</span> findLt index
+<span class="fu">+</span>      <span class="kw">if</span> S.index this <span class="dv">0</span> <span class="fu">==</span> bangChar <span class="fu">&amp;&amp;</span>
+<span class="fu">+</span>         S.index this <span class="dv">1</span> <span class="fu">==</span> commentChar <span class="fu">&amp;&amp;</span>
+<span class="fu">+</span>         S.index this <span class="dv">2</span> <span class="fu">==</span> commentChar
+<span class="fu">+</span>        <span class="kw">then</span> findCommentEnd (index <span class="fu">+</span> <span class="dv">3</span>)
+<span class="fu">+</span>        <span class="kw">else</span> findLt index
+<span class="fu">+</span>      <span class="kw">where</span>
+<span class="fu">+</span>        this <span class="fu">=</span> S.drop index str</code></pre>
+<p>And it dropped back down to our base speed again.</p>
+<h2 id="finding-tag-names">Finding tag names</h2>
+<p>I implemented finding tag names like this:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">+</span>    findTagName index0 <span class="fu">=</span>
+<span class="fu">+</span>      <span class="kw">case</span> S.findIndex (not <span class="fu">.</span> isTagName) (S.drop index str) <span class="kw">of</span>
+<span class="fu">+</span>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> error <span class="st">&quot;Couldn't find end of tag name.&quot;</span>
+<span class="fu">+</span>        <span class="dt">Just</span> ((<span class="fu">+</span> index) <span class="ot">-&gt;</span> spaceOrCloseTag) <span class="ot">-&gt;</span>
+<span class="fu">+</span>          <span class="kw">if</span> S.head this <span class="fu">==</span> closeTagChar
+<span class="fu">+</span>            <span class="kw">then</span> findGt spaceOrCloseTag
+<span class="fu">+</span>            <span class="kw">else</span> <span class="kw">if</span> S.head this <span class="fu">==</span> spaceChar
+<span class="fu">+</span>                   <span class="kw">then</span> findLt spaceOrCloseTag
+<span class="fu">+</span>                   <span class="kw">else</span> error
+<span class="fu">+</span>                          (<span class="st">&quot;Expecting space or closing '&gt;' after tag name, but got: &quot;</span> <span class="fu">++</span>
+<span class="fu">+</span>                           show this)
+<span class="fu">+</span>          <span class="kw">where</span> this <span class="fu">=</span> S.drop spaceOrCloseTag str
+<span class="fu">+</span>      <span class="kw">where</span>
+<span class="fu">+</span>        index <span class="fu">=</span>
+<span class="fu">+</span>          <span class="kw">if</span> S.head (S.drop index0 str) <span class="fu">==</span> questionChar <span class="fu">||</span>
+<span class="fu">+</span>             S.head (S.drop index0 str) <span class="fu">==</span> slashChar
+<span class="fu">+</span>            <span class="kw">then</span> index0 <span class="fu">+</span> <span class="dv">1</span>
+<span class="fu">+</span>            <span class="kw">else</span> index0</code></pre>
+<p>And immediately noticed a big slow down. From</p>
+<pre><code>Case        Bytes  GCs  Check
+4kb parse   1,160    0  OK
+42kb parse  1,472    0  OK
+52kb parse  1,160    0  OK
+Benchmark xeno-memory-bench: FINISH
+Benchmark xeno-speed-bench: RUNNING...
+benchmarking 4KB/hexml
+time                 6.149 μs   (6.125 μs .. 6.183 μs)
+benchmarking 4KB/xeno
+time                 2.691 μs   (2.665 μs .. 2.712 μs)</code></pre>
+<p>to</p>
+<pre><code>Case          Bytes  GCs  Check
+4kb parse    26,096    0  OK
+42kb parse   65,696    0  OK
+52kb parse  102,128    0  OK
+Benchmark xeno-memory-bench: FINISH
+Benchmark xeno-speed-bench: RUNNING...
+benchmarking 4KB/hexml
+time                 6.225 μs   (6.178 μs .. 6.269 μs)
+benchmarking 4KB/xeno
+time                 10.34 μs   (10.06 μs .. 10.59 μs)</code></pre>
+<p>The first thing that should jump out at you is the allocations. What’s going on there? I looked in the profiler output, by running <code>stack bench --profile</code> to see a profile output.</p>
+<pre><code>	Wed Jan 11 17:41 2017 Time and Allocation Profiling Report  (Final)
+
+	   xeno-speed-bench +RTS -N -p -RTS 4KB/xeno
+
+	total time  =        8.09 secs   (8085 ticks @ 1000 us, 1 processor)
+	total alloc = 6,075,628,752 bytes  (excludes profiling overheads)
+
+COST CENTRE            MODULE                             %time %alloc
+
+parse.findTagName      Xeno                                35.8   72.7
+getOverhead            Criterion.Monad                     13.6    0.0
+parse.checkOpenComment Xeno                                 9.9    0.0
+parse.findLT           Xeno                                 8.9    0.0
+parse                  Xeno                                 8.4    0.0
+&gt;&gt;=                    Data.Vector.Fusion.Util              4.6    7.7
+getGCStats             Criterion.Measurement                2.8    0.0
+basicUnsafeIndexM      Data.Vector.Primitive                1.6    2.0
+fmap                   Data.Vector.Fusion.Stream.Monadic    1.3    2.2
+rSquare.p              Statistics.Regression                1.3    1.5
+basicUnsafeWrite       Data.Vector.Primitive.Mutable        1.2    1.4
+innerProduct.\         Statistics.Matrix.Algorithms         1.0    1.6
+qr.\.\                 Statistics.Matrix.Algorithms         0.8    1.2
+basicUnsafeSlice       Data.Vector.Primitive.Mutable        0.5    1.1
+transpose              Statistics.Matrix                    0.5    1.3</code></pre>
+<p>Right at the top, we have <code>findTagName</code>, doing all the allocations. So I looked at the code, and found that the only possible thing that could be allocating, is <code>S.drop</code>. This function skips n elements at the start of a <code>ByteString</code>. It turns out that <code>S.head (S.drop index0 str)</code> was allocating an intermediate string, just to get the first character of that string. It wasn’t <em>copying</em> the whole string, but it was making a new pointer to it.</p>
+<p>So I realised that I could just replace <code>S.head (S.drop n s)</code> with <code>S.index s n</code>:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">-</span>          <span class="kw">if</span> S.head this <span class="fu">==</span> closeTagChar
+<span class="fu">+</span>          <span class="kw">if</span> S.index str spaceOrCloseTag <span class="fu">==</span> closeTagChar
+             <span class="kw">then</span> findLT spaceOrCloseTag
+<span class="fu">-</span>            <span class="kw">else</span> <span class="kw">if</span> S.head this <span class="fu">==</span> spaceChar
+<span class="fu">+</span>            <span class="kw">else</span> <span class="kw">if</span> S.index str spaceOrCloseTag <span class="fu">==</span> spaceChar
+                    <span class="kw">then</span> findGT spaceOrCloseTag
+                    <span class="kw">else</span> error <span class="st">&quot;Expecting space or closing '&gt;' after tag name.&quot;</span>
+<span class="fu">-</span>          <span class="kw">where</span> this <span class="fu">=</span> S.drop spaceOrCloseTag str
+       <span class="kw">where</span>
+         index <span class="fu">=</span>
+<span class="fu">-</span>          <span class="kw">if</span> S.head (S.drop index0 str) <span class="fu">==</span> questionChar <span class="fu">||</span>
+<span class="fu">-</span>             S.head (S.drop index0 str) <span class="fu">==</span> slashChar
+<span class="fu">+</span>          <span class="kw">if</span> S.index str index0 <span class="fu">==</span> questionChar <span class="fu">||</span>
+<span class="fu">+</span>             S.index str index0 <span class="fu">==</span> slashChar</code></pre>
+<p>And sure enough, the allocations disappeared:</p>
+<pre><code>Case        Bytes  GCs  Check
+4kb parse   1,160    0  OK
+42kb parse  1,160    0  OK
+52kb parse  1,472    0  OK
+Benchmark xeno-memory-bench: FINISH
+Benchmark xeno-speed-bench: RUNNING...
+benchmarking 4KB/hexml
+time                 6.190 μs   (6.159 μs .. 6.230 μs)
+benchmarking 4KB/xeno
+time                 4.215 μs   (4.175 μs .. 4.247 μs)</code></pre>
+<p>Down to 4.215 μs. That’s not as fast as our pre-name-parsing 2.691 μs. But we had to pay <em>something</em> for the extra operations per tag. We’re just not allocating anymore, which is great.</p>
+<h2 id="sax-for-free">SAX for free</h2>
+<p>Eventually I ended up with a function called <code>process</code> that parses XML and triggers events in a SAX style:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">process
+<span class="ot">  ::</span> <span class="dt">Monad</span> m
+  <span class="ot">=&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ Open tag.</span>
+  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ()) <span class="co">-- ^ Tag attribute.</span>
+  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ End open tag.</span>
+  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ Text.</span>
+  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ Close tag.</span>
+  <span class="ot">-&gt;</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ()</code></pre>
+<p>Thanks again to GHC’s optimizations, calling this function purely and doing nothing is exactly equal to the function before SAX-ization:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="co">-- | Parse the XML but return no result, process no events.</span>
+<span class="ot">validate ::</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+validate s <span class="fu">=</span>
+  <span class="kw">case</span> spork
+         (runIdentity
+            (process
+               (\_ <span class="ot">-&gt;</span> pure ())
+               (\_ _ <span class="ot">-&gt;</span> pure ())
+               (\_ <span class="ot">-&gt;</span> pure ())
+               (\_ <span class="ot">-&gt;</span> pure ())
+               (\_ <span class="ot">-&gt;</span> pure ())
+               s)) <span class="kw">of</span>
+    <span class="dt">Left</span> (_<span class="ot"> ::</span> <span class="dt">XenoException</span>) <span class="ot">-&gt;</span> <span class="dt">False</span>
+    <span class="dt">Right</span> _ <span class="ot">-&gt;</span> <span class="dt">True</span></code></pre>
+<pre><code>Case        Bytes  GCs  Check
+4kb parse   1,472    0  OK
+42kb parse  1,160    0  OK
+52kb parse  1,472    0  OK
+
+benchmarking 4KB/xeno
+time                 4.320 μs   (4.282 μs .. 4.361 μs)</code></pre>
+<p>This function performs at the same speed as <code>process</code> before it accepted any callback arguments. This means that the only overhead to SAX’ing will be the activities that the callback functions themselves do.</p>
+<h2 id="specialization-is-for-insects-and-as-it-happens-optimized-programs">Specialization is for insects (and, as it happens, optimized programs)</h2>
+<p>One point of interest is that adding a <code>SPECIALIZE</code> pragma for the <code>process</code> function increases speed by roughly 1 μs. Specialization means that for a given function which is generic (type-class polymorphic), which means it will accept a dictionary argument at runtime for the particular instance, instead we will generate a separate piece of code that is specialized on that exact instance. Below is the <code>Identity</code> monad’s (i.e. just pure, does nothing) specialized type for <code>process</code>.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="co">{-# SPECIALISE</span>
+<span class="co">    process</span>
+<span class="co">      :: (ByteString -&gt; Identity ())</span>
+<span class="co">      -&gt; (ByteString -&gt; ByteString -&gt; Identity ())</span>
+<span class="co">      -&gt; (ByteString -&gt; Identity ())</span>
+<span class="co">      -&gt; (ByteString -&gt; Identity ())</span>
+<span class="co">      -&gt; (ByteString -&gt; Identity ())</span>
+<span class="co">      -&gt; ByteString</span>
+<span class="co">      -&gt; Identity ()</span>
+<span class="co"> #-}</span></code></pre>
+<p>Before</p>
+<pre><code>benchmarking 4KB/xeno-sax
+time                 5.877 μs   (5.837 μs .. 5.926 μs)
+benchmarking 211KB/xeno-sax
+time                 285.8 μs   (284.7 μs .. 287.4 μs)</code></pre>
+<p>after</p>
+<pre><code>benchmarking 4KB/xeno-sax
+time                 5.046 μs   (5.036 μs .. 5.056 μs)
+benchmarking 211KB/xeno-sax
+time                 240.6 μs   (240.0 μs .. 241.5 μs)</code></pre>
+<p>In the 4KB case it’s only 800 ns, but as we say in Britain, take care of the pennies and the pounds will look after themselves. The 240-&gt;285 difference isn’t big in practical terms, but when we’re playing the speed game, we pay attention to things like that.</p>
+<h2 id="where-we-stand-xeno-vs-hexml">Where we stand: Xeno vs Hexml</h2>
+<p>Currently the SAX interface in Zeno outperforms Hexml in space and time. Hurrah! We’re as fast as C!</p>
+<pre><code>File   hexml-dom  xeno-sax
+4KB    6.134 μs   5.147 μs
+31KB   9.299 μs   2.879 μs
+211KB  257.3 μs   241.0 μs</code></pre>
+<p>It’s also worth noting that Haskell does this all safely. All the functions I’m using are standard ByteString functions which do bounds checking and throw an exception if so. We don’t accidentally access memory that we shouldn’t, and we don’t segfault. The server keeps running.</p>
+<p>If you’re interested, if we switch to unsafe functions (<code>unsafeTake</code>, <code>unsafeIndex</code> from the <code>Data.ByteString.Unsafe</code> module), we get a notable speed increase:</p>
+<pre><code>File   hexml-dom  xeno-sax
+4KB    6.134 μs   4.344 μs
+31KB   9.299 μs   2.570 μs
+211KB  257.3 μs   206.9 μs</code></pre>
+<p>We don’t need to show off, though. We’ve already made our point. We’re Haskellers, we like safety. I’ll keep my safe functions.</p>
+<h2 id="but-hexml-does-more">But Hexml does more!</h2>
+<p>I’d be remiss if I didn’t address the fact that Hexml does more useful things than we’ve done here. Hexml allocates a DOM for random access. Oh no! Allocation: Haskell’s worse enemy!</p>
+<p>We’ve seen that Haskell allocates a lot normally. Actually, have we looked at that properly?</p>
+<pre><code>Case                   Bytes  GCs  Check
+4kb/hexpat-sax       444,176    0  OK
+31kb/hexpat-sax      492,576    0  OK
+211kb/hexpat-sax  21,112,392   40  OK
+4kb/hexpat-dom       519,128    0  OK
+31kb/hexpat-dom      575,232    0  OK
+211kb/hexpat-dom  23,182,560   44  OK</code></pre>
+<p>Alright.</p>
+<h2 id="implementing-a-dom-parser-for-xeno">Implementing a DOM parser for Xeno</h2>
+<p>All isn’t lost. Hexml isn’t a dumb parser that’s fast because it’s in C, it’s also a decent algorithm. Rather than allocating a tree, it allocates a big flat vector of nodes and attributes, which contain offsets into the original string. We can do that in Haskell too!</p>
+<p>Here’s my design of a data structure contained in a vector. We want to store just integers in the vector. Integers that point to offsets in the original string. Here’s what I came up with.</p>
+<p>We have three kinds of payloads. Elements, text and attributes:</p>
+<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dv">1</span>.  <span class="dv">00</span> <span class="co"># Type tag: element</span>
+<span class="dv">2</span>.  <span class="dv">00</span> <span class="co"># Parent index (within this array)</span>
+<span class="dv">3</span>.  <span class="bn">01</span> <span class="co"># Start of the tag name in the original string</span>
+<span class="dv">4</span>.  <span class="bn">01</span> <span class="co"># Length of the tag name</span>
+<span class="dv">5</span>.  <span class="bn">05</span> <span class="co"># End index of the tag (within this array)</span></code></pre>
+<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dv">1</span>.  <span class="bn">02</span> <span class="co"># Type tag: attribute</span>
+<span class="dv">2</span>.  <span class="bn">01</span> <span class="co"># Start of the key</span>
+<span class="dv">3</span>.  <span class="bn">05</span> <span class="co"># Length of the key</span>
+<span class="dv">4</span>.  <span class="bn">06</span> <span class="co"># Start of the value</span>
+<span class="dv">5</span>.  <span class="bn">03</span> <span class="co"># Length of the value</span></code></pre>
+<pre class="sourceCode ruby"><code class="sourceCode ruby"><span class="dv">1</span>.  <span class="bn">01</span> <span class="co"># Type tag: text</span>
+<span class="dv">2</span>.  <span class="bn">01</span> <span class="co"># Start of the text</span>
+<span class="dv">3</span>.  <span class="dv">10</span> <span class="co"># Length of the text</span></code></pre>
+<p>That’s all the detail I’m going to go into. You can read <a href="https://github.com/chrisdone/xeno">the code</a> if you want to know more. It’s not a highly optimized format. Once we have such a vector, it’s possible to define a DOM API on top of it which can let you navigate the tree as usual, which we’ll see later.</p>
+<p>We’re going to use our SAX parser–the <code>process</code> function, and we’re going to implement a function that writes to a big array. This is a very imperative algorithm. Haskellers don’t like imperative algorithms much, but Haskell’s fine with them.</p>
+<p>The function ends up looking something like this:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">runST
+  (<span class="kw">do</span> nil <span class="ot">&lt;-</span> UMV.new <span class="dv">1000</span>
+      vecRef <span class="ot">&lt;-</span> newSTRef nil
+      sizeRef <span class="ot">&lt;-</span> fmap asURef (newRef <span class="dv">0</span>)
+      parentRef <span class="ot">&lt;-</span> fmap asURef (newRef <span class="dv">0</span>)
+      process
+        (\(<span class="dt">PS</span> _ name_start name_len) <span class="ot">-&gt;</span>
+            <span class="fu">&lt;</span>write the open tag elements<span class="fu">&gt;</span>)
+        (\(<span class="dt">PS</span> _ key_start key_len) (<span class="dt">PS</span> _ value_start value_len) <span class="ot">-&gt;</span>
+            <span class="fu">&lt;</span>write an attribute into the vector<span class="fu">&gt;</span>)
+        (\_ <span class="ot">-&gt;</span> <span class="fu">&lt;</span>ignore<span class="fu">&gt;</span>)
+        (\(<span class="dt">PS</span> _ text_start text_len) <span class="ot">-&gt;</span>
+            <span class="fu">&lt;</span>write a text entry into the vector<span class="fu">&gt;</span>)
+        (\_ <span class="ot">-&gt;</span>
+            <span class="fu">&lt;</span>set the end position <span class="kw">of</span> the parent<span class="fu">&gt;</span>
+            <span class="fu">&lt;</span>set the current element to the parent<span class="fu">&gt;</span>)
+        str
+      wet <span class="ot">&lt;-</span> readSTRef vecRef
+      arr <span class="ot">&lt;-</span> UV.unsafeFreeze wet
+      size <span class="ot">&lt;-</span> readRef sizeRef
+      return (UV.unsafeSlice <span class="dv">0</span> size arr))</code></pre>
+<p>The function runs in the <code>ST</code> monad which lets us locally read and write to mutable variables and vectors, while staying pure on the outside.</p>
+<p>I allocate an array of 1000 64-bit Ints (on 64-bit arch), I keep a variable of the current size, and the current parent (if any). The current parent variable lets us, upon seeing a &lt;/close&gt; tag, assign the position in the vector of where the parent is closed.</p>
+<p>Whenever we get an event and the array is too small, I grow the array by doubling its size. This strategy is copied from the Hexml package.</p>
+<p>Finally, when we’re done, we get the mutable vector, “freeze” it (this means making an immutable version of it), and then return that copy. We use <code>unsafeFreeze</code> to re-use the array without copying, which includes a promise that we don’t use the mutable vector afterwards, which we don’t.</p>
+<h2 id="the-dom-speed">The DOM speed</h2>
+<p>Let’s take a look at the speeds:</p>
+<pre><code>File   hexml-dom  xeno-sax  xeno-dom
+4KB    6.123 μs   5.038 μs  10.35 μs
+31KB   9.417 μs   2.875 μs  5.714 μs
+211KB  256.3 μs   240.4 μs  514.2 μs</code></pre>
+<p>Not bad! The DOM parser is only &lt;2x slower than Hexml (except in the 31KB where it’s faster. <em>shrug</em>). Here is where I stopped optimizing and decided it was good enough. But we can review some of the decisions made along the way.</p>
+<p>In the code we’re using unboxed mutable references for the current size and parent, the mutable references are provided by the mutable-containers package. See these two lines here:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">      sizeRef <span class="ot">&lt;-</span> fmap asURef (newRef <span class="dv">0</span>)
+      parentRef <span class="ot">&lt;-</span> fmap asURef (newRef <span class="dv">0</span>)</code></pre>
+<p>Originally, I had tried <code>STRef</code>’s, which are boxed. Boxed just means it’s a pointer to an integer instead of an actual integer. An unboxed Int is a proper machine register. Using an <code>STRef</code>, we get worse speeds:</p>
+<pre><code>File   xeno-dom
+4KB    12.18 μs
+31KB   6.412 μs
+211KB  631.1 μs</code></pre>
+<p>Which is a noticeable speed loss.</p>
+<p>Another thing to take into consideration is the array type. I’m using the unboxed mutable vectors from the <code>vector</code> package. When using atomic types like Int, it can be a leg-up to use unboxed vectors. If I use the regular boxed vectors from <code>Data.Vector</code>, the speed regresses to:</p>
+<pre><code>File   xeno-dom
+4KB    11.95 μs (from 10.35 μs)
+31KB   6.430 μs (from 5.714 μs)
+211KB  1.402 ms (from 514.2 μs)</code></pre>
+<p>Aside from taking a bit more time to do writes, it also allocates 1.5x more stuff:</p>
+<pre><code>Case                 Bytes  GCs  Check
+4kb/xeno/dom        11,240    0  OK
+31kb/xeno/dom       10,232    0  OK
+211kb/xeno/dom   1,082,696    0  OK</code></pre>
+<p>becomes</p>
+<pre><code>Case                 Bytes  GCs  Check
+4kb/xeno/dom        22,816    0  OK
+31kb/xeno/dom       14,968    0  OK
+211kb/xeno/dom   1,638,392    1  OK</code></pre>
+<p>See that GC there? We shouldn’t need it.</p>
+<p>Finally, one more remark for the DOM parser. If we forsake safety and use the <code>unsafeWrite</code> and <code>unsafeRead</code> methods from the vector package, we do see a small increase:</p>
+<pre><code>File   xeno-dom
+4KB    9.827 μs
+31KB   5.545 μs
+211KB  490.1 μs</code></pre>
+<p>But it’s nothing to write home about. I’ll prefer memory safety over a few microseconds this time.</p>
+<h2 id="the-dom-api">The DOM API</h2>
+<p>I wrote some functions to access our vector and provide a DOM-like API:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;</span> <span class="kw">let</span> <span class="dt">Right</span> node <span class="fu">=</span> parse <span class="st">&quot;&lt;foo k='123'&gt;&lt;p&gt;hi&lt;/p&gt;ok&lt;/foo&gt;&quot;</span>
+<span class="fu">&gt;</span> node
+(<span class="dt">Node</span> <span class="st">&quot;foo&quot;</span> [(<span class="st">&quot;k&quot;</span>,<span class="st">&quot;123&quot;</span>)] [<span class="dt">Element</span> (<span class="dt">Node</span> <span class="st">&quot;p&quot;</span> [] [<span class="dt">Text</span> <span class="st">&quot;hi&quot;</span>]),<span class="dt">Text</span> <span class="st">&quot;ok&quot;</span>])
+<span class="fu">&gt;</span> name node
+<span class="st">&quot;foo&quot;</span>
+<span class="fu">&gt;</span> children node
+[(<span class="dt">Node</span> <span class="st">&quot;p&quot;</span> [] [<span class="dt">Text</span> <span class="st">&quot;hi&quot;</span>])]
+<span class="fu">&gt;</span> attributes node
+[(<span class="st">&quot;k&quot;</span>,<span class="st">&quot;123&quot;</span>)]
+<span class="fu">&gt;</span> contents node
+[<span class="dt">Element</span> (<span class="dt">Node</span> <span class="st">&quot;p&quot;</span> [] [<span class="dt">Text</span> <span class="st">&quot;hi&quot;</span>]),<span class="dt">Text</span> <span class="st">&quot;ok&quot;</span>]</code></pre>
+<p>So that works.</p>
+<h2 id="wrapping-up">Wrapping-up</h2>
+<p>The final results are in:</p>
+<div class="figure">
+<img src="https://i.imgur.com/XgdZoQ9.png" ><p class="caption"></p>
+</div>
+<p>And just to check that a 1MB file doesn’t give wildly different results:</p>
+<pre><code>benchmarking 1MB/hexml-dom
+time                 1.225 ms   (1.221 ms .. 1.229 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 1.239 ms   (1.234 ms .. 1.249 ms)
+std dev              25.23 μs   (12.28 μs .. 40.84 μs)
+
+benchmarking 1MB/xeno-sax
+time                 1.206 ms   (1.203 ms .. 1.211 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 1.213 ms   (1.210 ms .. 1.218 ms)
+std dev              14.58 μs   (10.18 μs .. 21.34 μs)
+
+benchmarking 1MB/xeno-dom
+time                 2.768 ms   (2.756 ms .. 2.779 ms)
+                     1.000 R²   (1.000 R² .. 1.000 R²)
+mean                 2.801 ms   (2.791 ms .. 2.816 ms)
+std dev              41.10 μs   (30.14 μs .. 62.60 μs)</code></pre>
+<p>Tada! We matched Hexml, in pure Haskell, using safe accessor functions. We provided a SAX API which is very fast, and a simple demonstration DOM parser with a familiar API which is also quite fast. We use reasonably little memory in doing so.</p>
+<p><strong>UPDATE</strong>: Some people asked for comparisons with libxml2 (assuming that it’s somehow faster). <a href="https://chrisdone.com/libxml2.html">Here is a Criterion report</a>.</p>
+<p>This package is an experiment for educational purposes, to show what Haskell can do and what it can’t, for a very specific domain problem. If you would like to use this package, consider adopting it and giving it a good home. I’m not looking for more packages to maintain.</p>
+
+<footer>
+  © 2017-01-11 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

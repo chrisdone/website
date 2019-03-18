@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>A philosophical difference between Haskell and Lisp</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>A philosophical difference between Haskell and Lisp</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>One difference in philosophy of Lisp (e.g. Common Lisp, Emacs Lisp) and Haskell is that the latter makes liberal use of many tiny functions that do one single task. This is known as <em>composability</em>, or the UNIX philosophy. In Lisp a procedure tends to accept many options which configure its behaviour. This is known as <em>monolithism</em>, or to make procedures like a kitchen-sink, or a Swiss-army knife.</p>
+<p>Which one is better can be discussed in another post. I just want to make the simple case that there is indeed a difference in philosophy and practice. Having written my fair share of non-trivial Emacs Lisp (and a small share of Common Lisp; I’ve maintained Common Lisp systems) and my fair share of non-trivial Haskell I think I’m in a position to judge.</p>
+<p>Full disclosure: We’ll just look at some trivial examples anyone can understand, with the (unproven but asserted) implication that these examples are representative of the general way software is written in these languages.</p>
+<p>An example which should be readily familiar to any programmer of any background is working on lists. For example, CL has the <code>remove-if-not</code> procedure. Its documentation signature is like this:</p>
+<pre class="lisp"><code>(REMOVE-IF-NOT predicate seq :key :count :start :end :from-end)</code></pre>
+<p>It packs a number of ideas into one procedure.</p>
+<p>By comparison, Haskell has the <code>filter</code> function:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">filter<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</code></pre>
+<p>Given a problem statement “take all elements from the list–except the first three–that satisfy predicate <code>p</code>, and take only the first five of those”, in Common Lisp you’d express it quite concisely as this:</p>
+<pre class="lisp"><code>(remove-if-not #'p xs :count 5 :start 3)</code></pre>
+<p>The same in Haskell would be expressed as this:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">take <span class="dv">5</span> <span class="fu">.</span> filter p <span class="fu">.</span> drop <span class="dv">3</span></code></pre>
+<p>The difference which should be obvious whether you know Haskell or Lisp is that in the Lisp code the function does a few behaviours and accepts arguments to configure them. In the Haskell code, we use three different functions which do one task:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">take <span class="ot">∷</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]
+filter <span class="ot">∷</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]
+drop <span class="ot">∷</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</code></pre>
+<p>The <code>.</code> operator composes functions together, just like pipes in UNIX. We might express this in UNIX something like:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">bash-3.2</span>$ cat <span class="kw">|</span> <span class="kw">tail</span> -n <span class="st">'+4'</span> <span class="kw">|</span> <span class="kw">grep</span> -v <span class="st">'^p'</span> <span class="kw">|</span> <span class="kw">head</span> -n 5
+<span class="kw">1</span>
+<span class="kw">2</span>
+<span class="kw">3</span>
+<span class="kw">4</span>
+<span class="kw">5</span>
+<span class="kw">6</span>
+<span class="kw">7</span>
+<span class="kw">8</span>
+<span class="kw">9</span>
+<span class="kw">10</span></code></pre>
+<p>Press Ctrl-d here we get:</p>
+<pre class="sourceCode bash"><code class="sourceCode bash"><span class="kw">4</span>
+<span class="kw">5</span>
+<span class="kw">6</span>
+<span class="kw">7</span>
+<span class="kw">8</span></code></pre>
+<p>Like pipes in UNIX, the functions are clever enough to be performant when composed together–we don’t traverse the whole list and generate a new list each time, each item is generated on demand. In fact, due to <a href="https://chrisdone.com/posts/stream-composability">stream fusion</a>, the code will be compiled into one fast loop.</p>
+<p>If we want things that don’t satisfy the predicate, we just compose again with <code>not</code>:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">take <span class="dv">5</span> <span class="fu">.</span> filter (not <span class="fu">.</span> p) <span class="fu">.</span> drop <span class="dv">3</span></code></pre>
+<p>In Common Lisp composition is a bit wordier because it’s rarely if ever used, so instead there is another function for that:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">(remove<span class="fu">-</span><span class="kw">if</span> <span class="fu">#</span><span class="ch">'p xs :count 5 :start 3)</span></code></pre>
+<p>(Probably a more Lispy approach would’ve been to have a <code>:not</code> keyword argument to the <code>remove-if</code> function.)</p>
+<p>The most pathological example of such a kitchen sink in Lisp is the well known LOOP macro.</p>
+<p>Problem: get all elements less than 5, then just the even ones of that set.</p>
+<p>With the LOOP macro this can be expressed quite readily:</p>
+<pre class="lisp"><code>&gt; (loop for i in '(1 2 3 4 5 6 7 8 9 10)
+        when (evenp i)
+        collect i
+        when (&gt;= i 5) do (return))
+(2 4)</code></pre>
+<p>In Haskell this is expressed with two separate functions:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; (filter even <span class="fu">.</span> takeWhile (<span class="fu">&lt;</span> <span class="dv">5</span>)) [<span class="dv">1</span><span class="fu">..</span><span class="dv">10</span>]
+[<span class="dv">2</span>,<span class="dv">4</span>]</code></pre>
+<p>In Haskell the same applies to vector libraries and text libraries and bytes libraries, which can be fused. Fusion is chiefly an advantage of purity – you can fuse n loops together into one loop if you know that they don’t do side-effects. Such an advantage can also be applied to other pure languages like Idris or PureScript or Elm.</p>
+
+<footer>
+  © 2015-12-19 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

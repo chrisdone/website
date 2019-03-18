@@ -1,0 +1,145 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>One step forward, two steps back</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>One step forward, two steps back</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>The issue is that programming languages don’t go forward, they move sideways or diagonally, or sometimes backwards.</p>
+<p>A new car comes out, and it has some cool feature: Hey, it has road surface detection and changes the steering accordingly! But it should also come with all the old stuff that you come to expect. Comfy seats, seatbelts, airconditioner, heated windows, wipers, proximity detection, power steering, cruise control, etc.</p>
+<p>With new programming languages, what you tend to get is a chassis, engine and steering wheel, and the road surface detection.</p>
+<p>Here is a list of cool ideas that have been discovered and implemented in programming languages, but which do not in their whole make up any existing language:</p>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Design_by_contract">Contracts</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Pattern_matching">Pattern matching</a></li>
+<li><a href="https://c2.com/cgi/wiki?SyntacticAbstraction">Syntactic abstraction</a><sup><a href="#fn1" class="footnoteRef" id="fnref1">1</a></sup></li>
+<li><a href="https://en.wikipedia.org/wiki/Type_system">Static types</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Type_inference">Type inference</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Dependent_type">Dependent types</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Standard_ML#Module_system">Parametrized modules</a></li>
+<li><a href="https://www.haskell.org/ghc/docs/7.0.4/html/users_guide/type-class-extensions.html#overloaded-strings">Overloaded literals</a><sup><a href="#fn2" class="footnoteRef" id="fnref2">2</a></sup></li>
+<li><a href="https://en.wikipedia.org/wiki/Immutable_object">Fundamental immutability</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Purely_functional">Purity</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Interpreter_%28computing%29">Interpreter</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Closure_%28computer_programming%29">Closures</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Multiple_dispatch">Multiple dispatch</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Inheritance_%28object-oriented_programming%29">Inheritance</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Garbage_collection_%28computer_science%29">Garbage collection</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Debugger">A debugger</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Concurrency_%28computer_science%29">Well-supported concurrency</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Parallel_computing">Parallelism</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Scope_%28computer_science%29#Dynamic_scoping">Dynamic scope</a><sup><a href="#fn3" class="footnoteRef" id="fnref3">3</a></sup></li>
+<li><a href="https://en.wikipedia.org/wiki/Hot_swapping">Dynamic code update</a><sup><a href="#fn4" class="footnoteRef" id="fnref4">4</a></sup></li>
+<li><a href="https://en.wikipedia.org/wiki/Smalltalk#Image-based_persistence">Image-based persistent</a></li>
+<li>Infinite-sized integers and rationals</li>
+<li><a href="https://en.wikipedia.org/wiki/Exception_handling">Exceptions</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Nullable_type">Explicit null</a></li>
+<li><a href="https://www.haskell.org/tutorial/classes.html">Generic equality</a></li>
+<li><a href="https://www.gigamonkeys.com/book/beyond-exception-handling-conditions-and-restarts.html">Restarts</a></li>
+<li>A comprehensive platform / library set (e.g. Java, .NET)</li>
+<li><a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">REPL/interaction mode</a></li>
+<li><a href="https://common-lisp.net/project/slime/">Compiler—IDE integration</a></li>
+<li>Interoperability (with C, Java, JavaScript, CLR)</li>
+<li><a href="https://en.wikipedia.org/wiki/Domain-specific_language">Support domain-specific languages</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Proof_assistant">Proofs</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Erlang_%28programming_language%29#Concurrency_and_distribution_orientation">Distribution</a></li>
+<li>A compiler that compiles to machine code, either via static compilation, JIT compilation, or third-party engines</li>
+<li><a href="https://en.wikipedia.org/wiki/Tacit_programming">Tacit programming</a></li>
+<li><a href="https://chrisdone.com/posts/value-polymorphism">Value polymorphism</a></li>
+</ul>
+<p>The moral is, perhaps if you’re making a new language, try building upon the past, rather than ignoring it and starting from scratch?</p>
+<p>As a follow-up post I might make a matrix of the top, say, 30, general purpose programming languages and all the features that they tick off.</p>
+<div class="footnotes">
+<hr></hr>
+<ol>
+<li id="fn1"><p>Also known as quotation, quasiquotes, macros, templating, mixins, etc.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>So, numbers, strings, vectors, patterns, etc.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>Preferablly static. Also known as implicit parameters, contexts, etc.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Also known as “hot-swapping”, “live update”, “plugins”, etc.<a href="#fnref4">↩</a></p></li>
+</ol>
+</div>
+
+<footer>
+  © 2014-03-30 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Making GHCi scale better and faster</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Making GHCi scale better and faster</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>A common complaint with GHCi is that it doesn’t scale well when the size of the project gets bigger. Once you hit 20, 30, 50, or 150 modules, it stops being fun anymore and you start wishing you didn’t have to wait for it to load.</p>
+<p>I recommend enabling <code>-fobject-code</code>. You can enable this by running</p>
+<pre><code>$ ghci -fobject-code</code></pre>
+<p>Or by setting it in the REPL:</p>
+<pre><code>:set -fobject-code</code></pre>
+<p>If you want it on all the time, you can put the above line in a <code>.ghci</code> file either in your home directory or in the directory of your project.</p>
+<p>This makes GHCi compile everything once and then use incremental recompilation thereafter. You’ll find that you can load 100-module projects and work with them just fine in this way.</p>
+<p>After that, you may notice that loading some modules gives less type information and general metadata than before. For that, re-enable byte-compilation temporarily with <code>-fbyte-code</code> (<code>:set -fbyte-code</code>) and <code>:load</code> that module again, you now have fast recompilation with complete information, too.</p>
+<p>Another tip is to use <code>-fno-code</code> to have <em>really</em> fast compilation. This also works in combination with <code>-fobject-code</code>. But I’d recommend using this only for type checking, not for getting useful warnings (like pattern match inexhaustiveness). So I would combine it with <code>-fobject-code</code> in the same way as above with <code>-fbyte-code</code>, and then once you’re done hacking, re-enable <code>-fobject-code</code> and rebuild everything.</p>
+
+<footer>
+  © 2013-11-20 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

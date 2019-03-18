@@ -1,0 +1,182 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Emacs, Notmuch and Offlineimap</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Emacs, Notmuch and Offlineimap</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>I kind of hate writing in anything other than Emacs. Especially email. Writing email in Emacs with <code>message-mode</code> is lovely. I get all my editing facilities and any key bindings that I want. More than that, generally managing my mail in Emacs rather than relying on what’s available in the GMail UI is desirable.</p>
+<p>So I moved my email reading to Emacs. Here’s how I did it.</p>
+<h1 id="offlineimap">Offlineimap</h1>
+<p>First, I installed offlineimap. Second, I made a <code>~/.offlineimaprc</code> configuration file:</p>
+<pre class="sourceCode python"><code class="sourceCode python">[general]
+accounts = ChrisGmail
+
+[Account ChrisGmail]
+localrepository = Local
+remoterepository = ChrisDoneGmail
+
+[Repository Local]
+<span class="dt">type</span> = Maildir
+localfolders = ~/Mail
+
+[Repository ChrisDoneGmail]
+<span class="dt">type</span> = Gmail
+maxconnections=<span class="dv">1</span>
+remoteuser = chrisdone@gmail.com
+realdelete=no
+folderfilter =
+  <span class="kw">lambda</span> foldername:
+    foldername in [<span class="st">'[Google Mail]/All Mail'</span>,
+                   <span class="co">'[Google Mail]/Sent Mail'</span>]
+nametrans =
+  <span class="kw">lambda</span> foldername:
+    re.sub(<span class="st">'^\[Google Mail\]/All Mail$'</span>, <span class="st">'all'</span>,
+       re.sub(<span class="st">'^\[Google Mail\]/Sent Mail$'</span>, <span class="st">'sent'</span>,
+         foldername))
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+remotepass = &lt;my password here&gt;</code></pre>
+<p><em>Note: if you’re copy-pasting this file, you will need to put the <code>folderfilter</code> and <code>nametrans</code> on one line. Python doesn’t like multi-line lambdas.</em></p>
+<p>I ran</p>
+<pre><code>$ offlineimap</code></pre>
+<p>I let that run for 10 hours to download all 19K messages from my 8~ year old GMail account.</p>
+<h1 id="notmuch">Notmuch</h1>
+<p>To index, tag and search that mail, I installed Notmuch. I configured it using <code>notmuch config</code> and followed the guide.</p>
+<p>My current configuration (<code>~/.notmuch-config</code>) contains:</p>
+<pre><code>[database]
+path=/home/chris/Mail
+
+[new]
+tags=unread;inbox
+ignore=
+
+[search]
+exclude_tags=deleted;spam</code></pre>
+<p>I ran</p>
+<pre><code>$ notmuch new</code></pre>
+<p>to import all new mail from my database, which was the 19K messages. I think that took about 5 minutes.</p>
+<h1 id="post-sync-hook">Post-sync hook</h1>
+<p>Rather than manually running <code>offlineimap</code> and <code>notmuch new</code> all the time, instead you can put</p>
+<pre><code>autorefresh = 1</code></pre>
+<p>under your <code>[Account]</code> setting in <code>.offlineimaprc</code>. That will make Offlineimap run in one continuous process. I run it in screen for now, but I will probably add it as a system script when I’m feeling masochistic.</p>
+<p>Another thing you can add to the <code>[Account]</code> section is a <code>postsynchook</code>:</p>
+<pre><code>postsynchook = /usr/bin/offlineimap-postsync</code></pre>
+<p>That path points to my post-sync script. It contains:</p>
+<pre><code>notmuch new</code></pre>
+<p>And then a bunch of tagging commands.</p>
+<h1 id="tagging">Tagging</h1>
+<p>In GMail I would organize everything with filters and tags. I like this approach, so I took the same with Notmuch. First, mailing lists skip the inbox and are tagged. For example:</p>
+<pre><code>notmuch tag -inbox +ghc-devs to:ghc-devs@haskell.org tag:inbox
+notmuch tag -inbox +ghc-users to:glasgow-haskell-users@haskell.org tag:inbox
+notmuch tag -inbox +haskell-cafe to:haskell-cafe@haskell.org tag:inbox
+notmuch tag -inbox +haskell-beginners to:beginners@haskell.org tag:inbox</code></pre>
+<p>In other words, “remove the <code>inbox</code> tag, and add the <code>ghc-devs</code> tag for all messages addressed to <code>ghc-devs@haskell.org</code> in my inbox.”</p>
+<p>When I receive an electric bill I tag it and flag it:</p>
+<pre><code>notmuch tag +flagged +bill from:serviziweb@trenta.it tag:inbox</code></pre>
+<p>I also have some inbox skipping filters from lists or people I don’t have interest in seeing in my inbox.</p>
+<p>Then I have 69 deletion filters on various mailing lists I never signed up for and am unable to unsubscribe from.</p>
+<p>In all I have about 130 filters. I copied them from my GMail account and ran some keyboard macros to conver them to Notmuch’s tagging style.</p>
+<h1 id="emacs">Emacs</h1>
+<p>Once you have Notmuch setup, you can use notmuch.el and it works out of the box for reading and searching mail. The mode has some strange choices for its defaults, so I copied <a href="https://github.com/chrisdone/notmuch">the repo</a> with full intention for patching it heavily in the future, and I made some further configurations <a href="https://github.com/chrisdone/chrisdone-emacs/blob/master/config/notmuch.el">in a separate file</a>.</p>
+<p>The mode is pretty self-explanatory, it just has very silly keybindings. Otherwise it works very well.</p>
+<h1 id="sending-email">Sending email</h1>
+<p>One thing that doesn’t work out of the box is sending mail. For this I configured my mail user agent:</p>
+<pre><code>(setq mail-user-agent 'message-user-agent)</code></pre>
+<p>Set my default sending details:</p>
+<pre><code>(setq user-mail-address &quot;chrisdone@gmail.com&quot;
+      user-full-name &quot;Chris Done&quot;)</code></pre>
+<p>Configured the SMTP server info for GMail:</p>
+<pre><code>(setq smtpmail-stream-type 'ssl
+      smtpmail-smtp-server &quot;smtp.gmail.com&quot;
+      smtpmail-smtp-service 465)</code></pre>
+<p>Then I made a <code>~/.authinfo</code> file and put in:</p>
+<pre><code>machine smtp.gmail.com login chrisdone port 465 password &quot;&lt;password here&gt;&quot;</code></pre>
+<h1 id="suave-desktop-panel">Suave desktop panel</h1>
+<p>I also <a href="https://github.com/chrisdone/chrisdone-xmonad/blob/b097b98ac044fc1cfa0f2bccd9abe9803b6ac8c4/src/XMonad/Suave/Window.hs#L69">added the current inbox status to my Suave XMonad desktop panel</a>. There’s a screenshot <a href="https://chrisdone.com/suave-1.png">here</a>. The inbox display is in the centre.</p>
+<h1 id="summary">Summary</h1>
+<p>In summary I moved the client part of my GMail use from the GMail web client to Emacs. Now I can read and write mail completely in Emacs, and I can see when new mail has arrived in my panel.</p>
+
+<footer>
+  © 2014-02-08 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,462 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Haskell Formlets: Composable web form construction and validation</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Haskell Formlets: Composable web form construction and validation</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p><strong>Note</strong>: This is an archive of an old 2008 post from an old blog.</p>
+<p>I think we all saw formlets some months ago when Chris Eidhof posted a blog entry about Formlets in Haskell. For a reminder, a brief description follows. Then I will jump straight into examples.</p>
+<h2 id="description-of-a-formlet">Description of a formlet</h2>
+<p>A formlet contains information about how to render itself in mark-up language, whether values provided to it are valid, what error to show when those values are invalid, or, if valid, the formlet returns a new value. Perhaps as a loose model, we can enumerate these as:</p>
+<ul>
+<li>Presentation</li>
+<li>Validation</li>
+<li>Parsing</li>
+<li>Failure</li>
+<li>Success</li>
+</ul>
+<p>It is, therefore, a composition of five properties present in web forms. I contend that keeping these properties specified in the same place and therefore automatically consistent with eachother, is something we want, as developers.</p>
+<p>A formlet is self-contained and composable. By ‘self-contained’, this means that all the data needed for a formlet is contained inside its definition. By ‘composable’, this means that formlets can be used together without influencing eachother, and that I can make new, valid, formlets out of existing ones. Composability is something which Haskell is exceedingly good at<sup><a href="#fn1" class="footnoteRef" id="fnref1">1</a></sup>, as we will see. The Haskell Formlets library provides us, very concisely, with a way to use formlets. This entry discusses some examples of this library. I hope to convince the reader that this is an excellent way to develop web forms.</p>
+<h2 id="example-1-a-user-registration-form">Example 1: A user registration form</h2>
+<p>Suppose I have a formlet that is a user registration form, called register. The registration form takes a username and a password, and the password must be entered twice, in two fields, for confirmation. I might compose this formlet from two other formlets; user and pass. The user formlet may simply display a text field, and checks that the field is not empty. The pass formlet, on the other hand, ought to be composed of two password entry formlets. Each of those sub-formlets will perform the task of checking that the password is valid (such as ensuring that it is greater than six characters in length), and the password formlet merely needs to check that each of the values returned from these two are equal.</p>
+<p>Let us convince ourselves that we can indeed express this, using Haskell.</p>
+<p>Before defining the formlets, we’ll define a type to be returned:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">data</span> <span class="dt">Registration</span> <span class="fu">=</span> <span class="dt">Registration</span> {<span class="ot"> username ::</span> <span class="dt">String</span>
+                                 ,<span class="ot"> password ::</span> <span class="dt">String</span> }</code></pre>
+<h3 id="description-of-a-simple-validating-formlet">Description of a simple validating formlet</h3>
+<p>Firstly, for the register formlet I have added type annotations. Types in Haskell help us understand the behaviour of our code, and here is a good example. It is a form which displays mark-up of type Html (provided by Text.XHtml.Strict), it is intended to be ran in some monad m (or instance of Applicative), and returns a Registration value.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">register ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">Registration</span></code></pre>
+<p>Next, we can instantly see that register is composed of user and pass.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">register <span class="fu">=</span> <span class="dt">Registration</span> <span class="fu">&lt;$&gt;</span> user <span class="fu">&lt;*&gt;</span> pass</code></pre>
+<p>But what are user and pass? I will explain user; the meaning of pass can then be inferred. We’ve defined user as displaying a text input box, with no value i.e. Nothing. The value provided from this form element is then checked against what is called a Failing<sup><a href="#fn2" class="footnoteRef" id="fnref2">2</a></sup>, which ensures that a value is valid, or displays an error.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">user ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">String</span>
+user <span class="fu">=</span> F.input <span class="dt">Nothing</span> <span class="ot">`F.check`</span> F.ensure valid error <span class="kw">where</span>
+    valid <span class="fu">=</span> (<span class="fu">&gt;=</span><span class="dv">3</span>)<span class="fu">.</span> length
+    error <span class="fu">=</span> <span class="st">&quot;Username must be three characters or longer.&quot;</span>
+
+<span class="ot">pass ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">String</span>
+pass <span class="fu">=</span> F.password <span class="dt">Nothing</span> <span class="ot">`F.check`</span> F.ensure valid error <span class="kw">where</span>
+    valid <span class="fu">=</span> (<span class="fu">&gt;=</span><span class="dv">6</span>)<span class="fu">.</span> length
+    error <span class="fu">=</span> <span class="st">&quot;Password must be six characters or longer.&quot;</span></code></pre>
+<p>We can study ensure’s type briefly:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">ensure ::</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Failing</span> a</code></pre>
+<p>It takes a validating function (e.g. valid), an error message, and a value to validate. It either returns a Failure with the error message, or a Success with the value.</p>
+<p>Now, the type of check should make sense to us, and this is very lovely:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">check ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Form</span> xml m a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">Failing</span> b) <span class="ot">-&gt;</span> <span class="dt">Form</span> xml m b</code></pre>
+<p>We can see that it takes a formlet returning a, it takes a function which validates a and returns b, finally producing a formlet which returns b. What we have, now, is a function which wraps a validation around a formlet, producing a new formlet.</p>
+<h3 id="correction-of-the-registration-formlet">Correction of the registration formlet</h3>
+<p>Of course, the definition of pass is insufficient. It needs to display two fields, and check them both, and ensure that their values are equal. Let us correct this by defining a new formlet, passConfirmed. The name means that this password has been confirmed by the user, by their entering twice. Here is the definition<sup><a href="#fn3" class="footnoteRef" id="fnref3">3</a></sup>:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">passConfirmed ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">String</span>
+passConfirmed <span class="fu">=</span> fst <span class="fu">&lt;$&gt;</span> (passwords <span class="ot">`F.check`</span> F.ensure equal error) <span class="kw">where</span>
+    passwords <span class="fu">=</span> (,) <span class="fu">&lt;$&gt;</span> pass <span class="fu">&lt;*&gt;</span> pass
+    equal (a,b) <span class="fu">=</span> a <span class="fu">==</span> b
+    error <span class="fu">=</span> <span class="st">&quot;The entered passwords do not match!&quot;</span></code></pre>
+<p>Let us study what has been written here, using types to help us:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">passConfirmed ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">String</span>
+passConfirmed <span class="fu">=</span> fst <span class="fu">&lt;$&gt;</span> validPasswords <span class="kw">where</span>
+
+<span class="ot">    validPasswords ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m (<span class="dt">String</span>,<span class="dt">String</span>)
+    validPasswords <span class="fu">=</span> passwords <span class="ot">`F.check`</span> F.ensure equal error
+
+<span class="ot">    passwords ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m (<span class="dt">String</span>,<span class="dt">String</span>)
+    passwords <span class="fu">=</span> (,) <span class="fu">&lt;$&gt;</span> pass <span class="fu">&lt;*&gt;</span> pass
+
+<span class="ot">    equal ::</span> (<span class="dt">String</span>,<span class="dt">String</span>) <span class="ot">-&gt;</span> <span class="dt">Bool</span>
+    equal (a,b) <span class="fu">=</span> a <span class="fu">==</span> b
+
+    error <span class="fu">=</span> <span class="st">&quot;The entered passwords do not match!&quot;</span></code></pre>
+<p>The validPasswords is what could be described as a wrapper around passwords, which validates the values, and simply returns them if valid (i.e. equal). passwords simply takes two valid passwords, and puts them in a tuple.</p>
+<p>Here we must recognise something special! Composability, ladies and gentlemen! Our passConfirmed formlet does not have to care about whether the passwords are six characters or longer, because the pass formlets have done this for us!</p>
+<p>We can now go back to our register formlet and update the code:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">register ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">Registration</span>
+register <span class="fu">=</span> <span class="dt">Registration</span> <span class="fu">&lt;$&gt;</span> user <span class="fu">&lt;*&gt;</span> passConfirmed</code></pre>
+<h3 id="adding-labels-wrapping-mark-up">Adding labels: wrapping mark-up</h3>
+<p>Right now, despite being very lovely, the display of our widgets would be less than presentable. There are no labels on the form inputs! Neither the user nor the pass are labelled. They are also not paragraphed, in the mark-up. Therefore let us write a function which will take a formlet and stick a label and a paragraph around it.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">label l <span class="fu">=</span> F.plug (\xhtml <span class="ot">-&gt;</span> X.p <span class="fu">&lt;&lt;</span> (X.label <span class="fu">&lt;&lt;</span> (l <span class="fu">++</span> <span class="st">&quot;: &quot;</span>) <span class="fu">+++</span> xhtml))</code></pre>
+<p>What does the plug function do? Let us study its type:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">plug ::</span> (<span class="dt">Monad</span> m, <span class="dt">Plus</span> xml) <span class="ot">=&gt;</span> (xml <span class="ot">-&gt;</span> xml1) <span class="ot">-&gt;</span> <span class="dt">Form</span> xml m a <span class="ot">-&gt;</span> <span class="dt">Form</span>
+xml1 m a</code></pre>
+<p>It’s quite simple, of course. It takes a function which transforms some mark-up, a form, and returns a new form with the changed mark-up.</p>
+<p>Therefore our label function simply wraps some XHTML around the existing formlet. Now, we can use it.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">user ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">String</span>
+user <span class="fu">=</span> input <span class="ot">`F.check`</span> F.ensure valid error <span class="kw">where</span>
+    input <span class="fu">=</span> <span class="st">&quot;Username&quot;</span> <span class="ot">`label`</span> F.input <span class="dt">Nothing</span>
+    valid <span class="fu">=</span> (<span class="fu">&gt;=</span><span class="dv">3</span>)<span class="fu">.</span> length
+    error <span class="fu">=</span> <span class="st">&quot;Username must be three characters or longer.&quot;</span></code></pre>
+<p>We now have a proper label for the user input field. We ought to now confirm that this is indeed the case by running our code. …Finally!</p>
+<h3 id="running-a-formlet">Running a Formlet</h3>
+<p>In order to run our formlet, we need to use the runFormState function. Studying its type, we see that it takes an environment, a prefix for the form’s element names, and the formlet itself. Finally, it returns a tuple of the return success or failure of the form, mark-up which ought to be displayed, and the form content type, which we are not interested in.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">runFormState ::</span> <span class="dt">Monad</span> m
+             <span class="ot">=&gt;</span> <span class="dt">Env</span>
+             <span class="ot">-&gt;</span> <span class="dt">String</span>
+             <span class="ot">-&gt;</span> <span class="dt">Form</span> xml m a
+             <span class="ot">-&gt;</span> (m (<span class="dt">Failing</span> a),m xml,<span class="dt">FormContentType</span>)
+
+<span class="kw">type</span> <span class="dt">Env</span> <span class="fu">=</span> [(<span class="dt">String</span>, <span class="dt">Either</span> <span class="dt">String</span> <span class="dt">File</span>)]</code></pre>
+<p>We are interested only in the String form of values in the environment.</p>
+<p>Let us confirm that our code outputs what has been described:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="fu">:</span>load <span class="st">&quot;/var/www/chrisdone/blog/db/static/Register.hs&quot;</span>
+[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Register</span> ( Register.hs, interpreted )
+<span class="dt">Ok</span>, modules loaded<span class="fu">:</span> <span class="dt">Register</span><span class="fu">.</span>
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> env <span class="fu">=</span> map ((<span class="st">&quot;input&quot;</span><span class="fu">++</span>) <span class="fu">.</span> show) [<span class="dv">0</span><span class="fu">..</span>] <span class="ot">`zip`</span>
+                     map <span class="dt">Left</span> [<span class="st">&quot;chris&quot;</span>,<span class="st">&quot;mypassword&quot;</span>,<span class="st">&quot;mypassword&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> (result,xml,_) <span class="fu">=</span> runFormState env <span class="st">&quot;&quot;</span> register
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> putStrLn <span class="fu">.</span> X.prettyHtmlFragment <span class="fu">=&lt;&lt;</span> xml
+<span class="fu">&lt;</span>p<span class="fu">&gt;</span>
+   <span class="fu">&lt;</span>label<span class="fu">&gt;</span>
+      <span class="dt">Username</span><span class="fu">:</span>
+   <span class="fu">&lt;/</span>label<span class="fu">&gt;</span>
+   <span class="fu">&lt;</span>input <span class="kw">type</span><span class="fu">=</span><span class="st">&quot;text&quot;</span> name<span class="fu">=</span><span class="st">&quot;input0&quot;</span> id<span class="fu">=</span><span class="st">&quot;input0&quot;</span> value<span class="fu">=</span><span class="st">&quot;chris&quot;</span> <span class="fu">/&gt;</span>
+<span class="fu">&lt;/</span>p<span class="fu">&gt;</span>
+<span class="fu">&lt;</span>input <span class="kw">type</span><span class="fu">=</span><span class="st">&quot;password&quot;</span> name<span class="fu">=</span><span class="st">&quot;input1&quot;</span> id<span class="fu">=</span><span class="st">&quot;input1&quot;</span> value<span class="fu">=</span><span class="st">&quot;mypassword&quot;</span> <span class="fu">/&gt;</span>
+<span class="fu">&lt;</span>input <span class="kw">type</span><span class="fu">=</span><span class="st">&quot;password&quot;</span> name<span class="fu">=</span><span class="st">&quot;input2&quot;</span> id<span class="fu">=</span><span class="st">&quot;input2&quot;</span> value<span class="fu">=</span><span class="st">&quot;mypassword&quot;</span> <span class="fu">/&gt;</span>
+
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span></code></pre>
+<p>Here we have provided runFormState with a basic environment; providing a value for the username and passwords. The result demonstrates that our label wrapper does indeed work as described.</p>
+<p>Finally, we can add labels to our password inputs:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">passConfirmed ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">String</span>
+passConfirmed <span class="fu">=</span> fst <span class="fu">&lt;$&gt;</span> passwords <span class="ot">`F.check`</span> F.ensure equal error <span class="kw">where</span>
+    passwords <span class="fu">=</span> (,) <span class="fu">&lt;$&gt;</span> pass <span class="st">&quot;Password&quot;</span> <span class="fu">&lt;*&gt;</span> pass <span class="st">&quot;Password (confirm)&quot;</span>
+    equal (a,b) <span class="fu">=</span> a <span class="fu">==</span> b
+    error <span class="fu">=</span> <span class="st">&quot;The entered passwords do not match!&quot;</span>
+
+<span class="ot">pass ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">String</span>
+pass caption <span class="fu">=</span> input <span class="ot">`F.check`</span> F.ensure valid error <span class="kw">where</span>
+    input <span class="fu">=</span> caption <span class="ot">`label`</span> F.password <span class="dt">Nothing</span>
+    valid <span class="fu">=</span> (<span class="fu">&gt;=</span><span class="dv">6</span>)<span class="fu">.</span> length
+    error <span class="fu">=</span> <span class="st">&quot;Password must be six characters or longer.&quot;</span></code></pre>
+<p>We have simply added an extra argument to our pass formlet which takes an argument for what label to display next to it. Thus we have the following output:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> <span class="fu">:</span>load <span class="st">&quot;/var/www/chrisdone/blog/db/static/Register.hs&quot;</span>
+[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Register</span> ( Register.hs, interpreted )
+<span class="dt">Ok</span>, modules loaded<span class="fu">:</span> <span class="dt">Register</span><span class="fu">.</span>
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> env <span class="fu">=</span> map ((<span class="st">&quot;input&quot;</span><span class="fu">++</span>) <span class="fu">.</span> show) [<span class="dv">0</span><span class="fu">..</span>] <span class="ot">`zip`</span>
+                     map <span class="dt">Left</span> [<span class="st">&quot;chris&quot;</span>,<span class="st">&quot;mypassword&quot;</span>,<span class="st">&quot;mypassword&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> (result,xml,_) <span class="fu">=</span> runFormState env <span class="st">&quot;&quot;</span> register
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> putStrLn <span class="fu">.</span> X.prettyHtmlFragment <span class="fu">=&lt;&lt;</span> xml
+<span class="fu">&lt;</span>p<span class="fu">&gt;</span>
+   <span class="fu">&lt;</span>label<span class="fu">&gt;</span>
+      <span class="dt">Username</span><span class="fu">:</span>
+   <span class="fu">&lt;/</span>label<span class="fu">&gt;</span>
+   <span class="fu">&lt;</span>input <span class="kw">type</span><span class="fu">=</span><span class="st">&quot;text&quot;</span> name<span class="fu">=</span><span class="st">&quot;input0&quot;</span> id<span class="fu">=</span><span class="st">&quot;input0&quot;</span> value<span class="fu">=</span><span class="st">&quot;chris&quot;</span> <span class="fu">/&gt;</span>
+<span class="fu">&lt;/</span>p<span class="fu">&gt;</span>
+<span class="fu">&lt;</span>p<span class="fu">&gt;</span>
+   <span class="fu">&lt;</span>label<span class="fu">&gt;</span>
+      <span class="dt">Password</span><span class="fu">:</span>
+   <span class="fu">&lt;/</span>label<span class="fu">&gt;</span>
+   <span class="fu">&lt;</span>input <span class="kw">type</span><span class="fu">=</span><span class="st">&quot;password&quot;</span> name<span class="fu">=</span><span class="st">&quot;input1&quot;</span> id<span class="fu">=</span><span class="st">&quot;input1&quot;</span> value<span class="fu">=</span><span class="st">&quot;mypassword&quot;</span> <span class="fu">/&gt;</span>
+<span class="fu">&lt;/</span>p<span class="fu">&gt;</span>
+<span class="fu">&lt;</span>p<span class="fu">&gt;</span>
+   <span class="fu">&lt;</span>label<span class="fu">&gt;</span>
+      <span class="dt">Password</span> (confirm)<span class="fu">:</span>
+   <span class="fu">&lt;/</span>label<span class="fu">&gt;</span>
+   <span class="fu">&lt;</span>input <span class="kw">type</span><span class="fu">=</span><span class="st">&quot;password&quot;</span> name<span class="fu">=</span><span class="st">&quot;input2&quot;</span> id<span class="fu">=</span><span class="st">&quot;input2&quot;</span> value<span class="fu">=</span><span class="st">&quot;mypassword&quot;</span> <span class="fu">/&gt;</span>
+<span class="fu">&lt;/</span>p<span class="fu">&gt;</span>
+
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> env <span class="fu">=</span> map ((<span class="st">&quot;input&quot;</span><span class="fu">++</span>) <span class="fu">.</span> show) [<span class="dv">0</span><span class="fu">..</span>] <span class="ot">`zip`</span>
+                     map <span class="dt">Left</span> [<span class="st">&quot;chris&quot;</span>,<span class="st">&quot;mypassword&quot;</span>,<span class="st">&quot;mypa&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> (result,xml,_) <span class="fu">=</span> runFormState env <span class="st">&quot;&quot;</span> register <span class="kw">in</span> result
+<span class="dt">Failure</span> [<span class="st">&quot;Password must be six characters or longer.&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> env <span class="fu">=</span> map ((<span class="st">&quot;input&quot;</span><span class="fu">++</span>) <span class="fu">.</span> show) [<span class="dv">0</span><span class="fu">..</span>] <span class="ot">`zip`</span>
+                     map <span class="dt">Left</span> [<span class="st">&quot;chris&quot;</span>,<span class="st">&quot;mypassword&quot;</span>,<span class="st">&quot;mypassword-&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> (result,xml,_) <span class="fu">=</span> runFormState env <span class="st">&quot;&quot;</span> register <span class="kw">in</span> result
+<span class="dt">Failure</span> [<span class="st">&quot;The entered passwords do not match!&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> env <span class="fu">=</span> map ((<span class="st">&quot;input&quot;</span><span class="fu">++</span>) <span class="fu">.</span> show) [<span class="dv">0</span><span class="fu">..</span>] <span class="ot">`zip`</span>
+                     map <span class="dt">Left</span> [<span class="st">&quot;chris&quot;</span>,<span class="st">&quot;mypassword&quot;</span>,<span class="st">&quot;mypassword&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> (result,xml,_) <span class="fu">=</span> runFormState env <span class="st">&quot;&quot;</span> register <span class="kw">in</span> result
+<span class="dt">Success</span> (<span class="dt">Registration</span> {regUser <span class="fu">=</span> <span class="st">&quot;chris&quot;</span>, regPass <span class="fu">=</span> <span class="st">&quot;mypassword&quot;</span>})</code></pre>
+<p>We now have a full, presentable, composable, validating formlet.</p>
+<h3 id="complete-haskell-source">Complete Haskell source</h3>
+<p>Below is the source code in full for the reader to read, test and/or run:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">module</span> <span class="dt">Register</span> <span class="kw">where</span>
+
+<span class="kw">import</span> Control.Applicative
+<span class="kw">import</span> Network.CGI
+<span class="kw">import</span> Text.Formlets
+<span class="kw">import</span> Text.XHtml.Strict.Formlets (Form)
+<span class="kw">import</span> <span class="kw">qualified</span> Text.XHtml.Strict.Formlets <span class="kw">as</span> F
+<span class="kw">import</span> <span class="kw">qualified</span> Text.XHtml.Strict <span class="kw">as</span> X
+<span class="kw">import</span> Text.XHtml.Strict ((&lt;&lt;),(+++))
+
+<span class="kw">data</span> <span class="dt">Registration</span> <span class="fu">=</span> <span class="dt">Registration</span> {<span class="ot"> regUser ::</span> <span class="dt">String</span>
+                                 ,<span class="ot"> regPass ::</span> <span class="dt">String</span> }
+                                 <span class="kw">deriving</span> <span class="dt">Show</span>
+
+<span class="ot">register ::</span> <span class="dt">Form</span> <span class="dt">Html</span> <span class="dt">IO</span> <span class="dt">Registration</span>
+register <span class="fu">=</span> <span class="dt">Registration</span> <span class="fu">&lt;$&gt;</span> user <span class="fu">&lt;*&gt;</span> passConfirmed
+
+<span class="ot">user ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">String</span>
+user <span class="fu">=</span> input <span class="ot">`F.check`</span> F.ensure valid error <span class="kw">where</span>
+    input <span class="fu">=</span> <span class="st">&quot;Username&quot;</span> <span class="ot">`label`</span> F.input <span class="dt">Nothing</span>
+    valid <span class="fu">=</span> (<span class="fu">&gt;=</span><span class="dv">3</span>)<span class="fu">.</span> length
+    error <span class="fu">=</span> <span class="st">&quot;Username must be three characters or longer.&quot;</span>
+
+<span class="ot">passConfirmed ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">String</span>
+passConfirmed <span class="fu">=</span> fst <span class="fu">&lt;$&gt;</span> passwords <span class="ot">`F.check`</span> F.ensure equal error <span class="kw">where</span>
+    passwords <span class="fu">=</span> (,) <span class="fu">&lt;$&gt;</span> pass <span class="st">&quot;Password&quot;</span> <span class="fu">&lt;*&gt;</span> pass <span class="st">&quot;Password (confirm)&quot;</span>
+    equal (a,b) <span class="fu">=</span> a <span class="fu">==</span> b
+    error <span class="fu">=</span> <span class="st">&quot;The entered passwords do not match!&quot;</span>
+
+<span class="ot">pass ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">String</span>
+pass caption <span class="fu">=</span> input <span class="ot">`F.check`</span> F.ensure valid error <span class="kw">where</span>
+    input <span class="fu">=</span> caption <span class="ot">`label`</span> F.password <span class="dt">Nothing</span>
+    valid <span class="fu">=</span> (<span class="fu">&gt;=</span><span class="dv">6</span>)<span class="fu">.</span> length
+    error <span class="fu">=</span> <span class="st">&quot;Password must be six characters or longer.&quot;</span>
+
+<span class="ot">label ::</span> (<span class="dt">X.HTML</span> xml,<span class="dt">Monad</span> m,<span class="dt">Plus</span> xml)
+      <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Form</span> xml m a <span class="ot">-&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m a
+label l <span class="fu">=</span> F.plug (\xhtml <span class="ot">-&gt;</span> X.p <span class="fu">&lt;&lt;</span> (X.label <span class="fu">&lt;&lt;</span> (l <span class="fu">++</span> <span class="st">&quot;: &quot;</span>) <span class="fu">+++</span> xhtml))</code></pre>
+<p>Keen eyes will notice that I have changed the type of register:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">register ::</span> <span class="dt">Form</span> <span class="dt">Html</span> <span class="dt">IO</span> <span class="dt">Registration</span></code></pre>
+<p>I have set the monad type to IO. This is merely because we are testing it in GHCi, which defaults to the IO monad, which is just dandy for our purposes.<sup><a href="#fn4" class="footnoteRef" id="fnref4">4</a></sup></p>
+<h2 id="example-2-user-registration-with-monadic-validation">Example 2: User registration with monadic validation</h2>
+<p>We have so far covered how to develop a formlet from an informal description, improve it and then test it in our Haskell prompt. We have addressed the four points previously mentioned, i.e. we have worked with how formlets are presented in mark-up, we have worked with how they validate input, how they fail on invalid input, and how they succeed on valid input. Furthermore, we have demonstrated to ourselves, albiet in a limited way, that all of these things can be composed.</p>
+<p>So far, our validation has been pure. A formlet takes a value and validates it purely functionally. This is completely acceptable. Indeed, initially the Haskell Formlets library was only pure. However, we now have access to monadic validation! Yes! We shall briefly discuss why this is a good, and then demonstrate with an example.</p>
+<p>Consider a customer database; we want to use this database in our registration form. Suppose we want to check to see if the username already exists in the database. If it does, the form fails, otherwise it returns a registration which can then be sent off to some other function we don’t care about right now. This means that when validation occurs, it ought to have the ability to behave differently for the same input. We need to impurely talk to the database in order to complete the validation. But why do the formlets need to be impure? Why not run the whole form, and then compare the returned values against a database? Because then the whole model of composability is broken. It is no longer a formlet that validates inputs. It is a formlet that validates some inputs, and then breaks the abstraction when it gets a bit hairy. We want to be able to have a username formlet that has everything necessary in its description contained within its definition. We are now going to experiment with this notion.</p>
+<p>Let us continue from where we left off from Example 1.</p>
+<h3 id="create-a-simple-database-to-use">Create a simple database to use</h3>
+<p>For this example, we’ll play it safe and use Sqlite3.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">import</span> Database.HDBC
+<span class="kw">import</span> Database.HDBC.Sqlite3</code></pre>
+<p>We shall create a customer table with some entries to work with, with md5 hashed passwords:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="dt">Prelude</span><span class="fu">&gt;</span> <span class="fu">:</span>set prompt <span class="st">&quot;Haskell&gt; &quot;</span>
+<span class="dt">Haskell</span><span class="fu">&gt;</span> <span class="fu">:</span>set <span class="fu">-</span><span class="dt">XOverloadedStrings</span>
+<span class="dt">Haskell</span><span class="fu">&gt;</span> <span class="fu">:</span>m <span class="fu">+</span> <span class="dt">Data.Digest.Pure.MD5</span> <span class="dt">Data.ByteString.Lazy.Char8</span>
+<span class="dt">Haskell</span><span class="fu">&gt;</span> md5 <span class="st">&quot;haskell4life&quot;</span>
+<span class="dt">Loading</span> package syb <span class="fu">...</span> linking <span class="fu">...</span> done<span class="fu">.</span>
+<span class="dt">Loading</span> package base<span class="fu">-</span><span class="dv">3</span><span class="fu">.</span><span class="dv">0</span><span class="fu">.</span><span class="dv">3</span><span class="fu">.</span><span class="dv">0</span> <span class="fu">...</span> linking <span class="fu">...</span> done<span class="fu">.</span>
+<span class="dt">Loading</span> package array<span class="fu">-</span><span class="dv">0</span><span class="fu">.</span><span class="dv">2</span><span class="fu">.</span><span class="dv">0</span><span class="fu">.</span><span class="dv">0</span> <span class="fu">...</span> linking <span class="fu">...</span> done<span class="fu">.</span>
+<span class="dt">Loading</span> package containers<span class="fu">-</span><span class="dv">0</span><span class="fu">.</span><span class="dv">2</span><span class="fu">.</span><span class="dv">0</span><span class="fu">.</span><span class="dv">0</span> <span class="fu">...</span> linking <span class="fu">...</span> done<span class="fu">.</span>
+<span class="dt">Loading</span> package bytestring<span class="fu">-</span><span class="dv">0</span><span class="fu">.</span><span class="dv">9</span><span class="fu">.</span><span class="dv">1</span><span class="fu">.</span><span class="dv">4</span> <span class="fu">...</span> linking <span class="fu">...</span> done<span class="fu">.</span>
+<span class="dt">Loading</span> package binary<span class="fu">-</span><span class="dv">0</span><span class="fu">.</span><span class="dv">4</span><span class="fu">.</span><span class="dv">4</span> <span class="fu">...</span> linking <span class="fu">...</span> done<span class="fu">.</span>
+<span class="dt">Loading</span> package pureMD5<span class="fu">-</span><span class="dv">0</span><span class="fu">.</span><span class="dv">2</span><span class="fu">.</span><span class="dv">4</span> <span class="fu">...</span> linking <span class="fu">...</span> done<span class="fu">.</span>
+8afba4d177e7162510b9edf0139d1e8c
+<span class="dt">Haskell</span><span class="fu">&gt;</span> md5 <span class="st">&quot;expert programmer&quot;</span>
+c60ce6776f224600bb33e463aa68d138
+<span class="dt">Haskell</span><span class="fu">&gt;</span></code></pre>
+<p>The OverloadedStrings option lets us write string literals which can be provided as String or ByteString.<sup><a href="#fn5" class="footnoteRef" id="fnref5">5</a></sup></p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">chris<span class="fu">@</span>chrisdesktop<span class="fu">:/</span>var<span class="fu">/</span>www<span class="fu">/</span>chrisdone<span class="fu">/</span>blog<span class="fu">/</span>db<span class="fu">/</span>static<span class="fu">$</span> sqlite3 <span class="co">--version</span>
+<span class="dv">3</span><span class="fu">.</span><span class="dv">4</span><span class="fu">.</span><span class="dv">2</span>
+chris<span class="fu">@</span>chrisdesktop<span class="fu">:/</span>var<span class="fu">/</span>www<span class="fu">/</span>chrisdone<span class="fu">/</span>blog<span class="fu">/</span>db<span class="fu">/</span>static<span class="fu">$</span> sqlite3 customer<span class="fu">.</span>db
+<span class="dt">SQLite</span> version <span class="dv">3</span><span class="fu">.</span><span class="dv">4</span><span class="fu">.</span><span class="dv">2</span>
+<span class="dt">Enter</span> <span class="st">&quot;.help&quot;</span> for instructions
+sqlite<span class="fu">&gt;</span> <span class="dt">CREATE</span> <span class="dt">TABLE</span> <span class="ot">`customer`</span> (<span class="ot">`id`</span> <span class="dt">INTEGER</span> <span class="dt">PRIMARY_KEY</span>
+<span class="dt">AUTO_INCREMENT</span>, <span class="ot">`username`</span> <span class="dt">TINY</span> <span class="dt">BLOB</span>, <span class="ot">`password`</span> <span class="dt">BLOB</span>);
+sqlite<span class="fu">&gt;</span> <span class="dt">INSERT</span> <span class="dt">INTO</span> <span class="ot">`customer`</span> (<span class="ot">`username`</span>, <span class="ot">`password`</span>) <span class="dt">VALUES</span>
+(<span class="ch">'Peyton `Simon` Jones'</span>, <span class="ch">'085b1b14b7212a61ab8bffe89b02c254'</span>);
+sqlite<span class="fu">&gt;</span> <span class="dt">INSERT</span> <span class="dt">INTO</span> <span class="ot">`customer`</span> (<span class="ot">`username`</span>, <span class="ot">`password`</span>) <span class="dt">VALUES</span>
+(<span class="ch">'Christopher Done'</span>, <span class="ch">'c60ce6776f224600bb33e463aa68d138'</span>);
+sqlite<span class="fu">&gt;</span> <span class="dt">SELECT</span> <span class="fu">*</span> <span class="dt">FROM</span> <span class="ot">`customer`</span>;
+<span class="fu">|</span><span class="dt">Christopher</span> <span class="dt">Done</span><span class="fu">|</span>c60ce6776f224600bb33e463aa68d138
+<span class="fu">|</span><span class="dt">Peyton</span> <span class="ot">`Simon`</span> <span class="dt">Jones</span><span class="fu">|</span>085b1b14b7212a61ab8bffe89b02c254
+sqlite<span class="fu">&gt;</span> <span class="fu">.</span>quit
+chris<span class="fu">@</span>chrisdesktop<span class="fu">:/</span>var<span class="fu">/</span>www<span class="fu">/</span>chrisdone<span class="fu">/</span>blog<span class="fu">/</span>db<span class="fu">/</span>static<span class="fu">$</span>
+<span class="dt">And</span> now ensuring we have access from <span class="dt">Haskell's</span> library<span class="fu">:</span>
+<span class="dt">Haskell</span><span class="fu">&gt;</span> <span class="fu">:</span>load <span class="st">&quot;/var/www/chrisdone/blog/db/static/Register.hs&quot;</span>
+[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Register</span> ( Register.hs, interpreted )
+<span class="dt">Ok</span>, modules loaded<span class="fu">:</span> <span class="dt">Register</span><span class="fu">.</span>
+<span class="dt">Haskell</span><span class="fu">&gt;</span> con <span class="ot">&lt;-</span> connectSqlite3 <span class="st">&quot;customer.db&quot;</span>
+<span class="dt">Haskell</span><span class="fu">&gt;</span> getTables con
+[<span class="st">&quot;customer&quot;</span>]
+<span class="dt">Haskell</span><span class="fu">&gt;</span> quickQuery con <span class="st">&quot;SELECT * FROM `customer`&quot;</span> []
+[[<span class="dt">SqlNull</span>,<span class="dt">SqlString</span> <span class="st">&quot;Christopher Done&quot;</span>,
+  <span class="dt">SqlString</span> <span class="st">&quot;c60ce6776f224600bb33e463aa68d138&quot;</span>],
+[<span class="dt">SqlNull</span>,<span class="dt">SqlString</span> <span class="st">&quot;Peyton `Simon` Jones&quot;</span>,
+ <span class="dt">SqlString</span> <span class="st">&quot;085b1b14b7212a61ab8bffe89b02c254&quot;</span>]]
+<span class="dt">Haskell</span><span class="fu">&gt;</span> quickQuery con <span class="st">&quot;SELECT * FROM `customer`</span>
+<span class="st">WHERE `username` LIKE 'Christopher Done';&quot;</span> []
+[[<span class="dt">SqlNull</span>,<span class="dt">SqlString</span> <span class="st">&quot;Christopher Done&quot;</span>,
+  <span class="dt">SqlString</span> <span class="st">&quot;c60ce6776f224600bb33e463aa68d138&quot;</span>]]
+<span class="dt">Haskell</span><span class="fu">&gt;</span></code></pre>
+<h3 id="validating-against-an-sql-database">Validating against an SQL database</h3>
+<p>Let us now return to studying how to impurely validate in a formlet. We notice that the types thus far have all talked about a monad type, which we have ignored so far. Now we can make use of it:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">checkM ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Form</span> xml m a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> m (<span class="dt">Failing</span> b)) <span class="ot">-&gt;</span> <span class="dt">Form</span> xml m b
+<span class="ot">ensureM ::</span> (<span class="dt">Monad</span> m, <span class="dt">Show</span> a) <span class="ot">=&gt;</span> (a <span class="ot">-&gt;</span> m <span class="dt">Bool</span>) <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> m (<span class="dt">Failing</span> a)</code></pre>
+<p>These functions are monadic equivalents of check and ensure. Therefore, with this in mind, let us consider our definition of user.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">user ::</span> (<span class="dt">Applicative</span> m,<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> m <span class="dt">String</span>
+user <span class="fu">=</span> input <span class="ot">`F.check`</span> F.ensure valid error <span class="kw">where</span>
+    input <span class="fu">=</span> <span class="st">&quot;Username&quot;</span> <span class="ot">`label`</span> F.input <span class="dt">Nothing</span>
+    valid <span class="fu">=</span> (<span class="fu">&gt;=</span><span class="dv">3</span>)<span class="fu">.</span> length
+    error <span class="fu">=</span> <span class="st">&quot;Username must be three characters or longer.&quot;</span></code></pre>
+<p>I think that this formlet is a fine piece of code. Indeed, we do not need to change it at all. Instead, let us define a new formlet which wraps around this one, called uniqueUser:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">uniqueUser ::</span> <span class="dt">Connection</span> <span class="ot">-&gt;</span> <span class="dt">Form</span> <span class="dt">Html</span> <span class="dt">IO</span> <span class="dt">String</span></code></pre>
+<p>In order to query against the database we will need to pass the connection handle along. Or will we? I propose a ReaderT monad!</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">import</span> Control.Monad.Reader
+<span class="kw">type</span> <span class="dt">SQLM</span> <span class="fu">=</span> <span class="dt">ReaderT</span> <span class="dt">Connection</span> <span class="dt">IO</span></code></pre>
+<p>Our computation also needs to be an instance of Applicative to work with Formlets, so we define an instance for all ReaderT types:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">instance</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Applicative</span> (<span class="dt">ReaderT</span> s m) <span class="kw">where</span>
+    pure <span class="fu">=</span> return; (<span class="fu">&lt;*&gt;</span>) <span class="fu">=</span> ap</code></pre>
+<p>We’ll define a simple utility function which will take the connection from the monad and use it for a query:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">query ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> [<span class="dt">SqlValue</span>] <span class="ot">-&gt;</span> <span class="dt">SQLM</span> [[<span class="dt">SqlValue</span>]]
+query statement values <span class="fu">=</span> <span class="kw">do</span>
+  conn <span class="ot">&lt;-</span> ask
+  liftIO <span class="fu">$</span> quickQuery conn statement values</code></pre>
+<p>A demonstration might be something like:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> runReaderT (query <span class="st">&quot;SELECT * FROM `customer`&quot;</span> []) con
+[[<span class="dt">SqlNull</span>,<span class="dt">SqlString</span> <span class="st">&quot;Christopher Done&quot;</span>,
+  <span class="dt">SqlString</span> <span class="st">&quot;c60ce6776f224600bb33e463aa68d138&quot;</span>],
+ [<span class="dt">SqlNull</span>,<span class="dt">SqlString</span> <span class="st">&quot;Peyton `Simon` Jones&quot;</span>,
+ <span class="dt">SqlString</span> <span class="st">&quot;085b1b14b7212a61ab8bffe89b02c254&quot;</span>]]</code></pre>
+<p>Therefore we can make a very neat definition of uniqueUser:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">uniqueUser ::</span> <span class="dt">Form</span> <span class="dt">Html</span> <span class="dt">SQLM</span> <span class="dt">String</span>
+uniqueUser <span class="fu">=</span> user <span class="ot">`F.checkM`</span> F.ensureM valid error <span class="kw">where</span>
+valid name <span class="fu">=</span> null <span class="fu">&lt;$&gt;</span> query statement [toSql name]
+statement <span class="fu">=</span> <span class="st">&quot;SELECT * FROM `customer` WHERE `username` LIKE ?&quot;</span>
+error <span class="fu">=</span> <span class="st">&quot;Username already exists in the database!&quot;</span></code></pre>
+<p>I warn the reader of potential heart failure, excretions or other effects due to viewing the next section. Let us now test our monadic validating formlet:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="fu">:</span>load <span class="st">&quot;/var/www/chrisdone/blog/db/static/Register.hs&quot;</span>
+[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Register</span> ( Register.hs, interpreted )
+<span class="dt">Ok</span>, modules loaded<span class="fu">:</span> <span class="dt">Register</span><span class="fu">.</span>
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> env <span class="fu">=</span> map ((<span class="st">&quot;input&quot;</span><span class="fu">++</span>) <span class="fu">.</span> show) [<span class="dv">0</span><span class="fu">..</span>] <span class="ot">`zip`</span>
+                     map <span class="dt">Left</span> [<span class="st">&quot;chris&quot;</span>,<span class="st">&quot;mypassword&quot;</span>,<span class="st">&quot;mypassword&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> con <span class="ot">&lt;-</span> connectSqlite3 <span class="st">&quot;customer.db&quot;</span>
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> (result,xml,_) <span class="fu">=</span> runFormState env <span class="st">&quot;&quot;</span> register
+           <span class="kw">in</span> runReaderT result con
+<span class="dt">Success</span> (<span class="dt">Registration</span> {regUser <span class="fu">=</span> <span class="st">&quot;chris&quot;</span>, regPass <span class="fu">=</span> <span class="st">&quot;mypassword&quot;</span>})
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> env <span class="fu">=</span> map ((<span class="st">&quot;input&quot;</span><span class="fu">++</span>) <span class="fu">.</span> show) [<span class="dv">0</span><span class="fu">..</span>] <span class="ot">`zip`</span>
+                     map <span class="dt">Left</span> [<span class="st">&quot;christopher done&quot;</span>,<span class="st">&quot;mypassword&quot;</span>,<span class="st">&quot;mypassword&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> (result,xml,_) <span class="fu">=</span> runFormState env <span class="st">&quot;&quot;</span> register
+           <span class="kw">in</span> runReaderT result con
+<span class="dt">Failure</span> [<span class="st">&quot;Username already exists in the database!&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span></code></pre>
+<p>I shall summarise what has been covered in this section. We have familiarised ourselves with monadic version of check and ensure. We have happily combined pure and impure formlets, and kept each formlet contained, doing one thing well. ’Tis the beauty of abstraction in programming at its most clear. We have established how to run a formlet with a monad such as ReaderT, and we can see how this might be done with StateT, for instance.</p>
+<h2 id="example-3-custom-form-inputs">Example 3: Custom form inputs</h2>
+<p>Earlier, we touched upon producing custom mark-up for a formlet, by wrapping around an existing one. We will now create our own (simple) form input from scratch; that which is not provided in the Text.XHtml.Formlets library; a checkbox.</p>
+<p>A checkbox can only return two values, checked or unchecked, therefore Bool is completely satisfactory as a return value for our formlet. To help us think about the type, let’s look at an existing form input’s type:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">radio ::</span> <span class="dt">Monad</span> m
+      <span class="ot">=&gt;</span> [(<span class="dt">String</span>,<span class="dt">String</span>)] <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">XHtmlForm</span> m <span class="dt">String</span></code></pre>
+<p>It takes a list of (name,value) pairs, a default value, and returns a choice of radio buttons.</p>
+<p>It is worth noting that the type XHtmlForm is simply an alias for specifying the Text.XHtml.Strict.html type, defined as type XHtmlForm m a = Form Html m a.</p>
+<p>Our type should be as follows:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">checkbox ::</span> <span class="dt">Monad</span> m
+         <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">XHtmlForm</span> m <span class="dt">String</span></code></pre>
+<p>Take, a caption for the checkbox, maybe a default value, and return a checkbox which returns “yes” or “no”.</p>
+<p>To implement a form input, we need the input’ function:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">input' ::</span> <span class="dt">Monad</span> m
+       <span class="ot">=&gt;</span> (<span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> xml) <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Form</span> xml m <span class="dt">String</span></code></pre>
+<p>input’ takes a function that takes a name for the element in markup, and a value, input’ also takes maybe default value for the element, and finally returns a formlet.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">checkbox ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">XHtmlForm</span> m <span class="dt">String</span>
+checkbox caption def <span class="fu">=</span> input' box def <span class="kw">where</span>
+    box name value <span class="fu">=</span> X.input <span class="fu">!</span> ([X.thetype <span class="st">&quot;checkbox&quot;</span>, X.name name] <span class="fu">++</span> checked)
+                     <span class="fu">+++</span> caption
+        <span class="kw">where</span> checked <span class="fu">|</span> value <span class="fu">==</span> <span class="st">&quot;yes&quot;</span> <span class="fu">||</span> value <span class="fu">==</span> <span class="st">&quot;on&quot;</span> <span class="fu">=</span> [X.checked]
+                      <span class="fu">|</span> otherwise  <span class="fu">=</span> []</code></pre>
+<p>It is quite simple. There is nothing fancy to be done. Merely produce the correct markup. We can test it in GHCi to confirm:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> env <span class="fu">=</span> map ((<span class="st">&quot;input&quot;</span><span class="fu">++</span>) <span class="fu">.</span> show) [<span class="dv">0</span><span class="fu">..</span>] <span class="ot">`zip`</span> map <span class="dt">Left</span> [<span class="st">&quot;yes&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> (result,xml,_) <span class="fu">=</span>
+             runFormState env <span class="st">&quot;&quot;</span> (checkbox <span class="st">&quot;Send me spam?&quot;</span> <span class="dt">Nothing</span>)
+           <span class="kw">in</span> <span class="kw">do</span> r <span class="ot">&lt;-</span> result; x <span class="ot">&lt;-</span> xml; return (r,x)
+(<span class="dt">Success</span> <span class="st">&quot;yes&quot;</span>,<span class="fu">&lt;</span>input <span class="kw">type</span><span class="fu">=</span><span class="st">&quot;checkbox&quot;</span>
+name<span class="fu">=</span><span class="st">&quot;input0&quot;</span> checked<span class="fu">=</span><span class="st">&quot;checked&quot;</span> <span class="fu">/&gt;</span><span class="dt">Send</span> me spam<span class="fu">?</span>)
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> env <span class="fu">=</span> map ((<span class="st">&quot;input&quot;</span><span class="fu">++</span>) <span class="fu">.</span> show) [<span class="dv">0</span><span class="fu">..</span>] <span class="ot">`zip`</span> map <span class="dt">Left</span> [<span class="st">&quot;no&quot;</span>]
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span> <span class="kw">let</span> (result,xml,_) <span class="fu">=</span>
+             runFormState env <span class="st">&quot;&quot;</span> (checkbox <span class="st">&quot;Send me spam?&quot;</span> <span class="dt">Nothing</span>)
+           <span class="kw">in</span> <span class="kw">do</span> r <span class="ot">&lt;-</span> result; x <span class="ot">&lt;-</span> xml; return (r,x)
+(<span class="dt">Success</span> <span class="st">&quot;no&quot;</span>,<span class="fu">&lt;</span>input <span class="kw">type</span><span class="fu">=</span><span class="st">&quot;checkbox&quot;</span>
+name<span class="fu">=</span><span class="st">&quot;input0&quot;</span><span class="fu">/&gt;</span><span class="dt">Send</span> me spam<span class="fu">?</span>)
+<span class="fu">*</span><span class="dt">Register</span><span class="fu">&gt;</span></code></pre>
+<p>Of course, we have only demonstrated a very simple example. However, most form elements are simple. The point here is that one can use arbitary markup in a formlet and then compose that with any other. Consider a clever Javascript colour selector, and such things like that.</p>
+<h2 id="formlets-in-a-real-cgi-program">Formlets in a real CGI program</h2>
+<p>We have now covered the lovely features of the Haskell Formlets. Finally, I have put our demonstration code into practise in a live server application which simply accepts registrations and lists the usernames. You can view the page and view the raw source code or a syntax highlighted version. Forgive the messy code; it was written in about ten minutes; the code around it isn’t really important. It is the formlets themselves.</p>
+<p><strong>UPDATE: 11 April 09:</strong> Also, I have an example of using formlets in a real project with time constraints etc.</p>
+<h2 id="summary">Summary</h2>
+<p>I think I have covered, quite fully, the idea of formlets. Formlets are composable pieces which contain (1) presentation, (2) validation, (3) parsing, (4) success and (5) failure. Formlets are useful because these five points are kept in one place and thus consistent, without any manual ‘synching’. We can compose formlets, and a formlet’s definition contains all the required information. We can customise the presentation of existing formlets, or create our own new input methods. A self-contained formlet can validate with and perform side-effects, in a safe, composable manner. Formlets parse validated values into proper program values (such as the Registration type). Formlets are an excellent example of the kind of abstractions that Haskellers use all the time.</p>
+<h2 id="notes">Notes</h2>
+<p>Please email me about any typing mistakes or inconsistencies that you notice.</p>
+<div class="footnotes">
+<hr></hr>
+<ol>
+<li id="fn1"><p>Formlets, Parsec, Text.XHtml, the various monads, are some of my favourite examples.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>This is a type, defined in Control.Applicative.Error, with a definition that will make clear to you why it is used:</p>
+<pre><code> data Failing a = Success a | Failure [ErrorMsg]</code></pre>
+<a href="#fnref2">↩</a></li>
+<li id="fn3"><p>Which I wrote in one go, compiled, and found that it worked first time. I am clearly reaching Haskell Satori.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>One could easily leave it ambiguous, using the NoMonomorphismRestriction pragma, thus allowing us to use register in the IO monad, or the CGI monad, etc.<a href="#fnref4">↩</a></p></li>
+<li id="fn5"><p>“GHC supports overloaded string literals. Normally a string literal has type String, but with overloaded string literals enabled (with <code>-XOverloadedStrings</code>) a string literal has type <code>(IsString a) =&gt;   a</code>.” See the GHC documentation for <code>-XOverloadedStrings</code> for more information.<a href="#fnref5">↩</a></p></li>
+</ol>
+</div>
+
+<footer>
+  © 2008-11-14 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

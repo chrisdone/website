@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Deprecate Prelude.head and partial functions</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Deprecate Prelude.head and partial functions</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>Please boycott <a href="https://haskell.org/ghc/docs/latest/html/libraries/base/Prelude.html#v:head">Prelude.head</a> and all its partial friends.</p>
+<p>I’m sick of seeing <a href="https://www.google.com/search?sourceid=chrome&amp;ie=UTF-8&amp;q=%22Prelude.head%3A+empty+list%22">this exception</a>:</p>
+<pre><code>Prelude.head: empty list</code></pre>
+<p>That’s 6,610 results for this ridiculous exception. Alternatives are:</p>
+<pre><code>listToMaybe :: [a] -&gt; Maybe a
+take :: Int -&gt; [a] -&gt; [a]
+foldr :: (a -&gt; b -&gt; b) -&gt; b -&gt; [a] -&gt; b
+data List a = Single a | Cons a (List a)
+data NonEmpty a = NonEmpty a [a]
+list :: (a -&gt; [a] -&gt; b) -&gt; b -&gt; [a] -&gt; b
+Plain old pattern matching.</code></pre>
+<p>And if your code really does not make sense to have an empty list (then why are you using a list data type?) and you cannot be swayed against using a list type, please at least do this:</p>
+<pre><code>throw MeaningfulException
+   `fromMaybe` (listToMaybe xs)</code></pre>
+<p>Please stop using partial functions. Seriously. Remove them from your codebase.</p>
+<h2 id="expanding-with-examples">Expanding with examples</h2>
+<p>Someone commented:</p>
+<blockquote>
+<p>What if my data type is a list and I know that head will not throw an exception?</p>
+<pre><code>foo [] = 0
+foo xs = bar $ head xs</code></pre>
+</blockquote>
+<p>The problem is that this is an invariant that only exists in the programmer’s head (sorry) and is not encoded in the type system (such is the problem with all partial functions), when it so easily can be. Some examples:</p>
+<p>Sometime last year I found a Haddock bug:</p>
+<pre><code>haddock: internal Haddock or GHC error: Prelude.head: empty list</code></pre>
+<p>The cause is line 191:</p>
+<pre><code>packageMod       = ifaceMod (head ifaces)</code></pre>
+<p>in the <code>render</code> function, because the author assumed that the “not-null” invariant would never be broken. But then he used the renderStep function again, and line 158, in the <code>main</code> function:</p>
+<pre><code>renderStep flags packages []</code></pre>
+<p>Breaking this invariant.</p>
+<p>Around this time I also found a bug in Hakyll due to use of tail:</p>
+<pre><code>./src/Text/Hakyll/Internal/CompressCss.hs:
+| otherwise = head str : stripComments (tail str)</code></pre>
+<p>which triggered <a href="https://hpaste.org/40264/hakyll_error">this exception</a>.</p>
+<p>So, despite the invariant being satisfied at the time of writing, later that tacit invariant was broken and the developer didn’t realise it. This is more or less the most common case of partial function exceptions. You <em>just know</em> X will never happen, and then it does.</p>
+<p>It’s trivial to abstract away partiality. In some cases handling cases might be a speed concern, but that should be a case-by-case localized optimization based on profiling.</p>
+
+<footer>
+  © 2011-10-17 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

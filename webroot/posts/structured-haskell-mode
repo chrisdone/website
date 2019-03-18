@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>structured-haskell-mode</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>structured-haskell-mode</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>For about 2 months I’ve been working on and off on an Emacs package called <a href="https://github.com/chrisdone/structured-haskell-mode">structured-haskell-mode.</a><sup><a href="#fn1" class="footnoteRef" id="fnref1">1</a></sup> A full explanation and demo of the features is available on the Github page. In summary, it is a mode that offers <a href="https://www.youtube.com/watch?v=D6h5dFyyUX0">paredit-mode</a><sup><a href="#fn2" class="footnoteRef" id="fnref2">2</a></sup> abilities for Haskell code.</p>
+<p>I’ve been keeping it to myself in a private Github repo, hoping to finish fleshing out the feature set<sup><a href="#fn3" class="footnoteRef" id="fnref3">3</a></sup> and smooth over stability issues. In the end I decided I’d put it out there, because the base functionality is quite reliable and enough to get work done better. It does actually change how you work.</p>
+<p>The key features that enable new ways of working are:</p>
+<ol style="list-style-type: decimal">
+<li>Cutting and pasting actually preserves the indentation of the particular syntactic node. One doesn’t have to think or care about “re-indenting” or worry about how much nesting is happening for fear of having to clean it up later. It’s so trivial now.</li>
+<li>Typing characters or removing them will “bring along” dependent node source, meaning that re-indentation is handled automatically. This means that you can use a nice consistent Lisp style<sup><a href="#fn4" class="footnoteRef" id="fnref4">4</a></sup> without caring about how you’re going to have to manually re-indent it whenever you make changes.</li>
+<li>You now don’t have to think about indentation. You think about nesting level. To go to the right place, you use the <code>)</code> keybinding to go further outwards in the node layers, and hit <code>C-j</code> to start a new sibling at that node level. There is no “tab cycle”. This style is 100% reliable.</li>
+<li>Context-awareness is useful. In strings, the quote character is escaped. When hitting <code>C-j</code> in a list (of values, or types in a record, or a list of constructors in a data declaration), it can automatically add delimiter characters properly indented and spaced out. Something you don’t want to have to care about doing yourself.</li>
+<li>Parentheses are actually good. The Haskell tendency to abuse <code>$</code> to avoid having to manage parentheses is symptomatic of having crappy editing facilities. Managing parentheses in Haskell code is a pain, because editors don’t know about things like Haskell’s case expressions, or lambdas, or patterns, or whatever, and re-indentation is a nightmare inside parentheses. Not in this mode. Parentheses make editing a triviality rather than a chore.</li>
+</ol>
+<p>The overarching theme to this whole library is to remove redundancy in your work. Stop thinking so much about layout and syntactic debt<sup><a href="#fn5" class="footnoteRef" id="fnref5">5</a></sup> and appealing to the status quo<sup><a href="#fn6" class="footnoteRef" id="fnref6">6</a></sup>, and start just thinking about the real work you’re doing, which is plugging together programming constructs.</p>
+<div class="footnotes">
+<hr></hr>
+<ol>
+<li id="fn1"><p>It is actually a rewrite of a package I wrote six months ago of the same name. That package was stable, but the code was not favourable and there were some kinks to be ironed out. The new version uses Emacs markers so structured operations fail less often.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>Emacs users who’ve written their share of Elisp will know that paredit-mode is among the most enjoyable editing experiences out there. Strangers to this editing experience are simply missing out on the cream of the crop.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>Stealing ideas from paredit-mode (e.g. slurping, barfing, convoluting) and coming up with my own ideas, such as operand manipulation, automagic re-indentation.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Lisp style is:</p>
+<pre><code>foo bar
+    mu
+    (zot bar
+         bob)</code></pre>
+<a href="#fnref4">↩</a></li>
+<li id="fn5"><p>Syntactic debt is the energy and time you spend later on for making decisions or choices now. Feel like you’re nesting your function too deep? Better stop now or you’ll pay for it later because you’ll have to come back and collapse it down to fit within 80/120 columns! That’s a real problem when your editor sucks. When you have much better control over your code, things like that are a non-issue. Just write the code, worry about layout when you’re done. Lispers know this.<a href="#fnref5">↩</a></p></li>
+<li id="fn6"><p>The status quo has to debunked incrementally, I think. The next thing to sort out is diffs. People waste their time making their code more friendly to diff engines that only know about lines. Diffs should be smart enough to know better. Expect further development in this area.<a href="#fnref6">↩</a></p></li>
+</ol>
+</div>
+
+<footer>
+  © 2013-12-09 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

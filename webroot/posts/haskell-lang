@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>An alternative Haskell home page</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>An alternative Haskell home page</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>I started a couple months back an alternative home page for Haskell. It is a work in progress, but as I work on it every so often I push changes to it.</p>
+<h2 id="whats-wrong-with-haskell.org">What’s wrong with haskell.org?</h2>
+<p>haskell.org isn’t doing a satisfactory job for me as a place to impress people with Haskell and to guide them into using it.</p>
+<ul>
+<li>Its design is broken or just strangely put together and it’s not responsive.<sup><a href="#fn1" class="footnoteRef" id="fnref1">1</a></sup></li>
+<li>There are too many links on one page which indicates indecision about priorities and a lack of user story or particular target audience. Who’s this site targeting? Where are they supposed to go next? Is it answering the right questions?</li>
+<li>Also, the uncoordinated effort of the wiki <a href="https://stackoverflow.com/questions/23848648/text-html-vs-blaze-html">misleads people</a> and pages begin to bitrot. There are too many to vet.</li>
+</ul>
+<h2 id="why-not-fix-haskell.org">Why not fix haskell.org?</h2>
+<p>The current home page is historically resistant to change, technologically and socially. My relationship to haskell.org over the years has been one of stonewalling when requesting access, of slow replies, and of bike-shedding and nitpicking when proposing designs. A camel is a horse designed by committee and haskell.org is such a horse.</p>
+<h2 id="so-your-plan-is">So your plan is?</h2>
+<p>The plan goes like this:</p>
+<ul>
+<li>The first part of the plan was to survey existing programming language web sites.</li>
+<li>Decide on an audience.</li>
+<li>Decide on a theme.</li>
+<li>Decide on user stories.</li>
+<li>Implement.</li>
+<li>Yay, shiny web site.</li>
+</ul>
+<h2 id="what-do-all-language-sites-have-and-what-should-they-all-have">What do all language sites have and what should they all have?</h2>
+<p>I looked at the following web sites:</p>
+<ul>
+<li><a href="https://fsharp.org/">http://fsharp.org/</a></li>
+<li><a href="https://ruby-lang.org/">http://ruby-lang.org/</a></li>
+<li><a href="https://www.python.org/">https://www.python.org/</a></li>
+<li><a href="https://www.rust-lang.org/">http://www.rust-lang.org/</a></li>
+<li><a href="https://ocaml.org/">http://ocaml.org/</a></li>
+<li><a href="https://golang.org/">http://golang.org/</a></li>
+<li><a href="https://www.perl.org/">http://www.perl.org/</a></li>
+<li><a href="https://scala-lang.org/">http://scala-lang.org/</a></li>
+<li><a href="https://clojure.org/">http://clojure.org/</a></li>
+</ul>
+<p>There are good points and bad points for each one, but I came up with a set of things that are common among all, and a couple additional points I came up with:</p>
+<ul>
+<li>A theme</li>
+<li>Logo</li>
+<li>Menu
+<ul>
+<li>Download</li>
+<li>Community</li>
+<li>Documentation</li>
+<li>News</li>
+</ul></li>
+<li>Visual things
+<ul>
+<li>Opening paragraph</li>
+<li>Code sample</li>
+<li>Thumbnails of videos</li>
+<li>Pictures of community stuff; human beings</li>
+<li>Screenshots</li>
+<li>Selling points</li>
+<li>News</li>
+<li>Twitter/feeds</li>
+<li>Supporters / sponsoring companies</li>
+</ul></li>
+<li>Other links
+<ul>
+<li>Application areas / success stories</li>
+<li>Language options (locale; Japanese, German, etc.)</li>
+</ul></li>
+</ul>
+<h2 id="existing-crop-of-language-home-pages">Existing crop of language home pages</h2>
+<p>If you’re interested in my review of each home page, here’s what I wrote:</p>
+<ul>
+<li>F#’s is boring, it has no character, features no code samples. But it does have a bunch of company backing logos.</li>
+<li>Ruby’s is among the best. It has character. It has two navigations, which is bad,<sup><a href="#fn2" class="footnoteRef" id="fnref2">2</a></sup> but otherwise it’s perfect. Otherwise, my only criticism is that it overemphasizes news which most new people don’t care about and which Rubyists get via other sources.</li>
+<li>Python’s, like Ruby’s, is good. It has character. It has code samples. But it’s worse than Ruby in that it has four areas of navigation. The top bar, the second bar, the third call to action section, and finally the footer. Each of which has a different subset of total places of interest. Again, it uses space presenting news items. However, I particularly like the section which shows Web Programming, GUI Development, etc. and then next to each the library one would use to accomplish that task. That’s very practical and speaks positively about the language and community.</li>
+<li>OCaml’s is not bad either. It has a deserty theme giving it its own character. It suffers from link overload, which implies it might’ve been copying Haskell’s or Python’s home pages.</li>
+<li>Go’s home page is notable for its embedded try feature, something which I’ve wanted Haskell’s home page to have for a long time. It’s also got a very simple and straight-forward navigation. The logo/mascot is in there, giving the whole page a bit of fun character, too. While not much to look at, unresponsive to device, clearly written by a pragmatist systems person, it has a lot going for it and is in my mind among the best I’ve looked at.</li>
+<li>For Perl’s homepage, I’ll echo similar complaints as before. Link overload. It’s a rather lazy way to make a home page. Let’s throw in as many links as we can and hope people read it all and by chance find what they’re looking for. Oh and to fill out the page, let’s add recent uploads (who cares?) and news items (again, who cares?). Finally, it has no character whatsoever. It has the awful O’Reilly pen drawing of a random animal that’s supposed to embody the character of the language, but is meaningless. I probably dislike this one the most, a close tie with F#’s.</li>
+<li>Scala’s is very trendy and pretty. It’s got a lot of events and training info which, along with the header mountains, gives it a very communal and active fresh feel. Again, echoing the praise of Go’s page, it has very simple navigation. One navigation at the top, and then two big buttons for the most common tasks. After that, like Python’s home page, there’s a good review of features of the language that make this language more interesting than the next language. I give credit to this page for visual inspiration.</li>
+<li>Clojure suffers a little bit from linkitis, too. It has three menus and then a page full of links. It has zero code samples on the first page you land on. But it is clean and has a certain character to it.</li>
+</ul>
+<p>Generally, I’m not sure why sites bother with search boxes. Unless they’re implementing code-aware searches, Google will be faster and more accurate every time. As Joel Spolsky says of his StackOverflow, Google is the user interface to SO.</p>
+<p>Regarding linkitis, I will quote <a href="https://en.wikipedia.org/wiki/Don't_Make_Me_Think">Don’t Make Me Think</a> that a user will happily click three links to narrow down what they want, than to have to think and search around a page to find what they want, if they have the patience for it.</p>
+<h2 id="the-audience">The audience</h2>
+<p>The audience is newbies. People who use Haskell don’t go to haskell.org. They go to Hackage, or they google search and find wiki entries, or the GHC manual. A home page shouldn’t cater to Haskellers, it should cater to would-be Haskellers.</p>
+<p>Naysayers for an attractive home page say things like “we don’t want superficial people joining the community” (as if they could just learn Haskell on a whim!), but forget that people live insular lives. There are millions of people out there who’ve never heard of Haskell. If a random web user stumbles upon it and is taken by the look of it, what are they going to do with it? Share it. How did you first hear of Haskell? I was told about it by a friend.</p>
+<p>To decide on the kinds of things I want to see on a landing page when I first look at a language I’m unfamiliar with I ask a bunch of common questions. I’ve condensed them all in the user stories section.</p>
+<h2 id="the-theme">The theme</h2>
+<p>I’ve always liked the purple and green of the old Haskell logo. I don’t know why gray/sky blue ended up being used for the new logo. So I decided I’d keep that purple theme and made some mockups. Purple is <a href="https://en.wikipedia.org/wiki/Purple#Vanity.2C_extravagance.2C_individualism">a cool color</a>.</p>
+<h2 id="user-stories">User stories</h2>
+<p>The user stories I’ve identified have been encoded in the main navigation:</p>
+<ul>
+<li>A user just wants to try Haskell. They scroll to ‘Try it’ and, well, try it. There can be links to further sites like Try Haskell, School of Haskell, Code Pad, Lambdabot, services like that.</li>
+<li>A user wants to download Haskell. They click ‘Downloads’. What particular file they want to download doesn’t matter. It could be GHC, it could be the Haskell Platform, it could be some packages. If they want to download something, they go to Downloads.</li>
+<li>A user wants to interact with/find community. They click ‘Community’. On that page is a list of various community places of interest, which may itself be expanded with videos and things like that.</li>
+<li>A user wants to get information. They click ‘Documentation’. That means books, reports, papers, tutorials.</li>
+<li>A user wants to catch up with what’s new in general, with Haskell. They click ‘News’ and there can be an RSS feed available on that page. Haskell News is mostly suitable to this task.</li>
+</ul>
+<h2 id="ahoy-ye-olde-mockup">Ahoy, ye olde mockup!</h2>
+<p>I synthesized all this together into <a href="https://chrisdone.com/comp.png">a comp in Inkscape</a>.</p>
+<p>I think it answers the following questions:</p>
+<ul>
+<li>Any particular brand/logo? [header]</li>
+<li>In a few words, what is this thing? [header]</li>
+<li>What does it look like? I want to see code immediately. [header]</li>
+<li>Can I try it right now? [try haskell section]</li>
+<li>I’m still interested. Is anyone using this thing? [community &amp; videos, events section]</li>
+<li>What are the selling points, over, say, ML or C#? [features section]</li>
+<li>Where do I download stuff/find community/docs/news? [the main menu at the top]</li>
+</ul>
+<p>I made a mockup for the subsite, but that’s uninteresting.</p>
+<h2 id="implementation">Implementation</h2>
+<p>I’ve implemented a starting prototype here at <a href="https://haskell-lang.org/">haskell-lang.org</a>. At the time of writing it doesn’t yet fully flesh out all the things planned in the mockup.</p>
+<p>There are a few half-done pages in the navigation, fleshed out just enough to satisfy my plan and to motivate for further work.</p>
+<p>Here’s a quick comparison of the two sites now:</p>
+<p>To illustrate, here’re the sites on various devices:</p>
+<ul>
+<li><a href="https://ami.responsivedesign.is/?url=http%3A%2F%2Fhaskell.org">haskell.org</a></li>
+<li><a href="https://ami.responsivedesign.is/?url=http%3A%2F%2Fhaskell-lang.org">haskell-lang.org</a></li>
+</ul>
+<p>I’ve also made a little page to render wiki pages from haskell.org. There is a simple request sent to haskell.org for <code>/wiki/*</code> pages, it parses the Wiki syntax with pandoc and renders it to HTML, at least for the pages that MediaWiki is kind enough to serve. Example: <a href="https://www.haskell.org/haskellwiki/Handling_errors_in_Haskell">Handling errors in Haskell</a></p>
+<p>Here is <a href="https://haskell-lang.org/wiki/Handling_errors_in_Haskell">the above wiki page</a> with a cleaned up presentation.</p>
+<p>Note that MediaWiki is a bit stunted in the data it exposes for use. Some pages just aren’t available, others produce invalid XML, etc. This is why the wiki is not exposed in the navigation.</p>
+<p>I’m not sure about exposing the wiki directly, but rather some selected vetted pages, perhaps.</p>
+<h2 id="going-forward">Going forward</h2>
+<p>I still have to:</p>
+<ul>
+<li><del>Fill in the Try support</del></li>
+<li><del>The features copy</del></li>
+<li>Examples for each of said features</li>
+<li><del>A list of video thumbnails to appear under the community banner (as in the comp)</del></li>
+<li>Upcoming/past events</li>
+<li>At least 5 examples for the header code</li>
+<li><del>Add books &amp; manuals to the Documentation tab</del></li>
+</ul>
+<p>I’m happy with the look and feel and organization. Now is the matter of filling it with useful things. That’ll take about a month, by weekend/spare-time development. Once that’s done, it will be ready to link to newbies. I’ll have a link to be proud of when people bring up Haskell.</p>
+<p>I could solicit the community for contributions via pull requests. It depends on people approving of the project and my approach. So if you’re reading this and you accept my design and organization<sup><a href="#fn3" class="footnoteRef" id="fnref3">3</a></sup> and would like to contribute content (content pages are written in markdown), then pull requests to <a href="https://github.com/haskell-infra/hl">the github repo</a> would be most handy. I will merge your changes and redeploy with relative speed.</p>
+<p>In particular, content in wanting which is not straight-forward for me to produce:</p>
+<ul>
+<li>About 5 examples of concise, short Haskell code which can sit in the header. Ideally, each example can be clicked and it will take you to a markdown page under an Examples hierarchy that explains how the code works.</li>
+<li>The features section needs to be filled out with content. I’m not entirely sure that the headers are decent, but I’m pretty sure they’re a good start.<sup><a href="#fn4" class="footnoteRef" id="fnref4">4</a></sup> Pages for each of those which contain example code of real problems that are solved are needed.</li>
+</ul>
+<p>I won’t be able to actively work on this for a few days, but I can do bits and bobs here and there on the weekend and I always have time to merge straight-forward changes.</p>
+<p>Questions/comments, feel free to email me: <script type="text/javascript">
+<!--
+h='&#x67;&#x6d;&#x61;&#x69;&#108;&#46;&#x63;&#x6f;&#x6d;';a='&#64;';n='&#x63;&#104;&#114;&#x69;&#x73;&#100;&#x6f;&#110;&#x65;';e=n+a+h;
+document.write('<a h'+'ref'+'="ma'+'ilto'+':'+e+'">'+'<code>'+e+'</code>'+'<\/'+'a'+'>');
+// -->
+</script><noscript>chrisdone at gmail dot com</noscript> Put a note in the email if you wish to be CC’d with other people in the discussion.</p>
+<div class="footnotes">
+<hr></hr>
+<ol>
+<li id="fn1"><p>When I open haskell.org on my phone, I see the tablet-sized layout with tiny text. The layout goes wonky on the tablet version.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>Having two navigations leads to <a href="https://en.wikipedia.org/wiki/The_Paradox_of_Choice">arbitrary choice.</a><a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>That means that you won’t nitpick design decisions, bike shed about the theme, organization, choice of picture in the landing page, etc.<a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>Maybe type-classes and monads might be of interest because both where pioneered by Haskell and, at least in their native support, are both peculiar to Haskell.<a href="#fnref4">↩</a></p></li>
+</ol>
+</div>
+
+<footer>
+  © 2014-05-29 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

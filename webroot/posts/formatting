@@ -1,0 +1,213 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Formatting in Haskell</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Formatting in Haskell</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>This post is about the <a href="https://hackage.haskell.org/package/formatting">formatting</a> package.</p>
+<h2 id="whats-wrong-with-printf">What’s wrong with printf?</h2>
+<p>The <code>Text.Printf</code> module is problematic simply because it’s not type-safe:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; <span class="kw">import</span> Text.Printf
+λ&gt; printf <span class="st">&quot;&quot;</span> <span class="dv">2</span>
+<span class="fu">***</span> <span class="dt">Exception</span><span class="fu">:</span> printf<span class="fu">:</span> formatting string ended prematurely
+λ&gt; printf <span class="st">&quot;%s&quot;</span> <span class="dv">2</span>
+<span class="fu">***</span> <span class="dt">Exception</span><span class="fu">:</span> printf<span class="fu">:</span> bad formatting char <span class="ch">'s'</span></code></pre>
+<p>And it’s not extensible in the argument type. The <a href="https://hackage.haskell.org/package/base-4.7.0.1/docs/Text-Printf.html#t:PrintfType">PrintfType</a> class does not export its methods.</p>
+<p>And it’s not extensible in the formatting. You can’t add a “%K” syntax to it to print a value in Kelvins, for example.</p>
+<p>And it’s implicit. You can’t just use your normal API searching facilities to search how to print a <code>Day</code>.</p>
+<h2 id="holy-moly">Holy Moly!</h2>
+<p>A while ago I was inspired by the <a href="https://hackage.haskell.org/package/HoleyMonoid">HoleyMonoid</a> package to use that mechanism to make a general replacement for <a href="https://hackage.haskell.org/package/base-4.7.0.1/docs/Text-Printf.html"><code>printf</code></a>.</p>
+<p>It’s a continuation-based way of building up monoidal functions by composition with the ability to insert constants in-between. Example:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">let</span> holey <span class="fu">=</span> now <span class="st">&quot;x = &quot;</span>
+          <span class="fu">.</span> later show
+          <span class="fu">.</span> now <span class="st">&quot;, y = &quot;</span>
+          <span class="fu">.</span> later show
+
+<span class="fu">&gt;</span> run holey <span class="dv">3</span> <span class="dv">5</span>
+<span class="st">&quot;x = 3, y = 5&quot;</span></code></pre>
+<p>The <code>now</code> function inserts a monoidal value directly into the composition. So</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">run (now x <span class="fu">.</span> now y)</code></pre>
+<p>is equivalent to</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">x <span class="fu">&lt;&gt;</span> y</code></pre>
+<p>And</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">run (later show <span class="fu">.</span> now x <span class="fu">.</span> later show <span class="fu">.</span> now y)</code></pre>
+<p>is equivalent to</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">\a b <span class="ot">-&gt;</span> show a <span class="fu">&lt;&gt;</span> x <span class="fu">&lt;&gt;</span> show b <span class="fu">&lt;&gt;</span> y</code></pre>
+<h2 id="the-formatting-package">The Formatting package</h2>
+<p>The package is available on Hackage as <a href="https://hackage.haskell.org/package/formatting">formatting</a>.</p>
+<h3 id="comparison-with-other-formatters">Comparison with other formatters</h3>
+<p>Example:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">format (<span class="st">&quot;Person's name is &quot;</span> <span class="fu">%</span> text <span class="fu">%</span>  <span class="st">&quot;, age is &quot;</span> <span class="fu">%</span> hex) <span class="st">&quot;Dave&quot;</span> <span class="dv">54</span></code></pre>
+<p>or with short-names:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">format (<span class="st">&quot;Person's name is &quot;</span> <span class="fu">%</span> t <span class="fu">%</span> <span class="st">&quot;, age is &quot;</span> <span class="fu">%</span> x) <span class="st">&quot;Dave&quot;</span> <span class="dv">54</span></code></pre>
+<p>Similar to C’s <code>printf</code>:</p>
+<pre class="sourceCode c"><code class="sourceCode c">printf(<span class="st">&quot;Person's name is %s, age is %x&quot;</span>,<span class="st">&quot;Dave&quot;</span>,<span class="dv">54</span>);</code></pre>
+<p>and Common Lisp’s <code>FORMAT</code>:</p>
+<pre class="lisp"><code>(format nil &quot;Person's name is ~a, age is ~x&quot; &quot;Dave&quot; 54)</code></pre>
+<h3 id="the-holey-type">The Holey type</h3>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">newtype</span> <span class="dt">HoleyT</span> r a m <span class="fu">=</span> <span class="dt">Holey</span> {<span class="ot"> runHM ::</span> (m <span class="ot">-&gt;</span> r) <span class="ot">-&gt;</span> a }
+
+<span class="kw">type</span> <span class="dt">Holey</span> m r a <span class="fu">=</span> <span class="dt">HoleyT</span> r a m</code></pre>
+<p>This is my version of the <code>HoleyMonoid</code>. To make this into a useful package I changed a few things.</p>
+<p>The <code>Category</code> instance implied a name conflict burden with <code>(.)</code>, so I changed that to <code>(%)</code>:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">(%) ::</span> <span class="dt">Monoid</span> n <span class="ot">=&gt;</span> <span class="dt">Holey</span> n b c <span class="ot">-&gt;</span> <span class="dt">Holey</span> n b1 b <span class="ot">-&gt;</span> <span class="dt">Holey</span> n b1 c</code></pre>
+<p>Rather than have the name-conflicting <code>map</code> function, I flipped the type arguments of the type and made it an instance of <code>Functor</code>.</p>
+<h3 id="printers">Printers</h3>
+<p>There is an array of top-level printing functions for various output types:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="co">-- | Run the formatter and return a lazy 'Text' value.</span>
+<span class="ot">format ::</span> <span class="dt">Holey</span> <span class="dt">Builder</span> <span class="dt">Text</span> a <span class="ot">-&gt;</span> a
+
+<span class="co">-- | Run the formatter and return a strict 'S.Text' value.</span>
+<span class="ot">sformat ::</span> <span class="dt">Holey</span> <span class="dt">Builder</span> <span class="dt">S.Text</span> a <span class="ot">-&gt;</span> a
+
+<span class="co">-- | Run the formatter and return a 'Builder' value.</span>
+<span class="ot">bprint ::</span> <span class="dt">Holey</span> <span class="dt">Builder</span> <span class="dt">Builder</span> a <span class="ot">-&gt;</span> a
+
+<span class="co">-- | Run the formatter and print out the text to stdout.</span>
+<span class="ot">fprint ::</span> <span class="dt">Holey</span> <span class="dt">Builder</span> (<span class="dt">IO</span> ()) a <span class="ot">-&gt;</span> a
+
+<span class="co">-- | Run the formatter and put the output onto the given 'Handle'.</span>
+<span class="ot">hprint ::</span> <span class="dt">Handle</span> <span class="ot">-&gt;</span> <span class="dt">Holey</span> <span class="dt">Builder</span> (<span class="dt">IO</span> ()) a <span class="ot">-&gt;</span> a</code></pre>
+<p>All the combinators work on a lazy text <a href="https://hackage.haskell.org/package/text-1.1.1.3/docs/Data-Text-Lazy-Builder.html">Builder</a> which has good appending complexity and can output to a handle in chunks.</p>
+<h3 id="the-format-type">The Format type</h3>
+<p>There is a short-hand type for any formatter:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="kw">type</span> <span class="dt">Format</span> a <span class="fu">=</span> forall r<span class="fu">.</span> <span class="dt">Holey</span> <span class="dt">Builder</span> r (a <span class="ot">-&gt;</span> r)</code></pre>
+<p>All formatters are written in terms of <code>now</code> or <code>later</code>.</p>
+<h3 id="formatters">Formatters</h3>
+<p>There is a standard set of formatters in <a href="https://hackage.haskell.org/package/formatting-5.2/docs/Formatting-Formatters.html">Formatting.Formatters</a>, for example:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">text ::</span> <span class="dt">Format</span> <span class="dt">Text</span>
+<span class="ot">int ::</span> <span class="dt">Integral</span> a <span class="ot">=&gt;</span> <span class="dt">Format</span> a
+<span class="ot">sci ::</span> <span class="dt">Format</span> <span class="dt">Scientific</span>
+<span class="ot">hex ::</span> <span class="dt">Integral</span> a <span class="ot">=&gt;</span> <span class="dt">Format</span> a</code></pre>
+<p>Finally, there is a general <code>build</code> function that will build anything that is an instance of the <code>Build</code> class from the <code>text-format</code> package:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">build ::</span> <span class="dt">Buildable</span> a <span class="ot">=&gt;</span> <span class="dt">Format</span> a</code></pre>
+<p>For which there are a bunch of instances. See <a href="https://github.com/chrisdone/formatting#hello-world-texts">the README</a> for a full set of examples.</p>
+<h3 id="composing-formatters">Composing formatters</h3>
+<p><code>%.</code> is like <code>%</code> but feeds one formatter into another:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">λ&gt; format (left <span class="dv">2</span> <span class="ch">'0'</span> <span class="fu">%.</span> hex) <span class="dv">10</span>
+<span class="st">&quot;0a&quot;</span></code></pre>
+<h2 id="extension">Extension</h2>
+<p>You can include things verbatim in the formatter:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;</span> format (now <span class="st">&quot;This is printed now.&quot;</span>)
+<span class="st">&quot;This is printed now.&quot;</span></code></pre>
+<p>Although with <code>OverloadedStrings</code> you can just use string literals:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;</span> format <span class="st">&quot;This is printed now.&quot;</span>
+<span class="st">&quot;This is printed now.&quot;</span></code></pre>
+<p>You can handle things later which makes the formatter accept arguments:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;</span> format (later (const <span class="st">&quot;This is printed later.&quot;</span>)) ()
+<span class="st">&quot;This is printed later.&quot;</span></code></pre>
+<p>The type of the function passed to <code>later</code> should return an instance of <code>Monoid</code>.</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">later ::</span> (a <span class="ot">-&gt;</span> m) <span class="ot">-&gt;</span> <span class="dt">Holey</span> m r (a <span class="ot">-&gt;</span> r)</code></pre>
+<p>The function you format with (<code>format</code>, <code>bprint</code>, etc.) will determine the monoid of choice. In the case of this library, the top-level formating functions expect you to build a text <code>Builder</code>:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="ot">format ::</span> <span class="dt">Holey</span> <span class="dt">Builder</span> <span class="dt">Text</span> a <span class="ot">-&gt;</span> a</code></pre>
+<p>Because builders are efficient generators.</p>
+<p>So in this case we will be expected to produce Builders from arguments:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell">format <span class="fu">.</span><span class="ot"> later ::</span> (a <span class="ot">-&gt;</span> <span class="dt">Builder</span>) <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Text</span></code></pre>
+<p>To do that for common types you can just re-use the formatting library and use bprint:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"> <span class="fu">&gt;</span> <span class="fu">:</span>t bprint
+<span class="ot">bprint ::</span> <span class="dt">Holey</span> <span class="dt">Builder</span> <span class="dt">Builder</span> a <span class="ot">-&gt;</span> a
+<span class="fu">&gt;</span> <span class="fu">:</span>t bprint int <span class="dv">23</span>
+bprint int <span class="dv">23</span><span class="ot"> ::</span> <span class="dt">Builder</span></code></pre>
+<p>Coming back to <code>later</code>, we can now use it to build our own printer combinators:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;</span> <span class="kw">let</span> mint <span class="fu">=</span> later (maybe <span class="st">&quot;&quot;</span> (bprint int))
+<span class="fu">&gt;</span> <span class="fu">:</span>t mint
+<span class="ot">mint ::</span> <span class="dt">Holey</span> <span class="dt">Builder</span> r (<span class="dt">Maybe</span> <span class="dt">Integer</span> <span class="ot">-&gt;</span> r)</code></pre>
+<p>Now <code>mint</code> is a formatter to show <code>Maybe Integer</code>:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;</span> format mint (readMaybe <span class="st">&quot;23&quot;</span>)
+<span class="st">&quot;23&quot;</span>
+<span class="fu">&gt;</span> format mint (readMaybe <span class="st">&quot;foo&quot;</span>)
+<span class="st">&quot;&quot;</span></code></pre>
+<p>Although a better, more general combinator might be:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;</span> <span class="kw">let</span> mfmt x f <span class="fu">=</span> later (maybe x (bprint f))</code></pre>
+<p>Now you can use it to maybe format things:</p>
+<pre class="sourceCode haskell"><code class="sourceCode haskell"><span class="fu">&gt;</span> format (mfmt <span class="st">&quot;Nope!&quot;</span> int) (readMaybe <span class="st">&quot;foo&quot;</span>)
+<span class="st">&quot;Nope!&quot;</span></code></pre>
+<h2 id="retrospective">Retrospective</h2>
+<p>I’ve been using <code>formatting</code> in a bunch of projects since writing it. Happily, its API has been stable since releasing with some additions.</p>
+<p>It has the same advantages as <code>Parsec</code>. It’s a combinator-based mini-language with all the same benefits.</p>
+
+<footer>
+  © 2014-09-20 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>

@@ -1,0 +1,129 @@
+<meta charset="utf-8">
+<title>Stack source tree</title>
+<style>
+.node {
+  cursor: pointer;
+}
+.node:hover {
+  stroke: #000;
+  stroke-width: 1.5px;
+}
+.node--leaf {
+  fill: white;
+}
+.label {
+  font: 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-anchor: middle;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, -1px 0 0 #fff, 0 -1px 0 #fff;
+}
+.label,
+.node--root,
+.node--leaf {
+  pointer-events: none;
+}
+</style>
+<svg width="960" height="960"></svg>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script>
+function go(paths, indata){
+var svg = d3.select("svg"),
+    margin = 20,
+    diameter = +svg.attr("width"),
+    g = svg.append("g").attr("transform", "translate(" + diameter / 2 + "," + diameter / 2 + ")");
+
+var color = d3.scaleLinear()
+    .domain([-1, 5])
+    .range(["#DFE2DB", "#191919"])
+    .interpolate(d3.interpolateHcl);
+
+var color2 = d3.scaleLinear()
+    .domain([-1, 2])
+    .range(["#81d1a1", "#70a585"])
+    .interpolate(d3.interpolateHcl);
+
+var pack = d3.pack()
+    .size([diameter - margin, diameter - margin])
+    .padding(2);
+
+(function(error, root) {
+  if (error) throw error;
+
+  root = d3.hierarchy(root)
+      .sum(function(d) { return d.size; })
+      .sort(function(a, b) { return b.value - a.value; });
+
+  var focus = root,
+      nodes = pack(root).descendants(),
+      view;
+
+function path(x){
+  return (x.parent? path(x.parent) + "/" : "") + x.data.name;
+}
+function visited(c){
+  return paths.some(function(p){
+  return c.substring(0,p.length)==p
+  })
+}
+
+  var circle = g.selectAll("circle")
+    .data(nodes)
+    .enter().append("circle")
+      .attr("class", function(d) { return d.parent ? d.children ? "node" : "node node--leaf" : "node node--root"; })
+      .style("fill", function(d) {
+        return visited(path(d))?
+           color2(d.depth) : d.children ?
+          color(d.depth) :
+
+            null;
+      })
+      .on("click", function(d,e) {
+      console.log(d);
+          if (focus !== d) zoom(d), d3.event.stopPropagation();
+      });
+
+  var text = g.selectAll("text")
+    .data(nodes)
+    .enter().append("text")
+      .attr("class", "label")
+      .style("fill-opacity", function(d) { return d.parent === root ? 1 : 0; })
+      .style("display", function(d) { return d.parent === root ? "inline" : "none"; })
+      .text(function(d) { return d.data.name; });
+
+  var node = g.selectAll("circle,text");
+
+  svg
+      .style("background", color(-1))
+      .on("click", function() {
+
+      zoom(root);
+      });
+
+  zoomTo([root.x, root.y, root.r * 2 + margin]);
+
+  function zoom(d) {
+    var focus0 = focus; focus = d;
+
+    var transition = d3.transition()
+        .duration(d3.event.altKey ? 7500 : 750)
+        .tween("zoom", function(d) {
+          var i = d3.interpolateZoom(view, [focus.x, focus.y, focus.r * 2 + margin]);
+          return function(t) { zoomTo(i(t)); };
+        });
+
+    transition.selectAll("text")
+      .filter(function(d) { return d.parent === focus || this.style.display === "inline"; })
+        .style("fill-opacity", function(d) { return d.parent === focus ? 1 : 0; })
+        .on("start", function(d) { if (d.parent === focus) this.style.display = "inline"; })
+        .on("end", function(d) { if (d.parent !== focus) this.style.display = "none"; });
+  }
+
+  function zoomTo(v) {
+    var k = diameter / v[2]; view = v;
+    node.attr("transform", function(d) { return "translate(" + (d.x - v[0]) * k + "," + (d.y - v[1]) * k + ")"; });
+    circle.attr("r", function(d) { return d.r * k; });
+  }
+})(null, indata);
+}
+</script>
+
+<script>go([], {"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":28017,"children":[],"name":"release.hs"},{"size":46,"children":[],"name":"Setup.hs"}],"name":"scripts"}],"name":"etc"},{"size":1032,"children":[],"name":"HLint.hs"},{"size":2907,"children":[],"name":"Setup.hs"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":5310,"children":[],"name":"Execute.hs"}],"name":"Concurrent"}],"name":"Control"},{"size":0,"children":[{"size":0,"children":[{"size":5685,"children":[],"name":"Extended.hs"}],"name":"Aeson"},{"size":0,"children":[{"size":1263,"children":[],"name":"Args.hs"},{"size":614,"children":[],"name":"Combinators.hs"},{"size":5920,"children":[],"name":"Interpreter.hs"}],"name":"Attoparsec"},{"size":0,"children":[{"size":423,"children":[],"name":"RunOnce.hs"}],"name":"IORef"},{"size":0,"children":[{"size":743,"children":[],"name":"Extra.hs"}],"name":"Maybe"},{"size":0,"children":[{"size":215,"children":[],"name":"Extra.hs"}],"name":"Monoid"},{"size":0,"children":[{"size":4232,"children":[],"name":"VersionTagged.hs"}],"name":"Store"},{"size":0,"children":[{"size":249,"children":[],"name":"Extra.hs"}],"name":"Text"}],"name":"Data"},{"size":0,"children":[{"size":0,"children":[{"size":1093,"children":[],"name":"Extra.hs"}],"name":"Version"}],"name":"Distribution"},{"size":0,"children":[{"size":38091,"children":[],"name":"Main.hs"}],"name":"main"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":12138,"children":[],"name":"Verified.hs"}],"name":"Download"},{"size":5200,"children":[],"name":"Download.hs"}],"name":"HTTP"}],"name":"Network"},{"size":0,"children":[{"size":0,"children":[{"size":1527,"children":[],"name":"Args.hs"},{"size":0,"children":[{"size":6524,"children":[],"name":"Extra.hs"}],"name":"Builder"},{"size":5805,"children":[],"name":"Complicated.hs"}],"name":"Applicative"}],"name":"Options"},{"size":0,"children":[{"size":4106,"children":[],"name":"Extra.hs"},{"size":3947,"children":[],"name":"Find.hs"}],"name":"Path"},{"size":0,"children":[{"size":1340,"children":[],"name":"StackSetupShim.hs"}],"name":"setup-shim"},{"size":0,"children":[{"size":0,"children":[{"size":15615,"children":[],"name":"Cache.hs"},{"size":41493,"children":[],"name":"ConstructPlan.hs"},{"size":76010,"children":[],"name":"Execute.hs"},{"size":13570,"children":[],"name":"Haddock.hs"},{"size":12540,"children":[],"name":"Installed.hs"},{"size":28282,"children":[],"name":"Source.hs"},{"size":13848,"children":[],"name":"Target.hs"}],"name":"Build"},{"size":16833,"children":[],"name":"Build.hs"},{"size":46511,"children":[],"name":"BuildPlan.hs"},{"size":2799,"children":[],"name":"Clean.hs"},{"size":0,"children":[{"size":3157,"children":[],"name":"Build.hs"},{"size":4711,"children":[],"name":"Docker.hs"},{"size":2712,"children":[],"name":"Nix.hs"},{"size":781,"children":[],"name":"Urls.hs"}],"name":"Config"},{"size":41190,"children":[],"name":"Config.hs"},{"size":5789,"children":[],"name":"ConfigCmd.hs"},{"size":11599,"children":[],"name":"Constants.hs"},{"size":22879,"children":[],"name":"Coverage.hs"},{"size":0,"children":[{"size":5095,"children":[],"name":"GlobalDB.hs"}],"name":"Docker"},{"size":43099,"children":[],"name":"Docker.hs"},{"size":12994,"children":[],"name":"Dot.hs"},{"size":3290,"children":[],"name":"Exec.hs"},{"size":28781,"children":[],"name":"Fetch.hs"},{"size":5521,"children":[],"name":"FileWatch.hs"},{"size":0,"children":[{"size":3076,"children":[],"name":"Script.hs"}],"name":"Ghci"},{"size":36595,"children":[],"name":"Ghci.hs"},{"size":6774,"children":[],"name":"GhcPkg.hs"},{"size":7104,"children":[],"name":"Hoogle.hs"},{"size":1908,"children":[],"name":"IDE.hs"},{"size":8389,"children":[],"name":"Image.hs"},{"size":22033,"children":[],"name":"Init.hs"},{"size":17558,"children":[],"name":"New.hs"},{"size":7204,"children":[],"name":"Nix.hs"},{"size":0,"children":[{"size":995,"children":[],"name":"BenchParser.hs"},{"size":6537,"children":[],"name":"BuildMonoidParser.hs"},{"size":3528,"children":[],"name":"BuildParser.hs"},{"size":716,"children":[],"name":"CleanParser.hs"},{"size":5150,"children":[],"name":"ConfigParser.hs"},{"size":6673,"children":[],"name":"DockerParser.hs"},{"size":3107,"children":[],"name":"DotParser.hs"},{"size":1929,"children":[],"name":"ExecParser.hs"},{"size":713,"children":[],"name":"GhcBuildParser.hs"},{"size":2229,"children":[],"name":"GhciParser.hs"},{"size":740,"children":[],"name":"GhcVariantParser.hs"},{"size":3598,"children":[],"name":"GlobalParser.hs"},{"size":768,"children":[],"name":"HaddockParser.hs"},{"size":1291,"children":[],"name":"HpcReportParser.hs"},{"size":1546,"children":[],"name":"LogLevelParser.hs"},{"size":1290,"children":[],"name":"NewParser.hs"},{"size":2087,"children":[],"name":"NixParser.hs"},{"size":1258,"children":[],"name":"PackageParser.hs"},{"size":1109,"children":[],"name":"ResolverParser.hs"},{"size":325,"children":[],"name":"SolverParser.hs"},{"size":1314,"children":[],"name":"TestParser.hs"},{"size":819,"children":[],"name":"Utils.hs"}],"name":"Options"},{"size":51682,"children":[],"name":"Package.hs"},{"size":17854,"children":[],"name":"PackageDump.hs"},{"size":18977,"children":[],"name":"PackageIndex.hs"},{"size":8865,"children":[],"name":"Path.hs"},{"size":4824,"children":[],"name":"PrettyPrint.hs"},{"size":8634,"children":[],"name":"Runners.hs"},{"size":15304,"children":[],"name":"SDist.hs"},{"size":0,"children":[{"size":7397,"children":[],"name":"Installed.hs"}],"name":"Setup"},{"size":82608,"children":[],"name":"Setup.hs"},{"size":4288,"children":[],"name":"SetupCmd.hs"},{"size":0,"children":[{"size":4036,"children":[],"name":"GPG.hs"},{"size":4759,"children":[],"name":"Sign.hs"}],"name":"Sig"},{"size":318,"children":[],"name":"Sig.hs"},{"size":32907,"children":[],"name":"Solver.hs"},{"size":0,"children":[{"size":25298,"children":[],"name":"Build.hs"},{"size":16362,"children":[],"name":"BuildPlan.hs"},{"size":3369,"children":[],"name":"Compiler.hs"},{"size":1335,"children":[],"name":"CompilerBuild.hs"},{"size":0,"children":[{"size":13660,"children":[],"name":"Build.hs"}],"name":"Config"},{"size":78588,"children":[],"name":"Config.hs"},{"size":17973,"children":[],"name":"Docker.hs"},{"size":3925,"children":[],"name":"FlagName.hs"},{"size":2328,"children":[],"name":"GhcPkgId.hs"},{"size":3459,"children":[],"name":"Image.hs"},{"size":2404,"children":[],"name":"Internal.hs"},{"size":3662,"children":[],"name":"Nix.hs"},{"size":15548,"children":[],"name":"Package.hs"},{"size":1300,"children":[],"name":"PackageDump.hs"},{"size":3533,"children":[],"name":"PackageIdentifier.hs"},{"size":5142,"children":[],"name":"PackageIndex.hs"},{"size":5464,"children":[],"name":"PackageName.hs"},{"size":6178,"children":[],"name":"Resolver.hs"},{"size":3013,"children":[],"name":"Sig.hs"},{"size":12362,"children":[],"name":"StackT.hs"},{"size":4333,"children":[],"name":"TemplateName.hs"},{"size":1318,"children":[],"name":"Urls.hs"},{"size":7455,"children":[],"name":"Version.hs"}],"name":"Types"},{"size":10074,"children":[],"name":"Upgrade.hs"},{"size":11303,"children":[],"name":"Upload.hs"}],"name":"Stack"},{"size":0,"children":[{"size":0,"children":[{"size":2718,"children":[],"name":"Log.hs"},{"size":5048,"children":[],"name":"PagerEditor.hs"},{"size":18635,"children":[],"name":"Read.hs"},{"size":5694,"children":[],"name":"Run.hs"}],"name":"Process"}],"name":"System"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":5975,"children":[],"name":"VerifiedSpec.hs"}],"name":"Download"}],"name":"HTTP"}],"name":"Network"},{"size":69,"children":[],"name":"Spec.hs"},{"size":0,"children":[{"size":6076,"children":[],"name":"ArgsSpec.hs"},{"size":0,"children":[{"size":133,"children":[],"name":"ExecuteSpec.hs"},{"size":1160,"children":[],"name":"TargetSpec.hs"}],"name":"Build"},{"size":5067,"children":[],"name":"BuildPlanSpec.hs"},{"size":5741,"children":[],"name":"ConfigSpec.hs"},{"size":5531,"children":[],"name":"DotSpec.hs"},{"size":0,"children":[{"size":315,"children":[],"name":"PortableFakePaths.hs"},{"size":2559,"children":[],"name":"ScriptSpec.hs"}],"name":"Ghci"},{"size":8660,"children":[],"name":"GhciSpec.hs"},{"size":1951,"children":[],"name":"NixSpec.hs"},{"size":11969,"children":[],"name":"PackageDumpSpec.hs"},{"size":1480,"children":[],"name":"SolverSpec.hs"},{"size":3148,"children":[],"name":"StoreSpec.hs"},{"size":0,"children":[{"size":1594,"children":[],"name":"UntarSpec.hs"}],"name":"Untar"}],"name":"Stack"},{"size":78,"children":[],"name":"Test.hs"}],"name":"test"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":10978,"children":[],"name":"Extended.hs"}],"name":"Leijen"}],"name":"PrettyPrint"}],"name":"Text"}],"name":"src"},{"size":0,"children":[{"size":0,"children":[{"size":5012,"children":[],"name":"IntegrationSpec.hs"},{"size":0,"children":[{"size":5642,"children":[],"name":"StackTest.hs"}],"name":"lib"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":120,"children":[],"name":"Lib.hs"}],"name":"src"}],"name":"files"},{"size":55,"children":[],"name":"Main.hs"}],"name":"111-custom-snapshot"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":85,"children":[],"name":"Main.hs"}],"name":"app"}],"name":"also-has-exe-foo"},{"size":0,"children":[{"size":80,"children":[],"name":"Main.hs"}],"name":"app"},{"size":0,"children":[{"size":0,"children":[{"size":84,"children":[],"name":"Main.hs"}],"name":"app"}],"name":"has-exe-foo-too"}],"name":"files"},{"size":1097,"children":[],"name":"Main.hs"}],"name":"1198-multiple-exes-with-same-name"},{"size":0,"children":[{"size":262,"children":[],"name":"Main.hs"}],"name":"1265-extensible-snapshots"},{"size":0,"children":[{"size":922,"children":[],"name":"Main.hs"}],"name":"1336-1337-new-package-names"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":73,"children":[],"name":"Main.hs"}],"name":"app"},{"size":46,"children":[],"name":"Setup.hs"},{"size":0,"children":[{"size":96,"children":[],"name":"Пσε.hs"}],"name":"ארץ"}],"name":"files"},{"size":311,"children":[],"name":"Main.hs"}],"name":"1337-unicode-everywhere"},{"size":0,"children":[{"size":105,"children":[],"name":"Main.hs"}],"name":"1884-url-to-tarball"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":54,"children":[],"name":"Main.hs"}],"name":"main"},{"size":445,"children":[],"name":"Main.hs"},{"size":142,"children":[],"name":"Unlisted_FAIL.hs"},{"size":49,"children":[],"name":"Unlisted_OK.hs"}],"name":"src"}],"name":"files"},{"size":595,"children":[],"name":"Main.hs"}],"name":"32-unlisted-module"},{"size":0,"children":[{"size":0,"children":[{"size":46,"children":[],"name":"Setup.hs"},{"size":0,"children":[{"size":159,"children":[],"name":"Lib.hs"}],"name":"src"}],"name":"files"},{"size":189,"children":[],"name":"Main.hs"}],"name":"335-multi-package-flags"},{"size":0,"children":[{"size":0,"children":[{"size":66,"children":[],"name":"Foo.hs"}],"name":"files"},{"size":122,"children":[],"name":"Main.hs"}],"name":"345-override-bytestring"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":43,"children":[],"name":"Main.hs"}],"name":"app"}],"name":"files"},{"size":247,"children":[],"name":"Main.hs"}],"name":"365-invalid-success"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":31,"children":[],"name":"Main.hs"}],"name":"app"}],"name":"files"},{"size":187,"children":[],"name":"Main.hs"}],"name":"366-non-root-dir"},{"size":0,"children":[{"size":0,"children":[{"size":58,"children":[],"name":"Setup.hs"},{"size":0,"children":[{"size":88,"children":[],"name":"Lib.hs"}],"name":"src"}],"name":"files"},{"size":55,"children":[],"name":"Main.hs"}],"name":"370-invalid-setup-hs"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":88,"children":[],"name":"Lib.hs"}],"name":"src"}],"name":"dir1"},{"size":0,"children":[{"size":0,"children":[{"size":88,"children":[],"name":"Lib.hs"}],"name":"src"}],"name":"dir2"}],"name":"files"},{"size":100,"children":[],"name":"Main.hs"}],"name":"384-local-deps"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":88,"children":[],"name":"Lib.hs"}],"name":"src"}],"name":"files"},{"size":311,"children":[],"name":"Main.hs"}],"name":"397-case-insensitive-flags"},{"size":0,"children":[{"size":958,"children":[],"name":"Main.hs"}],"name":"443-specify-path"},{"size":0,"children":[{"size":0,"children":[{"size":64,"children":[],"name":"Test.hs"}],"name":"files"},{"size":242,"children":[],"name":"Main.hs"}],"name":"444-package-option"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":88,"children":[],"name":"Lib.hs"}],"name":"src"}],"name":"files"},{"size":170,"children":[],"name":"Main.hs"}],"name":"606-local-version-not-exist"},{"size":0,"children":[{"size":72,"children":[],"name":"Main.hs"}],"name":"617-extra-dep-flag"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":88,"children":[],"name":"Lib.hs"}],"name":"src"}],"name":"files"},{"size":191,"children":[],"name":"Main.hs"}],"name":"617-unused-flag-cli"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":88,"children":[],"name":"Lib.hs"}],"name":"src"}],"name":"files"},{"size":58,"children":[],"name":"Main.hs"}],"name":"617-unused-flag-name-yaml"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":88,"children":[],"name":"Lib.hs"}],"name":"src"}],"name":"files"},{"size":58,"children":[],"name":"Main.hs"}],"name":"617-unused-flag-yaml"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":50,"children":[],"name":"Main.hs"}],"name":"app"}],"name":"files"},{"size":243,"children":[],"name":"Main.hs"}],"name":"763-buildable-false"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":240,"children":[],"name":"Lib.hs"}],"name":"src"}],"name":"files"},{"size":151,"children":[],"name":"Main.hs"}],"name":"796-ghc-options"},{"size":0,"children":[{"size":135,"children":[],"name":"Main.hs"}],"name":"basic-install"},{"size":0,"children":[{"size":0,"children":[{"size":17,"children":[],"name":"Foo.hs"}],"name":"files"},{"size":449,"children":[],"name":"Main.hs"}],"name":"cabal-solver"},{"size":0,"children":[{"size":150,"children":[],"name":"Main.hs"}],"name":"cyclic-test-deps"},{"size":0,"children":[{"size":269,"children":[],"name":"Main.hs"}],"name":"duplicate-package-ids"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":72,"children":[],"name":"Main.hs"}],"name":"exe"},{"size":46,"children":[],"name":"Setup.hs"},{"size":0,"children":[{"size":0,"children":[{"size":65,"children":[],"name":"A.hs"}],"name":"Lib"}],"name":"src"}],"name":"files"},{"size":227,"children":[],"name":"Main.hs"}],"name":"module-added-multiple-times"},{"size":0,"children":[{"size":0,"children":[{"size":0,"children":[{"size":61,"children":[],"name":"Main.hs"}],"name":"app"},{"size":0,"children":[{"size":67,"children":[],"name":"Cyclic.hs"},{"size":46,"children":[],"name":"Setup.hs"},{"size":61,"children":[],"name":"Spec.hs"}],"name":"cyclic"},{"size":46,"children":[],"name":"Setup.hs"},{"size":0,"children":[{"size":261,"children":[],"name":"Lib.hs"}],"name":"src"},{"size":0,"children":[{"size":0,"children":[{"size":56,"children":[],"name":"Lib2.hs"},{"size":25,"children":[],"name":"main.hs"}],"name":"src"},{"size":0,"children":[{"size":75,"children":[],"name":"Spec.hs"}],"name":"test"}],"name":"sub-package"},{"size":0,"children":[{"size":0,"children":[],"name":"OtherModule.hs"},{"size":42,"children":[],"name":"Spec.hs"}],"name":"test"},{"size":0,"children":[{"size":43,"children":[],"name":"Spec.hs"}],"name":"test-2"},{"size":0,"children":[{"size":31,"children":[],"name":"Spec.hs"}],"name":"test-3"}],"name":"files"},{"size":799,"children":[],"name":"Main.hs"}],"name":"multi-test"},{"size":0,"children":[{"size":448,"children":[],"name":"Main.hs"}],"name":"sanity"},{"size":0,"children":[{"size":228,"children":[],"name":"Main.hs"}],"name":"skip-unreachable-dirs"}],"name":"tests"}],"name":"integration"}],"name":"test"}],"name":"."});</script>

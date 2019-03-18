@@ -1,0 +1,128 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Rank-N types, a simple DB example</title>
+  <style>body {
+  max-width: 40em;
+  margin: .5in auto;
+  font-size: 18px;
+  font-family: serif;
+  margin-top: 5em;
+  line-height: 1.5;
+}
+pre, code {
+  font-size: 16px;
+}
+pre {
+  margin-left: 1.5em;
+  line-height: 1.2;
+}
+a {
+  color: #1a6e8e
+}
+.menu a {
+  margin-right: 1em;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: Helvetica;
+}
+
+h1 a,h2 a,h3 a,h4 a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-1,.post-2{
+  margin-bottom: 0.5em;
+}
+
+.author {
+  display: none;
+}
+
+footer {
+  margin-top: 1.5em;
+  padding-top: 1.5em;
+  border-top: 1px solid #ccc;
+  margin-bottom: 2em
+}
+
+footer span {
+  display: none;
+}
+
+img {
+  max-width: 100%
+}
+pre.sourceCode span.st {
+  color: #366354
+}
+pre.sourceCode span.kw {
+  color: #397460
+}
+pre.sourceCode span.fu {
+  color: #8f4e8b
+}
+pre.sourceCode span.ot {
+  color: #2e659c
+}
+pre.sourceCode span.dt {
+  color: #4F4371
+}
+pre.sourceCode span.co {
+  color: #666
+}
+  </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Rank-N types, a simple DB example</h1>
+<p class="author">By <a href="https://chrisdone.com/">Chris Done</a></p>
+
+<p>This is a very simple example of rank-N types to demonstrate to non-Haskellers/newbies.</p>
+<p>Following the resources theme, rank-N types as seen in <a href="https://www.haskell.org/haskellwiki/Monad/ST">the ST monad</a> are also a gem:</p>
+<pre><code>{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE RankNTypes #-}</code></pre>
+<p>Define a monad for interacting with the DB parametrized on a connection type variable, <code>c</code>, as well as the return type:</p>
+<pre><code>newtype DB c a = DB (IO a) deriving (Monad)</code></pre>
+<p>And a connection data type parametrized on the connection type variable:</p>
+<pre><code>newtype Connection c = Connection ()</code></pre>
+<p>Define the connection opening function such that the quantified type variable <code>c</code> cannot escape from the DB monad:</p>
+<pre><code>withConnection :: (forall c. DB c a) -&gt; IO a
+withConnection m = case m of DB io -&gt; io</code></pre>
+<p>Let’s say in a real implementation <code>withConnection</code> opens a database connection in a transaction and commits and closes when done, among other exception catching things.</p>
+<p>Define some functions for the DB monad (note they all reference the <code>c</code> type variable):</p>
+<pre><code>getConn :: DB c (Connection c)
+getConn = return (Connection ())
+
+query :: Connection c -&gt; String -&gt; DB c [String]
+query _ _ = return [&quot;Hello!&quot;]</code></pre>
+<p>Now we can use it like this:</p>
+<pre><code>demo1 = withConnection $ do
+  conn &lt;- getConn
+  rows &lt;- query conn &quot;SELECT …&quot;
+  return rows
+
+λ&gt; demo1
+[&quot;Hello!&quot;]</code></pre>
+<p>But if you try to return the connection…</p>
+<pre><code> demo2 = withConnection $ do
+   conn &lt;- getConn
+   rows &lt;- query conn &quot;SELECT …&quot;
+   return conn</code></pre>
+<p>You get a compile error:</p>
+<pre><code>Error:  Inferred type is less polymorphic than expected
+      Quantified type variable `c' escapes</code></pre>
+<p>This is pretty nice if your DB library implementation, e.g., is supposed to ensure operations on a connection run inside a transaction, or if your operations assume a connection exists. Otherwise you’re liable to having DB code run outside of a transaction, or code throwing exceptions because the connection was closed but we tried to use it anyway, or in severe cases, some C DB libraries will just segfault.</p>
+<p>We didn’t have to do anything complex or write any boilerplate or macros or whatnot, just use the type system. That’s what it’s for.</p>
+
+<footer>
+  © 2011-10-16 Chris Done &lt;chrisdone@gmail.com&gt;
+<span style="float:right"><a href="../rss.xml">RSS</a></span>
+</footer>
+
+    </div>
+
+  </body>
+</html>
