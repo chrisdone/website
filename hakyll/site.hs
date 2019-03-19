@@ -18,7 +18,7 @@ main =
         pandocCompiler >>= loadAndApplyTemplate "templates/post.html" postCtx >>=
         loadAndApplyTemplate "templates/default.html" postCtx >>=
         relativizeUrls
-    create ["archive.html"] $ do
+    create ["posts.html"] $ do
       route indexRoute
       compile $ do
         posts <- recentFirst =<< loadAll "posts/*"
