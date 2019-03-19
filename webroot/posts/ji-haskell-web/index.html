@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Ji, a little library for controlling a web browser from Haskell</title>
+    <style>body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      margin-top: 5em;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.2;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>
+Ji, a little library for controlling a web browser from Haskell
+</h1>
+<p>As of recent I have only been creating a lot of new projects, not working one existing ones or finishing half done ones off.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>So here’s yet another little project that is to test the concept of controlling the web browser’s DOM from Haskell as a means to write user applications.</p>
+<p>It doesn’t use websockets as websockets aren’t well supported<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>, so I just used a simple poll/push protocol.</p>
+<p>The code is on Github:</p>
+<ul>
+<li><a href="https://github.com/chrisdone/ji" class="uri">https://github.com/chrisdone/ji</a></li>
+</ul>
+<p>Haddock docs <a href="http://chrisdone.com/ji/doc/html/ji/Graphics-UI-Ji.html">here</a>.</p>
+<p>Here are two examples I made so far:</p>
+<ul>
+<li><a href="http://chrisdone.com/ji/buttons/">Some simple buttons</a></li>
+<li><a href="http://chrisdone.com/ji/missing-dollars/">Missing dollars question</a></li>
+</ul>
+<p>It seems fairly viable so far. I would have liked to produce many more examples, but I couldn’t really think of any. I stole the idea for the dollars from Albert Lai. There is more room for optimizations, but until I do a more large scale test, hard to say exactly where needs it.</p>
+<p>It might be a good test to rewrite TryHaskell with it. Probably still too easy. I’ll give it a while to think about it.</p>
+<p>It could be a base on which to build a more high-level library or framework.</p>
+<p>I could also write a back-end for digestive-formlets.</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Partly this is a way to feel like I’ve spent my time well as it’s easier to complete something small, and partly that ideas I get which sound feasible typically linger in my head asking to be prototyped, so this is a way of flushing them out.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>I wanted to use socket.io but there is no Haskell socket.Io back-end, and I didn’t feel like writing Node. There are several websockets Haskell libraries, but as mentioned websockets itself isn’t well supported, I’d have to upgrade to try it (and so would everyone else). Websockets would be the eventual protocol, though.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+</ol>
+</section>
+
+<footer>
+  © 2011-12-26 Chris Done
+</footer>
+
+    </div>
+  </body>
+</html>

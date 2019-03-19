@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>$title$</title>
+    <title>A map generic upon the value thanks to typeable</title>
     <style>body {
       max-width: 40em;
       margin: .5in auto;
@@ -77,7 +77,47 @@
   </head>
   <body>
     <div class="page-wrap">
-      $body$
+      <h1>
+A map generic upon the value thanks to typeable
+</h1>
+<p>Not sure why I never tried this before.</p>
+<pre><code>{-# LANGUAGE ExistentialQuantification #-}
+{-# LANGUAGE DeriveDataTypeable #-}
+
+import Data.Typeable
+import qualified Data.Map as M
+import Data.Map (Map)
+
+data Person = Person Integer String
+  deriving (Typeable,Show)
+
+data Value = forall v. Typeable v =&gt; Value v
+
+demo = do
+  print (glookup &quot;foo&quot; map :: Maybe ())
+  print (glookup &quot;bar&quot; map :: Maybe Char)
+  print (glookup &quot;chris&quot; map :: Maybe Person)
+
+    where map = M.insert &quot;bar&quot; (Value 'a') $
+                M.insert &quot;foo&quot; (Value ())  $
+                M.insert &quot;chris&quot; (Value (Person 123 &quot;Chris Done&quot;))  $
+                M.empty
+
+glookup :: (Typeable a,Ord key) =&gt; key -&gt; Map key Value -&gt; Maybe a
+glookup key map =
+  case M.lookup key map of
+    Nothing -&gt; Nothing
+    Just (Value x) -&gt; (cast x)
+
+-- λ&gt; demo
+-- Just ()
+-- Just 'a'
+-- Just (Person 123 &quot;Chris Done&quot;)</code></pre>
+
+<footer>
+  © 2011-12-05 Chris Done
+</footer>
+
     </div>
   </body>
 </html>

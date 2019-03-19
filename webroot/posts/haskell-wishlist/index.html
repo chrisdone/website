@@ -1,0 +1,232 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>My Haskell tooling wishlist</title>
+    <style>body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      margin-top: 5em;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.2;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>
+My Haskell tooling wishlist
+</h1>
+<p>I spend a lot of my time on Haskell tooling, both for my hobbies and my job. Almost every project I work on sparks a desire for another piece of tooling. Much of the time, I’ll follow that wish and take a detour to implement that thing (Fay, structured-haskell-mode, hindent, are some Haskell-specific examples). But in the end it means less time working on the actual domain problem I’m interested in, so a while ago I intentionally placed a quota on the amount of time I can spend on this.</p>
+<p>So this page will contain a list of things I’d work on if I had infinite spare time, and that I wish someone else would make. I’ll update it from time to time as ideas come to the fore.</p>
+<p>These projects are non-trivial but are do-able by one person who has enough free time and motivation. There is a common theme among the projects listed, which is that they are things that Haskell among most other well known languages is particularly well suited for and yet we don’t have such tooling as standard tools in the Haskell tool box. They should be!</p>
+<h2 id="an-equational-reasoning-assistant">An equational reasoning assistant</h2>
+<p>Equational reasoning lets you prove properties about your functions by following a simple substitution model to state that one term is equal to another. The approach I typically take is to expand and reduce until both sides of the equation are the same.</p>
+<p>Here is an example. I have a data type, <code>Consumer</code>. Here is an instance of <code>Functor</code>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Functor</span> (<span class="dt">Consumer</span> s d) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">  fmap f (<span class="dt">Consumer</span> d p) <span class="fu">=</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">    <span class="dt">Consumer</span> d</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">             (\s <span class="ot">-&gt;</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">                <span class="kw">case</span> p s <span class="kw">of</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">                  (<span class="dt">Failed</span> e,s') <span class="ot">-&gt;</span> (<span class="dt">Failed</span> e,s')</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">                  (<span class="dt">Continued</span> e,s') <span class="ot">-&gt;</span> (<span class="dt">Continued</span> e,s')</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">                  (<span class="dt">Succeeded</span> a,s') <span class="ot">-&gt;</span></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9">                    (<span class="dt">Succeeded</span> (f a),s'))</a></code></pre></div>
+<p>I want to prove that it is a law-abiding instance of Functor, which means proving that <code>fmap id ≡ id</code>. You don’t need to know anything about the <code>Consumer</code> type itself, just this implementation. Here are some very mechanical steps one can take to prove this:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1">id ≡ fmap id</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">   ≡ \(<span class="dt">Consumer</span> d p) <span class="ot">-&gt;</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">        <span class="dt">Consumer</span> d</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">         (\s <span class="ot">-&gt;</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">            <span class="kw">case</span> p s <span class="kw">of</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">              (<span class="dt">Failed</span> e,s') <span class="ot">-&gt;</span> (<span class="dt">Failed</span> e,s')</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">              (<span class="dt">Continued</span> e,s') <span class="ot">-&gt;</span> (<span class="dt">Continued</span> e,s')</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">              (<span class="dt">Succeeded</span> a,s') <span class="ot">-&gt;</span> (<span class="dt">Succeeded</span> (id a),s'))</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">   ≡ \(<span class="dt">Consumer</span> d p) <span class="ot">-&gt;</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">        <span class="dt">Consumer</span> d</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">         (\s <span class="ot">-&gt;</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">            <span class="kw">case</span> p s <span class="kw">of</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">              (<span class="dt">Failed</span> e,s') <span class="ot">-&gt;</span> (<span class="dt">Failed</span> e,s')</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">              (<span class="dt">Continued</span> e,s') <span class="ot">-&gt;</span> (<span class="dt">Continued</span> e,s')</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">              (<span class="dt">Succeeded</span> a,s') <span class="ot">-&gt;</span> (<span class="dt">Succeeded</span> a,s'))</a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">   ≡ \(<span class="dt">Consumer</span> d p) <span class="ot">-&gt;</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">        <span class="dt">Consumer</span> d</a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">         (\s <span class="ot">-&gt;</span> p s)</a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">   ≡ \(<span class="dt">Consumer</span> d p) <span class="ot">-&gt;</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">        <span class="dt">Consumer</span> d p</a>
+<a class="sourceLine" id="cb2-21" data-line-number="21">   ≡ id</a></code></pre></div>
+<p>So that’s:</p>
+<ul>
+<li>Expand the <code>fmap id</code> into the instance’s implementation.</li>
+<li>Reduce by applying the property that <code>id x ≡ x</code>.</li>
+<li>Reason that if every branch of a case returns the original value of the case, then that whole case is an identity and can be dropped.</li>
+<li>Eta-reduce.</li>
+<li>Again, pattern-matching lambdas are just syntactic sugar for cases, so by the same rule this can be considered identity.</li>
+<li>End up with what we wanted to prove: <code>fmap id ≡ id</code></li>
+</ul>
+<p>These are pretty mechanical steps. They’re also pretty laborious and error-prone. Of course, if you look at the first step, it’s pretty obvious the whole thing is an identity, but writing the steps out provides transformations that can be statically checked by a program. So it’s a good example, because it’s easily understandable and you can imagine proving something more complex would require a lot more steps and a lot more substitutions. Proof of <a href="http://lpaste.net/5232874250913710080">identity for Applicative has substantially more steps</a>, but is equally mechanical.</p>
+<p>Wouldn’t it be nice if there was a tool which given some expression would do the following?</p>
+<ul>
+<li>Suggest a list of in-place expansions.</li>
+<li>Suggest a list of reductions based on a set of pre-defined rules (or axioms).</li>
+</ul>
+<p>Then I could easily provide an interactive interface for this from Emacs.</p>
+<p>In order to do expansion, you need the original source of the function name you want to expand. So in the case of <code>id</code>, that’s why I suggested stating an axiom (id a ≡ a) for this. Similarly, I could state the identity law for Monoids by saying <code>mappend mempty a ≡ a</code>, <code>mappend a mempty ≡ a</code>. I don’t necessarily need to expand the source of all functions. Usually just the ones I’m interested in.</p>
+<p>Given such a system, for my example above, the program could actually perform all those steps automatically and spit out the steps so that I can read them if I choose, or otherwise accept that the proof was derived sensibly.</p>
+<p>In fact, suppose I have my implementation again, and I state what must be satisfied by the equational process (and, perhaps, some axioms that might be helpful for doing it, but in this case our axioms are pretty standard), I might write it like this:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Functor</span> (<span class="dt">Consumer</span> s d) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">  fmap f (<span class="dt">Consumer</span> d p) <span class="fu">=</span> <span class="fu">...</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">proof [<span class="fu">|</span>fmap id ≡<span class="ot"> id ::</span> <span class="dt">Consumer</span> s d a<span class="fu">|</span>]</a></code></pre></div>
+<p>This template-haskell macro <code>proof</code> would run the steps above and if the equivalence is satisfied, the program compiles. If not, it generates a compile error, showing the steps it performed and where it got stuck. TH has limitations, so it might require writing it another way.</p>
+<p>Such a helpful tool would also encourage people (even newbies) to do more equational reasoning, which Haskell is often claimed to be good at but you don’t often see it in evidence in codebases. In practice isn’t a standard thing.</p>
+<p>Promising work in this area:</p>
+<ul>
+<li><a href="http://ittc.ku.edu/~andygill/papers/IntroHERA06.pdf">Introducing the Haskell Equational Reasoning Assistant</a> – works pretty much how I described above. I don’t know where the source is, I’ve emailed the author about it. Will update with any results.</li>
+</ul>
+<p><strong>Update 2014-01-25</strong>: Andrew Gill got back to me that <a href="http://ku-fpg.github.io/software/hermit/">HERMIT</a> is the continuation of HERA. It seems that you can get <a href="http://hackage.haskell.org/package/hermit-0.6.0.0/docs/HERMIT-Dictionary-Inline.html">inlining</a>, <a href="http://hackage.haskell.org/package/hermit-0.6.0.0/docs/HERMIT-Dictionary-Composite.html">general reduction</a> and <a href="http://hackage.haskell.org/package/hermit-0.6.0.0/docs/HERMIT-Dictionary-Local-Case.html">a whole bunch of case rewrites</a> from this project. Check <a href="http://ku-fpg.github.io/papers/Sculthorpe-14-KURE/">the KURE paper</a> for the DSL used to do these rewrites, it looks pretty aweeome. So if anyone’s thinking of working on this, I’d probably start with reading <code>HERMIT.Shell</code> or <code>HERMIT.Plugin</code> and see how to get it up and running. It’s a pity it has to work on Core, that’s a little sad, but as far as trade-offs go it’s not too bad. Doing proofs on things more complicated than core might be hard anyway. It does mean you’ll probably want to make a rewrite that does a global variable replacement: <code>x</code> and <code>y</code> is a little easier to read than <code>x0_6</code> and the like that you get in Core.</p>
+<h2 id="catch-for-ghc">Catch for GHC</h2>
+<p>Ideally, we would never have inexhaustive patterns in Haskell. But a combination of an insufficient type system and people’s insistence on using partial functions leads to a library ecosystem full of potential landmines. <a href="http://community.haskell.org/~ndm/catch/">Catch</a> is a project by Neil Mitchell which considers how a function is called when determining whether its patterns are exhaustive or not. This lets us use things like <code>head</code> and actually have a formal proof that our use is correct, or a formal proof that our use, or someone else’s use, will possibly crash.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1">map head <span class="fu">.</span> group</a></code></pre></div>
+<p>This is an example which is always correct, because <code>group</code> returns a list of non-empty lists.</p>
+<p>Unfortunately, it currently works for a defunct Haskell compiler, but apparently it can be ported to GHC Core with some work. I would very much like for someone to do that. This is yet another project which is the kind of thing people claim is possible thanks to Haskell’s unique properties, but in practice it isn’t a standard thing, in the way that QuickCheck is.</p>
+<h2 id="a-substitution-stepper">A substitution stepper</h2>
+<p>This is semi-related, but different, to the proof assistant. I would like a program which can accept a Haskell module of source code and an expression to evaluate in the context of that module and output the same expression, as valid source code, with a single evaluation step performed. This would be fantastic for writing new algorithms, for understanding existing functions and algorithms, writing proofs, and learning Haskell. There was something like this demonstrated in Inventing on Principle. The opportunities for education and general development practice are worth such a project.</p>
+<p>Note: A debugger stepper is not the same thing.</p>
+<p>Example:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1">foldr (<span class="fu">+</span>) <span class="dv">0</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">foldr (<span class="fu">+</span>) <span class="dv">0</span> (<span class="dv">1</span> <span class="fu">:</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>])</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="dv">1</span> <span class="fu">+</span> foldr (<span class="fu">+</span>) <span class="dv">0</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="dv">1</span> <span class="fu">+</span> foldr (<span class="fu">+</span>) <span class="dv">0</span> (<span class="dv">2</span> <span class="fu">:</span> [<span class="dv">3</span>, <span class="dv">4</span>])</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="dv">1</span> <span class="fu">+</span> (<span class="dv">2</span> <span class="fu">+</span> foldr (<span class="fu">+</span>) <span class="dv">0</span> [<span class="dv">3</span>, <span class="dv">4</span>])</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="dv">1</span> <span class="fu">+</span> (<span class="dv">2</span> <span class="fu">+</span> foldr (<span class="fu">+</span>) <span class="dv">0</span> (<span class="dv">3</span> <span class="fu">:</span> [<span class="dv">4</span>]))</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="dv">1</span> <span class="fu">+</span> (<span class="dv">2</span> <span class="fu">+</span> (<span class="dv">3</span> <span class="fu">+</span> foldr (<span class="fu">+</span>) <span class="dv">0</span> [<span class="dv">4</span>]))</a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="dv">1</span> <span class="fu">+</span> (<span class="dv">2</span> <span class="fu">+</span> (<span class="dv">3</span> <span class="fu">+</span> foldr (<span class="fu">+</span>) <span class="dv">0</span> (<span class="dv">4</span> <span class="fu">:</span> [])))</a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="dv">1</span> <span class="fu">+</span> (<span class="dv">2</span> <span class="fu">+</span> (<span class="dv">3</span> <span class="fu">+</span> (<span class="dv">4</span> <span class="fu">+</span> foldr (<span class="fu">+</span>) <span class="dv">0</span> [])))</a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="dv">1</span> <span class="fu">+</span> (<span class="dv">2</span> <span class="fu">+</span> (<span class="dv">3</span> <span class="fu">+</span> (<span class="dv">4</span> <span class="fu">+</span> <span class="dv">0</span>)))</a>
+<a class="sourceLine" id="cb5-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="dv">1</span> <span class="fu">+</span> (<span class="dv">2</span> <span class="fu">+</span> (<span class="dv">3</span> <span class="fu">+</span> <span class="dv">4</span>))</a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="dv">1</span> <span class="fu">+</span> (<span class="dv">2</span> <span class="fu">+</span> <span class="dv">7</span>)</a>
+<a class="sourceLine" id="cb5-24" data-line-number="24"></a>
+<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="dv">1</span> <span class="fu">+</span> <span class="dv">9</span></a>
+<a class="sourceLine" id="cb5-26" data-line-number="26"></a>
+<a class="sourceLine" id="cb5-27" data-line-number="27"><span class="dv">10</span></a></code></pre></div>
+<p>Comparing this with foldl immediately shows the viewer how they differ in structure:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1">foldl (<span class="fu">+</span>) <span class="dv">0</span> [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">foldl (<span class="fu">+</span>) <span class="dv">0</span> (<span class="dv">1</span> <span class="fu">:</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>])</a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">foldl (<span class="fu">+</span>) ((<span class="fu">+</span>) <span class="dv">0</span> <span class="dv">1</span>) [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7">foldl (<span class="fu">+</span>) ((<span class="fu">+</span>) <span class="dv">0</span> <span class="dv">1</span>) (<span class="dv">2</span> <span class="fu">:</span> [<span class="dv">3</span>, <span class="dv">4</span>])</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9">foldl (<span class="fu">+</span>) ((<span class="fu">+</span>) ((<span class="fu">+</span>) <span class="dv">0</span> <span class="dv">1</span>) <span class="dv">2</span>) [<span class="dv">3</span>, <span class="dv">4</span>]</a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11">foldl (<span class="fu">+</span>) ((<span class="fu">+</span>) ((<span class="fu">+</span>) <span class="dv">0</span> <span class="dv">1</span>) <span class="dv">2</span>) (<span class="dv">3</span> <span class="fu">:</span> [<span class="dv">4</span>])</a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13">foldl (<span class="fu">+</span>) ((<span class="fu">+</span>) ((<span class="fu">+</span>) ((<span class="fu">+</span>) <span class="dv">0</span> <span class="dv">1</span>) <span class="dv">2</span>) <span class="dv">3</span>) [<span class="dv">4</span>]</a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15">foldl (<span class="fu">+</span>) ((<span class="fu">+</span>) ((<span class="fu">+</span>) ((<span class="fu">+</span>) <span class="dv">0</span> <span class="dv">1</span>) <span class="dv">2</span>) <span class="dv">3</span>) (<span class="dv">4</span> <span class="fu">:</span> [])</a>
+<a class="sourceLine" id="cb6-16" data-line-number="16"></a>
+<a class="sourceLine" id="cb6-17" data-line-number="17">foldl (<span class="fu">+</span>) ((<span class="fu">+</span>) ((<span class="fu">+</span>) ((<span class="fu">+</span>) ((<span class="fu">+</span>) <span class="dv">0</span> <span class="dv">1</span>) <span class="dv">2</span>) <span class="dv">3</span>) <span class="dv">4</span>) []</a>
+<a class="sourceLine" id="cb6-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb6-19" data-line-number="19">(<span class="fu">+</span>) ((<span class="fu">+</span>) ((<span class="fu">+</span>) ((<span class="fu">+</span>) <span class="dv">0</span> <span class="dv">1</span>) <span class="dv">2</span>) <span class="dv">3</span>) <span class="dv">4</span></a>
+<a class="sourceLine" id="cb6-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb6-21" data-line-number="21"><span class="dv">1</span> <span class="fu">+</span> <span class="dv">2</span> <span class="fu">+</span> <span class="dv">3</span> <span class="fu">+</span> <span class="dv">4</span></a>
+<a class="sourceLine" id="cb6-22" data-line-number="22"></a>
+<a class="sourceLine" id="cb6-23" data-line-number="23"><span class="dv">3</span> <span class="fu">+</span> <span class="dv">3</span> <span class="fu">+</span> <span class="dv">4</span></a>
+<a class="sourceLine" id="cb6-24" data-line-number="24"></a>
+<a class="sourceLine" id="cb6-25" data-line-number="25"><span class="dv">6</span> <span class="fu">+</span> <span class="dv">4</span></a>
+<a class="sourceLine" id="cb6-26" data-line-number="26"></a>
+<a class="sourceLine" id="cb6-27" data-line-number="27"><span class="dv">10</span></a></code></pre></div>
+<p>Each step in this is a valid Haskell program, and it’s just simple substitution.</p>
+<p>If the source for a function isn’t available, there are a couple options for what to do:</p>
+<ul>
+<li>Have special-cases for things like <code>(+)</code>, as above.</li>
+<li>Just perform no substitution for that function, it will still be a legitimate program.</li>
+</ul>
+<p>It’s another project I could easily provide see-as-you-type support for in Emacs, given an engine to query.</p>
+<p>Again, this is just one more project which should just be a standard thing Haskell can do. It’s a pure language. It’s used to teach equational reasoning and following a simple lambda calculus substitution model. But there is no such tool. Haskell is practically waving in our faces with this opportunity.</p>
+<p>Existing work in this area:</p>
+<ul>
+<li><a href="https://github.com/bmillwood/stepeval">stepeval</a> - a prototype which nicely demonstrates the idea. It’s based on HSE and only supports a tiny subset. There aren’t any plans to move this forward at the moment. I’ll update the page if this changes.</li>
+</ul>
+
+<footer>
+  © 2015-01-24 Chris Done
+</footer>
+
+    </div>
+  </body>
+</html>

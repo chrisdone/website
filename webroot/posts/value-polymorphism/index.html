@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>“Value polymorphism”, simple explanation with examples</title>
+    <style>body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      margin-top: 5em;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.2;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>
+“Value polymorphism”, simple explanation with examples
+</h1>
+<p>A concept in Haskell which is particularly novel is that polymorphism works at the value level rather than function-parameter or object-dereference level.</p>
+<p>Function-parameter polymorphism comes in some different forms, for example, C++:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="dt">void</span> draw(Circle c){ … }</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="dt">void</span> draw(Triangle t){ … }</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">draw(circle); <span class="co">// draws a circle</span></a></code></pre></div>
+<p>Function overloading is a type of function-parameter polymorphism. Generic functions in Common Lisp are another way to have function-parameter polymorphism:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode commonlisp"><code class="sourceCode commonlisp"><a class="sourceLine" id="cb2-1" data-line-number="1">(<span class="kw">defgeneric</span><span class="fu"> draw </span>(shape))</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">(<span class="kw">defmethod</span><span class="fu"> draw </span>((shape circle)) …)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">(<span class="kw">defmethod</span><span class="fu"> draw </span>((shape triangle)) …)</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">(draw circle) <span class="co">;; draws a circle</span></a></code></pre></div>
+<p>Object-dereference (or message passing) polymorphism is common to most object oriented languages. Depending on the object, the function/message will do something different:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">class</span> Circle { <span class="dt">void</span> draw(){ … } }</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">class</span> Triangle { <span class="dt">void</span> draw(){ … } }</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">circle.draw(); <span class="co">// draws a circle</span></a></code></pre></div>
+<p>To avoid confusion, Haskell also has function parameter polymorphism, like C++ and Common Lisp above:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">class</span> <span class="dt">Drawable</span> a <span class="kw">where</span><span class="ot"> draw ::</span> a <span class="ot">-&gt;</span> <span class="dt">Bitmap</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">instance</span> <span class="dt">Drawable</span> <span class="dt">Circle</span> <span class="kw">where</span> draw <span class="fu">=</span> …</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">instance</span> <span class="dt">Drawable</span> <span class="dt">Triangle</span> <span class="kw">where</span> draw <span class="fu">=</span> …</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">draw circle <span class="co">-- draws a circle</span></a></code></pre></div>
+<p>But more generally, Haskell has <em>value</em> polymorphism, which is that any value can be polymorphic and will be instantiated to a class instance depending on type signature or annotation:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">class</span> <span class="dt">Default</span> a <span class="kw">where</span><span class="ot"> def ::</span> a</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">instance</span> <span class="dt">Default</span> <span class="dt">Int</span> <span class="kw">where</span> def <span class="fu">=</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">instance</span> <span class="dt">Default</span> <span class="dt">Char</span> <span class="kw">where</span> def <span class="fu">=</span> <span class="ch">'a'</span></a></code></pre></div>
+<p>The type of an expression <code>def</code> therefore is <code>Default a =&gt; a</code>, or, “any instance of <code>Default</code>”. I can instantiate an instance myself by specifying a type signature:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1">λ<span class="fu">&gt;</span><span class="ot"> def ::</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="ot">→</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb6-3" data-line-number="3">λ<span class="fu">&gt;</span><span class="ot"> def ::</span> <span class="dt">Char</span></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="ot">→</span> <span class="ch">'a'</span></a></code></pre></div>
+<p>Or by type inference, meaning that the combination of this expression with other expressions allows the compiler to infer the single correct type instance:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1">λ<span class="fu">&gt;</span> def <span class="fu">:</span> <span class="st">&quot;bc&quot;</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="ot">→</span> <span class="st">&quot;abc&quot;</span></a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">λ<span class="fu">&gt;</span> def <span class="fu">-</span> <span class="dv">2</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="ot">→</span> <span class="fu">-</span><span class="dv">2</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">λ<span class="fu">&gt;</span> def <span class="fu">==</span> <span class="dv">0</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="ot">→</span> <span class="dt">True</span></a></code></pre></div>
+<p>But with no information it will be a static compile error:</p>
+<pre><code>λ&gt; def
+Ambiguous type variable `a' in the constraint:
+  `Default a' arising from a use of `def' at
+    &lt;interactive&gt;:1:0-2
+Probable fix: add a type signature that fixes these type
+              variable(s)</code></pre>
+<p>Why is value polymorphism beneficial? Some trivial examples follow (and you are trusted to extrapolate to the more sophisticated things that might otherwise obscure the essence of this feature).</p>
+<p>The <code>Read</code> class contains a method <code>read</code> which is polymorphic on the return value:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">class</span> <span class="dt">Read</span> a <span class="kw">where</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="ot">  read ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> a</a></code></pre></div>
+<p>It parses a data type from a string. Combined with the <code>Show</code> class, together <code>Read</code> and <code>Show</code> make a naive serialization library. In the same way, it would be ambiguous to read without specifying the instance:</p>
+<pre><code>λ&gt; read &quot;2&quot;
+Ambiguous type variable `a' in the constraint:
+  `Read a' arising from a use of `read' at
+    &lt;interactive&gt;:1:0-7
+Probable fix: add a type signature that fixes these type
+              variable(s)</code></pre>
+<p>But specifying with a type signature or using type inference are fine:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1">λ<span class="fu">&gt;</span> read <span class="st">&quot;2&quot;</span><span class="ot"> ::</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="ot">→</span> <span class="dv">2</span></a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">λ<span class="fu">&gt;</span> read <span class="st">&quot;2&quot;</span> <span class="fu">*</span> <span class="dv">3</span></a>
+<a class="sourceLine" id="cb11-4" data-line-number="4"><span class="ot">→</span> <span class="dv">6</span></a></code></pre></div>
+<p>Another example is JSON parsing (the real class is different to this, but introduces questions that are irrelevant to the point of this post).</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">class</span> <span class="dt">JSON</span> a <span class="kw">where</span></a>
+<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="ot">  decode ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Result</span> a</a></code></pre></div>
+<p>The <code>decode</code> function is return-value polymorphic, it can be read like this:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="ot">decode ::</span> (<span class="dt">JSON</span> a) <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Result</span> a</a></code></pre></div>
+<p>That is, it returns a result (success or fail) with a value which is an instance of the JSON class.</p>
+<p>So both specifying an instance or using inference works:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" data-line-number="1">λ<span class="fu">&gt;</span> decode <span class="st">&quot;1&quot;</span><span class="ot"> ::</span> <span class="dt">Result</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb14-2" data-line-number="2"><span class="ot">→</span> <span class="dt">Ok</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">λ<span class="fu">&gt;</span> <span class="kw">do</span> x <span class="ot">&lt;-</span> decode <span class="st">&quot;1&quot;</span>; return (x<span class="fu">*</span><span class="dv">3</span>)</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4"><span class="ot">→</span> <span class="dt">Ok</span> <span class="dv">3</span></a></code></pre></div>
+<p>And it works however complex you want to go with your types:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" data-line-number="1">λ<span class="fu">&gt;</span> decode <span class="st">&quot;[[1,\&quot;a\&quot;,{\&quot;x\&quot;:3}],[1,\&quot;a\&quot;,{\&quot;x\&quot;:2}]]&quot;</span></a>
+<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="ot">   ::</span> <span class="dt">Result</span> [(<span class="dt">Int</span>,<span class="dt">String</span>,<span class="dt">JSObject</span> <span class="dt">Int</span>)]</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3"><span class="ot">→</span> <span class="dt">Ok</span> [(<span class="dv">1</span>,<span class="st">&quot;a&quot;</span>,<span class="dt">JSONObject</span> {fromJSObject <span class="fu">=</span> [(<span class="st">&quot;x&quot;</span>,<span class="dv">3</span>)]})</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">     ,(<span class="dv">1</span>,<span class="st">&quot;a&quot;</span>,<span class="dt">JSONObject</span> {fromJSObject <span class="fu">=</span> [(<span class="st">&quot;x&quot;</span>,<span class="dv">2</span>)]})]</a></code></pre></div>
+<p>Thus by merely specifying the return type we have effectively generated a parser. An invalid string will produce an error:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" data-line-number="1">λ<span class="fu">&gt;</span> decode <span class="st">&quot;[[1,\&quot;a\&quot;,{\&quot;x\&quot;:3}],[1,\&quot;a\&quot;]]&quot;</span></a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="ot">  ::</span> <span class="dt">Result</span> [(<span class="dt">Int</span>,<span class="dt">String</span>,<span class="dt">JSObject</span> <span class="dt">Int</span>)]</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"><span class="ot">→</span> <span class="dt">Error</span> <span class="st">&quot;Unable to read Triple&quot;</span></a></code></pre></div>
+<p>In fact, the literal <code>1</code> is also polymorphic with type <code>Num a =&gt; a</code>, meaning that the number could be an <code>Integer</code>, a <code>Double</code>, a <code>Rational</code>, or a user-defined type like <code>Scientific</code>. It will be determined by inference or annotation.</p>
+<p>Such static value polymorphism is difficult to do in popular languages such as C#, Java, C++, without some kind of proxy objects to explicitly instantiate an object to dereference using generics or templates, and hard to do in Lisp, Python, Ruby and JavaScript without static type systems (although can also be approximated with proxy aka “witness” objects). This is, for example, why implementing the Monad class is rather awkward in other languages.</p>
+<p>The list goes on. More examples include database query results, string literals, monoids, monads, …</p>
+<p>Lastly, the <code>Default</code> class is a real class and in common use today.</p>
+
+<footer>
+  © 2011-10-16 Chris Done
+</footer>
+
+    </div>
+  </body>
+</html>

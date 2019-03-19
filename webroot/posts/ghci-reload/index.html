@@ -1,0 +1,104 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Reloading running code in GHCi</title>
+    <style>body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      margin-top: 5em;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.2;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>
+Reloading running code in GHCi
+</h1>
+<p>Something I’ve been using over the past couple weeks in a personal Yesod web site is a way to reload the code while the server is still running in GHCi. I saw in <a href="http://www.yesodweb.com/blog/2014/03/gsoc-proposals">Greg Weber’s</a> blog post about a “reload mode” for web servers and thought I’d share my approach. GHCi already supports reloading of code, it just doesn’t know it.</p>
+<p>The problem with doing this in GHCi is always that the <code>:load</code> and <code>:reload</code> commands will clear out any bindings made in the REPL. This means that even if you start your web server in a separate thread—and it will stay running between reloads—you have no way to <em>update</em> or <em>talk</em> to it directly.</p>
+<p>That’s why I wrote a package called <a href="http://hackage.haskell.org/package/foreign-store">foreign-store</a>. Its purpose is to make a stable pointer to some Haskell value and store it at an index, and then keep hold of it in C. Later, it can provide that stable pointer by that index. That’s its whole purpose. Because the C code is unaffected by GHCi’s reloads, the pointers are retained, and they are not garbage collected, because that is the point of a stable pointer.</p>
+<p>Now, with that created, it’s possible to run a web server, keep hold of the thread id, reload some code in GHCi, kill that thread and restart it. Another option is to keep an <code>IORef</code> of the web handler itself, and then update the <code>IORef</code> instead. In my use of it so far, this has worked flawlessly.</p>
+<p>I made <a href="https://github.com/chrisdone/ghci-reload-demo">a demo project</a> with a README explaining the (simple) approach. The short of it is that I can make some change to a Haskell module in my web project, hit a key (F12), and instantaneously see the browser page refresh with the new update. This is pretty much optimal for me.</p>
+<p>It doesn’t end at web servers, of course. Any kind of long-running program that you would like to keep running while developing is fair game. For example, an IRC server. Why not run the server and also inspect the innards of its state while it’s running, and also update the message handler? I’ve done this with my <a href="https://github.com/chrisdone/hulk">Hulk</a> IRC server before. You can inspect the data structures, query the types of things, etc. all from the REPL.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>If you want to get really funky, you can try using the continuation monad to implement <a href="http://www.gigamonkeys.com/book/beyond-exception-handling-conditions-and-restarts.html">Common Lisp’s restarts.</a> Restarts are especially handy for when you’re running some long IO process and it bails out. You want to be able to correct the code and the continue from where you left off. Restarts let you do that.</p>
+<p>I shouldn’t have to tell anyone this but just in case: <em>don’t use this in production</em>.</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Of course, there aren’t many of us Haskellers who live in the REPL like Smalltalkers and Lispers do. Many Haskellers never even launch GHCi while developing.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
+</section>
+
+<footer>
+  © 2014-03-16 Chris Done
+</footer>
+
+    </div>
+  </body>
+</html>

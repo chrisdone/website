@@ -1,0 +1,226 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Lucid 2.0: clearer than before</title>
+    <style>body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      margin-top: 5em;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.2;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>
+Lucid 2.0: clearer than before
+</h1>
+<p>Since <a href="http://chrisdone.com/posts/lucid">my last post</a> about Lucid, I’ve <a href="http://hackage.haskell.org/package/lucid">updated Lucid to major version 2.0</a> in a way that removes the need for the <code>with</code> combinator. Now, you can just write:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1">term_ <span class="fu">&lt;</span>children<span class="fu">&gt;</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">term_ [<span class="fu">&lt;</span>props<span class="fu">&gt;</span>] <span class="fu">&lt;</span>children<span class="fu">&gt;</span></a></code></pre></div>
+<p>Example:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ot">page ::</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">page <span class="fu">=</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">  html_</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    (<span class="kw">do</span> head_</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">          (<span class="kw">do</span> title_ <span class="st">&quot;Introduction page.&quot;</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">              link_ [rel_ <span class="st">&quot;stylesheet&quot;</span>,type_ <span class="st">&quot;text/css&quot;</span>,href_ <span class="st">&quot;screen.css&quot;</span>]</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">              style_ <span class="st">&quot;body{background:red}&quot;</span>)</a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">        body_</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">          (<span class="kw">do</span> div_ [id_ <span class="st">&quot;header&quot;</span>,style_ <span class="st">&quot;color:white&quot;</span>] <span class="st">&quot;Syntax&quot;</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">              p_ (span_ (strong_ <span class="st">&quot;This is an example of Lucid syntax.&quot;</span>))</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">              hr_ []</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">              ul_ (mapM_ (li_ <span class="fu">.</span> toHtml <span class="fu">.</span> show)</a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">                         [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>])</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">              table_ (tr_ (<span class="kw">do</span> td_ <span class="st">&quot;Hello!&quot;</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">                              td_ [class_ <span class="st">&quot;alt&quot;</span>] <span class="st">&quot;World!&quot;</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">                              td_ <span class="st">&quot;Sup?&quot;</span>))))</a></code></pre></div>
+<p>Here’s the (pretty printed) output:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb3-1" data-line-number="1">λ&gt; page</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="dt">&lt;!DOCTYPE </span>html<span class="dt">&gt;</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">&lt;html&gt;</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw">&lt;head&gt;</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">    <span class="kw">&lt;title&gt;</span>Introduction page.<span class="kw">&lt;/title&gt;</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">    <span class="kw">&lt;link</span><span class="ot"> href=</span><span class="st">&quot;screen.css&quot;</span><span class="ot"> rel=</span><span class="st">&quot;stylesheet&quot;</span><span class="ot"> type=</span><span class="st">&quot;text/css&quot;</span><span class="kw">&gt;</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">    <span class="kw">&lt;style&gt;</span>body{<span class="kw">background</span>:<span class="dv">red</span>}<span class="kw">&lt;/style&gt;</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="kw">&lt;/head&gt;</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="kw">&lt;body&gt;</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">    <span class="kw">&lt;div</span><span class="ot"> id=</span><span class="st">&quot;header&quot;</span><span class="ot"> style=</span><span class="st">&quot;color:white&quot;</span><span class="kw">&gt;</span>Syntax<span class="kw">&lt;/div&gt;</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">    <span class="kw">&lt;p&gt;&lt;span&gt;&lt;strong&gt;</span>This is an example of Lucid syntax.<span class="kw">&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">    <span class="kw">&lt;hr&gt;</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">    <span class="kw">&lt;ul&gt;</span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">        <span class="kw">&lt;li&gt;</span>1<span class="kw">&lt;/li&gt;</span></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">        <span class="kw">&lt;li&gt;</span>2<span class="kw">&lt;/li&gt;</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">        <span class="kw">&lt;li&gt;</span>3<span class="kw">&lt;/li&gt;</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17">    <span class="kw">&lt;/ul&gt;</span></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18">    <span class="kw">&lt;table&gt;</span></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19">        <span class="kw">&lt;tr&gt;</span></a>
+<a class="sourceLine" id="cb3-20" data-line-number="20">            <span class="kw">&lt;td&gt;</span>Hello!<span class="kw">&lt;/td&gt;</span></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21">            <span class="kw">&lt;td</span><span class="ot"> class=</span><span class="st">&quot;alt&quot;</span><span class="kw">&gt;</span>World!<span class="kw">&lt;/td&gt;</span></a>
+<a class="sourceLine" id="cb3-22" data-line-number="22">            <span class="kw">&lt;td&gt;</span>Sup?<span class="kw">&lt;/td&gt;</span></a>
+<a class="sourceLine" id="cb3-23" data-line-number="23">        <span class="kw">&lt;/tr&gt;</span></a>
+<a class="sourceLine" id="cb3-24" data-line-number="24">    <span class="kw">&lt;/table&gt;</span></a>
+<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="kw">&lt;/body&gt;</span></a>
+<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="kw">&lt;/html&gt;</span></a></code></pre></div>
+<h2 id="overloaded">Overloaded</h2>
+<p>Element terms are now typed like this:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ot">p_ ::</span> <span class="dt">Term</span> arg result <span class="ot">=&gt;</span> arg <span class="ot">-&gt;</span> result</a></code></pre></div>
+<p>Giving a couple overloaded instances:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="ot">p_ ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> [<span class="dt">Attribute</span>] <span class="ot">-&gt;</span> <span class="dt">HtmlT</span> m () <span class="ot">-&gt;</span> <span class="dt">HtmlT</span> m ()</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="ot">p_ ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">HtmlT</span> m () <span class="ot">-&gt;</span> <span class="dt">HtmlT</span> m ()</a></code></pre></div>
+<p>This is similar to the variadic <code>printf</code> from <code>Text.Printf</code>, but limited to one level of variance.</p>
+<h1 id="retaining-old-invariants">Retaining old invariants</h1>
+<p>In <a href="http://chrisdone.com/posts/lucid">my last post I listed</a> a bunch of factors that Lucid should solve, I worked hard to make sure these were met in this change.</p>
+<h2 id="preserving-liberal-term-use">Preserving liberal term use</h2>
+<p>You can still use <code>style_</code> or <code>title_</code> as an element or an attribute:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1">λ<span class="fu">&gt;</span> style_ [style_ <span class="st">&quot;inception&quot;</span>] <span class="st">&quot;Go deeper.&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="fu">&lt;</span>style style<span class="fu">=</span><span class="st">&quot;inception&quot;</span><span class="fu">&gt;</span><span class="dt">Go</span> deeper<span class="fu">.&lt;/</span>style<span class="fu">&gt;</span></a></code></pre></div>
+<h2 id="preserving-encoding-properties">Preserving encoding properties</h2>
+<p>The <code>script_</code> and <code>style_</code> elements still output unencoded:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1">λ<span class="fu">&gt;</span> script_ <span class="st">&quot;alert('Hello!' &gt; 12)&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="fu">&lt;</span>script<span class="fu">&gt;</span>alert('<span class="dt">Hello</span><span class="fu">!</span>' <span class="fu">&gt;</span> <span class="dv">12</span>)<span class="fu">&lt;/</span>script<span class="fu">&gt;</span></a></code></pre></div>
+<h2 id="with-is-still-available">With is still available</h2>
+<p>You can still add attributes to elements using <code>with</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1">λ<span class="fu">&gt;</span> p_ [id_ <span class="st">&quot;foo&quot;</span>] <span class="st">&quot;&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="fu">&lt;</span>p id<span class="fu">=</span><span class="st">&quot;foo&quot;</span><span class="fu">&gt;&lt;/</span>p<span class="fu">&gt;</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">λ<span class="fu">&gt;</span> with (p_ [id_ <span class="st">&quot;foo&quot;</span>]) [class_ <span class="st">&quot;red&quot;</span>] <span class="st">&quot;yo&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="fu">&lt;</span>p id<span class="fu">=</span><span class="st">&quot;foo&quot;</span> <span class="kw">class</span><span class="fu">=</span><span class="st">&quot;red&quot;</span><span class="fu">&gt;</span>yo<span class="fu">&lt;/</span>p<span class="fu">&gt;</span></a></code></pre></div>
+<h2 id="convenient-construction-of-custom-elements">Convenient construction of custom elements</h2>
+<p>You can construct custom elements if needed:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1">λ<span class="fu">&gt;</span> with (term <span class="st">&quot;potato&quot;</span> [id_ <span class="st">&quot;foo&quot;</span>]) [class_ <span class="st">&quot;red&quot;</span>] <span class="st">&quot;yo&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="fu">&lt;</span>potato id<span class="fu">=</span><span class="st">&quot;foo&quot;</span> <span class="kw">class</span><span class="fu">=</span><span class="st">&quot;red&quot;</span><span class="fu">&gt;</span>yo<span class="fu">&lt;/</span>potato<span class="fu">&gt;</span></a></code></pre></div>
+<p>But you can also construct normal elements with a custom class, so that you don’t have to use <code>with</code> for extending elements like our old <code>container_</code> example, you can construct an element with some given attributes:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1">λ<span class="fu">&gt;</span> <span class="kw">let</span> container_ <span class="fu">=</span> termWith <span class="st">&quot;div&quot;</span> [class_ <span class="st">&quot; container &quot;</span>]</a></code></pre></div>
+<p>And then use it later like a normal element:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1">λ<span class="fu">&gt;</span> container_ [class_ <span class="st">&quot;main&quot;</span>] <span class="st">&quot;OK, go!&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="fu">&lt;</span>div <span class="kw">class</span><span class="fu">=</span><span class="st">&quot; container main&quot;</span><span class="fu">&gt;</span><span class="dt">OK</span>, go<span class="fu">!&lt;/</span>div<span class="fu">&gt;</span></a></code></pre></div>
+<p>Some basic Bootstrap terms are available in <a href="http://hackage.haskell.org/package/lucid-2.1/docs/Lucid-Bootstrap.html">Lucid.Bootstrap</a>.</p>
+<h2 id="still-a-monad-transformer">Still a monad transformer</h2>
+<p>I didn’t change anything about the monad itself. Just the combinators. So you can still use it as a transformer:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" data-line-number="1">λ<span class="fu">&gt;</span> runReader (renderTextT (html_ (body_ (<span class="kw">do</span> name <span class="ot">&lt;-</span> lift ask</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">                                            p_ [class_ <span class="st">&quot;name&quot;</span>] (toHtml name)))))</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">             (<span class="st">&quot;Chris&quot;</span><span class="ot"> ::</span> <span class="dt">String</span>)</a>
+<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="st">&quot;&lt;html&gt;&lt;body&gt;&lt;p class=\&quot;name\&quot;&gt;Chris&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span></a></code></pre></div>
+<h2 id="small-trade-off">Small trade-off</h2>
+<p>One small difference is that elements that take no children always take arguments:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="co">-- | @input@ element</span></a>
+<a class="sourceLine" id="cb13-2" data-line-number="2"><span class="ot">input_ ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> [<span class="dt">Attribute</span>] <span class="ot">-&gt;</span> <span class="dt">HtmlT</span> m ()</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">input_ <span class="fu">=</span> with (makeElementNoEnd <span class="st">&quot;input&quot;</span>)</a></code></pre></div>
+<p>So you will always write:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" data-line-number="1">input_ [<span class="fu">&lt;</span>something<span class="fu">&gt;</span>]</a></code></pre></div>
+<p>But in practice it seems that elements with no children almost always take a number of attributes. Exceptions to that rule are <code>br_</code> and <code>hr_</code>, but those are quite rare. So this is a very happy trade-off, I feel. (See the ‘real examples’ at the end of this post.)</p>
+<p>Extending elements like this is straight-forward using our usual <code>with</code> combinator. Example, suppose you’re sick of writing the classic <code>input type=&quot;text&quot;</code>, you can define a combinator like this:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="ot">text_ ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> [<span class="dt">Attribute</span>] <span class="ot">-&gt;</span> <span class="dt">HtmlT</span> m ()</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">text_ <span class="fu">=</span> with (with (makeElementNoEnd <span class="st">&quot;input&quot;</span>) [type_ <span class="st">&quot;text&quot;</span>])</a></code></pre></div>
+<p>And now you can write:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" data-line-number="1">λ<span class="fu">&gt;</span> text_ []</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="fu">&lt;</span>input <span class="kw">type</span><span class="fu">=</span><span class="st">&quot;text&quot;</span><span class="fu">&gt;</span></a>
+<a class="sourceLine" id="cb16-3" data-line-number="3">λ<span class="fu">&gt;</span> text_ [class_ <span class="st">&quot;foo&quot;</span>]</a>
+<a class="sourceLine" id="cb16-4" data-line-number="4"><span class="fu">&lt;</span>input <span class="kw">type</span><span class="fu">=</span><span class="st">&quot;text&quot;</span> <span class="kw">class</span><span class="fu">=</span><span class="st">&quot;foo&quot;</span><span class="fu">&gt;</span></a></code></pre></div>
+<h2 id="larger-trade-off">Larger trade-off</h2>
+<p>Due to the overloadedness, similar to the overloaded strings example:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb17-1" data-line-number="1">λ<span class="fu">&gt;</span> <span class="st">&quot;foo &gt; bar&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">foo <span class="fu">&amp;</span>gt; bar</a></code></pre></div>
+<p>You have to use a type annotation in GHCi:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb18-1" data-line-number="1">λ<span class="fu">&gt;</span> p_ <span class="st">&quot;foo&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="fu">&lt;</span>p<span class="fu">&gt;</span>foo<span class="fu">&lt;/</span>p<span class="fu">&gt;</span></a></code></pre></div>
+<p>Otherwise you get</p>
+<blockquote>
+<p>No instance for <code>(Term arg0 a0)</code> arising from a use of <code>it</code></p>
+</blockquote>
+<p>Most Haskellers won’t care about this case, but for GHCi users it’s a slight regression. Also, in some local where declarations, you might need a type signature. For example, the following is OK:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="ot">people ::</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb19-2" data-line-number="2">people <span class="fu">=</span> ul_ (mapM_ person [<span class="st">&quot;Mary Smith&quot;</span>,<span class="st">&quot;Dave Jones&quot;</span>])</a>
+<a class="sourceLine" id="cb19-3" data-line-number="3">  <span class="kw">where</span> person name <span class="fu">=</span> li_ name</a></code></pre></div>
+<p>Whereas in this case:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="ot">bigTable ::</span> [[<span class="dt">Int</span>]] <span class="ot">-&gt;</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb20-2" data-line-number="2">bigTable t <span class="fu">=</span> table_ (mapM_ row t)</a>
+<a class="sourceLine" id="cb20-3" data-line-number="3">  <span class="kw">where</span> row r <span class="fu">=</span> tr_ (mapM_ (td_ <span class="fu">.</span> toHtml <span class="fu">.</span> show) r)</a></code></pre></div>
+<p>It’s a little harder for GHC to infer this, so you add a type-signature:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb21-1" data-line-number="1"><span class="ot">bigTable ::</span> [[<span class="dt">Int</span>]] <span class="ot">-&gt;</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb21-2" data-line-number="2">bigTable t <span class="fu">=</span> table_ (mapM_ row t)</a>
+<a class="sourceLine" id="cb21-3" data-line-number="3">  <span class="kw">where</span><span class="ot"> row ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">Html</span> ()</a>
+<a class="sourceLine" id="cb21-4" data-line-number="4">        row r <span class="fu">=</span> tr_ (mapM_ (td_ <span class="fu">.</span> toHtml <span class="fu">.</span> show) r)</a></code></pre></div>
+<p>Not a big deal given the benefits, but something to be aware of.</p>
+<h2 id="summary">Summary</h2>
+<p>In total, I’ve made this library almost perfect for my own tastes. It’s concise, easy to read and edit (and auto-format), it lacks namespace issues, it’s easy to make re-usable terms, and it’s fast enough. The need for the <code>with</code> combinator was the only wart that naggled me over the past week, I knew I’d end up making some change. I’ve also covered the trade-offs that come with this design decision.</p>
+<p>As far as I’m concerned, Lucid can rest at major version <code>2.*</code> for a long time now. I added some newfangled HTML5 elements (who knew <code>main</code> was now an element?) and <a href="https://github.com/chrisdone/lucid/blob/master/test/Main.hs">a test suite</a>. You can expect the only minor version bumps henceforth to be bugfixes, regression tests, and more documentation.</p>
+<p>For some real examples:</p>
+<ul>
+<li><a href="https://github.com/chrisdone/tryhaskell/blob/d8b59e71d46cb890935f5c0c6c1d723cc9f78d99/src/TryHaskell.hs#L326-L419">Try Haskell</a> is now using Lucid.</li>
+<li>As is the upcoming <a href="https://github.com/haskell-infra/hl/blob/master/src/HL/V/Template.hs#L37-171">Haskell homepage</a>.</li>
+<li>And <a href="https://github.com/relrod/isysuclosed.com/blob/haskell/Main.hs#L34">isysuclosed.com</a>.</li>
+</ul>
+
+<footer>
+  © 2014-11-20 Chris Done
+</footer>
+
+    </div>
+  </body>
+</html>

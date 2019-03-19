@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>‘amb’ operator and the list monad</title>
+    <style>body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      margin-top: 5em;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.2;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>
+‘amb’ operator and the list monad
+</h1>
+<p>A friend was <a href="http://mihai.bazon.net/blog/amb-in-javascript/take-two">messing about with the <code>amb</code> operator</a> in JavaScript after seeing it in Common Lisp. The <code>amb</code> (or <em>ambiguous</em>) operator, first described by our pal John McCarthy (1967), and something I first <a href="http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-28.html#%_sec_4.3">encountered in SICP.</a></p>
+<p>These kind of constraint/logic puzzles seem naturally solved by the list monad, <a href="http://hpaste.org/45504/who_owns_the_fish">here’s an example of solving ‘Who owns the fish?’</a> Similar to <a href="http://en.wikipedia.org/wiki/Zebra_Puzzle">the Zebra puzzle.</a></p>
+<pre><code>-- Translation of
+-- http://mihai.bazon.net/blog/amb-in-javascript/take-two#wotf
+
+import Control.Monad
+import Data.Maybe
+import Data.List
+
+whoOwnsTheFish = addHouse []
+
+addHouse houses = do
+
+  nat &lt;- other &quot;nat&quot; [&quot;British&quot;,&quot;Swedish&quot;,&quot;Danish&quot;,&quot;Norwegian&quot;
+                     ,&quot;German&quot;]
+  col &lt;- other &quot;col&quot; [&quot;red&quot;,&quot;green&quot;,&quot;white&quot;,&quot;yellow&quot;,&quot;blue&quot;]
+  pet &lt;- other &quot;pet&quot; [&quot;dogs&quot;,&quot;cats&quot;,&quot;horses&quot;,&quot;birds&quot;,&quot;fish&quot;]
+  bev &lt;- other &quot;bev&quot; [&quot;tea&quot;,&quot;milk&quot;,&quot;coffee&quot;,&quot;beer&quot;,&quot;water&quot;]
+  tob &lt;- other &quot;tob&quot; [&quot;pallmall&quot;,&quot;dunhill&quot;,&quot;marlboro&quot;
+                     ,&quot;winfield&quot;,&quot;rothmans&quot;]
+
+  (nat == &quot;British&quot;)  `iff` (col == &quot;red&quot;)
+  (nat == &quot;Swedish&quot;)  `iff` (pet == &quot;dogs&quot;)
+  (nat == &quot;Danish&quot;)   `iff` (bev == &quot;tea&quot;)
+  (col == &quot;white&quot;)    `iff`
+    (thisHouse &gt; 0 &amp;&amp; &quot;col&quot; `lookup` (houses!!(thisHouse - 1))
+                       == Just &quot;green&quot;)
+  (col == &quot;green&quot;)    `iff` (bev == &quot;coffee&quot;)
+  (tob == &quot;pallmall&quot;) `iff` (pet == &quot;birds&quot;)
+  (col == &quot;yellow&quot;)   `iff` (tob == &quot;dunhill&quot;)
+  (thisHouse == 2)    `iff` (bev == &quot;milk&quot;)
+  (thisHouse == 0)    `iff` (nat == &quot;Norwegian&quot;)
+  (tob == &quot;winfield&quot;) `iff` (bev == &quot;beer&quot;)
+  (nat == &quot;German&quot;)   `iff` (tob == &quot;rothmans&quot;)
+
+  let h = [(&quot;nat&quot;,nat),(&quot;bev&quot;,bev),(&quot;tob&quot;,tob),(&quot;pet&quot;,pet)
+          ,(&quot;col&quot;,col)]
+      a = houses ++ [h]
+  if length a == 5
+     then do neighbors a &quot;tob&quot; &quot;marlboro&quot;  &quot;pet&quot; &quot;cats&quot;
+             neighbors a &quot;pet&quot; &quot;horses&quot;    &quot;tob&quot; &quot;dunhill&quot;
+             neighbors a &quot;nat&quot; &quot;Norwegian&quot; &quot;col&quot; &quot;blue&quot;
+             neighbors a &quot;tob&quot; &quot;marlboro&quot;  &quot;bev&quot; &quot;water&quot;
+             return a
+     else addHouse a
+
+  where other typ = filter (isNothing . findHouse houses typ)
+        thisHouse = length houses
+
+findHouse houses typ val =
+  fmap fst . find ((==Just val) . lookup typ . snd) . zip [0..]
+   $ houses
+
+neighbors houses typ1 val1 typ2 val2 = guard $ diff == Just 1
+  where diff = do h1 &lt;- findHouse houses typ1 val1
+                  h2 &lt;- findHouse houses typ2 val2
+                  return $ abs $ h1 - h2
+
+iff x y = guard $ x == y</code></pre>
+
+<footer>
+  © 2011-04-10 Chris Done
+</footer>
+
+    </div>
+  </body>
+</html>

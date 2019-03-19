@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>$title$</title>
+    <title>Lisk - Lisp and Haskell</title>
     <style>body {
       max-width: 40em;
       margin: .5in auto;
@@ -77,7 +77,34 @@
   </head>
   <body>
     <div class="page-wrap">
-      $body$
+      <h1>
+Lisk - Lisp and Haskell
+</h1>
+<p>In my spare time I’m working on a project called Lisk. Using the <code>-pgmF</code> option for GHC, you can provide GHC a program name that is called to preprocess the file before GHC compiles it. It also works in GHCi and imports. You use it like this:</p>
+<pre><code>{-# OPTIONS -F -pgmF lisk #-}
+(module fibs
+  (import system.environment)
+
+  (:: main (io ()))
+  (= main (&gt;&gt;= get-args (. print fib read head)))
+
+  (:: test (-&gt; :string (, :int :string)))
+  (= test (, 1))
+
+  (:: fib (-&gt; :int :int))
+  (= fib 0 0)
+  (= fib 1 1)
+  (= fib n (+ (fib (- n 1))
+              (fib (- n 2)))))</code></pre>
+<p>The git repo is here:</p>
+<pre><code>git://github.com/chrisdone/lisk.git</code></pre>
+<p>And the <a href="https://github.com/chrisdone/lisk">github page is here.</a></p>
+<p>I literally only support what is exhibited in the example above, and it is not ready for use at all. But I am using <a href="http://hackage.haskell.org/package/haskell-src-exts">haskell-src-exts’s</a> AST and pretty printer in order to convert from Lisk to Haskell, so I’m in good hands regarding completeness of the syntax. I don’t have a lot of time to work on it right now, but I will be doing.</p>
+
+<footer>
+  © 2010-11-25 Chris Done
+</footer>
+
     </div>
   </body>
 </html>

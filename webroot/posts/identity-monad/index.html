@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>The Identity monad trick</title>
+    <style>body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      margin-top: 5em;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.2;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>
+The Identity monad trick
+</h1>
+<p><em><strong>Update:</strong> Got the link! <a href="http://blog.sigfpe.com/2007/04/trivial-monad.html">The Trivial Monad</a>. Thanks, John. Naturally, all interesting Haskell things eventually lead back to Dan Piponi.</em></p>
+<p>I heard about this from John Wiegley a while ago, but every time I recall it, I can’t remember how it goes, so I thought I’d write it down for myself. I think there’s a paper about it, but I can’t find it. Hopefully I’m recalling it correctly.</p>
+<p>The Identity monad trick: Let’s say I want to expose an API that lets you work with a data structure. I want you to be able to keep hold of that data structure and pass it back into my library, and I’ll give it back to you later and we can go back and forth.</p>
+<p><strong>But</strong> I don’t want you to actually <em>give you</em> the data structure freely so you can go and give it to your friends. So instead I force you into the Identity monad, via a newtype wrapper that only <em>I</em> can unpack.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">newtype</span> <span class="dt">Secret</span> a <span class="fu">=</span> <span class="dt">Secret</span> {<span class="ot"> unSecret ::</span> <span class="dt">Identity</span> a }</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">  <span class="kw">deriving</span> (<span class="dt">Monad</span>,<span class="dt">Functor</span>,<span class="dt">Applicative</span>)</a></code></pre></div>
+<p>And I have some function exposing it like:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ot">getSecret ::</span> <span class="dt">Foo</span> <span class="ot">-&gt;</span> <span class="dt">Secret</span> <span class="dt">Text</span></a></code></pre></div>
+<p>Here, use that. What can you do with it? You can’t extract the value out, you can only compose it with more functor or monad stuff:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1">fmap (map T.toUpper) (getSecret foo)</a></code></pre></div>
+<p>Or:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">do</span> text <span class="ot">&lt;-</span> getSecret foo</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">   <span class="kw">if</span> all T.isUpper text</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">      <span class="kw">then</span> return (T.reverse text)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">      <span class="kw">else</span> return text</a></code></pre></div>
+<p>Note that the whole type of this expression is <code>Secret Text</code>. You still don’t have the secret, you’ve got a computation over it.</p>
+<p>You’ve used the value, but it never escaped<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> the actual Identity monad. It’s like I’m giving you the value, but I’m also not giving you the value.</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>As always, there’s a difference between “secure against your own stupidity” and “secure against attackers.” For the former, this is satisfied.</p>
+<p>For the latter, bottom complicates it, so you should force it in the IO monad and catch any exceptions e.g.</p>
+<p><code>extract :: Secret a -&gt; IO (Maybe a)</code></p>
+<p>This prevents people from using</p>
+<p><code>(v &gt;&gt;= \a -&gt; error (&quot;The value is &quot; ++ show a))</code></p>
+<p>To try to get around it.</p>
+<p><code>unsafePerformIO</code> and other non-standard Haskell can get around it, but if you’re defending against developers, you probably have control over the environment, so you can just white-list the imports and extensions and there’s nothing they can do. This is what tryhaskell (via mueval) does.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+</ol>
+</section>
+
+<footer>
+  © 2014-04-29 Chris Done
+</footer>
+
+    </div>
+  </body>
+</html>
