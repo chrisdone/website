@@ -18,14 +18,24 @@ main =
         pandocCompiler >>= loadAndApplyTemplate "templates/post.html" postCtx >>=
         loadAndApplyTemplate "templates/default.html" postCtx >>=
         relativizeUrls
+    create ["index.html"] $ do
+      route idRoute
+      compile
+        (makeItem "" >>=
+         loadAndApplyTemplate "templates/index.html" defaultContext >>=
+         loadAndApplyTemplate
+           "templates/default.html"
+           (constField "title" "Chris Done's Homepage" <> defaultContext))
     create ["posts.html"] $ do
       route indexRoute
       compile $ do
         posts <- recentFirst =<< loadAll "posts/*"
         let archiveCtx =
-              listField "posts" (dateField "date" "%Y-%m-%d" `mappend` postCtx ) (return posts) `mappend`
-              constField "title" "Archives" `mappend`
-
+              listField
+                "posts"
+                (dateField "date" "%Y-%m-%d" <> postCtx)
+                (return posts) <>
+              constField "title" "Archives" <>
               defaultContext
         makeItem "" >>= loadAndApplyTemplate "templates/archive.html" archiveCtx >>=
           loadAndApplyTemplate "templates/default.html" archiveCtx >>=
@@ -34,9 +44,7 @@ main =
     match "templates/*" $ compile templateBodyCompiler
 
 postCtx :: Context String
-postCtx =
-    dateField "date" "%Y-%m-%d" `mappend`
-    defaultContext
+postCtx = dateField "date" "%Y-%m-%d" <> defaultContext
 
 niceRoute :: Routes
 niceRoute = customRoute createIndexRoute

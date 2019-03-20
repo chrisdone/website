@@ -2,141 +2,151 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Chris Done's Homepage</title>
     <style>
-body {
-  max-width: 40em;
-  margin: .5in auto;
-  font-size: 18px;
-  font-family: serif;
-  margin-top: 5em;
-  line-height: 1.5;
-}
-pre, code {
-  font-size: 16px;
-}
-pre {
-  margin-left: 1.5em;
-  line-height: 1.2;
-}
-a {
-  color: #1a6e8e
-}
-.menu a {
-  margin-right: 1em;
-}
-h1,h2,h3,h4,h5,h6 {
-  font-family: Helvetica;
-}
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
 
-h1 a,h2 a,h3 a,h4 a {
-  text-decoration: none;
-  color: inherit;
-}
+      pre, code {
+      font-size: 16px;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.2;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
 
-.post-1,.post-2{
-  margin-bottom: 0.5em;
-}
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
 
-.author {
-  display: none;
-}
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
 
-footer {
-  margin-top: 1.5em;
-  padding-top: 1.5em;
-  border-top: 1px solid #ccc;
-  margin-bottom: 2em
-}
+      .author {
+      display: none;
+      }
 
-footer span {
-  display: none;
-}
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
 
-img {
-  max-width: 100%
-}
-pre.sourceCode span.st {
-  color: #366354
-}
-pre.sourceCode span.kw {
-  color: #397460
-}
-pre.sourceCode span.fu {
-  color: #8f4e8b
-}
-pre.sourceCode span.ot {
-  color: #2e659c
-}
-pre.sourceCode span.dt {
-  color: #4F4371
-}
-pre.sourceCode span.co {
-  color: #666
-}
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
     </style>
   </head>
   <body>
     <div class="page-wrap">
       <div class="home">
-        <h1>Chris Done</h1>
-        <p class="menu">
-          <a href="posts">Posts</a>
-          <a href="http://github.com/chrisdone">GitHub</a>
-          <a href="http://twitter.com/christopherdone">Twitter</a>
-          <a href="txt/chrisdone-ssh.txt">SSH</a>
-          <a href="https://keybase.io/chrisdone">Keybase</a>
-        </p>
-      </div>
-      <div id="posts">
-        <h2>Popular articles</h2>
-        <div id="archive">
-          <div class="post-1">
-            <span><a href="./posts/fast-haskell-c-parsing-xml">Fast Haskell:
-              Competing with C at parsing XML</a></span>
-          </div>
-          <div class="post-2">
-            <span><a href="./posts/emacs-users-are-like-igor">Emacs users are like Terry Pratchett’s Igors</a></span>
+  <h1>Chris Done</h1>
+  <p class="menu">
+    <a href="posts">Posts</a>
+    <a href="http://github.com/chrisdone">GitHub</a>
+    <a href="http://twitter.com/christopherdone">Twitter</a>
+    <a href="txt/chrisdone-ssh.txt">SSH</a>
+    <a href="https://keybase.io/chrisdone">Keybase</a>
+  </p>
+</div>
+<div id="posts">
+  <h2>Popular articles</h2>
+  <ul id="archive">
+    <li class="post-1">
+      <span><a href="./posts/fast-haskell-c-parsing-xml">Fast Haskell:
+          Competing with C at parsing XML</a></span>
+    </li>
+    <li class="post-2">
+      <span><a href="./posts/emacs-users-are-like-igor">Emacs users are like Terry Pratchett’s Igors</a></span>
 
-          </div>
-          <div class="post-2">
-            <span><a href="./posts/twitter-problem-loeb">Twitter waterflow problem and loeb</a></span>
+    </li>
+    <li class="post-2">
+      <span><a href="./posts/twitter-problem-loeb">Twitter waterflow problem and loeb</a></span>
 
-          </div>
-          <div class="post-2">
-            <span><a href="./posts/haskell-lisp-philosophy-difference">A philosophical difference between Haskell and Lisp</a></span>
+    </li>
+    <li class="post-2">
+      <span><a href="./posts/haskell-lisp-philosophy-difference">A philosophical difference between Haskell and Lisp</a></span>
 
-          </div>
-          <div class="post-1">
-            <span><a href="/posts/z">A tiny language called Z</a></span>
+    </li>
+    <li class="post-1">
+      <span><a href="/posts/z">A tiny language called Z</a></span>
 
-          </div>
-          <div class="post-2">
-            <span><a href="./posts/haskell-lang">An alternative Haskell home page</a></span>
+    </li>
+    <li class="post-2">
+      <span><a href="./posts/haskell-lang">An alternative Haskell home page</a></span>
 
-          </div>
-          <div class="post-2">
-            <span><a href="./posts/postgresql-pagination">Fast pagination on PostgreSQL</a></span>
+    </li>
+    <li class="post-2">
+      <span><a href="./posts/postgresql-pagination">Fast pagination on PostgreSQL</a></span>
 
-          </div>
-          <div class="post-2">
-            <span><a href="./posts/data-typeable">Typeable and Data in Haskell</a></span>
+    </li>
+    <li class="post-2">
+      <span><a href="./posts/data-typeable">Typeable and Data in Haskell</a></span>
 
-          </div>
-          <div class="post-1">
-            <span><a href="./posts/the-mythical-man-month-insights">Some insights from The Mythical Man Month starting from Chapter 11</a></span>
+    </li>
+    <li class="post-1">
+      <span><a href="./posts/the-mythical-man-month-insights">Some insights from The Mythical Man Month starting from Chapter 11</a></span>
 
-          </div>
-          <div class="post-2">
-            <span><a href="./posts/lucid">Lucid: templating DSL for HTML</a></span>
+    </li>
+    <li class="post-2">
+      <span><a href="./posts/lucid">Lucid: templating DSL for HTML</a></span>
 
-          </div>
-          <div style="clear:both"></div>
-        </div>
-      </div>
-      <footer>
-        <a href="mailto:hello@chrisdone.com">hello@chrisdone.com</a>
-      </footer>
+    </li>
+  </ul>
+</div>
+
     </div>
   </body>
 </html>
