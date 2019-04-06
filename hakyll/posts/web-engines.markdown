@@ -54,6 +54,11 @@ Quoting from the page in case it goes offline one day:
 > * It understands most of the protocols used for information retrieval in WWW: http, ftp, nntp (news), gopher and telnet. It can also read files and directories in the local file system. When talking to nntp and ftp servers, it uses the same connection for several transfers rather than connecting/disconnecting for every document retrieved.
 > * It can connect to the Internet directly or through a proxy.
 
+Hard to believe there was a pretty viable looking browser back then,
+and in Haskell! It's very impressive! The Fudgets work really is still
+interesting to this day. I've started and will continue to read
+through their documentation and ideas.
+
 ## Reflecting on browsers
 
 You might think (or not think) that a cross-platform browser in 600
@@ -104,8 +109,10 @@ Unfortunately, they've been collapsed down to:
 * WebKit (Safari) -- controlled by Apple
 * Gecko (Firefox) -- controlled by Mozilla
 
-I hope this trend doesn't continue. Mozilla are pretty bent on keeping
-the web diverse and competitive. I'm not sure whether Apple will
-follow Microsoft's and Opera's lead and move to Blink for Safari.
+I hope this trend doesn't continue. Google are already attempting to
+destroy email as we know it, using their power afforded by
+GMail.  Mozilla are pretty bent on keeping the web diverse and
+competitive. I'm not sure whether Apple will follow Microsoft's and
+Opera's lead and move to Blink for Safari.
 
 We'll see.
