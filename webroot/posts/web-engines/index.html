@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Web engines in Haskell</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+
+      pre, code {
+      font-size: 16px;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.2;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>
+Web engines in Haskell
+</h1>
+<h2 id="vado">Vado</h2>
+<p><a href="https://github.com/chrisdone/vado">Vado</a> is a Haskell web browser I wrote in two evenings that is the culmination of:</p>
+<ul>
+<li>Wanting to demonstrate some good Haskell libraries.</li>
+<li>That a cross-platform sdl2 package in Haskell is quite usable and works on Linux, OS X and Windows.</li>
+<li>That a simple web browser like something from the 90s was pretty straight-forward to implement.</li>
+</ul>
+<p>In that I think the project is a success. The code isn’t anything special, and it’s not beautiful, or efficient.</p>
+<p>Quoting the page:</p>
+<blockquote>
+<p>This is a demonstration program that is able to load a web page up and render it like in the early 90’s. It supports laying out text, different font sizes for headings, inline and block elements, hyperlinks, bold and italics. It supports mouse-wheel scrolling, too.</p>
+</blockquote>
+<blockquote>
+<p>I wrote this in a couple evenings, because it seemed straight-forward to do so given the libraries available today. That’s a good sign for Haskell. Also, there’s an inarticulate gut feeling I have that tells me maybe it’s worth celebrating these days in which the web is still viewable in its simplest, earliest form.</p>
+</blockquote>
+<h2 id="fudgets">Fudgets</h2>
+<p>Meanwhile, I found that in 1994 there was <a href="http://www.cse.chalmers.se/~hallgren/wwwbrowser.html">a Haskell web browser by the Fudgets folk.</a></p>
+<p>Quoting from the page in case it goes offline one day:</p>
+<blockquote>
+<p>WWWBrowser is a prototype WWW Browser implemented in the functional programming language Haskell using the Fudget Library. WWWBrowser was mostly implemented in 1994, when NCSA Mosaic was the dominant web browser, and some updates have been made in 1997 and 1998.</p>
+<p>WWWBrowser is also described in the chapter WWWBrowser – a WWW client in the Fudgets Thesis.</p>
+<ul>
+<li>It supports forms.</li>
+<li>It supports inlined images, like [:-)]. The GIF, PNG, JPEG, PNM and XBM formats are recognized. PNM and GIF images are processed with Haskell code. For the other formats, conversions are done with external programs (from the PBMPLUS package). Dithering (or just color remapping) is done by the WWWBrowser itself. (Unfortunately this gets a bit slow for large images.) (See The Graphics File Format Page (2D specs) for info on these and other image file formats.)</li>
+<li>Inlined images are fetched in parallel. This means that pages containing many small inlined images, such as IconBAZAAR, load faster in WWWBrowser (in spite of the slow image processing) than in browsers, like NCSA Mosaic (the dominating browser at the time when WWWBrowser was developed), that fetch one image at a time.</li>
+<li>It understands most of the protocols used for information retrieval in WWW: http, ftp, nntp (news), gopher and telnet. It can also read files and directories in the local file system. When talking to nntp and ftp servers, it uses the same connection for several transfers rather than connecting/disconnecting for every document retrieved.</li>
+<li>It can connect to the Internet directly or through a proxy.</li>
+</ul>
+</blockquote>
+<h2 id="reflecting-on-browsers">Reflecting on browsers</h2>
+<p>You might think (or not think) that a cross-platform browser in 600 lines is pretty good. But this exercise also helps illuminate to me the gulf that exists between what we had in the 90s, and what people expect today. Vado doesn’t do anything that you would expect from a modern web browser. Here are just some things that I can think of:</p>
+<ul>
+<li>Support cookies</li>
+<li>Loading images</li>
+<li>Caching of assets</li>
+<li>History forward/back navigation</li>
+<li>Handle the plethora of custom form inputs (dates, integers, sliders, dropdowns, multiselects, basic text, textarea, buttons, etc.)</li>
+<li>Parse and handle even old CSS 2, nevermind modern CSS 3 (and custom fonts)</li>
+<li>Parse and handle plain old JavaScript, not to mention more modern JS</li>
+<li>Provide the large surface area of API for JavaScript, including but not limited to
+<ul>
+<li>The basic DOM API with all its events (keyboards, timers, mouse, form inputs)</li>
+<li>Drawing APIs (canvas)</li>
+<li>Network APIs (AJAX, websockets)</li>
+<li>Cookies and web storage</li>
+<li>Window APIs (navigation, refreshing, etc.), alerts, prompts</li>
+<li>Audio, video elements, web workers, …</li>
+</ul></li>
+<li>The whole UI around managing your history, addresses, bookmarks, cookies, etc. that they’re expected to have.</li>
+</ul>
+<p>Also to do all of these things efficiently, securely, and in a way that matches (quirks and all) with the way other engines are expected to render. And then if you want anyone to continue using it, you have to keep on keeping up with the web, aside from the high maintenance costs of a basic web browser.</p>
+<h2 id="approaching-a-mono-culture">Approaching a mono culture</h2>
+<p>At present we have an unfortunate state of affairs, we used to have these rendering engines:</p>
+<ul>
+<li>Blink (Chromium)</li>
+<li>KHTML (Konqueror)</li>
+<li>WebKit (Safari)</li>
+<li>Trident (IE)</li>
+<li>EdgeHTML (Edge)</li>
+<li>Presto (Opera)</li>
+<li>Gecko (Firefox)</li>
+</ul>
+<p>Unfortunately, they’ve been collapsed down to:</p>
+<ul>
+<li>Blink (Chromium, Opera, Edge) – controlled by Google</li>
+<li>KHTML (Konqueror) – controlled by KDE</li>
+<li>WebKit (Safari) – controlled by Apple</li>
+<li>Gecko (Firefox) – controlled by Mozilla</li>
+</ul>
+<p>I hope this trend doesn’t continue. Mozilla are pretty bent on keeping the web diverse and competitive. I’m not sure whether Apple will follow Microsoft’s and Opera’s lead and move to Blink for Safari.</p>
+<p>We’ll see.</p>
+
+<footer>
+  © 2019-04-05 Chris Done
+</footer>
+
+    </div>
+  </body>
+</html>
