@@ -56,8 +56,8 @@ Quoting from the page in case it goes offline one day:
 
 Hard to believe there was a pretty viable looking browser back then,
 and in Haskell! It's very impressive! The Fudgets work really is still
-interesting to this day. I've started and will continue to read
-through their documentation and ideas.
+amazing and interesting to this day. I've started and will continue to
+read through their documentation and ideas.
 
 ## Reflecting on browsers
 
