@@ -25,7 +25,7 @@ writing for is to imagine someone who has a familiarity with your
 domain but not your program's take on the domain. I think programmers
 forget that, as they are authors, they have readers.
 
-A famous and regularly quoted piece of advice, from the mailling list
+A famous and regularly quoted piece of advice, from the mailing list
 `comp.lang.c` in 1991, John F. Woods wrote:
 
 > Always code as if the guy who ends up maintaining your code will be a
@@ -48,7 +48,7 @@ plain English, usually in the interest of brevity:
 4. Acronyms: using initial letters to refer to concepts: `throwVE`
    ("throw validation error").
 
-Most of these are unecessary[^typedness] and/or harmful.
+Most of these are unnecessary[^typedness] and/or harmful.
 
 ## It's All Greek To Me
 
@@ -74,24 +74,27 @@ on a napkin.
 ## German Naming Convention
 
 This is what I consider good naming convention. I discovered this
-convention while to working with a German colleague, who, I'd always
+convention while working with a German colleague, who, I'd always
 joked, uses long variable names, and almost never abbreviates
-anything. The more I read his code, the more I realized I was able to
-read the story he was trying to tell, and appreciated it a lot.
+anything. However, the more I read his code, the more I realised I was
+able to read the story he was trying to tell, and appreciated it a
+lot: Using as many words as necessary to clearly name
+something. _Everything_.
 
 I called this "German" naming convention as a reference to the fact
 that the German language is known for its compound words, which can
 become comically long and specific at times. Some examples include,
 _Betäubungsmittelverschreibungsverordnung_ ("regulation requiring a
-prescription for an anesthetic"),
+prescription for an anaesthetic"),
 _Rechtsschutzversicherungsgesellschaften_ (""legal protection
 insurance companies"), and the 1999 German "Word of the Year":
 _Rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz_
-("beef labeling regulation and delegation of supervision law").
+("beef labelling regulation and delegation of supervision law").
 
-So don't write `fopen` when you can write `openFile`. Write
+Don't write `fopen` when you can write `openFile`. Write
 `throwValidationError` and not `throwVE`. Call that name `function`
-and not `fct`. Your readers will thank you.
+and not `fct`. That's German naming convention. Do this and your
+readers will appreciate it.
 
 ## Isomorphic Naming
 

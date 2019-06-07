@@ -99,7 +99,7 @@ German Naming Convention
 <p>Jump to <a href="#german-naming-convention">German Naming Convention</a> to skip straight to it.</p>
 <h2 id="expect-the-violent-psychopath">Expect the Violent Psychopath</h2>
 <p>You’re trying to tell a story with your code. Your code should tell that story clearly, not cryptically, for an audience besides yourself. A good yardstick for deciding what kind of audience you are writing for is to imagine someone who has a familiarity with your domain but not your program’s take on the domain. I think programmers forget that, as they are authors, they have readers.</p>
-<p>A famous and regularly quoted piece of advice, from the mailling list <code>comp.lang.c</code> in 1991, John F. Woods wrote:</p>
+<p>A famous and regularly quoted piece of advice, from the mailing list <code>comp.lang.c</code> in 1991, John F. Woods wrote:</p>
 <blockquote>
 <p>Always code as if the guy who ends up maintaining your code will be a violent psychopath who knows where you live. Code for readability.</p>
 </blockquote>
@@ -112,16 +112,16 @@ German Naming Convention
 <li>“Hungarian” notation: any prefix or suffix notation in which a single letter is used to refer to a <em>type</em> or <em>property</em> of the variable, as in sigils like <code>$foo</code> (“scalar foo”), <code>lpszFoo</code> (“long pointer string zero-terminated”), or <code>fooL</code> (list of foo).</li>
 <li>Acronyms: using initial letters to refer to concepts: <code>throwVE</code> (“throw validation error”).</li>
 </ol>
-<p>Most of these are unecessary<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> and/or harmful.</p>
+<p>Most of these are unnecessary<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> and/or harmful.</p>
 <h2 id="its-all-greek-to-me">It’s All Greek To Me</h2>
 <p>A word on this convention. Single letter naming comes from mathematical tradition; it means “there isn’t a good noun for this because it’s general”. A person of X height. In some cases, this is actually reasonable. Consider:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1">identity x <span class="fu">=</span> x</a></code></pre></div>
 <p>The <code>identity</code> function isn’t enhanced by calling its parameter <code>thing</code>; it literally doesn’t matter what it is, especially in some typed languages<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. In fact, one could argue that it’s harmful to try to using a meaningful English name.</p>
 <p>However, anywhere that your variables have some meaning, by using “Greek convention”, you’re throwing away information that could help someone to digest your code better. You’re not trying to fit your code on a napkin.</p>
 <h2 id="german-naming-convention">German Naming Convention</h2>
-<p>This is what I consider good naming convention. I discovered this convention while to working with a German colleague, who, I’d always joked, uses long variable names, and almost never abbreviates anything. The more I read his code, the more I realized I was able to read the story he was trying to tell, and appreciated it a lot.</p>
-<p>I called this “German” naming convention as a reference to the fact that the German language is known for its compound words, which can become comically long and specific at times. Some examples include, <em>Betäubungsmittelverschreibungsverordnung</em> (“regulation requiring a prescription for an anesthetic”), <em>Rechtsschutzversicherungsgesellschaften</em> (&quot;“legal protection insurance companies”), and the 1999 German “Word of the Year”: <em>Rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz</em> (“beef labeling regulation and delegation of supervision law”).</p>
-<p>So don’t write <code>fopen</code> when you can write <code>openFile</code>. Write <code>throwValidationError</code> and not <code>throwVE</code>. Call that name <code>function</code> and not <code>fct</code>. Your readers will thank you.</p>
+<p>This is what I consider good naming convention. I discovered this convention while working with a German colleague, who, I’d always joked, uses long variable names, and almost never abbreviates anything. However, the more I read his code, the more I realised I was able to read the story he was trying to tell, and appreciated it a lot: Using as many words as necessary to clearly name something. <em>Everything</em>.</p>
+<p>I called this “German” naming convention as a reference to the fact that the German language is known for its compound words, which can become comically long and specific at times. Some examples include, <em>Betäubungsmittelverschreibungsverordnung</em> (“regulation requiring a prescription for an anaesthetic”), <em>Rechtsschutzversicherungsgesellschaften</em> (&quot;“legal protection insurance companies”), and the 1999 German “Word of the Year”: <em>Rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz</em> (“beef labelling regulation and delegation of supervision law”).</p>
+<p>Don’t write <code>fopen</code> when you can write <code>openFile</code>. Write <code>throwValidationError</code> and not <code>throwVE</code>. Call that name <code>function</code> and not <code>fct</code>. That’s German naming convention. Do this and your readers will appreciate it.</p>
 <h2 id="isomorphic-naming">Isomorphic Naming</h2>
 <p>This convention complements German naming convention completely.</p>
 <p><em>Isomorphic naming</em> is to say that the name of the variable is the same form<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> of the name of the type. A simple heuristic, in other words: <strong>just use the name of the type.</strong></p>
