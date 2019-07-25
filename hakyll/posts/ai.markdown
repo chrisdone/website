@@ -9,6 +9,13 @@ tags: ai
 
 Intelligence is any goal-based behavior informed by evidence.
 
+
+    intelligence  =    behavior
+                          ^  \
+            informed by  /    \  satisfies a
+                        /      v
+                   evidence   goal
+
 The _goal_ is what we give as observers, and we judge how well the
 _behavior_ satisfies the goal.
 
@@ -51,3 +58,5 @@ A Saharan desert ant calculates distance (called "path integration")
 to their goal and then returns home the same number of steps. If one
 adds stilts or shortens their legs, they overshoot or undershoot the
 distance.
+
+[this post is incomplete, but upon returning to it, I think I was onto something with clarity]
