@@ -9,8 +9,32 @@ tags: haskell
 At the beginning of this decade, a few of us Haskellers were exploring
 how best to do client-side web programming. We didn't want to write
 JavaScript. There's a surprising number of techniques we tried to
-avoid doing so. Here's a history of my own experience in this problem
-space.
+avoid doing so. There was work coming from academia and
+industry. Here's a history of my own experience in this problem space.
+
+In 2008, Joel Bjornson and Niklas Broberg published
+[HJScript](http://hackage.haskell.org/package/HJScript-0.4), which was
+a Haskell EDSL for writing JavaScript. It had the ability to express
+typed JS via a GADT. I used it in 2010 on a project to make limited
+DOM manipulations. I wrote
+[a wrapper around jquery](https://github.com/benarmston/hpaste/blob/master/src/HJScript/Objects/JQuery/Extra.hs),
+for example. It was nice to write in Haskell, but it was also mental
+overhead to write in two languages at once (it still had JavaScript's
+semantics). In the end I went back to using plain JavaScript.
+
+Around 2010, Adam Chlipala announces
+[Ur](http://impredicative.com/ur/), a radical web dev language with
+row types, which compiles to both binary (via OCaml) and JavaScript,
+fairly transparently, embedding both HTML and SQL syntax into the
+language. I am both impressed by the simplicity of the code and
+correctness, and horrified by some of the code involving
+metaprogramming. The row types documentation frankly scares me
+away. After trying out some examples, I don't return to it.[^1] To
+this day I am still interested in this architecture.
+
+Some time in 2011, [Opa](http://opalang.org/) appears, but apparently
+nobbody wants to learn yet another server-side language. I don't know
+anyone who has used this in production.
 
 In August 2011, I was
 [experimenting with GHCJS](https://chrisdone.com/posts/ghcjs/), notes
@@ -48,7 +72,8 @@ impractical. Indeed, in 2016, Evan wrote
 [A Farewell to FRP](https://elm-lang.org/news/farewell-to-frp). Elm
 used to be all about FRP, and then it wasn't. "I might argue that Elm
 was _never_ about FRP," writes Evan. I imagine this contributed to
-Elm's growing success.
+Elm's growing success. Today, Elm is not my choice because it lacks
+type-classes.
 
 In April 2012, Michael Snoyman was doing some very interesting
 explorations into
@@ -62,7 +87,7 @@ a Haskell-to-JavaScript compiler like GHCJS which also goes via GHC
 Core, but doesn't try as hard to implement the GHC runtime in the
 browser. It's the driver for
 [his PhD thesis](https://ekblad.cc/pubs/thesis.pdf) _Functional EDSLs
-for Web Applications_.
+for Web Applications_. We never really give it a try on a real project.
 
 In September 2012, I
 [authored the Fay compiler](https://chrisdone.com/posts/fay/), which
@@ -80,6 +105,13 @@ To add some additional context, at the time, I wrote:
 > well, we can’t do anything about it, let’s just wait for Google to
 > complete their native client project and hope that it breaks the
 > market.
+
+In March 2013, Andrew Gill and Jan Bracker published their
+[sunroof](https://github.com/ku-fpg/sunroof-compiler)
+project, which was a HJScript on steroids, and which actually seemed
+compelling to some people at the time. I'm not sure anybody ever used
+it in production. I think this was the last ember of effort in
+JavaScript DSLs in Haskell, and it flickered out.
 
 In October 2013, Phil Freeman
 [announced PureScript](https://www.reddit.com/r/haskell/comments/1pkzd0/show_reddit_my_weekend_project_purescript/),
@@ -153,4 +185,20 @@ that. I decide to give Halogen a try. After initial pain, I end up
 loving it.
 
 November 2018, we briefly discuss whether Rust+WASM is a new possible
-contender.
+contender. We'll have to wait for WASM to become supported on all
+browsers, especially mobile.
+
+December 2018, we have a dev meeting on the state of frontend
+development. Our meeting notes are long and detailed, the brief
+summary: we don't feel comfortable with GHCJS, Reflex is great but
+also costly (double novelty budget), Halogen is a better architecture
+than Elm. PureScript and Halogen come out as the best possible
+choice. Other things considered: ClojureScript, TypeScript, Rust,
+[ReasonML](https://reasonml.github.io/), Elm,
+[OCaml](https://ocsigen.org/js_of_ocaml/3.1.0/manual/overview).
+
+[^1]: In retrospect, if it was marketed in the same way Elm was, and
+less "academic", it may have taken off. But it could just be that it
+arrived before anyone was ready to try alternative languages. Or
+perhaps its syntax could have matched Haskell. Comparatively,
+PureScript has row types too.
