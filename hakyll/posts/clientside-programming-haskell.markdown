@@ -1,7 +1,7 @@
 ---
 date: 2019-07-25
-title: Client-side web programming in Haskell
-description: Client-side web programming in Haskell
+title: "Client-side web programming in Haskell: A retrospective"
+description: "Client-side web programming in Haskell: A retrospective"
 author: Chris Done
 tags: haskell
 ---
@@ -24,7 +24,7 @@ semantics). In the end I went back to using plain JavaScript.
 
 Around 2010, Adam Chlipala announces
 [Ur](http://impredicative.com/ur/), a radical web dev language with
-row types, which compiles to both binary (via OCaml) and JavaScript,
+row types, which compiles to both native object code and JavaScript,
 fairly transparently, embedding both HTML and SQL syntax into the
 language. I am both impressed by the simplicity of the code and
 correctness, and horrified by some of the code involving
@@ -33,7 +33,7 @@ away. After trying out some examples, I don't return to it.[^1] To
 this day I am still interested in this architecture.
 
 Some time in 2011, [Opa](http://opalang.org/) appears, but apparently
-nobbody wants to learn yet another server-side language. I don't know
+nobody wants to learn yet another server-side language. I don't know
 anyone who has used this in production.
 
 In August 2011, I was

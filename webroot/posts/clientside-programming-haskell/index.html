@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Client-side web programming in Haskell</title>
+    <title>Client-side web programming in Haskell: A retrospective</title>
     <style>
       body {
       max-width: 40em;
@@ -92,12 +92,12 @@
   <body>
     <div class="page-wrap">
       <h1>
-Client-side web programming in Haskell
+Client-side web programming in Haskell: A retrospective
 </h1>
 <p>At the beginning of this decade, a few of us Haskellers were exploring how best to do client-side web programming. We didn’t want to write JavaScript. There’s a surprising number of techniques we tried to avoid doing so. There was work coming from academia and industry. Here’s a history of my own experience in this problem space.</p>
 <p>In 2008, Joel Bjornson and Niklas Broberg published <a href="http://hackage.haskell.org/package/HJScript-0.4">HJScript</a>, which was a Haskell EDSL for writing JavaScript. It had the ability to express typed JS via a GADT. I used it in 2010 on a project to make limited DOM manipulations. I wrote <a href="https://github.com/benarmston/hpaste/blob/master/src/HJScript/Objects/JQuery/Extra.hs">a wrapper around jquery</a>, for example. It was nice to write in Haskell, but it was also mental overhead to write in two languages at once (it still had JavaScript’s semantics). In the end I went back to using plain JavaScript.</p>
-<p>Around 2010, Adam Chlipala announces <a href="http://impredicative.com/ur/">Ur</a>, a radical web dev language with row types, which compiles to both binary (via OCaml) and JavaScript, fairly transparently, embedding both HTML and SQL syntax into the language. I am both impressed by the simplicity of the code and correctness, and horrified by some of the code involving metaprogramming. The row types documentation frankly scares me away. After trying out some examples, I don’t return to it.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> To this day I am still interested in this architecture.</p>
-<p>Some time in 2011, <a href="http://opalang.org/">Opa</a> appears, but apparently nobbody wants to learn yet another server-side language. I don’t know anyone who has used this in production.</p>
+<p>Around 2010, Adam Chlipala announces <a href="http://impredicative.com/ur/">Ur</a>, a radical web dev language with row types, which compiles to both native object code and JavaScript, fairly transparently, embedding both HTML and SQL syntax into the language. I am both impressed by the simplicity of the code and correctness, and horrified by some of the code involving metaprogramming. The row types documentation frankly scares me away. After trying out some examples, I don’t return to it.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> To this day I am still interested in this architecture.</p>
+<p>Some time in 2011, <a href="http://opalang.org/">Opa</a> appears, but apparently nobody wants to learn yet another server-side language. I don’t know anyone who has used this in production.</p>
 <p>In August 2011, I was <a href="https://chrisdone.com/posts/ghcjs/">experimenting with GHCJS</a>, notes which later I copied over to the Haskell Wiki under the name <a href="http://www.haskell.org/haskellwiki/The_JavaScript_Problem">The JavaScript Problem</a>. At the time, I encountered bugs and runtime difficulties with some simple GHCJS experiments. From there I mostly abandoned it as a choice, underwhelmed.</p>
 <p>In December 2011, I came up with <a href="https://chrisdone.com/posts/ji-haskell-web/">ji</a>, a means of controlling a web page from a Haskell web service, which later was renamed to <a href="http://hackage.haskell.org/package/threepenny-gui">threepenny-gui</a> and is now maintained by Heinrich Apfelmus to this day. It turned out to be extremely powerful; I wrote an IRC-like app in which people could chat on a web page in a page of code. However, in the end it wasn’t to be for mainstream web dev; a good point that Michael Snoyman made was that it had a high server-side cost, and did not scale to multiple servers. In the end, threepenny-gui is a great library to consider for cross-platform desktop programs (such as with Electron).</p>
 <p>In January 2012, I <a href="https://web.archive.org/web/20120623212312/https://chrisdone.com/posts/2012-01-06-uhc-javascript.html">experimented with UHC</a>. My experience was similar to GHCJS. I tried some basic experiments, but the heavy runtime that came along with it wasn’t attractive to me. It felt like I would spend half my time maintaining <em>it</em> aside from the applications I might’ve written with it.</p>
@@ -128,7 +128,7 @@ Client-side web programming in Haskell
 </blockquote>
 <p>April 2017, Michael Snoyman <a href="https://github.com/snoyberg/purescript-halogen-onetimepad">writes a PureScript + Halogen version</a> of his one-time-pad toy app. At the time, I’m not interested in Halogen. It looks complicated, and I’m still enjoying React.</p>
 <p>August 2018, it has been decided that we will use PureScript to build a UI for a cryptocurrency client at FP Complete. I’m happy about that. I decide to give Halogen a try. After initial pain, I end up loving it.</p>
-<p>November 2018, we briefly discuss whether Rust+WASM is a new possible contender.</p>
+<p>November 2018, we briefly discuss whether Rust+WASM is a new possible contender. We’ll have to wait for WASM to become supported on all browsers, especially mobile.</p>
 <p>December 2018, we have a dev meeting on the state of frontend development. Our meeting notes are long and detailed, the brief summary: we don’t feel comfortable with GHCJS, Reflex is great but also costly (double novelty budget), Halogen is a better architecture than Elm. PureScript and Halogen come out as the best possible choice. Other things considered: ClojureScript, TypeScript, Rust, <a href="https://reasonml.github.io/">ReasonML</a>, Elm, <a href="https://ocsigen.org/js_of_ocaml/3.1.0/manual/overview">OCaml</a>.</p>
 <section class="footnotes">
 <hr />
