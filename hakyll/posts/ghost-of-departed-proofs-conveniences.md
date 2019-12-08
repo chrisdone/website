@@ -43,14 +43,20 @@ someNamed x = SomeNamed (Named_ x)
 pattern Name t <- (someNamed -> SomeNamed t)
 ```
 
-With this, we can write `case x of Name x' -> ...` and
-now we have a named version of `x`. This scales to any number of
-tuples or pattern matches.
+With this, we can write
+
+```haskell
+case x of Name x' -> ...
+```
+
+And now we have a named version of `x`! This scales to any number of
+tuples or pattern matches. See below for a real example.
 
 ## Some proof generators
 
-A couple trivial modules for checking non-zeroness of a number, and a
-function that makes use of such proof to perform division.
+For the sake of example in the next section, I introduce a couple
+trivial modules for checking non-zeroness of a number, and a function
+that makes use of such proof to perform division.
 
 ``` haskell
 -- | A trivial proof of nonzero for a given named thing.
@@ -111,8 +117,8 @@ main = do
           in putStrLn ("Result: " ++ show result)
 ```
 
-One nice addition is that we can use monad syntax to unwrap them
-conveniently:
+One nice addition is that we can _use monad syntax_ to name them very
+conveniently!
 
 ``` haskell
 main2 = do
