@@ -6,6 +6,20 @@ author: Chris Done
 tags: haskell
 ---
 
+## Update 2020-05-24
+
+The web site has since been through various iterations and changes,
+therefore I include some screenshots below for posterity (because my
+design is much more beautiful than what is now online ;-).
+
+<img src="../../images/blog/Screen Shot 2020-05-10 at 12.08.59 PM.png">
+
+<img src="../../images/blog/Screen Shot 2020-05-10 at 12.09.04 PM.png">
+
+<img src="../../images/blog/Screen Shot 2020-05-10 at 12.09.06 PM.png">
+
+## An alternative Haskell home page
+
 I started a couple months back an alternative home page for
 Haskell. It is a work in progress, but as I work on it every so often
 I push changes to it.
