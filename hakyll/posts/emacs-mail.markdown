@@ -33,7 +33,7 @@ localfolders = ~/Mail
 [Repository ChrisDoneGmail]
 type = Gmail
 maxconnections=1
-remoteuser = chrisdone@gmail.com
+remoteuser = blog@chrisdone.com
 realdelete=no
 folderfilter =
   lambda foldername:
@@ -156,7 +156,7 @@ configured my mail user agent:
 
 Set my default sending details:
 
-    (setq user-mail-address "chrisdone@gmail.com"
+    (setq user-mail-address "blog@chrisdone.com"
           user-full-name "Chris Done")
 
 Configured the SMTP server info for GMail:

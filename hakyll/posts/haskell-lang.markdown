@@ -291,7 +291,7 @@ bits and bobs here and there on the weekend and I always have time to
 merge straight-forward changes.
 
 Questions/comments, feel free to email me:
-[chrisdone@gmail.com](mailto:chrisdone@gmail.com) Put a note in the
+[blog@chrisdone.com](mailto:blog@chrisdone.com) Put a note in the
 email if you wish to be CC'd with other people in the discussion.
 
 [^1]: When I open haskell.org on my phone, I see the tablet-sized
