@@ -1,0 +1,180 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Statically Checked Overloaded Strings</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.2;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>
+Statically Checked Overloaded Strings
+</h1>
+<p>This page demonstrates a trick I came up with which is defining <code>IsString</code> for <code>Q (TExp a)</code>, where <code>a</code> is <code>lift</code>-able. It allows you to write <code>$$(&quot;...&quot;)</code> and have the string parsed at compile-time.</p>
+<p>This offers a light-weight way to enforce compile-time constraints. It’s basically <code>OverloadedStrings</code> with static checks.</p>
+<p>This trick works already in old GHC versions.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ot">{-# LANGUAGE TemplateHaskell, OverloadedStrings #-}</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">import</span> <span class="dt">Network.URI</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="kw">import</span> <span class="dt">Path</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">import</span> <span class="dt">PATHTH</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="kw">import</span> <span class="dt">SHA256TH</span></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="kw">import</span> <span class="dt">URITH</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"><span class="ot">uri ::</span> <span class="dt">URI</span></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">uri <span class="fu">=</span> <span class="fu">$$</span>(<span class="st">&quot;https://releases.hashicorp.com/vault/1.2.2/vault_1.2.2_linux_amd64.zip&quot;</span>)</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"><span class="ot">sha256 ::</span> <span class="dt">SHA256</span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">sha256 <span class="fu">=</span> <span class="fu">$$</span>(<span class="st">&quot;7725b35d9ca8be3668abe63481f0731ca4730509419b4eb29fa0b0baa4798458&quot;</span>)</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="ot">home ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">home <span class="fu">=</span> <span class="fu">$$</span>(<span class="st">&quot;/home/chris&quot;</span>)</a></code></pre></div>
+<p>Scroll down to see the modules <code>PATHTH</code>, <code>SHA256TH</code> and <code>URITH</code>.</p>
+<h2 id="versus-quasiquotes">Versus QuasiQuotes</h2>
+<p>This is more light-weight and overloaded than, e.g.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1">[quasiquote|...|]</a></code></pre></div>
+<p>which requires stating the name of the quoter you want (sometimes you’d rather not), requires the <code>QuasiQuotes</code> extension, and leaves syntax highlighters not sure how to highlight your content properly.</p>
+<h2 id="a-step-to-make-this-syntax-even-lighter">A step to make this syntax even lighter</h2>
+<p>It’d be nice to relax GHC’s parser a little to support <code>$$&quot;...&quot;</code> to mean the same thing. This wouldn’t conflict with any existing syntax that I am aware of, or of any existing plans or proposals.</p>
+<h2 id="pathth">PATHTH</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ot">{-# LANGUAGE FlexibleInstances #-}</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">module</span> <span class="dt">PATHTH</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">import</span> <span class="dt">Data.String</span> (<span class="dt">IsString</span>(..))</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Syntax</span> (<span class="dt">Q</span>, <span class="dt">TExp</span>(..), lift)</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw">import</span> <span class="dt">Path</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">Dir</span>))) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">  fromString <span class="fu">=</span> fmap <span class="dt">TExp</span> <span class="fu">.</span> mkRelDir</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>))) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">  fromString <span class="fu">=</span> fmap <span class="dt">TExp</span> <span class="fu">.</span> mkAbsDir</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>))) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">  fromString <span class="fu">=</span> fmap <span class="dt">TExp</span> <span class="fu">.</span> mkRelFile</a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">File</span>))) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">  fromString <span class="fu">=</span> fmap <span class="dt">TExp</span> <span class="fu">.</span> mkAbsFile</a></code></pre></div>
+<h2 id="sha256th">SHA256TH</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ot">{-# LANGUAGE DeriveLift, FlexibleInstances, TemplateHaskell #-}</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">module</span> <span class="dt">SHA256TH</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="kw">import</span>           <span class="dt">Data.ByteString</span> (<span class="dt">ByteString</span>)</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString</span> <span class="kw">as</span> <span class="dt">S</span></a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Base16</span> <span class="kw">as</span> <span class="dt">Hex</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="kw">import</span>           <span class="dt">Data.String</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="kw">import</span>           <span class="dt">Instances.TH.Lift</span> ()</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="kw">import</span>           <span class="dt">Language.Haskell.TH.Syntax</span> (<span class="dt">Q</span>, <span class="dt">TExp</span>(..), <span class="dt">Lift</span>(..))</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="kw">newtype</span> <span class="dt">SHA256</span> <span class="fu">=</span> <span class="dt">SHA256</span> <span class="dt">ByteString</span> <span class="kw">deriving</span> (<span class="dt">Eq</span>, <span class="dt">Ord</span>, <span class="dt">Lift</span>)</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">SHA256</span>)) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">  fromString i <span class="fu">=</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">    <span class="kw">if</span> length i <span class="fu">==</span> <span class="dv">64</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13">      <span class="kw">then</span> <span class="kw">case</span> Hex.decode (fromString i) <span class="kw">of</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14">             (result, wrong)</a>
+<a class="sourceLine" id="cb4-15" data-line-number="15">               <span class="fu">|</span> S.null wrong <span class="ot">-&gt;</span> fmap <span class="dt">TExp</span> (lift (<span class="dt">SHA256</span> result))</a>
+<a class="sourceLine" id="cb4-16" data-line-number="16">             _ <span class="ot">-&gt;</span> fail <span class="st">&quot;Invalid SHA256 format.&quot;</span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17">      <span class="kw">else</span> fail <span class="st">&quot;Incorrect length for SHA256.&quot;</span></a></code></pre></div>
+<h2 id="urith">URITH</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="ot">{-# LANGUAGE NamedFieldPuns, FlexibleInstances, TemplateHaskell #-}</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">module</span> <span class="dt">URITH</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">import</span> <span class="dt">Data.String</span> (<span class="dt">IsString</span>(..))</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Syntax</span> (<span class="dt">Q</span>, <span class="dt">TExp</span>(..), lift)</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw">import</span> <span class="dt">Network.URI</span> (<span class="dt">URI</span>(..), parseURI, <span class="dt">URIAuth</span>(..))</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">URI</span>)) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">  fromString i <span class="fu">=</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">    <span class="kw">case</span> parseURI i <span class="kw">of</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> fail (<span class="st">&quot;Invalid URI: &quot;</span> <span class="fu">++</span> show i)</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">      <span class="dt">Just</span> uri <span class="ot">-&gt;</span> liftURI uri</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="ot">liftURI ::</span> <span class="dt">URI</span> <span class="ot">-&gt;</span> <span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">URI</span>)</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">liftURI <span class="dt">URI</span> {uriScheme, uriAuthority, uriPath, uriQuery, uriFragment} <span class="fu">=</span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13">  fmap <span class="dt">TExp</span> [<span class="fu">|</span><span class="dt">URI</span> {uriScheme, uriAuthority <span class="fu">=</span> <span class="fu">$</span>(mauthority), uriPath, uriQuery, uriFragment}<span class="fu">|</span>]</a>
+<a class="sourceLine" id="cb5-14" data-line-number="14">  <span class="kw">where</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15">    mauthority <span class="fu">=</span> maybe [<span class="fu">|</span><span class="dt">Nothing</span><span class="fu">|</span>] liftAuthority uriAuthority</a>
+<a class="sourceLine" id="cb5-16" data-line-number="16">    liftAuthority <span class="dt">URIAuth</span> {uriUserInfo, uriRegName, uriPort} <span class="fu">=</span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17">      [<span class="fu">|</span><span class="dt">Just</span> (<span class="dt">URIAuth</span> {uriUserInfo, uriRegName, uriPort})<span class="fu">|</span>]</a></code></pre></div>
+
+<footer>
+  © 2019-11-13 Chris Done
+</footer>
+
+    </div>
+  </body>
+</html>

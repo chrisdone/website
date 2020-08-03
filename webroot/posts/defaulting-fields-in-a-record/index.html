@@ -1,0 +1,179 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Defaulting fields in a record</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.2;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>
+Defaulting fields in a record
+</h1>
+<p>Do you have 20+ fields of configuration for your kitchen sink API? This approach might be for you.</p>
+<p>An approach to specifying many (required) fields, where some are defaulted. What you get:</p>
+<ol type="1">
+<li>The ability to specify what the defaults are in a single place.</li>
+<li>That set of defaults is decoupled from the function that uses the record (separating concerns).</li>
+<li>The ability to choose different sets of defaults easily (e.g. “dev” mode vs “production” mode).</li>
+<li>Type-safety; you can’t specify defaults for required fields as an API provider.</li>
+<li>Overriding: you can provide values instead of using the default trivially.</li>
+<li>Light-weight syntax.</li>
+<li>Failing to provide a required field as an API end-user results in a type error.</li>
+</ol>
+<p>A field which has no sensible default value (such as one enabling a new feature like <code>TLSSettings</code>) can still be <code>Maybe a</code>.</p>
+<p>Your consumer of this API:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">-- | Usage of API.</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">import</span> <span class="dt">DBAPI</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co">-- Omitting either username or password triggers a type error.</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">main <span class="fu">=</span> connect connSpecDefaults {username <span class="fu">=</span> <span class="st">&quot;test&quot;</span>, password <span class="fu">=</span> <span class="st">&quot;mypw&quot;</span>}</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co">-- To override defaults, just specify the field e.g. port:</span></a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">main2 <span class="fu">=</span> connect connSpecDefaults {username <span class="fu">=</span> <span class="st">&quot;test&quot;</span>, password <span class="fu">=</span> <span class="st">&quot;mypw&quot;</span>, port <span class="fu">=</span> <span class="dv">1234</span>}</a>
+<a class="sourceLine" id="cb1-12" data-line-number="12"></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="co">-- Thanks Aleksey Khudyakov (@pineapple_zombi) for pointing out that plain record</span></a>
+<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co">-- update has the same typing rules as RecordWildCards.</span></a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="co">--</span></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co">-- Old version was: ConnSpec{username=&quot;..&quot;,password=&quot;..&quot;,..} where</span></a>
+<a class="sourceLine" id="cb1-17" data-line-number="17"><span class="co">-- ConnSpec{..} = connSpecDefaults</span></a></code></pre></div>
+<p>Definition of an API, in this case the example is a database:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ot">{-# LANGUAGE DataKinds #-}</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="co">-- | My database API.</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="kw">module</span> <span class="dt">DBAPI</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="kw">import</span> <span class="dt">Data.Defaults</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="kw">data</span> <span class="dt">ConnSpec</span> p <span class="fu">=</span> <span class="dt">ConnSpec</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">  {<span class="ot"> username ::</span> <span class="fu">!</span>(<span class="dt">Required</span> p <span class="dt">String</span>)</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">  ,<span class="ot"> password ::</span> <span class="fu">!</span>(<span class="dt">Required</span> p <span class="dt">String</span>)</a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">  ,<span class="ot"> port ::</span> <span class="fu">!</span><span class="dt">Int</span> <span class="co">-- Optional and therefore requires a default.</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">  ,<span class="ot"> host ::</span> <span class="fu">!</span><span class="dt">String</span> <span class="co">-- Optional and therefore requires a default.</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">  }</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="ot">connSpecDefaults ::</span> <span class="dt">ConnSpec</span> <span class="dt">Defaults</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17">connSpecDefaults <span class="fu">=</span> <span class="dt">ConnSpec</span> {</a>
+<a class="sourceLine" id="cb2-18" data-line-number="18">  <span class="co">-- Required fields are ()</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19">  username <span class="fu">=</span> (), password <span class="fu">=</span> (),</a>
+<a class="sourceLine" id="cb2-20" data-line-number="20">  <span class="co">-- Defaulted fields need defaults specified</span></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21">  port <span class="fu">=</span> <span class="dv">5432</span>, host <span class="fu">=</span> <span class="st">&quot;localhost&quot;</span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22">  }</a>
+<a class="sourceLine" id="cb2-23" data-line-number="23"></a>
+<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">-- Example func.</span></a>
+<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="ot">connect ::</span> <span class="dt">ConnSpec</span> <span class="dt">Complete</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</a>
+<a class="sourceLine" id="cb2-26" data-line-number="26">connect _ <span class="fu">=</span> pure ()</a></code></pre></div>
+<p>Basic defaults module to support this approach:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ot">{-# LANGUAGE TypeFamilies #-}</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="ot">{-# LANGUAGE DataKinds #-}</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="ot">{-# LANGUAGE KindSignatures #-}</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">-- | Providing defaults for fields in a record.</span></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="kw">module</span> <span class="dt">Data.Defaults</span> <span class="kw">where</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">-- | Purpose of a data type.</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="kw">data</span> <span class="dt">Purpose</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">  <span class="fu">=</span> <span class="dt">Defaults</span> <span class="co">-- For specifying defaults.</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">  <span class="fu">|</span> <span class="dt">Complete</span> <span class="co">-- For making a complete record.</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">-- | Required fields are not usable from a defaults spec.</span></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="kw">type</span> family <span class="dt">Required</span> (<span class="ot">p ::</span> <span class="dt">Purpose</span>) a <span class="kw">where</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">  <span class="dt">Required</span> '<span class="dt">Defaults</span> a  <span class="fu">=</span> () <span class="co">-- When we're defining defaults, required fields are ().</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17">  <span class="dt">Required</span> '<span class="dt">Complete</span> a <span class="fu">=</span> a</a></code></pre></div>
+
+<footer>
+  © 2019-12-07 Chris Done
+</footer>
+
+    </div>
+  </body>
+</html>

@@ -12,9 +12,9 @@
       font-family: serif;
       line-height: 1.5;
       }
-
       pre, code {
       font-size: 16px;
+      word-wrap: break-word;
       }
       pre {
       margin-left: 1.5em;
@@ -94,6 +94,11 @@
       <h1>
 A philosophical difference between Haskell and Lisp
 </h1>
+<p><strong>UPDATE 2020-08-03</strong>: I no longer stand by the content in this post. I think the overall sentiment is marginally accurate; however, the details in the post are incorrect (as many have pointed out over the years).</p>
+<p>As as been pointed out, <code>remove-if-not</code>’s start/count parameters behave differently and cannot easily be separated out of the function, a design trade-off that I appreciate.</p>
+<p>As has been noted and pointed out, Clojure permits compositional style and laziness. I would also point out that laziness isn’t exactly necessary for stream fusion (just purity will do), but it helps with ergonomics.</p>
+<p>I don’t feel like pulling the article completely. It has made the rounds on HN/reddit for years. I feel good about just admitting that it’s not very good. Feel free to read on, but take it with a grain of salt.</p>
+<hr />
 <p>One difference in philosophy of Lisp (e.g. Common Lisp, Emacs Lisp) and Haskell is that the latter makes liberal use of many tiny functions that do one single task. This is known as <em>composability</em>, or the UNIX philosophy. In Lisp a procedure tends to accept many options which configure its behaviour. This is known as <em>monolithism</em>, or to make procedures like a kitchen-sink, or a Swiss-army knife.</p>
 <p>Which one is better can be discussed in another post. I just want to make the simple case that there is indeed a difference in philosophy and practice. Having written my fair share of non-trivial Emacs Lisp (and a small share of Common Lisp; I’ve maintained Common Lisp systems) and my fair share of non-trivial Haskell I think I’m in a position to judge.</p>
 <p>Full disclosure: We’ll just look at some trivial examples anyone can understand, with the (unproven but asserted) implication that these examples are representative of the general way software is written in these languages.</p>

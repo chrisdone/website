@@ -6,6 +6,27 @@ author: Chris Done
 tags: haskell, lisp
 ---
 
+**UPDATE 2020-08-03**: I no longer stand by the content in this
+post. I think the overall sentiment is marginally accurate; however,
+the details in the post are incorrect (as many have pointed out over
+the years).
+
+As as been pointed out, `remove-if-not`'s start/count parameters
+behave differently and cannot easily be separated out of the function,
+a design trade-off that I appreciate.
+
+As has been noted and pointed out, Clojure permits compositional style
+and laziness. I would also point out that laziness isn't exactly
+necessary for stream fusion (just purity will do), but it helps with
+ergonomics.
+
+I don't feel like pulling the article completely. It has made the
+rounds on HN/reddit for years. I feel good about just admitting that
+it's not very good. Feel free to read on, but take it with a grain of
+salt.
+
+---
+
 One difference in philosophy of Lisp (e.g. Common Lisp, Emacs Lisp)
 and Haskell is that the latter makes liberal use of many tiny
 functions that do one single task. This is known as _composability_,

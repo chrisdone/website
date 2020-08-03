@@ -12,9 +12,9 @@
       font-family: serif;
       line-height: 1.5;
       }
-
       pre, code {
       font-size: 16px;
+      word-wrap: break-word;
       }
       pre {
       margin-left: 1.5em;
@@ -112,7 +112,7 @@ Emacs, Notmuch and Offlineimap
 <a class="sourceLine" id="cb1-12" data-line-number="12">[Repository ChrisDoneGmail]</a>
 <a class="sourceLine" id="cb1-13" data-line-number="13"><span class="bu">type</span> <span class="op">=</span> Gmail</a>
 <a class="sourceLine" id="cb1-14" data-line-number="14">maxconnections<span class="op">=</span><span class="dv">1</span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15">remoteuser <span class="op">=</span> chrisdone<span class="op">@</span>gmail.com</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15">remoteuser <span class="op">=</span> blog<span class="op">@</span>chrisdone.com</a>
 <a class="sourceLine" id="cb1-16" data-line-number="16">realdelete<span class="op">=</span>no</a>
 <a class="sourceLine" id="cb1-17" data-line-number="17">folderfilter <span class="op">=</span></a>
 <a class="sourceLine" id="cb1-18" data-line-number="18">  <span class="kw">lambda</span> foldername:</a>
@@ -172,7 +172,7 @@ notmuch tag -inbox +haskell-beginners to:beginners@haskell.org tag:inbox</code><
 <p>One thing that doesn’t work out of the box is sending mail. For this I configured my mail user agent:</p>
 <pre><code>(setq mail-user-agent 'message-user-agent)</code></pre>
 <p>Set my default sending details:</p>
-<pre><code>(setq user-mail-address &quot;chrisdone@gmail.com&quot;
+<pre><code>(setq user-mail-address &quot;blog@chrisdone.com&quot;
       user-full-name &quot;Chris Done&quot;)</code></pre>
 <p>Configured the SMTP server info for GMail:</p>
 <pre><code>(setq smtpmail-stream-type 'ssl
