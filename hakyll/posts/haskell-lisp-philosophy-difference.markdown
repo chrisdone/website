@@ -11,7 +11,7 @@ post. I think the overall sentiment is marginally accurate; however,
 the details in the post are incorrect (as many have pointed out over
 the years).
 
-As as been pointed out, `remove-if-not`'s start/count parameters
+As has been pointed out, `remove-if-not`'s start/count parameters
 behave differently and cannot easily be separated out of the function,
 a design trade-off that I appreciate.
 
