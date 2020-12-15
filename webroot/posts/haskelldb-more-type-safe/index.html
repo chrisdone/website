@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Making HaskellDB slightly more type-safe
-</h1>
+      <h1>Making HaskellDB slightly more type-safe</h1>
+
 <p>I was just discussing HaskellDB’s major flaws with Oliver Charles and I noted that one <em>huge</em> problem is that the type of <code>update</code> does not restrict the record given to make the update. Its type is</p>
 <pre><code>update :: (ShowLabels s, ToPrimExprs s)
        =&gt; Database             -- ^ Database.
@@ -128,8 +127,14 @@ Making HaskellDB slightly more type-safe
 <p>Testing this on my codebase actually found a bug in which I was using the wrong field!</p>
 <p>I will send this to the maintainer of HaskellDB as it’s a glaring bug waiting to happen to someone.</p>
 
+
 <footer>
-  © 2012-08-25 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2012-08-25 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

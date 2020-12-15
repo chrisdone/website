@@ -91,12 +91,11 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Use import aliases to easily access fields
-</h1>
+      <h1>Use import aliases to easily access fields</h1>
+
 <p>This post demonstrates using imports as a quick and easy way to disambiguate record field names. You can still put all your types in one module.</p>
 <p>No fancy type classes or machinery needed.</p>
-<p>Define all your types in one module:</p>
+<p>Define all your types in one module, using <code>DuplicateRecordFields</code> to avoid GHC complaining about conflicting field names:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ot">{-# LANGUAGE DuplicateRecordFields  #-}</span></a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">module</span> <span class="dt">Types</span> <span class="kw">where</span></a>
 <a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">import</span> <span class="dt">Prelude</span></a>
@@ -137,8 +136,14 @@ Use import aliases to easily access fields
 </blockquote>
 <p>Which I agree with!</p>
 
+
 <footer>
-  © 2020-12-15 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2020-12-15 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

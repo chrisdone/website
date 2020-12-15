@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Dynamically typed Haskell
-</h1>
+      <h1>Dynamically typed Haskell</h1>
+
 <p>For a while I’ve been intending to make a package that provides a dynamic type and a trivial means to read/write that type to/from CSV/JSON and web requests. I thought that this would be enough to provide a convenient package for doing exploratory work against unknown data.</p>
 <p>In Haskell, typically we would model all the types of the data that we want to work with ahead of time. That’s inconvenient if you want to just quickly look through a JSON or CSV file and do some quick calculation: that’s where you would reach for Python. Even type providers<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> don’t provide that level of convenience.</p>
 <p>I thought, well, it’s pretty easy to define a <code>Dynamic</code> type which is an instance of a bunch of classes like <code>Num</code>, <code>FromCSV</code> and <code>FromJSON</code>, etc. with which one could program like they do in a dynamically typed language.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> But I had other things to work on.</p>
@@ -106,8 +105,14 @@ Dynamically typed Haskell
 </ol>
 </section>
 
+
 <footer>
-  © 2019-04-06 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2019-04-06 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

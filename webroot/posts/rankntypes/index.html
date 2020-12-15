@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Rank-N types, a simple DB example
-</h1>
+      <h1>Rank-N types, a simple DB example</h1>
+
 <p>This is a very simple example of rank-N types to demonstrate to non-Haskellers/newbies.</p>
 <p>Following the resources theme, rank-N types as seen in <a href="http://www.haskell.org/haskellwiki/Monad/ST">the ST monad</a> are also a gem:</p>
 <pre><code>{-# LANGUAGE GeneralizedNewtypeDeriving #-}
@@ -131,8 +130,14 @@ query _ _ = return [&quot;Hello!&quot;]</code></pre>
 <p>This is pretty nice if your DB library implementation, e.g., is supposed to ensure operations on a connection run inside a transaction, or if your operations assume a connection exists. Otherwise you’re liable to having DB code run outside of a transaction, or code throwing exceptions because the connection was closed but we tried to use it anyway, or in severe cases, some C DB libraries will just segfault.</p>
 <p>We didn’t have to do anything complex or write any boilerplate or macros or whatnot, just use the type system. That’s what it’s for.</p>
 
+
 <footer>
-  © 2011-10-16 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2011-10-16 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Duck typing in Haskell
-</h1>
+      <h1>Duck typing in Haskell</h1>
+
 <p>This is a simple Literate Haskell file demonstrating <a href="http://en.wikipedia.org/wiki/Duck_typing">duck typing</a> in Haskell. You copy the whole web page and paste it into a .hs file and compile/load it. Grab the normal Haskell version <a href="http://hpaste.org/41710/duck_typing">here.</a></p>
 <p>I’m using <a href="http://hackage.haskell.org/package/has">a library called Has which you can grab from Hackage</a> (or just <code>cabal install has</code>). It’s pretty neat, it allows you to define field names and their types, that you are going to use at some point, and then lets you construct/access/update arbitrary records based on those fields.</p>
 <p>We need to enable type families and flexible class contexts to work with this library. And also it’s nice if we disable the monomorphism restriction. I don’t want mono, I want manymorphism! As many as you can fit in your pocket.</p>
@@ -213,8 +212,14 @@ TyNil) arising from a use of `^.' at &lt;interactive&gt;:1:0-12</code></pre>
 &gt; (^-) = const $ fieldOf
 &gt; infixr 6 ^-</code></pre>
 
+
 <footer>
-  © 2010-11-22 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2010-11-22 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

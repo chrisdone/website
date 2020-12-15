@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Deprecate Prelude.head and partial functions
-</h1>
+      <h1>Deprecate Prelude.head and partial functions</h1>
+
 <p>Please boycott <a href="http://haskell.org/ghc/docs/latest/html/libraries/base/Prelude.html#v:head">Prelude.head</a> and all its partial friends.</p>
 <p>I’m sick of seeing <a href="http://www.google.com/search?sourceid=chrome&amp;ie=UTF-8&amp;q=%22Prelude.head%3A+empty+list%22">this exception</a>:</p>
 <pre><code>Prelude.head: empty list</code></pre>
@@ -131,8 +130,14 @@ foo xs = bar $ head xs</code></pre>
 <p>So, despite the invariant being satisfied at the time of writing, later that tacit invariant was broken and the developer didn’t realise it. This is more or less the most common case of partial function exceptions. You <em>just know</em> X will never happen, and then it does.</p>
 <p>It’s trivial to abstract away partiality. In some cases handling cases might be a speed concern, but that should be a case-by-case localized optimization based on profiling.</p>
 
+
 <footer>
-  © 2011-10-17 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2011-10-17 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

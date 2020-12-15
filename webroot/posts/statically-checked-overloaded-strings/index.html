@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Statically Checked Overloaded Strings
-</h1>
+      <h1>Statically Checked Overloaded Strings</h1>
+
 <p>This page demonstrates a trick I came up with which is defining <code>IsString</code> for <code>Q (TExp a)</code>, where <code>a</code> is <code>lift</code>-able. It allows you to write <code>$$(&quot;...&quot;)</code> and have the string parsed at compile-time.</p>
 <p>This offers a light-weight way to enforce compile-time constraints. It’s basically <code>OverloadedStrings</code> with static checks.</p>
 <p>This trick works already in old GHC versions.</p>
@@ -171,8 +170,14 @@ Statically Checked Overloaded Strings
 <a class="sourceLine" id="cb5-16" data-line-number="16">    liftAuthority <span class="dt">URIAuth</span> {uriUserInfo, uriRegName, uriPort} <span class="fu">=</span></a>
 <a class="sourceLine" id="cb5-17" data-line-number="17">      [<span class="fu">|</span><span class="dt">Just</span> (<span class="dt">URIAuth</span> {uriUserInfo, uriRegName, uriPort})<span class="fu">|</span>]</a></code></pre></div>
 
+
 <footer>
-  © 2019-11-13 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2019-11-13 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

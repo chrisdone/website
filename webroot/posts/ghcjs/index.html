@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Experimenting with GHCJS, the Haskell→JavaScript compiler
-</h1>
+      <h1>Experimenting with GHCJS, the Haskell→JavaScript compiler</h1>
+
 <!-- Part 1: Explain what's wrong with JavaScript -->
 <p>JavaScript <em>per se</em> is insufficient. The depths to which JavaScript fails is well-documented and well-understood. Its main faults are its verbose function syntax<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, late binding<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>, which has led to the creation of various static analysis tools to alleviate this language flaw<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>, but with limited success<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> (there is even a static type checker<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a>), <a href="http://stackoverflow.com/questions/5447153/javascript-equality-transitivity-is-weird/5447170#5447170">finicky equality</a>, <code>this</code> behaviour, and lack of static types and modules<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a>.</p>
 <!-- Part 2: Explain the ways in which we fix JavaScript -->
@@ -202,8 +201,14 @@ goog.Baz.prototype.query = function(groupNum, term) {
 </ol>
 </section>
 
+
 <footer>
-  © 2011-08-20 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2011-08-20 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

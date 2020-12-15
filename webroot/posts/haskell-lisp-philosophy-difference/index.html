@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-A philosophical difference between Haskell and Lisp
-</h1>
+      <h1>A philosophical difference between Haskell and Lisp</h1>
+
 <p><strong>UPDATE 2020-08-03</strong>: I no longer stand by the content in this post. I think the overall sentiment is marginally accurate; however, the details in the post are incorrect (as many have pointed out over the years).</p>
 <p>As has been pointed out, <code>remove-if-not</code>’s start/count parameters behave differently and cannot easily be separated out of the function, a design trade-off that I appreciate.</p>
 <p>As has been noted and pointed out, Clojure permits compositional style and laziness. I would also point out that laziness isn’t exactly necessary for stream fusion (just purity will do), but it helps with ergonomics.</p>
@@ -152,8 +151,14 @@ A philosophical difference between Haskell and Lisp
 <a class="sourceLine" id="cb11-2" data-line-number="2">[<span class="dv">2</span>,<span class="dv">4</span>]</a></code></pre></div>
 <p>In Haskell the same applies to vector libraries and text libraries and bytes libraries, which can be fused. Fusion is chiefly an advantage of purity – you can fuse n loops together into one loop if you know that they don’t do side-effects. Such an advantage can also be applied to other pure languages like Idris or PureScript or Elm.</p>
 
+
 <footer>
-  © 2015-12-19 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2015-12-19 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

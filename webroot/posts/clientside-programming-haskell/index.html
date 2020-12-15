@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Client-side web programming in Haskell: A retrospective
-</h1>
+      <h1>Client-side web programming in Haskell: A retrospective</h1>
+
 <p>At the beginning of this decade, a few of us Haskellers were exploring how best to do client-side web programming. We didn’t want to write JavaScript. There’s a surprising number of techniques we tried to avoid doing so. There was work coming from academia and industry. Here’s a history of my own experience in this problem space.</p>
 <p>In 2008, Joel Bjornson and Niklas Broberg published <a href="http://hackage.haskell.org/package/HJScript-0.4">HJScript</a>, which was a Haskell EDSL for writing JavaScript. It had the ability to express typed JS via a GADT. I used it in 2010 on a project to make limited DOM manipulations. I wrote <a href="https://github.com/benarmston/hpaste/blob/master/src/HJScript/Objects/JQuery/Extra.hs">a wrapper around jquery</a>, for example. It was nice to write in Haskell, but it was also mental overhead to write in two languages at once (it still had JavaScript’s semantics). In the end I went back to using plain JavaScript.</p>
 <p>Around 2010, Adam Chlipala announces <a href="http://impredicative.com/ur/">Ur</a>, a radical web dev language with row types, which compiles to both native object code and JavaScript, fairly transparently, embedding both HTML and SQL syntax into the language. I am both impressed by the simplicity of the code and correctness, and horrified by some of the code involving metaprogramming. The row types documentation frankly scares me away. After trying out some examples, I don’t return to it.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> To this day I am still interested in this architecture.</p>
@@ -137,8 +136,14 @@ Client-side web programming in Haskell: A retrospective
 </ol>
 </section>
 
+
 <footer>
-  © 2019-07-25 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2019-07-25 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

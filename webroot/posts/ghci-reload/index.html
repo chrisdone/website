@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Reloading running code in GHCi
-</h1>
+      <h1>Reloading running code in GHCi</h1>
+
 <p>Something I’ve been using over the past couple weeks in a personal Yesod web site is a way to reload the code while the server is still running in GHCi. I saw in <a href="http://www.yesodweb.com/blog/2014/03/gsoc-proposals">Greg Weber’s</a> blog post about a “reload mode” for web servers and thought I’d share my approach. GHCi already supports reloading of code, it just doesn’t know it.</p>
 <p>The problem with doing this in GHCi is always that the <code>:load</code> and <code>:reload</code> commands will clear out any bindings made in the REPL. This means that even if you start your web server in a separate thread—and it will stay running between reloads—you have no way to <em>update</em> or <em>talk</em> to it directly.</p>
 <p>That’s why I wrote a package called <a href="http://hackage.haskell.org/package/foreign-store">foreign-store</a>. Its purpose is to make a stable pointer to some Haskell value and store it at an index, and then keep hold of it in C. Later, it can provide that stable pointer by that index. That’s its whole purpose. Because the C code is unaffected by GHCi’s reloads, the pointers are retained, and they are not garbage collected, because that is the point of a stable pointer.</p>
@@ -109,8 +108,14 @@ Reloading running code in GHCi
 </ol>
 </section>
 
+
 <footer>
-  © 2014-03-16 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2014-03-16 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Attempto Controlled English
-</h1>
+      <h1>Attempto Controlled English</h1>
+
 <p><a href="http://en.wikipedia.org/wiki/Attempto_Controlled_English">Attempto Controlled English</a> is a formally defined unambiguous language which is a subset of the English language. It’s pretty sweet.</p>
 <p>I’ve known about it for some time, but I never fiddled with it because the standard implementation setup is rather elaborate. I wanted a nice, simple package in Haskell which would define a parser and a printer only, much like haskell-src-exts does. That way I can use ACE to parse some simple English for all sorts of purposes<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, with a simple familiar API that I can peruse on Hackage. Partly it’s also a good learning experience.</p>
 <p>So I went through the paper The Syntax of Attempto Controlled English to see whether it was comprehensive enough to write a parsec parser out of. It was! I first wrote a <a href="https://github.com/chrisdone/ace/blob/master/src/ACE/Tokenizer.hs">tokenizer</a> in with Attoparsec and <a href="https://github.com/chrisdone/ace/blob/master/test/Main.hs#L39">wrote some tests</a>. From those tokens I produced a set of <a href="https://github.com/chrisdone/ace/blob/master/src/ACE/Combinators.hs">combinators</a> for Parsec, then I wrote a <a href="https://github.com/chrisdone/ace/blob/master/src/ACE/Parsers.hs">parser</a>. While writing the parser I produced a set of <a href="https://github.com/chrisdone/ace/blob/master/test/Main.hs#L67">test-cases</a> for each grammar production. Finally, I wrote a <a href="https://github.com/chrisdone/ace/blob/master/src/ACE/Pretty.hs">pretty printer</a>, and <a href="https://github.com/chrisdone/ace/blob/master/test/Main.hs#L599">wrote some tests</a> to check that <code>print . parse . print . parse = id</code>.</p>
@@ -132,8 +131,14 @@ Attempto Controlled English
 </ol>
 </section>
 
+
 <footer>
-  © 2014-02-24 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2014-02-24 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

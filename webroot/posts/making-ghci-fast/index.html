@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Making GHCi scale better and faster
-</h1>
+      <h1>Making GHCi scale better and faster</h1>
+
 <p>A common complaint with GHCi is that it doesn’t scale well when the size of the project gets bigger. Once you hit 20, 30, 50, or 150 modules, it stops being fun anymore and you start wishing you didn’t have to wait for it to load.</p>
 <p>I recommend enabling <code>-fobject-code</code>. You can enable this by running</p>
 <pre><code>$ ghci -fobject-code</code></pre>
@@ -104,8 +103,14 @@ Making GHCi scale better and faster
 <p>After that, you may notice that loading some modules gives less type information and general metadata than before. For that, re-enable byte-compilation temporarily with <code>-fbyte-code</code> (<code>:set -fbyte-code</code>) and <code>:load</code> that module again, you now have fast recompilation with complete information, too.</p>
 <p>Another tip is to use <code>-fno-code</code> to have <em>really</em> fast compilation. This also works in combination with <code>-fobject-code</code>. But I’d recommend using this only for type checking, not for getting useful warnings (like pattern match inexhaustiveness). So I would combine it with <code>-fobject-code</code> in the same way as above with <code>-fbyte-code</code>, and then once you’re done hacking, re-enable <code>-fobject-code</code> and rebuild everything.</p>
 
+
 <footer>
-  © 2013-11-20 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2013-11-20 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

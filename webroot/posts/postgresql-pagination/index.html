@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Fast pagination on PostgreSQL
-</h1>
+      <h1>Fast pagination on PostgreSQL</h1>
+
 <p><strong>UPDATE: 2014-11-19:</strong> Some people asked me how much creating an index on <code>event(channel,id)</code> helps. Answer: <a href="http://lpaste.net/114584">not much</a>.</p>
 <p>During the implementation of <a href="http://ircbrowse.net/">IRCBrowse</a> I discovered that Postgres’s built-in offset is not very fast.</p>
 <p>Here are the characteristics of my data:</p>
@@ -186,8 +185,14 @@ sys     0m0.004s</code></pre>
 <p>Of course, sending a request in your browser will take longer due to the connection overhead and assets, but generally the goal was for it to be very snappy. The old ircbrowse.com (by another individual, who kindly let me have the name) was very slow indeed. You’d see the page loading the data incrementally from the database.</p>
 <p>Anyhoo, thought that was a decent, practical PostgreSQL-specific optimization regarding pagination. Hope it was worth writing up.</p>
 
+
 <footer>
-  © 2014-10-28 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2014-10-28 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

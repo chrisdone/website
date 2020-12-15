@@ -1,7 +1,21 @@
-<ul id="archive">
+
+<table id="archive" style="line-height:2em">
     $for(posts)$
-        <li>
-            <a href="$url$">$title$</a> - $date$
-        </li>
+        <tr>
+          <td>
+            <a href="$url$">$title$</a>
+          </td>
+          <td>
+            <i>$date$</i>
+          </td>
+        </tr>
     $endfor$
-</ul>
+</table>
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© <a href="/">Chris Done</a></td>
+    </tr>
+  </table>
+</footer>

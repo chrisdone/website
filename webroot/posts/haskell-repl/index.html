@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Use the REPL, Luke
-</h1>
+      <h1>Use the REPL, Luke</h1>
+
 <p>There was an online discussion about iteration times in Haskell and whether and why they are slow. For me, it’s not slow. I do all my Haskell development using a REPL. Here are some tips I wrote up in that discussion.</p>
 <h2 id="prepare-for-ghci-use">Prepare for GHCi use</h2>
 <p>The first thing you want to do before writing anything for your project is make sure you can load your code in the REPL; GHCi. Sometimes you have special configuration options or whatnot (<code>cabal repl</code> and <code>stack ghci</code> make this much easier than in the past). The sooner you start the better. It can be a PITA to load some projects that expect to just be a “start, run and die” process, they often launch threads without any clean-up procedure; in this way the REPL makes you think about cleaner architecture.</p>
@@ -117,8 +116,14 @@ Use the REPL, Luke
 <h2 id="in-summary">In summary</h2>
 <p>Haskell’s lucky to have a small REPL culture, but you have to work with a Lisp or Smalltalk to really know what’s possible when you fully “buy in”. Many Haskellers come from C++ and “stop program, edit file, re-run compiler, re-run whole program” cycles and don’t have much awareness or interest in it. If you are such a person, the above probably won’t come naturally, but try it out.</p>
 
+
 <footer>
-  © 2015-07-15 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2015-07-15 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

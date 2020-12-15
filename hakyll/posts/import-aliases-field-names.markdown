@@ -12,7 +12,8 @@ one module.
 
 No fancy type classes or machinery needed.
 
-Define all your types in one module:
+Define all your types in one module, using `DuplicateRecordFields` to
+avoid GHC complaining about conflicting field names:
 
 ```haskell
 {-# LANGUAGE DuplicateRecordFields  #-}

@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Static Smart Constructors with Double Splices
-</h1>
+      <h1>Static Smart Constructors with Double Splices</h1>
+
 <p>I plan on using this technique in at least one library, and so thought it would be worth giving a name and a page dedicated to it, so it can be linked to, instead of explained all over again.</p>
 <hr />
 <p>Sometimes you’re making a DSL and you need a way to make a smart constructor that is static. You want to validate a value at compile-time (possibly because the validation logic is harder to do in the type-system or not ergonomic enough), and also return the run-time value, without having to <code>lift</code> the whole structure from TH-land to real-land. Perhaps your data type is a funky GADT with functions in it, and therefore has no <code>Lift</code> instance anyway!</p>
@@ -155,8 +154,14 @@ Static Smart Constructors with Double Splices
 </ol>
 </section>
 
+
 <footer>
-  © 2019-08-22 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2019-08-22 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

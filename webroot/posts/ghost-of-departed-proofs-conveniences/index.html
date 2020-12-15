@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Ghosts of Departed Proofs Convenience
-</h1>
+      <h1>Ghosts of Departed Proofs Convenience</h1>
+
 <p>Following on from <a href="https://kataskeue.com/gdp.pdf"><em>Ghosts of Departed Proofs</em></a> with a <code>Named</code> type as defined in <a href="https://ocharles.org.uk/blog/posts/2019-08-09-who-authorized-these-ghosts.html">Olliver Charles’s post on the same topic</a>, we can add a usability improvement by defining a <code>SomeNamed</code> existential in order to wrap up the new type introduced for the <code>n</code> in <code>Name n a</code>, and then a pattern synonym to conveniently unwrap that constructor.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="co">-- | Our main engine for naming a value, then we can prove properties</span></a>
 <a class="sourceLine" id="cb1-2" data-line-number="2"><span class="co">--   about a named value.</span></a>
@@ -229,8 +228,14 @@ Ghosts of Departed Proofs Convenience
 <pre><code>• Couldn't match type ‘n’ with ‘n1’</code></pre>
 <p>The <code>denominatorNonZero</code> proof refers to <code>denominatorInt</code> by a generate name type (<code>n1</code>), and <code>numeratorInt</code>’s name (<code>n</code>) is different.</p>
 
+
 <footer>
-  © 2019-12-07 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2019-12-07 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

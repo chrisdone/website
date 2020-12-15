@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Analysis of Emacs keys pressed
-</h1>
+      <h1>Analysis of Emacs keys pressed</h1>
+
 <p>Here’s the deal: Emacs keybindings make my fingers hurt. I don’t think I ever experienced RSI before I started using Emacs. I guess I’ve been using Emacs for about 6 years. I’m very efficient with it. I can edit almost as fast as I can think, my fingers never need to take a break. But that efficiency comes at a steep price, I feel.</p>
 <p>I hypothesize that chords are to blame, and that I would be happier and less achey if I used a modal set of keybindings, like in Vim, in which every key binding is a single character. Not all the keybindings (e.g. <code>$</code>) are a single key press, but most are.</p>
 <p>I’ve tried <code>evil-mode</code>, and it’s pretty poor. It doesn’t provide a proper mapping to Emacs; hitting <code>$</code> doesn’t actually execute <code>move-end-of-line</code>, it executes <code>evil-end-of-line</code>, which does not integrate with existing modes well at all. It’s catering to Vimers, but it’s not good for Emacs power users.</p>
@@ -152,8 +151,14 @@ Analysis of Emacs keys pressed
 <p>Very interesting is how much I use navigation functions. In reaction to this, I’m disabling those keybindings and switching to arrow keys. And I’ve found <code>M-e</code>, a more convenient binding for <code>C-M-u</code>. I will also stop using <code>C-d</code> and use <code>DEL</code>.</p>
 <p><a href="../../posts/speculations-on-exclusive-editing">Follow-up page →</a></p>
 
+
 <footer>
-  © 2013-08-07 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2013-08-07 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>

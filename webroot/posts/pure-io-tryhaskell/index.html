@@ -91,9 +91,8 @@
   </head>
   <body>
     <div class="page-wrap">
-      <h1>
-Pure IO monad and Try Haskell
-</h1>
+      <h1>Pure IO monad and Try Haskell</h1>
+
 <p><strong>tl;dr: <a href="http://tryhaskell.org/">Try Haskell</a> now has simple I/O built on a pure IO monad.</strong></p>
 <p>I wrote Try Haskell in 2010. I didn’t really update the codebase since. It was rather poor, but had generally been stable enough. Last week I finally set some time aside to rewrite it from scratch (barring the tutorial part). In doing so I gave it a fresh design, rewrote the backend and stopped using my patched version of mueval (faster, but less stable).</p>
 <p>Aside from reproducing the functionality, I afterwards added a new piece of functionality: typing in a function name (or composition of functions) will simply show the generalized type of that expression. This removes the need for an explicit <code>:t</code> and is more friendly to newbies who would rather see something useful than an error.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
@@ -140,8 +139,14 @@ Pure IO monad and Try Haskell
 </ol>
 </section>
 
+
 <footer>
-  © 2014-01-12 Chris Done
+  <table style="width:100%">
+    <tr>
+      <td>© 2014-01-12 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
 </footer>
 
     </div>
