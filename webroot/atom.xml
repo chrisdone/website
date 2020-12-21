@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>Chris Done's Blog</title>
+    <link href="http://chrisdone.com//atom.xml" rel="self" />
+    <link href="http://chrisdone.com/" />
+    <id>http://chrisdone.com//atom.xml</id>
+    <author>
+        <name>Chris Done</name>
+        <email>blog@chrisdone.com</email>
+    </author>
+    <updated>2020-12-15T00:00:00Z</updated>
+    <entry>
+    <title>Use import aliases to easily access fields</title>
+    <link href="http://chrisdone.com//posts/import-aliases-field-names/index.html" />
+    <id>http://chrisdone.com//posts/import-aliases-field-names/index.html</id>
+    <published>2020-12-15T00:00:00Z</published>
+    <updated>2020-12-15T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Use import aliases to easily access fields]]></summary>
+</entry>
+<entry>
+    <title>Ghosts of Departed Proofs Convenience</title>
+    <link href="http://chrisdone.com//posts/ghost-of-departed-proofs-conveniences/index.html" />
+    <id>http://chrisdone.com//posts/ghost-of-departed-proofs-conveniences/index.html</id>
+    <published>2019-12-07T00:00:00Z</published>
+    <updated>2019-12-07T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Ghosts of Departed Proofs Convenience]]></summary>
+</entry>
+<entry>
+    <title>Defaulting fields in a record</title>
+    <link href="http://chrisdone.com//posts/defaulting-fields-in-a-record/index.html" />
+    <id>http://chrisdone.com//posts/defaulting-fields-in-a-record/index.html</id>
+    <published>2019-12-07T00:00:00Z</published>
+    <updated>2019-12-07T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Defaulting fields in a record]]></summary>
+</entry>
+<entry>
+    <title>Statically Checked Overloaded Strings</title>
+    <link href="http://chrisdone.com//posts/statically-checked-overloaded-strings/index.html" />
+    <id>http://chrisdone.com//posts/statically-checked-overloaded-strings/index.html</id>
+    <published>2019-11-13T00:00:00Z</published>
+    <updated>2019-11-13T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Statically Checked Overloaded Strings]]></summary>
+</entry>
+<entry>
+    <title>Static Smart Constructors with Double Splices</title>
+    <link href="http://chrisdone.com//posts/static-smart-constructors/index.html" />
+    <id>http://chrisdone.com//posts/static-smart-constructors/index.html</id>
+    <published>2019-08-22T00:00:00Z</published>
+    <updated>2019-08-22T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Static Smart Constructors with Double Splices]]></summary>
+</entry>
+<entry>
+    <title>Client-side web programming in Haskell: A retrospective</title>
+    <link href="http://chrisdone.com//posts/clientside-programming-haskell/index.html" />
+    <id>http://chrisdone.com//posts/clientside-programming-haskell/index.html</id>
+    <published>2019-07-25T00:00:00Z</published>
+    <updated>2019-07-25T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Client-side web programming in Haskell: A retrospective]]></summary>
+</entry>
+<entry>
+    <title>German Naming Convention</title>
+    <link href="http://chrisdone.com//posts/german-naming-convention/index.html" />
+    <id>http://chrisdone.com//posts/german-naming-convention/index.html</id>
+    <published>2019-06-07T00:00:00Z</published>
+    <updated>2019-06-07T00:00:00Z</updated>
+    <summary type="html"><![CDATA[German Naming Convention]]></summary>
+</entry>
+<entry>
+    <title>Dynamically typed Haskell</title>
+    <link href="http://chrisdone.com//posts/dynamically-typed-haskell/index.html" />
+    <id>http://chrisdone.com//posts/dynamically-typed-haskell/index.html</id>
+    <published>2019-04-06T00:00:00Z</published>
+    <updated>2019-04-06T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Dynamically typed Haskell]]></summary>
+</entry>
+<entry>
+    <title>Web engines in Haskell</title>
+    <link href="http://chrisdone.com//posts/web-engines/index.html" />
+    <id>http://chrisdone.com//posts/web-engines/index.html</id>
+    <published>2019-04-05T00:00:00Z</published>
+    <updated>2019-04-05T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Web engines in Haskell]]></summary>
+</entry>
+<entry>
+    <title>Lazy list length</title>
+    <link href="http://chrisdone.com//posts/lazy-list-length/index.html" />
+    <id>http://chrisdone.com//posts/lazy-list-length/index.html</id>
+    <published>2018-08-23T00:00:00Z</published>
+    <updated>2018-08-23T00:00:00Z</updated>
+    <summary type="html"><![CDATA[Lazy list length]]></summary>
+</entry>
+
+</feed>

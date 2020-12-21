@@ -7,8 +7,16 @@
         <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
         <atom:link href="https://chrisdone.com/rss.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 15 Dec 2020 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Mon, 21 Dec 2020 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Try.do for recoverable errors in Haskell</title>
+    <link>https://chrisdone.com/posts/try-do</link>
+    <description><![CDATA[Try.do for recoverable errors in Haskell]]></description>
+    <pubDate>Mon, 21 Dec 2020 00:00:00 UT</pubDate>
+    <guid>https://chrisdone.com/posts/try-do</guid>
+    <dc:creator>Chris Done</dc:creator>
+</item>
+<item>
     <title>Use import aliases to easily access fields</title>
     <link>https://chrisdone.com/posts/import-aliases-field-names</link>
     <description><![CDATA[Use import aliases to easily access fields]]></description>
@@ -78,14 +86,6 @@
     <description><![CDATA[Web engines in Haskell]]></description>
     <pubDate>Fri, 05 Apr 2019 00:00:00 UT</pubDate>
     <guid>https://chrisdone.com/posts/web-engines</guid>
-    <dc:creator>Chris Done</dc:creator>
-</item>
-<item>
-    <title>Lazy list length</title>
-    <link>https://chrisdone.com/posts/lazy-list-length</link>
-    <description><![CDATA[Lazy list length]]></description>
-    <pubDate>Thu, 23 Aug 2018 00:00:00 UT</pubDate>
-    <guid>https://chrisdone.com/posts/lazy-list-length</guid>
     <dc:creator>Chris Done</dc:creator>
 </item>
 
