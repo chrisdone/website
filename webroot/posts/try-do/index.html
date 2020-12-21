@@ -151,12 +151,13 @@
 <h2 id="qualified-do">Qualified do</h2>
 <p>One thing that struck me was that our earlier <code>Make the IO action return Either</code> approach produced code that was still perfectly satisfying the unliftio laws. Perhaps, like in Rust, we need a syntactic solution to the problem.</p>
 <p>Enter <a href="https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/qualified_do.html">QualifiedDo</a>, which will be available on the 9.0.1 version of GHC. What this would allow us to do is rebind <code>(&gt;&gt;=)</code> to mean what we’d like:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="ot">(&gt;&gt;=) ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> e a) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> e b) <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> e b)</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">(<span class="fu">&gt;&gt;=</span>) m f <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">  result <span class="ot">&lt;-</span> m</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">  <span class="kw">case</span> result <span class="kw">of</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">    <span class="dt">Left</span> e <span class="ot">-&gt;</span> pure (<span class="dt">Left</span> e)</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">    <span class="dt">Right</span> a <span class="ot">-&gt;</span> f a</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">module</span> <span class="dt">Try</span> ((<span class="fu">Try.&gt;&gt;=</span>)) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="ot">(&gt;&gt;=) ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> e a) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> e b)) <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> e b)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">(<span class="fu">&gt;&gt;=</span>) m f <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">  result <span class="ot">&lt;-</span> m</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">  <span class="kw">case</span> result <span class="kw">of</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">    <span class="dt">Left</span> e <span class="ot">-&gt;</span> pure (<span class="dt">Left</span> e)</a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">    <span class="dt">Right</span> a <span class="ot">-&gt;</span> f a</a></code></pre></div>
 <p>We put this in a module called <code>Try</code> and import it with <code>QualifiedDo</code> enabled.</p>
 <p>Now our code becomes:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1">Try.do constraints <span class="ot">&lt;-</span> constrainRenamed renamed</a>

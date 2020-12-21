@@ -143,7 +143,8 @@ which will be available on the 9.0.1 version of GHC. What this would
 allow us to do is rebind `(>>=)` to mean what we'd like:
 
 ``` haskell
-(>>=) :: IO (Either e a) -> (a -> IO (Either e b) -> IO (Either e b)
+module Try ((Try.>>=)) where
+(>>=) :: IO (Either e a) -> (a -> IO (Either e b)) -> IO (Either e b)
 (>>=) m f = do
   result <- m
   case result of
