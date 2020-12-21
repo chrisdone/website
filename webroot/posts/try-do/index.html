@@ -138,7 +138,8 @@
 <a class="sourceLine" id="cb6-4" data-line-number="4">      generalised <span class="ot">&lt;-</span> generaliseSolved solved</a>
 <a class="sourceLine" id="cb6-5" data-line-number="5">      resolveGeneralised generalised)</a></code></pre></div>
 <p>The <code>runExceptT</code> produces an <code>IO (Either ErrorType OutputType)</code>.</p>
-<p>However, <code>ExceptT</code> <a href="https://github.com/fpco/unliftio/tree/master/unliftio#limitations">cannot be an instance of <code>MonadUnliftIO</code></a> – because it necessarily requires multiple exit points. <strong>This is a big deal.</strong></p>
+<p>However, <code>ExceptT</code> <a href="https://github.com/fpco/unliftio/tree/master/unliftio#limitations">cannot be an instance of <code>MonadUnliftIO</code></a> – because it necessarily requires multiple exit points. See <a href="https://github.com/fpco/unliftio/issues/68">this discussion</a> which should give you an idea of how hairy and unpredictable this can be.</p>
+<p><strong>This is a big deal.</strong></p>
 <p>Essentially, if a monad is unliftio-able, then:</p>
 <ol type="1">
 <li>The regular exception system will work as normal. This is important, because you do want regular exceptions to be thrown upwards.</li>

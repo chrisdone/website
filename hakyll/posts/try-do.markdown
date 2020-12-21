@@ -110,8 +110,11 @@ The `runExceptT` produces an `IO (Either ErrorType OutputType)`.
 
 However, `ExceptT` [cannot be an instance of
 `MonadUnliftIO`](https://github.com/fpco/unliftio/tree/master/unliftio#limitations)
--- because it necessarily requires multiple exit points. **This is a big
-deal.**
+-- because it necessarily requires multiple exit points. See
+[this discussion](https://github.com/fpco/unliftio/issues/68) which
+should give you an idea of how hairy and unpredictable this can be.
+
+**This is a big deal.**
 
 Essentially, if a monad is unliftio-able, then:
 
