@@ -7,8 +7,16 @@
         <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
         <atom:link href="https://chrisdone.com/rss.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Mon, 21 Dec 2020 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Thu, 24 Dec 2020 00:00:00 UT</lastBuildDate>
         <item>
+    <title>Is it Try.do that is dangerous?</title>
+    <link>https://chrisdone.com/posts/is-try-do-dangerous</link>
+    <description><![CDATA[Is it Try.do that is dangerous?]]></description>
+    <pubDate>Thu, 24 Dec 2020 00:00:00 UT</pubDate>
+    <guid>https://chrisdone.com/posts/is-try-do-dangerous</guid>
+    <dc:creator>Chris Done</dc:creator>
+</item>
+<item>
     <title>Try.do for recoverable errors in Haskell</title>
     <link>https://chrisdone.com/posts/try-do</link>
     <description><![CDATA[Try.do for recoverable errors in Haskell]]></description>
@@ -78,14 +86,6 @@
     <description><![CDATA[Dynamically typed Haskell]]></description>
     <pubDate>Sat, 06 Apr 2019 00:00:00 UT</pubDate>
     <guid>https://chrisdone.com/posts/dynamically-typed-haskell</guid>
-    <dc:creator>Chris Done</dc:creator>
-</item>
-<item>
-    <title>Web engines in Haskell</title>
-    <link>https://chrisdone.com/posts/web-engines</link>
-    <description><![CDATA[Web engines in Haskell]]></description>
-    <pubDate>Fri, 05 Apr 2019 00:00:00 UT</pubDate>
-    <guid>https://chrisdone.com/posts/web-engines</guid>
     <dc:creator>Chris Done</dc:creator>
 </item>
 

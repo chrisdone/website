@@ -93,6 +93,8 @@
     <div class="page-wrap">
       <h1>Try.do for recoverable errors in Haskell</h1>
 
+<p><strong>UPDATE</strong>: I’ve added a follow-up post to this <a href="../../posts/is-try-do-dangerous/">here</a>, where I address some criticisms of this post.</p>
+<hr />
 <p>In Haskell, I sometimes have IO-based actions that may produce failures. The IO aspect is usually incidental; because I need logging or metrics generation.</p>
 <p>When not using a free monad or a fancy effect-system–just plain IO–I like to follow a mental model similar to <a href="https://doc.rust-lang.org/book/ch09-00-error-handling.html">Rust’s definition of error handling</a>, which splits them into <em>recoverable</em> vs <em>unrecoverable</em> errors.</p>
 <p>In Rust, when a function can fail with a recoverable error, it returns a <code>Result</code>, like:</p>

@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Is it Try.do that is dangerous?</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>Is it Try.do that is dangerous?</h1>
+
+<p>I wrote the post <a href="https://chrisdone.com/posts/try-do/">Try.do for recoverable errors in Haskell</a> and someone has written <a href="https://github.com/effectfully/sketches/blob/d45c3ec127e8789ab1af657f911c1a2a070d3780/try-do-is-dangerous/README.md">a nice response post</a> proposing that this pattern is actually dangerous. While reading it I wrote up some of my own notes to share in reply.</p>
+<p>I’d like to preface with the fact that I’m grateful for discussion and criticism of this approach. I’d like to use this approach, but if someone finds genuine issues with it, then I’ll naturally have to look elsewhere.</p>
+<h2 id="loss-of-code-re-use">Loss of code re-use</h2>
+<p>The first point made, and I think this is a solid point, is that you can’t re-use handy monadic functions like <code>traverse</code> or <code>forever</code> with this syntax. That’s a downer.</p>
+<p>However, I think it also follows naturally. If <code>ExceptT</code> were easily a clean <code>MonadUnliftIO</code> instance, then we would have a clean interpretation of how such functions would behave under all the circumstances that unliftio is applicable in, most importantly threading and when IO appears in negative position (<code>withX</code>). As it happens, we don’t.</p>
+<p>This also applies to free monads, by the way. When you run the monad, you still have to decide on an interpretation, figure out how things will interact, and the idea of doing so does not bring me confidence.</p>
+<p>Indeed, I may want to decide on a case-by-case basis whether <code>traverse</code> should optimistically run <em>all</em> actions (<a href="https://hackage.haskell.org/package/unliftio-0.2.13.1/docs/UnliftIO-Async.html#v:pooledMapConcurrentlyN">even concurrently</a>; which I’m doing in my compiler), only at the end checking all results, or whether it should fail hard on the <em>first</em> failing action. Happily, the <code>pooledMapConcurrentlyN</code> function doesn’t have to know or care about how I do error handling.</p>
+<p>In conclusion, I don’t see this as a complete obvious loss, and in some way it’s also a gain. I think there might be some interesting ideas to explore in this area.</p>
+<h2 id="lifting-hides-results">Lifting hides results</h2>
+<p>The second point, in my reading, was that with this syntax, a programmer will get into the habit of lifting all actions that aren’t returning <code>Either E A</code>. The downside being that if you use a function like <code>timeout</code>, like this:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1">result <span class="ot">&lt;-</span> timeout (<span class="ot">someAction ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">E</span> <span class="dt">A</span>))</a></code></pre></div>
+<p>Then you’ll hit a type error,</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1">• <span class="dt">Couldn't</span> match <span class="kw">type</span><span class="fu">:</span> <span class="dt">Maybe</span> (<span class="dt">Either</span> <span class="dt">ErrorType</span> <span class="dt">Int</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">                 with<span class="fu">:</span> <span class="dt">Either</span> e0 b0</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">• <span class="dt">In</span> a stmt <span class="kw">of</span> a qualified 'do' block<span class="fu">:</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    result <span class="ot">&lt;-</span> timeout <span class="dv">1000</span> action1</a></code></pre></div>
+<p>So, being in a rush, they ignore the code and just add an <code>fmap pure</code> call to fix the error:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1">result <span class="ot">&lt;-</span> fmap pure (timeout <span class="dv">1000</span> action1)</a></code></pre></div>
+<p>Now we’ve lost the error, it didn’t short-circuit where it should have! Actually, <strong>we haven’t lose the error</strong>. In fact, we <em>haven’t finished writing the code</em> at this point. Assuming we have compiler warnings on, we’ll be <strong>told that <code>result</code> is unused</strong>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1">Main.hs<span class="fu">:</span><span class="dv">10</span><span class="fu">:</span><span class="dv">7</span><span class="fu">:</span> warning<span class="fu">:</span> [<span class="fu">-</span><span class="dt">Wunused</span><span class="fu">-</span>matches]</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">    <span class="dt">Defined</span> but not used<span class="fu">:</span> ‘result’</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">   <span class="fu">|</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4"><span class="dv">10</span> <span class="fu">|</span>       result <span class="ot">&lt;-</span> fmap pure (timeout <span class="dv">1000</span> action1)</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">   <span class="fu">|</span>       <span class="fu">^^^^^^</span></a></code></pre></div>
+<p>Furthermore, when we decide to use it, we’ll see that its type is</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="dt">Maybe</span> (<span class="dt">Either</span> <span class="dt">ErrorType</span> <span class="dt">Int</span>)</a></code></pre></div>
+<p>The error is still here, we have to <em>do something</em> with it. You can’t use it without having to deal with the error in some way. I think if the compiler tells you something and you ignore it, that’s your responsibility. It can’t save you from yourself.</p>
+<p>This is the first instance of a running theme in the post that I’m replying to, which is that code that doesn’t use results is dangerous.</p>
+<h2 id="the-try-function">The <code>try</code> function</h2>
+<p>The next case considered was <code>try</code>, which has this type:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ot">try ::</span> <span class="dt">Exception</span> e <span class="ot">=&gt;</span> <span class="dt">IO</span> a <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> e a)</a></code></pre></div>
+<p>And what would happen if you wrote:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1">result <span class="ot">&lt;-</span> try (<span class="ot">someAction ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">E</span> <span class="dt">A</span>))</a></code></pre></div>
+<p>So that the type would be:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1">result <span class="ot">&lt;-</span> try (<span class="ot">someAction ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">E</span> <span class="dt">A</span>))<span class="ot"> ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">E</span> (<span class="dt">Either</span> <span class="dt">E</span> <span class="dt">A</span>))</a></code></pre></div>
+<p>The author claims that you won’t get a type error if you do something with the result. Let’s study it:</p>
+<ol type="1">
+<li><code>try</code> will catch exceptions thrown by the GHC exception mechanism.</li>
+<li>It will catch only those exceptions that are an instance of <code>Exception</code>.</li>
+<li>It will be reported back to the user in the <code>Left</code> case of the either.</li>
+</ol>
+<p>In this example:</p>
+<ul>
+<li>This assumes that one would make their failure result type <code>E</code> an instance of <code>Exception</code>. <strong>I don’t think there would be a good reason to do that.</strong> But let’s continue with this assumption.</li>
+<li>If, further, you actually use the <code>throw</code> call from <code>base</code> to throw your result type (<strong>again, why would you?</strong>), then <code>try</code> will catch it. So it wasn’t lost.</li>
+<li>If the function simply returns the failure type, then you have it.</li>
+<li>Finally, my point above about the <code>result</code> variable stands here; it has to be used somewhere.</li>
+</ul>
+<p>But I believe that this example is contrived. The whole point of the <code>Try.do</code> system is to avoid using the <code>base</code> exception system for our business logic. Why, then, would we implement an instance of <code>Exception</code> and then willingly <code>throw</code> our failure type? Finally, the code doesn’t lose any errors. In fact, the double <code>Either</code> would be enough to indicate to a programmer that something is off here.</p>
+<h2 id="names-are-not-type-safety">Names are not type safety</h2>
+<p>As an aside, an easy to avoid confusion here is to simply use a type dedicated to this. Let’s call it <code>Failure</code>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Failure</span> err ok <span class="fu">=</span> <span class="dt">Failed</span> err <span class="fu">|</span> <span class="dt">Ok</span> ok</a></code></pre></div>
+<p>Now, it’s not possible to be confused about <code>Either</code> as some random data and <code>Failure</code> which only ever is produced by a failure. Many have argued that <code>Either</code> itself is a form of <a href="https://existentialtype.wordpress.com/2011/03/15/boolean-blindness/">boolean blindness</a>. I used <code>Either</code> in my post as an aid to demonstrate a point; there’s no compelling reason otherwise to use it.</p>
+<p>The author, citing Alexis King, would have us believe that <a href="https://lexi-lambda.github.io/blog/2020/11/01/names-are-not-type-safety/">names are not type safety</a>. <strong>I disagree; all types are type safety.</strong> The attempt to put type techniques into “safe” and “unsafe” categories only serves to eliminate nuance.</p>
+<p>Additionally, the author believes that syntax is not type safety. I think syntax is the main driving force behind type safety, or so I feel, having written the type generation stage of various compilers.</p>
+<h2 id="finally-pun-intended">Finally (pun intended)</h2>
+<p>The last point the author brings up seems to be more of a criticism of any <code>IO</code> action returning <code>Either</code>, than the special syntax I proposed in my post.</p>
+<p>In base there are two functions which are notable in one crucial aspect, <strong>their discarding of values</strong>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="ot">finally ::</span> <span class="dt">MonadUnliftIO</span> m <span class="ot">=&gt;</span> m a <span class="ot">-&gt;</span> m b <span class="ot">-&gt;</span> m a</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="ot">bracket ::</span> <span class="dt">MonadUnliftIO</span> m <span class="ot">=&gt;</span> m a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> m c) <span class="ot">-&gt;</span> m c</a></code></pre></div>
+<p><code>finally</code> discards <code>b</code>, and <code>bracket</code> discards <code>b</code>.</p>
+<p>The author writes that for,</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1">someAction1 <span class="ot">`finally`</span> someAction2</a></code></pre></div>
+<p>would necessarily discard the result of <code>someAction2</code>. I think this is a good observation. <strong>Your result will be discarded, never to be seen again.</strong></p>
+<p>This does bring up a wider point, however: the type of bracket and friends is a problem. Why don’t they use <code>()</code>? These functions can swallow results all the time, regardless of whether you’re using <code>Try.do</code> or writing normal Haskell. In Scala, Kotlin and Ceylon, <code>bracket</code> uses <code>void</code> or <code>unit</code>.</p>
+<p>I’m glad the author brought this up, because we don’t currently have any tooling to find and catch these mistakes. Essentially, <code>bracket</code>/<code>finally</code> are risky functions to use due to this.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> This is what prompted the title of my reply – is it <code>Try.do</code> that’s dangerous, or is it <code>bracket</code>/<code>finally</code>?</p>
+<p>Is it a criticism of <code>Try.do</code>? I’m doubtful at the moment.</p>
+<h2 id="concluding">Concluding</h2>
+<p>I don’t think there’s any reason to call this technique “dangerous”. I think that the examples in the post were slightly contrived (such as the dubious suggestion that you would implement <code>Exception</code> for your result type, or not using the result of an action that GHC would warn you about), and in the last point it seemed to be arguing against <code>base</code> rather than my proposed technique, to which I can only agree.</p>
+<p>I’m unsure about the tone in the penultimate paragraph<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>, but overall I liked the criticism, it got me thinking. I do think there’s a wider discussion to be had about “use”, and perhaps my slow absorption of Rust thinking has me wishing there was less of a complacent attitude to throwing away results in Haskell’s base libraries. It’ll raise my alarms more readily when reviewing/auditing code.</p>
+<p>It’ll still be a while before I’m even able to take advantage of <code>QualifiedDo</code>, but I still look forward to pushing the boundaries of this idea.</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Well, they’re risky anyway. Consider the case of an exception being raised in the handler or releaser. It’s complicated.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>This language seems tonally ambiguous, “shallow unsafe trick into a single weak spoiled framework”, but I’ll assume good faith.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2020-12-24 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>

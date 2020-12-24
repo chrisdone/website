@@ -6,6 +6,12 @@ author: Chris Done
 tags: haskell
 ---
 
+**UPDATE**: I've added a follow-up post to this
+  [here](/posts/is-try-do-dangerous/), where I address some criticisms
+  of this post.
+
+---
+
 In Haskell, I sometimes have IO-based actions that may produce
 failures. The IO aspect is usually incidental; because I need logging
 or metrics generation.
