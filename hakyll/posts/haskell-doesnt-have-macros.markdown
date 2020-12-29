@@ -17,33 +17,44 @@ In Lisp, macros are:
 
 1. Syntactically light-weight.
 2. Don't require writing a parser to deal with the language's native
-   syntax.
-3. They work trees of lexical tokens of the language; _not_
-   abstract syntax trees. It's a _symbolic tree_.
+syntax.
+3. They work on trees of lexical tokens of the language; _not_
+abstract syntax trees. At best, they are incomplete ASTs.
+
+Macros are functions that take in this tree of tokens, either atomic
+lexical tokens, or lists denoted by balanced parentheses[^1], and
+do some transforms, and return the same as output.
+
+```lisp
+foo
+"bar"
+123
+(foo "bar" (123) nil (blob x))
+```
 
 ## Quoting in Lisp vs Haskell
 
 In Haskell, we have GHC's Template Haskell. What that provides is:
 
 1. Splices: `$(foo)` -- this syntax means: run the code `foo`, in the
-   `Q` monad, at compile time, and it should produce a valid Haskell
-   abstract syntax tree.
+`Q` monad, at compile time, and it should produce a valid Haskell
+abstract syntax tree.
 2. Quotation: `[|bar|]` -- this means: produce an action in the `Q`
-   monad which will produce the abstract syntax tree for the code
-   `bar`.
+monad which will produce the abstract syntax tree for the code
+`bar`.
 3. Quasiquotation: `[zot|anything|]` -- this means: the `zot` is a
-   parser that will parse the string contents `anything` and produce
-   an abstract syntax tree in the `Q` monad.
+parser that will parse the string contents `anything` and produce
+an abstract syntax tree in the `Q` monad.
 
 This code is ran at compile-time. That's different to Lisp.
 
 In Lisp, e.g. Common Lisp, we have:
 
-1. Splices: `,foo` -- run the code to produce a symbolic tree.
+1. Splices: `,foo` -- run the code to produce a tree.
 2. Quotation: `'bar` or `'(bar abc)` -- quote the code, that's all.
 3. Quasiquotation: `` `bar`` or `` `(bar ,foo)``  --
-   this is like a regular quotation, but I can place `,` anywhere to
-   mean "run this code".
+this is like a regular quotation, but I can place `,` anywhere to
+mean "run this code".
 
 The code runs at **runtime** at this point, not compile-time yet.[^1]
 
@@ -57,14 +68,14 @@ makes whatever it is available as `it` in the if:
 
 ```lisp
 (defmacro aif (test-form then-form else-form)
-   `(let ((it ,test-form))
-       (if it ,then-form ,else-form)))
+  `(let ((it ,test-form))
+    (if it ,then-form ,else-form)))
 ```
 
 You use it like this:
 
 ```lisp
-(aif (/= 0 (+ x y)) (/ z it) z)
+(aif (calculate-something) (use it) (do-something-else))
 ```
 
 Here's how we implement the same thing in Template Haskell:
@@ -73,8 +84,8 @@ Here's how we implement the same thing in Template Haskell:
 aif testForm thenForm elseForm =
   [| let it = $testForm
      in if it
-           then $thenForm
-           else $elseForm
+     then $thenForm
+     else $elseForm
   |]
 ```
 
@@ -82,22 +93,24 @@ So far so good, apart from the fact no one would write this macro in
 Haskell.[^2] Here's how we use it:
 
 ``` haskell
-$(aif [|0 /= x+y|] [|x/it|] [|z|])
+$(aif [|calculate something|] [|use it|] [|something other|])
 ```
 
-Oh no! That's incredibly verbose. I have to manually quote every
-argument myself!
+Oh no! have to manually quote every argument myself! The quotation
+syntax isn't even short, I have to write `[| .. |]` around
+everything. No one will use your macros if they are like that.
 
 ## Quasiquotes don't solve the problem
 
-Haskell has what it calls "quasiquotes" which are like reader
-macros. You can parse an arbitrary string. They're actually great for
-embedding other languages into Haskell like JSON, YAML, HTML, etc.
+Haskell has what it calls "quasiquotes" which are like Lisp's reader
+macros: You can parse an arbitrary string and produce an AST for the
+compiler. They're actually great for embedding other languages into
+Haskell like JSON, YAML, HTML, etc.
 
 Maybe that could make writing this easy? Perhaps something like:
 
 ``` haskell
-[aif|0 /= x+y then x/it else z|]
+[aif|calculate something; use it; something other|]
 ```
 
 On the surface this looks like we're there. But we're not, because
@@ -106,12 +119,11 @@ AST. The type `Exp` forms the abstract syntax tree and looks like this:
 
 ``` haskell
 data Exp = VarE Name | ConE Name | LitE Lit | AppE Exp Exp | AppTypeE
-  Exp Type | ...
+Exp Type | ...
 ```
 
-So you can't go from the string above, `0 /= x+y then x/it else z`
-into the compiler without converting to an AST. **You need a parse
-step**.
+So you can't go from the string above into the compiler without
+converting to an AST. **You need a parse step**.
 
 Fine, let's just import GHC's own parser to produce the AST. Surely
 that's possible? Sadly, not. GHC's own API parser has a completely
@@ -132,20 +144,46 @@ A quick fix to at least let us get at the parse tree would be to have
 some special syntax, e.g. to make something up completely[^4]:
 
 ```haskell
-aif!(if 0/=x+y then x/it else z)
+aif!(if calculate something then use it else something other)
 ```
 
 Could produce:
 
 ```haskell
-$(aif [| if 0/=x+y then x/it else z |])
+$(aif [| if calculate something then use it else something other |])
 ```
 
 The limitation here is that the input to the macro has to parse
-correctly into an AST. This would encourage strange warping and
-re-using of existing syntax to achieve what you want.
+correctly into an AST. You can't have the branches of the `if`
+separately from the `if` itself.
 
-I don't think this is a good idea on the whole.
+The surface syntax of Lisp (token trees), used by the macro system, is
+a superset of the core syntax of Lisp (let/setf/cond/progn,
+etc.). Unfortunately, the surface syntax of Haskell (used by the
+metaprogramming) is exactly the core syntax:
+
+``` haskell
+> :t $(lamE [varP (mkName "x")] (varE (mkName "x")))
+<interactive>:1:3-46: Splicing expression lamE [varP (mkName "x")] (varE (mkName "x"))
+======>
+\ x -> x
+```
+
+This is how you have to construct the AST in Haskell: it has to be of
+the right schema immediately, there's no way to produce a "loose tree
+of tokens" that TH will consume for you.
+
+Additionally, quotation demands correct syntax too: `[| let |]` is a
+syntax error. What if I wanted to define my own variation on let? Too
+bad.
+
+This would encourage strange warping and re-using of existing syntax
+to achieve what you want. I don't think this is a good idea on the
+whole.
+
+Therefore, we either have to fit our macros into existing syntax (as
+above), or parse strings (quasiquotes). We need the middle ground that
+Lisp offers.
 
 ## An ideal design
 
@@ -153,21 +191,21 @@ Going back to the original definition of macros, we had:
 
 1. Syntactically light-weight.
 2. Don't require writing a parser to deal with the language's native
-   syntax.
-3. They work trees of lexical tokens of the language; _not_
-   abstract syntax trees. It's a _symbolic tree_.
+syntax.
+3. They work on trees of lexical tokens of the language; _not_
+abstract syntax trees.
 
 Let's explore this in Haskell. If we had this, it might look like:
 
 ``` haskell
-aif!(0 /= x+y then x/it else z)
+aif!(calculate something; use it; something other)
 ```
 
 This is light-weight. It doesn't require a parser. We could receive
 the lexical tokens as:
 
 ``` haskell
-0, /=, x, +, y, then, x, /, it, else, z
+calculate  something  ;  use  it  ;  something  other
 ```
 
 The only special addendum would be that bracketing syntax be balanced
@@ -175,6 +213,8 @@ into a tree, so: `() {} []`.[^5] Just like in Lisp. Finally, the
 Template Haskell API would provide a trivial way to go from a token
 tree to an abstract syntax tree: `[if,x,then,y,else,z]` into `CondE
 ...`
+
+## Motivating examples
 
 So the following constructs would be fine:
 
@@ -186,6 +226,9 @@ email!"chrisdone@gmail.com" -- compile-time validated email
 set!{1 2 3 c 4}
 vec![ 1, 2, 3 ] -- vector type
 map!{ x: 1, y: 2, z: 3 } -- easier-to-read compile-time constructed map
+ado!(x <- y
+     y <- z
+     x)  -- applicative or qualified do could have been macros
 ```
 
 (If you don't find those examples enticing there's no hope for you.)
@@ -194,6 +237,11 @@ As it happens, Rust's macros work just like this. Lisp's do. Haskell
 could potentially have this. It depends whether the community wants
 it, and/or whether someone is willing to implement a patch for GHC and
 lobby for it. But it seemed worth pointing out.
+
+---
+
+Thanks [Jānis ǅeriņš](https://www.jonis.lv/) and
+[Mihai Bazon](http://lisperator.net/) for reviewing this post.
 
 [^1]: They're also syntactic sugar for `QUOTE`, `UNQUOTE`, and
 `QUASIQUOTE`. The latter can be implemented with macros.
@@ -210,4 +258,7 @@ big; be my guest.
 [^5]: An open question would be whether you would include
 whitespace-aligned lines as "these are a list of trees", to support
 Haskell's indentation-sensitive syntax. Personally, I never liked that
-part of Haskell. But it's a real consideration.
+part of Haskell. But it's a real consideration, it's how people code
+in reality. Infix operators are another consideration: you may want to
+resolve their precedence, or not. If you want `*` in prefix/postfix
+position, then balancing shouldn't get in your way.
