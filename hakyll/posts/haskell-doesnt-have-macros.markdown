@@ -22,7 +22,7 @@ syntax.
 abstract syntax trees. At best, they are incomplete ASTs.
 
 Macros are functions that take in this tree of tokens, either atomic
-lexical tokens, or lists denoted by balanced parentheses[^1], and
+lexical tokens, or lists denoted by balanced parentheses, and
 do some transforms, and return the same as output.
 
 ```lisp
