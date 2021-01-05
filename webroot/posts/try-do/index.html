@@ -94,111 +94,59 @@
     <div class="page-wrap">
       <h1>Try.do for recoverable errors in Haskell</h1>
 
+<p><strong>UPDATE 2021-01-02</strong>: I have since written <a href="https://github.com/inflex-io/early">a GHC compiler plugin to implement an alternative <code>?</code>-based syntax for early return.</a> I prefer that one than use of <code>Try.do</code>, because it doesn’t require any type magic or special instances, and the <code>?</code> is more readable.</p>
+<hr />
 <p><strong>UPDATE</strong>: I’ve added a follow-up post to this <a href="../../posts/is-try-do-dangerous/">here</a>, where I address some criticisms of this post.</p>
 <hr />
-<p>In Haskell, I sometimes have IO-based actions that may produce failures. The IO aspect is usually incidental; because I need logging or metrics generation.</p>
-<p>When not using a free monad or a fancy effect-system–just plain IO–I like to follow a mental model similar to <a href="https://doc.rust-lang.org/book/ch09-00-error-handling.html">Rust’s definition of error handling</a>, which splits them into <em>recoverable</em> vs <em>unrecoverable</em> errors.</p>
-<p>In Rust, when a function can fail with a recoverable error, it returns a <code>Result</code>, like:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode rust"><code class="sourceCode rust"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="dt">Result</span>&lt;OutputType, ErrorType&gt;</a></code></pre></div>
-<p>which the caller can pattern-match on. Let’s compare recoverable errors in Haskell.</p>
-<h2 id="have-the-io-action-throw-a-runtime-exception">Have the IO action throw a runtime exception</h2>
-<p>Our code might look like:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">do</span> constraints <span class="ot">&lt;-</span> constrainRenamed renamed</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">   solved <span class="ot">&lt;-</span> solveConstraints constraints</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">   generalised <span class="ot">&lt;-</span> generaliseSolved solved</a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">   resolveGeneralised generalised</a></code></pre></div>
-<p>And each of these steps may throw an exception. We leave it up to code above in the call chain to remember to catch them.</p>
-<p>The trouble with exceptions is that they’re not mentioned in the type system. They’re also handled not at the call site, when for recoverable errors, that is usually the most straight-forward place to handle them.</p>
-<p>It’s simply very easy–and it happens all the time–that you either throw the wrong exception type in the wrong place, or you forget to catch exceptions at the right place.</p>
-<p><strong>Verdict</strong>: Too dangerous.</p>
-<h2 id="make-the-io-action-return-either">Make the IO action return Either</h2>
-<p>A more direct approach, which is a bit like Rust, is to simply have the function return <code>Either ErrorType OutputType</code> and then pattern match on the result to find out whether everything went fine.</p>
-<p>Now our code looks like this:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">do</span> constraints <span class="ot">&lt;-</span> constrainRenamed renamed</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">   <span class="kw">case</span> constraints <span class="kw">of</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">     <span class="dt">Left</span> err <span class="ot">-&gt;</span> return (<span class="dt">Left</span> err)</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">     <span class="dt">Right</span> constraints' <span class="ot">-&gt;</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">       solved <span class="ot">&lt;-</span> solveConstraints constraints</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">       <span class="kw">case</span> solved <span class="kw">of</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">         <span class="dt">Left</span> err <span class="ot">-&gt;</span> return (<span class="dt">Left</span> err)</a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">         <span class="dt">Right</span> solved' <span class="ot">-&gt;</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9">           generalised <span class="ot">&lt;-</span> generaliseSolved solved'</a>
-<a class="sourceLine" id="cb3-10" data-line-number="10">           <span class="kw">case</span> generalised <span class="kw">of</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11">             <span class="dt">Left</span> err <span class="ot">-&gt;</span> return (<span class="dt">Left</span> err)</a>
-<a class="sourceLine" id="cb3-12" data-line-number="12">             <span class="dt">Right</span> generalised' <span class="ot">-&gt;</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13">              resolveGeneralised generalised'</a></code></pre></div>
-<p>This is tedious to write, there’s all that repetition on the <code>Left</code> case. Reading it, you also can’t immediately tell whether there’s any extra logic going on here.</p>
-<p><strong>Verdict</strong>: Too much code.</p>
-<h2 id="wrap-your-io-code-up-in-exceptt">Wrap your IO code up in <code>ExceptT</code></h2>
-<p>One way to solve this issue is to wrap up these actions in the <code>ExceptT</code> monad transformer. We have to make each of the actions now live in the <code>ExceptT</code> monad, so</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">ErrorType</span> <span class="dt">OutputType</span>)</a></code></pre></div>
-<p>becomes</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="dt">ExceptT</span> <span class="dt">ErrorType</span> <span class="dt">IO</span> <span class="dt">OutputType</span></a></code></pre></div>
-<p>And our code goal is clean again:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1">runExceptT</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">  (<span class="kw">do</span> constraints <span class="ot">&lt;-</span> constrainRenamed renamed</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">      solved <span class="ot">&lt;-</span> solveConstraints constraints</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">      generalised <span class="ot">&lt;-</span> generaliseSolved solved</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">      resolveGeneralised generalised)</a></code></pre></div>
-<p>The <code>runExceptT</code> produces an <code>IO (Either ErrorType OutputType)</code>.</p>
-<p>However, <code>ExceptT</code> <a href="https://github.com/fpco/unliftio/tree/master/unliftio#limitations">cannot be an instance of <code>MonadUnliftIO</code></a> – because it necessarily requires multiple exit points. See <a href="https://github.com/fpco/unliftio/issues/68">this discussion</a> which should give you an idea of how hairy and unpredictable this can be.</p>
-<p><strong>This is a big deal.</strong></p>
-<p>Essentially, if a monad is unliftio-able, then:</p>
-<ol type="1">
-<li>The regular exception system will work as normal. This is important, because you do want regular exceptions to be thrown upwards.</li>
-<li>Concurrent programming works as usual: you can use <code>async</code> with <a href="https://hackage.haskell.org/package/unliftio-0.2.13.1/docs/UnliftIO-Async.html"><code>UnliftIO.Async</code></a> and get predictable results.</li>
-<li>Resource clean-up is also straight-forward.</li>
-</ol>
-<p>So, <code>ExceptT</code> has to be thrown out too, sadly.</p>
-<p><strong>Verdict</strong>: Not compatible.</p>
+<p>The first half of this post is <a href="../../posts/recoverable-errors-in-haskell">here</a>. Please read that for context.</p>
 <h2 id="qualified-do">Qualified do</h2>
 <p>One thing that struck me was that our earlier <code>Make the IO action return Either</code> approach produced code that was still perfectly satisfying the unliftio laws. Perhaps, like in Rust, we need a syntactic solution to the problem.</p>
 <p>Enter <a href="https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/qualified_do.html">QualifiedDo</a>, which will be available on the 9.0.1 version of GHC. What this would allow us to do is rebind <code>(&gt;&gt;=)</code> to mean what we’d like:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">module</span> <span class="dt">Try</span> ((<span class="fu">Try.&gt;&gt;=</span>)) <span class="kw">where</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="ot">(&gt;&gt;=) ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> e a) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> e b)) <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> e b)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">(<span class="fu">&gt;&gt;=</span>) m f <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">  result <span class="ot">&lt;-</span> m</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">  <span class="kw">case</span> result <span class="kw">of</span></a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">    <span class="dt">Left</span> e <span class="ot">-&gt;</span> pure (<span class="dt">Left</span> e)</a>
-<a class="sourceLine" id="cb7-7" data-line-number="7">    <span class="dt">Right</span> a <span class="ot">-&gt;</span> f a</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">module</span> <span class="dt">Try</span> ((<span class="fu">Try.&gt;&gt;=</span>)) <span class="kw">where</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ot">(&gt;&gt;=) ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> e a) <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> e b)) <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> e b)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">(<span class="fu">&gt;&gt;=</span>) m f <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">  result <span class="ot">&lt;-</span> m</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">  <span class="kw">case</span> result <span class="kw">of</span></a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">    <span class="dt">Left</span> e <span class="ot">-&gt;</span> pure (<span class="dt">Left</span> e)</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">    <span class="dt">Right</span> a <span class="ot">-&gt;</span> f a</a></code></pre></div>
 <p>We put this in a module called <code>Try</code> and import it with <code>QualifiedDo</code> enabled.</p>
 <p>Now our code becomes:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1">Try.do constraints <span class="ot">&lt;-</span> constrainRenamed renamed</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">       solved <span class="ot">&lt;-</span> solveConstraints constraints</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">       generalised <span class="ot">&lt;-</span> generaliseSolved solved</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">       resolveGeneralised generalised</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1">Try.do constraints <span class="ot">&lt;-</span> constrainRenamed renamed</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">       solved <span class="ot">&lt;-</span> solveConstraints constraints</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">       generalised <span class="ot">&lt;-</span> generaliseSolved solved</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">       resolveGeneralised generalised</a></code></pre></div>
 <p>where each action’s type is <code>SomeThing -&gt; IO (Either ErrorType OtherThing)</code>.</p>
 <p>Full working example:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="ot">{-# LANGUAGE QualifiedDo #-}</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="kw">import</span> <span class="dt">Try</span></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="kw">data</span> <span class="dt">ErrorType</span> <span class="fu">=</span> <span class="dt">OhNo</span> <span class="kw">deriving</span> (<span class="dt">Show</span>)</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="ot">action1 ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">ErrorType</span> <span class="dt">Int</span>)</a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">action1 <span class="fu">=</span> pure (<span class="dt">Right</span> <span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb9-6" data-line-number="6"><span class="ot">action2 ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">ErrorType</span> <span class="dt">Int</span>)</a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">action2 x <span class="fu">=</span> pure (<span class="dt">Left</span> <span class="dt">OhNo</span>)</a>
-<a class="sourceLine" id="cb9-8" data-line-number="8"><span class="ot">action3 ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">ErrorType</span> <span class="dt">Int</span>)</a>
-<a class="sourceLine" id="cb9-9" data-line-number="9">action3 x <span class="fu">=</span> pure (<span class="dt">Right</span> (x<span class="fu">+</span><span class="dv">30</span>))</a>
-<a class="sourceLine" id="cb9-10" data-line-number="10">main <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb9-11" data-line-number="11">  result <span class="ot">&lt;-</span></a>
-<a class="sourceLine" id="cb9-12" data-line-number="12">    Try.do</a>
-<a class="sourceLine" id="cb9-13" data-line-number="13">      output <span class="ot">&lt;-</span> action1</a>
-<a class="sourceLine" id="cb9-14" data-line-number="14">      output2 <span class="ot">&lt;-</span> action2 output</a>
-<a class="sourceLine" id="cb9-15" data-line-number="15">      output3 <span class="ot">&lt;-</span> action3 output2</a>
-<a class="sourceLine" id="cb9-16" data-line-number="16">  print result</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ot">{-# LANGUAGE QualifiedDo #-}</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">import</span> <span class="dt">Try</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">data</span> <span class="dt">ErrorType</span> <span class="fu">=</span> <span class="dt">OhNo</span> <span class="kw">deriving</span> (<span class="dt">Show</span>)</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="ot">action1 ::</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">ErrorType</span> <span class="dt">Int</span>)</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">action1 <span class="fu">=</span> pure (<span class="dt">Right</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="ot">action2 ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">ErrorType</span> <span class="dt">Int</span>)</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">action2 x <span class="fu">=</span> pure (<span class="dt">Left</span> <span class="dt">OhNo</span>)</a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="ot">action3 ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">ErrorType</span> <span class="dt">Int</span>)</a>
+<a class="sourceLine" id="cb3-9" data-line-number="9">action3 x <span class="fu">=</span> pure (<span class="dt">Right</span> (x<span class="fu">+</span><span class="dv">30</span>))</a>
+<a class="sourceLine" id="cb3-10" data-line-number="10">main <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11">  result <span class="ot">&lt;-</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12">    Try.do</a>
+<a class="sourceLine" id="cb3-13" data-line-number="13">      output <span class="ot">&lt;-</span> action1</a>
+<a class="sourceLine" id="cb3-14" data-line-number="14">      output2 <span class="ot">&lt;-</span> action2 output</a>
+<a class="sourceLine" id="cb3-15" data-line-number="15">      output3 <span class="ot">&lt;-</span> action3 output2</a>
+<a class="sourceLine" id="cb3-16" data-line-number="16">  print result</a></code></pre></div>
 <p>If you want a final return, you need to wrap it up in <code>Either</code>, as:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1">main <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">  result <span class="ot">&lt;-</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">    Try.do</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">      output <span class="ot">&lt;-</span> action1</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">      output2 <span class="ot">&lt;-</span> action2 output</a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">      output3 <span class="ot">&lt;-</span> action3 output2</a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">      pure (<span class="dt">Right</span> output3)</a>
-<a class="sourceLine" id="cb10-8" data-line-number="8">  print result</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1">main <span class="fu">=</span> <span class="kw">do</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">  result <span class="ot">&lt;-</span></a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">    Try.do</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">      output <span class="ot">&lt;-</span> action1</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">      output2 <span class="ot">&lt;-</span> action2 output</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">      output3 <span class="ot">&lt;-</span> action3 output2</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7">      pure (<span class="dt">Right</span> output3)</a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">  print result</a></code></pre></div>
 <p>Otherwise it won’t match our type:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1">Main.hs<span class="fu">:</span><span class="dv">16</span><span class="fu">:</span><span class="dv">7</span><span class="fu">:</span> error<span class="fu">:</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">    • <span class="dt">Couldn't</span> match <span class="kw">type</span> ‘<span class="dt">Int</span>’ with ‘<span class="dt">Either</span> <span class="dt">ErrorType</span> b0’</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">      <span class="dt">Expected</span><span class="fu">:</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">ErrorType</span> b0)</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4">        <span class="dt">Actual</span><span class="fu">:</span> <span class="dt">IO</span> <span class="dt">Int</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1">Main.hs<span class="fu">:</span><span class="dv">16</span><span class="fu">:</span><span class="dv">7</span><span class="fu">:</span> error<span class="fu">:</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">    • <span class="dt">Couldn't</span> match <span class="kw">type</span> ‘<span class="dt">Int</span>’ with ‘<span class="dt">Either</span> <span class="dt">ErrorType</span> b0’</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">      <span class="dt">Expected</span><span class="fu">:</span> <span class="dt">IO</span> (<span class="dt">Either</span> <span class="dt">ErrorType</span> b0)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">        <span class="dt">Actual</span><span class="fu">:</span> <span class="dt">IO</span> <span class="dt">Int</span></a></code></pre></div>
 <p>People who know a bit of Rust will see this as a familiar pattern; putting <code>Ok(output3)</code> at the end of your function.</p>
 <p>What did we gain? We can have our cake and eat it too. We get a trivial, syntactically-lightweight, way to string possibly-failing actions together, while retaining all the benefits of being an unliftio-able monad.</p>
 <p><strong>Verdict</strong>: Best of all worlds.</p>

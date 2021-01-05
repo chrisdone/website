@@ -96,7 +96,7 @@ Haskell.[^2] Here's how we use it:
 $(aif [|calculate something|] [|use it|] [|something other|])
 ```
 
-Oh no! have to manually quote every argument myself! The quotation
+Oh no! I have to manually quote every argument myself! The quotation
 syntax isn't even short, I have to write `[| .. |]` around
 everything. No one will use your macros if they are like that.
 
@@ -136,7 +136,7 @@ though. It'd need long-term maintenance.
 
 Quasiquotes in GHC optimise a different use-case to macros: they let
 you deal with _foreign_ languages. Macros let you add slight
-enhancements to your existing language.
+enhancements to your _existing_ language.
 
 ## A quick fix
 
@@ -251,7 +251,18 @@ Thanks [Jānis ǅeriņš](https://www.jonis.lv/) and
 error. But we're going with a very typical example.
 
 [^3]: Feel like writing that translation?  Haskell's surface syntax is
-big; be my guest.
+      big; be my guest. See Nikita Volkov's famous
+      [records library post](http://nikita-volkov.github.io/record/)
+      for an example of where this bites:
+
+      > Unfortunately since the introduced syntax is not supported by
+      > “haskell-src-exts” and since neither does that library expose a
+      > parser API, Haskell syntax parsing needs to be reimplemented in the
+      > “record” library. This is not a trivial task, so currently the
+      > quasi-quoters do not support all of the Haskell syntax. All the
+      > basic stuff is supported however: variables, literals, tuple and
+      > list syntax. Don’t worry though, if you’ll try to use something
+      > unsupported, you’ll get notified during compilation.
 
 [^4]: Actually, this is very similar to Rust syntax.
 

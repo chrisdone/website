@@ -138,7 +138,7 @@
 <a class="sourceLine" id="cb4-6" data-line-number="6">  <span class="fu">|</span>]</a></code></pre></div>
 <p>So far so good, apart from the fact no one would write this macro in Haskell.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> Here’s how we use it:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="fu">$</span>(aif [<span class="fu">|</span>calculate something<span class="fu">|</span>] [<span class="fu">|</span>use it<span class="fu">|</span>] [<span class="fu">|</span>something other<span class="fu">|</span>])</a></code></pre></div>
-<p>Oh no! have to manually quote every argument myself! The quotation syntax isn’t even short, I have to write <code>[| .. |]</code> around everything. No one will use your macros if they are like that.</p>
+<p>Oh no! I have to manually quote every argument myself! The quotation syntax isn’t even short, I have to write <code>[| .. |]</code> around everything. No one will use your macros if they are like that.</p>
 <h2 id="quasiquotes-dont-solve-the-problem">Quasiquotes don’t solve the problem</h2>
 <p>Haskell has what it calls “quasiquotes” which are like Lisp’s reader macros: You can parse an arbitrary string and produce an AST for the compiler. They’re actually great for embedding other languages into Haskell like JSON, YAML, HTML, etc.</p>
 <p>Maybe that could make writing this easy? Perhaps something like:</p>
@@ -149,7 +149,7 @@
 <p>So you can’t go from the string above into the compiler without converting to an AST. <strong>You need a parse step</strong>.</p>
 <p>Fine, let’s just import GHC’s own parser to produce the AST. Surely that’s possible? Sadly, not. GHC’s own API parser has a completely different tree type to the one in Template Haskell.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> This is where we get stuck.</p>
 <p>Implementing such a translation might be the way to salvage quasi-quote syntax into a macro system. It might be a little slow, though. It’d need long-term maintenance.</p>
-<p>Quasiquotes in GHC optimise a different use-case to macros: they let you deal with <em>foreign</em> languages. Macros let you add slight enhancements to your existing language.</p>
+<p>Quasiquotes in GHC optimise a different use-case to macros: they let you deal with <em>foreign</em> languages. Macros let you add slight enhancements to your <em>existing</em> language.</p>
 <h2 id="a-quick-fix">A quick fix</h2>
 <p>A quick fix to at least let us get at the parse tree would be to have some special syntax, e.g. to make something up completely<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1">aif<span class="fu">!</span>(<span class="kw">if</span> calculate something <span class="kw">then</span> use it <span class="kw">else</span> something other)</a></code></pre></div>
@@ -198,7 +198,11 @@
 <ol>
 <li id="fn1"><p>They’re also syntactic sugar for <code>QUOTE</code>, <code>UNQUOTE</code>, and <code>QUASIQUOTE</code>. The latter can be implemented with macros.<a href="#fnref1" class="footnote-back">↩</a></p></li>
 <li id="fn2"><p>No one would write this because Haskell doesn’t have “true-ish-ness” or implicit null, so this would simply produce a type error. But we’re going with a very typical example.<a href="#fnref2" class="footnote-back">↩</a></p></li>
-<li id="fn3"><p>Feel like writing that translation? Haskell’s surface syntax is big; be my guest.<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>Feel like writing that translation? Haskell’s surface syntax is big; be my guest. See Nikita Volkov’s famous <a href="http://nikita-volkov.github.io/record/">records library post</a> for an example of where this bites:</p>
+<blockquote>
+<p>Unfortunately since the introduced syntax is not supported by “haskell-src-exts” and since neither does that library expose a parser API, Haskell syntax parsing needs to be reimplemented in the “record” library. This is not a trivial task, so currently the quasi-quoters do not support all of the Haskell syntax. All the basic stuff is supported however: variables, literals, tuple and list syntax. Don’t worry though, if you’ll try to use something unsupported, you’ll get notified during compilation.</p>
+</blockquote>
+<a href="#fnref3" class="footnote-back">↩</a></li>
 <li id="fn4"><p>Actually, this is very similar to Rust syntax.<a href="#fnref4" class="footnote-back">↩</a></p></li>
 <li id="fn5"><p>An open question would be whether you would include whitespace-aligned lines as “these are a list of trees”, to support Haskell’s indentation-sensitive syntax. Personally, I never liked that part of Haskell. But it’s a real consideration, it’s how people code in reality. Infix operators are another consideration: you may want to resolve their precedence, or not. If you want <code>*</code> in prefix/postfix position, then balancing shouldn’t get in your way.<a href="#fnref5" class="footnote-back">↩</a></p></li>
 </ol>
