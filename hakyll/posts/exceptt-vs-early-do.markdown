@@ -197,8 +197,10 @@ zot i = do
 ```
 
 The `App` monad has the full power of all the previously mentioned
-things. I **cannot put `ExceptT` in this monad stack and retain the
-`MonadUnliftIO` instance.**
+things.
+
+But not with `ExceptT`. I **cannot put `ExceptT` in this monad stack
+and retain the `MonadUnliftIO` instance.** It has no valid instance!
 
 # But you should still use ExceptT because I like it
 
