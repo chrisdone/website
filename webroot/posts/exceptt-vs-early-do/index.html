@@ -175,7 +175,7 @@
 <a class="sourceLine" id="cb3-5" data-line-number="5"></a>
 <a class="sourceLine" id="cb3-6" data-line-number="6"><span class="ot">foo ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">RIO</span> () (<span class="dt">Either</span> () ())</a>
 <a class="sourceLine" id="cb3-7" data-line-number="7">foo i <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">  _ <span class="ot">&lt;-</span> bar (i <span class="fu">+</span> <span class="dv">1</span>)<span class="fu">?</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"> _ <span class="ot">&lt;-</span> bar (i <span class="fu">+</span> <span class="dv">1</span>)<span class="fu">?</span></a>
 <a class="sourceLine" id="cb3-9" data-line-number="9"> zot (i <span class="fu">+</span> <span class="dv">2</span>)</a>
 <a class="sourceLine" id="cb3-10" data-line-number="10"></a>
 <a class="sourceLine" id="cb3-11" data-line-number="11"><span class="ot">bar ::</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">RIO</span> () (<span class="dt">Either</span> () ((), ()))</a>
@@ -218,7 +218,8 @@
 <a class="sourceLine" id="cb4-24" data-line-number="24">zot i <span class="fu">=</span> <span class="kw">do</span></a>
 <a class="sourceLine" id="cb4-25" data-line-number="25">  _ <span class="ot">&lt;-</span> bar (i <span class="fu">+</span> <span class="dv">1</span>)<span class="fu">?</span></a>
 <a class="sourceLine" id="cb4-26" data-line-number="26">  zot (i <span class="fu">+</span> <span class="dv">2</span>)</a></code></pre></div>
-<p>The <code>App</code> monad has the full power of all the previously mentioned things. I <strong>cannot put <code>ExceptT</code> in this monad stack and retain the <code>MonadUnliftIO</code> instance.</strong></p>
+<p>The <code>App</code> monad has the full power of all the previously mentioned things.</p>
+<p>But not with <code>ExceptT</code>. I <strong>cannot put <code>ExceptT</code> in this monad stack and retain the <code>MonadUnliftIO</code> instance.</strong> It has no valid instance!</p>
 <h1 id="but-you-should-still-use-exceptt-because-i-like-it">But you should still use ExceptT because I like it</h1>
 <p>Could the mechanics of this syntax use <code>ExceptT</code> underneath? Sure, but then the whole do block would be under <code>ExceptT</code>, and I’d have to lift the rest of the do notation too (even if it’s not necessary, incurring extra cost for no reason). Even if I could tell which statements should be <code>ExceptT</code>’d or <code>lift</code>’d, it would be overkill.</p>
 <p>At this level, it doesn’t matter much. All you need the syntax to produce is a case expression. The use of an <code>Early</code> class is unneccessary, it just makes it easy to use either <code>Maybe</code> or <code>Either</code> with the same syntax.</p>

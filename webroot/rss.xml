@@ -7,8 +7,16 @@
         <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
         <atom:link href="https://chrisdone.com/rss.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Tue, 05 Jan 2021 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sat, 20 Mar 2021 00:00:00 UT</lastBuildDate>
         <item>
+    <title>What's wrong with ImplicitParams</title>
+    <link>https://chrisdone.com/posts/whats-wrong-with-implicitparams</link>
+    <description><![CDATA[What's wrong with ImplicitParams]]></description>
+    <pubDate>Sat, 20 Mar 2021 00:00:00 UT</pubDate>
+    <guid>https://chrisdone.com/posts/whats-wrong-with-implicitparams</guid>
+    <dc:creator>Chris Done</dc:creator>
+</item>
+<item>
     <title>How exactly ExceptT differs to EarlyDo</title>
     <link>https://chrisdone.com/posts/exceptt-vs-early-do</link>
     <description><![CDATA[How exactly ExceptT differs to EarlyDo]]></description>
@@ -78,14 +86,6 @@
     <description><![CDATA[Statically Checked Overloaded Strings]]></description>
     <pubDate>Wed, 13 Nov 2019 00:00:00 UT</pubDate>
     <guid>https://chrisdone.com/posts/statically-checked-overloaded-strings</guid>
-    <dc:creator>Chris Done</dc:creator>
-</item>
-<item>
-    <title>Static Smart Constructors with Double Splices</title>
-    <link>https://chrisdone.com/posts/static-smart-constructors</link>
-    <description><![CDATA[Static Smart Constructors with Double Splices]]></description>
-    <pubDate>Thu, 22 Aug 2019 00:00:00 UT</pubDate>
-    <guid>https://chrisdone.com/posts/static-smart-constructors</guid>
     <dc:creator>Chris Done</dc:creator>
 </item>
 

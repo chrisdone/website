@@ -141,7 +141,7 @@ import UnliftIO
 
 foo :: Int -> RIO () (Either () ())
 foo i = do
-  _ <- bar (i + 1)?
+ _ <- bar (i + 1)?
  zot (i + 2)
 
 bar :: Int -> RIO () (Either () ((), ()))

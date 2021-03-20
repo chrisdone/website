@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>What's wrong with ImplicitParams</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+    </style>
+    <script async defer data-domain="chrisdone.com" src="https://plausible.io/js/plausible.js"></script>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>What's wrong with ImplicitParams</h1>
+
+<p>Implicit parameters, enabled by the <code>ImplicitParams</code> extension in GHC, often come up in Haskell discussions,<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> with the statement that they’re so convenient, yet nobody<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> seems to use them. Why is that?</p>
+<p>The problem is incoherence. Type class resolution works in a very binary way: either it finds one, singular instance with one behavior and we compile, or it finds none at all and we don’t compile. It’s never<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> the case that changing our code will <em>change</em> a resolved instance. I can change my import list, or update my type-signatures.</p>
+<p>Incoherence breaks this guarantee. Implicit parameters rely on incoherence to work, because they piggyback on the type-class machinery with magical instances that appear as needed.</p>
+<p>Let’s see an example of how this leads to surprising results.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ot">{-# LANGUAGE ImplicitParams #-}</span></a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ot">horror ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3">horror <span class="fu">=</span></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">  <span class="kw">let</span><span class="ot"> result ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">      result <span class="fu">=</span> <span class="fu">?</span>myparam</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6">   <span class="kw">in</span> ( result</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">      , <span class="kw">let</span> <span class="fu">?</span>myparam <span class="fu">=</span> <span class="dv">456</span></a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">         <span class="kw">in</span> result)</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="ot">terror ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11">terror <span class="fu">=</span></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">  <span class="kw">let</span><span class="ot"> result ::</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb1-13" data-line-number="13">      result <span class="fu">=</span> <span class="fu">?</span>myparam</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">   <span class="kw">in</span> ( result</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15">      , <span class="kw">let</span> <span class="fu">?</span>myparam <span class="fu">=</span> <span class="dv">456</span></a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">         <span class="kw">in</span> result)</a></code></pre></div>
+<p>You found it; it’s that we added a type signature to <code>result</code>. That changed the behavior! If you find this surprising, it’s because you’re used to coherence. In normal Haskell, an inferred type and an explicit type don’t produce different code.</p>
+<p>Here’s another, more insidious, way to evoke the problem:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ot">{-# LANGUAGE ImplicitParams, NoMonomorphismRestriction #-}</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ot">terror ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">terror <span class="fu">=</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="kw">let</span> result <span class="fu">=</span> <span class="fu">?</span>myparam</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">   <span class="kw">in</span> ( result</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">      , <span class="kw">let</span> <span class="fu">?</span>myparam <span class="fu">=</span> <span class="dv">456</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">         <span class="kw">in</span> result)</a></code></pre></div>
+<p>Try removing <code>NoMonomorphismRestriction</code>. The output is different depending on whether this extension is on or not. <strong>Be afraid, be very afraid.</strong></p>
+<p>If this constraint was <code>Show</code>, I wouldn’t be able to reproduce this difference, because there’s only one <code>Show Int</code> instance.</p>
+<p>Implicit parameters break fundamental expectations about one of Haskell’s most basic features: its type inference. For me, this is reason enough to avoid it.</p>
+<hr />
+<p>Thanks Andrew Martin for insightful discussion on this topic a few years ago.</p>
+<section class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Such as this blog post <a href="https://hugopeters.me/posts/10/">Who still uses ReaderT</a> by Hugo Peters.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn2"><p>People do use them, see e.g. <a href="https://www.reddit.com/r/haskell/comments/5xqozf/implicit_parameters_vs_reflection/dek9eqg/">Ed Kmett</a>.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn3"><p>Orphan instances change this guarantee, which is why they’re maligned.<a href="#fnref3" class="footnote-back">↩</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2021-03-20 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
