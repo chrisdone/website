@@ -21,7 +21,17 @@ Incoherence breaks this guarantee. Implicit parameters rely on
 incoherence to work, because they piggyback on the type-class
 machinery with magical instances that appear as needed.
 
-Let's see an example of how this leads to surprising results.
+Let's see an example of how this leads to surprising results. The two
+declarations below produce different results.
+
+``` haskell
+> let ?myparam = 123 in terror
+(123,123)
+> let ?myparam = 123 in horror
+(123,456)
+```
+
+Check out the code and find the reason why.
 
 ``` haskell
 {-# LANGUAGE ImplicitParams #-}

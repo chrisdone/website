@@ -97,32 +97,37 @@
 <p>Implicit parameters, enabled by the <code>ImplicitParams</code> extension in GHC, often come up in Haskell discussions,<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> with the statement that they’re so convenient, yet nobody<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> seems to use them. Why is that?</p>
 <p>The problem is incoherence. Type class resolution works in a very binary way: either it finds one, singular instance with one behavior and we compile, or it finds none at all and we don’t compile. It’s never<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> the case that changing our code will <em>change</em> a resolved instance. I can change my import list, or update my type-signatures.</p>
 <p>Incoherence breaks this guarantee. Implicit parameters rely on incoherence to work, because they piggyback on the type-class machinery with magical instances that appear as needed.</p>
-<p>Let’s see an example of how this leads to surprising results.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ot">{-# LANGUAGE ImplicitParams #-}</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ot">horror ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">horror <span class="fu">=</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">  <span class="kw">let</span><span class="ot"> result ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> <span class="dt">Int</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">      result <span class="fu">=</span> <span class="fu">?</span>myparam</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">   <span class="kw">in</span> ( result</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">      , <span class="kw">let</span> <span class="fu">?</span>myparam <span class="fu">=</span> <span class="dv">456</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">         <span class="kw">in</span> result)</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9"></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="ot">terror ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">terror <span class="fu">=</span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">  <span class="kw">let</span><span class="ot"> result ::</span> <span class="dt">Int</span></a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">      result <span class="fu">=</span> <span class="fu">?</span>myparam</a>
-<a class="sourceLine" id="cb1-14" data-line-number="14">   <span class="kw">in</span> ( result</a>
-<a class="sourceLine" id="cb1-15" data-line-number="15">      , <span class="kw">let</span> <span class="fu">?</span>myparam <span class="fu">=</span> <span class="dv">456</span></a>
-<a class="sourceLine" id="cb1-16" data-line-number="16">         <span class="kw">in</span> result)</a></code></pre></div>
+<p>Let’s see an example of how this leads to surprising results. The two declarations below produce different results.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="fu">&gt;</span> <span class="kw">let</span> <span class="fu">?</span>myparam <span class="fu">=</span> <span class="dv">123</span> <span class="kw">in</span> terror</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">(<span class="dv">123</span>,<span class="dv">123</span>)</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="fu">&gt;</span> <span class="kw">let</span> <span class="fu">?</span>myparam <span class="fu">=</span> <span class="dv">123</span> <span class="kw">in</span> horror</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">(<span class="dv">123</span>,<span class="dv">456</span>)</a></code></pre></div>
+<p>Check out the code and find the reason why.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ot">{-# LANGUAGE ImplicitParams #-}</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ot">horror ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">horror <span class="fu">=</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="kw">let</span><span class="ot"> result ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">      result <span class="fu">=</span> <span class="fu">?</span>myparam</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">   <span class="kw">in</span> ( result</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">      , <span class="kw">let</span> <span class="fu">?</span>myparam <span class="fu">=</span> <span class="dv">456</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">         <span class="kw">in</span> result)</a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="ot">terror ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">terror <span class="fu">=</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12">  <span class="kw">let</span><span class="ot"> result ::</span> <span class="dt">Int</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13">      result <span class="fu">=</span> <span class="fu">?</span>myparam</a>
+<a class="sourceLine" id="cb2-14" data-line-number="14">   <span class="kw">in</span> ( result</a>
+<a class="sourceLine" id="cb2-15" data-line-number="15">      , <span class="kw">let</span> <span class="fu">?</span>myparam <span class="fu">=</span> <span class="dv">456</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16">         <span class="kw">in</span> result)</a></code></pre></div>
 <p>You found it; it’s that we added a type signature to <code>result</code>. That changed the behavior! If you find this surprising, it’s because you’re used to coherence. In normal Haskell, an inferred type and an explicit type don’t produce different code.</p>
 <p>Here’s another, more insidious, way to evoke the problem:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ot">{-# LANGUAGE ImplicitParams, NoMonomorphismRestriction #-}</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ot">terror ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">terror <span class="fu">=</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="kw">let</span> result <span class="fu">=</span> <span class="fu">?</span>myparam</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">   <span class="kw">in</span> ( result</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">      , <span class="kw">let</span> <span class="fu">?</span>myparam <span class="fu">=</span> <span class="dv">456</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">         <span class="kw">in</span> result)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ot">{-# LANGUAGE ImplicitParams, NoMonomorphismRestriction #-}</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="ot">terror ::</span> (<span class="fu">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">terror <span class="fu">=</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">  <span class="kw">let</span> result <span class="fu">=</span> <span class="fu">?</span>myparam</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">   <span class="kw">in</span> ( result</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">      , <span class="kw">let</span> <span class="fu">?</span>myparam <span class="fu">=</span> <span class="dv">456</span></a>
+<a class="sourceLine" id="cb3-7" data-line-number="7">         <span class="kw">in</span> result)</a></code></pre></div>
 <p>Try removing <code>NoMonomorphismRestriction</code>. The output is different depending on whether this extension is on or not. <strong>Be afraid, be very afraid.</strong></p>
 <p>If this constraint was <code>Show</code>, I wouldn’t be able to reproduce this difference, because there’s only one <code>Show Int</code> instance.</p>
 <p>Implicit parameters break fundamental expectations about one of Haskell’s most basic features: its type inference. For me, this is reason enough to avoid it.</p>
