@@ -86,7 +86,8 @@ Thanks Andrew Martin for insightful discussion on this topic a few
 years ago.
 
 [^1]: People do use them, see
-e.g. [Ed Kmett](https://www.reddit.com/r/haskell/comments/5xqozf/implicit_parameters_vs_reflection/dek9eqg/).
+e.g. [Ed Kmett](https://old.reddit.com/r/haskell/comments/m8o88a/who_still_uses_readert/grkh17q/),
+with caveats.
 
 [^2]: Such as this blog post
 [Who still uses ReaderT](https://hugopeters.me/posts/10/) by Hugo Peters.
