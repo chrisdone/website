@@ -146,6 +146,16 @@ productive.
 When combined with iterators, I think understanding such code is quite
 difficult.
 
+## As a general purpose language
+
+I feel like Rust is self-defined as a "systems" language, but it's
+being used to write web apps and command-line tools and all sorts of
+things.
+
+This is a little disappointing, but also predictable: the more
+successful your language, the more people will use your language for
+things it wasn't intended for.
+
 ## Conclusions, if any
 
 I won't be using Rust for any of my own personal projects. But it's
