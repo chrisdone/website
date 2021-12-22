@@ -49,7 +49,7 @@ code doesn't fit into Rust's tight memory restrictions.
 
 I've also been told, by people with white in their hair, with an air
 of misty-eyed revelation, that one you "get" Rust's memory model of
-the stack and the heap,[1] that things just all fit together
+the stack and the heap,[^1] that things just all fit together
 wonderfully.
 
 This touches on another topic I'd like to write about elsewhere: the
@@ -164,5 +164,4 @@ used at my job, so I'm sort of forced to have an opinion about it.
 But I wouldn't mind using it as a replacement for single-threaded C if
 I just use the standard library. That would be fun.
 
-^[1]: Having done my fair share of C code, there's nothing new here
-      for me.
+[^1]: Having done my fair share of C code, there's nothing new here for me.

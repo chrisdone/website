@@ -106,7 +106,7 @@
 <p>This can be compared with Haskell’s use of monads, that provide syntactic sugar. The more magic you introduce, the harder it is for newbies to learn and to talk about.</p>
 <h2 id="fetishization-of-efficient-memory-representation">Fetishization of Efficient Memory Representation</h2>
 <p>I’ve watched people on calls that are a couple years into Rust spend 20 minutes attempting to understand why their perfectly reasonable code doesn’t fit into Rust’s tight memory restrictions.</p>
-<p>I’ve also been told, by people with white in their hair, with an air of misty-eyed revelation, that one you “get” Rust’s memory model of the stack and the heap,[1] that things just all fit together wonderfully.</p>
+<p>I’ve also been told, by people with white in their hair, with an air of misty-eyed revelation, that one you “get” Rust’s memory model of the stack and the heap,<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> that things just all fit together wonderfully.</p>
 <p>This touches on another topic I’d like to write about elsewhere: the difference between practice and theory and how users of languages like Rust and Haskell that make big promises and require big sacrifices don’t seem to distinguish the difference.</p>
 <p>It’s not the technology that’s working poorly, it’s that you’re using it wrong.</p>
 <p>In practice, people just want to be able to write a tree-like type without having to play Chess against the compiler. I predict that garbage collectors will become popular in Rust eventually.</p>
@@ -142,11 +142,10 @@
 <h2 id="conclusions-if-any">Conclusions, if any</h2>
 <p>I won’t be using Rust for any of my own personal projects. But it’s used at my job, so I’m sort of forced to have an opinion about it.</p>
 <p>But I wouldn’t mind using it as a replacement for single-threaded C if I just use the standard library. That would be fun.</p>
-<p><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>: Having done my fair share of C code, there’s nothing new here for me.</p>
 <section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>1<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>Having done my fair share of C code, there’s nothing new here for me.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
