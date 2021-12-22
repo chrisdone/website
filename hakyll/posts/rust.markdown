@@ -48,7 +48,7 @@ I've watched people on calls that are a couple years into Rust spend
 code doesn't fit into Rust's tight memory restrictions.
 
 I've also been told, by people with white in their hair, with an air
-of misty-eyed revelation, that one you "get" Rust's memory model of
+of misty-eyed revelation, that once you "get" Rust's memory model of
 the stack and the heap,[^1] that things just all fit together
 wonderfully.
 
@@ -58,14 +58,15 @@ Rust and Haskell that make big promises and require big sacrifices
 don't seem to distinguish the difference.
 
 It's not the technology that's working poorly, it's that you're using
-it wrong.
+it wrongly.
 
 In practice, people just want to be able to write a tree-like type
 without having to play Chess against the compiler. I predict that
 garbage collectors will become popular in Rust eventually.
 
 This is both Rust's main goal--be like C, but safe--and also its main
-downside.
+downside. People waste time on trivialities that will never make a
+difference.
 
 ## Unsafe
 

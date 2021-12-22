@@ -88,7 +88,6 @@
       }
       }
     </style>
-    <script async defer data-domain="chrisdone.com" src="https://plausible.io/js/plausible.js"></script>
   </head>
   <body>
     <div class="page-wrap">
@@ -106,11 +105,11 @@
 <p>This can be compared with Haskell’s use of monads, that provide syntactic sugar. The more magic you introduce, the harder it is for newbies to learn and to talk about.</p>
 <h2 id="fetishization-of-efficient-memory-representation">Fetishization of Efficient Memory Representation</h2>
 <p>I’ve watched people on calls that are a couple years into Rust spend 20 minutes attempting to understand why their perfectly reasonable code doesn’t fit into Rust’s tight memory restrictions.</p>
-<p>I’ve also been told, by people with white in their hair, with an air of misty-eyed revelation, that one you “get” Rust’s memory model of the stack and the heap,<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> that things just all fit together wonderfully.</p>
+<p>I’ve also been told, by people with white in their hair, with an air of misty-eyed revelation, that once you “get” Rust’s memory model of the stack and the heap,<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> that things just all fit together wonderfully.</p>
 <p>This touches on another topic I’d like to write about elsewhere: the difference between practice and theory and how users of languages like Rust and Haskell that make big promises and require big sacrifices don’t seem to distinguish the difference.</p>
-<p>It’s not the technology that’s working poorly, it’s that you’re using it wrong.</p>
+<p>It’s not the technology that’s working poorly, it’s that you’re using it wrongly.</p>
 <p>In practice, people just want to be able to write a tree-like type without having to play Chess against the compiler. I predict that garbage collectors will become popular in Rust eventually.</p>
-<p>This is both Rust’s main goal–be like C, but safe–and also its main downside.</p>
+<p>This is both Rust’s main goal–be like C, but safe–and also its main downside. People waste time on trivialities that will never make a difference.</p>
 <h2 id="unsafe">Unsafe</h2>
 <p>The use of unsafe is a little disturbing, because every library features it. But it’s not much different to using an FFI. I don’t see this is a big downside.</p>
 <h2 id="the-rewrite-fallacy">The Rewrite Fallacy</h2>

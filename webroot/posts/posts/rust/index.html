@@ -1,0 +1,163 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My negative views on Rust</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+      <h1>My negative views on Rust</h1>
+
+<p>This is a little summary of my current thoughts on Rust. I wonder whether I’ll look back in five years and see if my views have changed.</p>
+<h2 id="the-good">The Good</h2>
+<p>Rust’s macros are very good. They act like Lisp’s macros, unlike Haskell’s.</p>
+<p>The fact that Rust has type-classes (“traits”) and sum types (“enums”) and pattern matching is very attractive. Making orphan instances package-wide rather than module-wide is a very good decision.</p>
+<p>I also like its treatment of records.</p>
+<p>Its standard library does a few things well, like handling strings as UTF-8.</p>
+<p>Distinguishing mutability has its advantages, it’s easy to see that a function is “morally” pure–if not actually pure–and that’s good for reading.</p>
+<h2 id="take-sugar">Take Sugar?</h2>
+<p>Rust’s use of magical sugar constructs, where the compiler will automatically insert dereferences and copies and clones and drops for you has an initial appealing “it’s all simple underneath” quality to it, but in practice this leads to bad compile errors: The worst kind of compile error is the one where the compiler is complaining about something that it generated for you, rather than something you explicitly wrote.</p>
+<p>This can be compared with Haskell’s use of monads, that provide syntactic sugar. The more magic you introduce, the harder it is for newbies to learn and to talk about.</p>
+<h2 id="fetishization-of-efficient-memory-representation">Fetishization of Efficient Memory Representation</h2>
+<p>I’ve watched people on calls that are a couple years into Rust spend 20 minutes attempting to understand why their perfectly reasonable code doesn’t fit into Rust’s tight memory restrictions.</p>
+<p>I’ve also been told, by people with white in their hair, with an air of misty-eyed revelation, that one you “get” Rust’s memory model of the stack and the heap,<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> that things just all fit together wonderfully.</p>
+<p>This touches on another topic I’d like to write about elsewhere: the difference between practice and theory and how users of languages like Rust and Haskell that make big promises and require big sacrifices don’t seem to distinguish the difference.</p>
+<p>It’s not the technology that’s working poorly, it’s that you’re using it wrong.</p>
+<p>In practice, people just want to be able to write a tree-like type without having to play Chess against the compiler. I predict that garbage collectors will become popular in Rust eventually.</p>
+<p>This is both Rust’s main goal–be like C, but safe–and also its main downside.</p>
+<h2 id="unsafe">Unsafe</h2>
+<p>The use of unsafe is a little disturbing, because every library features it. But it’s not much different to using an FFI. I don’t see this is a big downside.</p>
+<h2 id="the-rewrite-fallacy">The Rewrite Fallacy</h2>
+<p>I see a lot of “we rewrote X in Rust and it got faster” posts. I think that if you rewrite anything from scratch with performance in mind, you’ll see a significant performance improvement. I’m suspicious of how much Rust itself is needed versus the developers having some performance discipline.</p>
+<h2 id="the-friendly-community">The “Friendly” Community</h2>
+<p>All new language communities are nice. When things don’t matter much, people have no reason to get mad.</p>
+<p>As soon as people have a stake in something, that’s when things heat up and tempers come out. You get a stake in a programming language by writing a lot of code in it, or by building a business on it. When you have a stake in how a language works, you’re highly sensitive to changes that will make you do more work than needed, or will limit your goals.</p>
+<p>I’ve seen this play out for Haskell. Around 2007, when I started with Haskell, the community was friendly as anything, evangelic, open. People praised it for this. Everyone just felt blessed to be able to use this exciting language. Today, it’s more like any other community. What happened? People started using Haskell for real, that’s all.</p>
+<p>Rust is going through the same thing, much more rapidly. Is it a reason to avoid Rust? No. But a “nice” community isn’t a reason to join an upcoming language, either.</p>
+<h2 id="async-is-highly-problematic">Async is highly problematic</h2>
+<p>Rust’s choice to exclude a runtime/scheduler blessed and built-in to the language means they had to develop alternative strategies in the language itself. This is not turning out well.</p>
+<p><a href="https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/">Coloured Functions</a> is a powerful metaphor for the incompatibility between async and synchronous functions and the awkward situations that mixing them introduces. Some blog posts have attempted to downplay the situation by focusing on technical aspects of specific syntactic forms. That doesn’t really matter, though, because the reality is much simpler: Async code is easier to use when dependencies are in an async form.</p>
+<p>People will choose libraries that are async over libraries that are not. However, maintainers that have written good, maintained code, are also resistant to adopt async.</p>
+<ul>
+<li><p>One conversation I’ve overhead:</p>
+<blockquote>
+<p>Person 1: Another difference between diesel and sqlx is that diesel is not async yet and from looking at the issues it doesn’t seem to be priority yet.</p>
+<p>Person 2: That sounds like a major issue</p>
+</blockquote></li>
+</ul>
+<p>As the saying goes, the proof of the pudding is in the eating of the pudding.</p>
+<p>Async introduces <a href="https://github.com/diesel-rs/diesel/issues/399">long, heated discussions.</a></p>
+<p>The problem for Rust is that its users want a runtime, but want the option of not having one. The result is a mess.</p>
+<p>Generally, I think Go, Erlang and Haskell made the better choice here. A garbage collector and green threads make programmers more productive.</p>
+<p>When combined with iterators, I think understanding such code is quite difficult.</p>
+<h2 id="as-a-general-purpose-language">As a general purpose language</h2>
+<p>I feel like Rust is self-defined as a “systems” language, but it’s being used to write web apps and command-line tools and all sorts of things.</p>
+<p>This is a little disappointing, but also predictable: the more successful your language, the more people will use your language for things it wasn’t intended for.</p>
+<h2 id="conclusions-if-any">Conclusions, if any</h2>
+<p>I won’t be using Rust for any of my own personal projects. But it’s used at my job, so I’m sort of forced to have an opinion about it.</p>
+<p>But I wouldn’t mind using it as a replacement for single-threaded C if I just use the standard library. That would be fun.</p>
+<section class="footnotes" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>Having done my fair share of C code, there’s nothing new here for me.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2021-12-22 <a href="../../">Chris Done</a></td>
+      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
