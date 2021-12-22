@@ -49,7 +49,7 @@ code doesn't fit into Rust's tight memory restrictions.
 
 I've also been told, by people with white in their hair, with an air
 of misty-eyed revelation, that one you "get" Rust's memory model of
-the stack and the heap, that things just all fit together
+the stack and the heap,[1] that things just all fit together
 wonderfully.
 
 This touches on another topic I'd like to write about elsewhere: the
@@ -120,7 +120,7 @@ Async code is easier to use when dependencies are in an async form.
 
 People will choose libraries that are async over libraries that are
 not. However, maintainers that have written good, maintained code, are
-also resistent to adopt async.
+also resistant to adopt async.
 
 * One conversation I've overhead:
 
@@ -150,3 +150,6 @@ difficult.
 
 I won't be using Rust for any of my own personal projects. But it's
 used at my job, so I'm sort of forced to have an opinion about it.
+
+^[1]: Having done my fair share of C code, there's nothing new here
+      for me.
