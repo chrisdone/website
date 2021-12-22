@@ -151,5 +151,8 @@ difficult.
 I won't be using Rust for any of my own personal projects. But it's
 used at my job, so I'm sort of forced to have an opinion about it.
 
+But I wouldn't mind using it as a replacement for single-threaded C if
+I just use the standard library. That would be fun.
+
 ^[1]: Having done my fair share of C code, there's nothing new here
       for me.
