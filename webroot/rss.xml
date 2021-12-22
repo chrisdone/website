@@ -7,8 +7,16 @@
         <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
         <atom:link href="https://chrisdone.com/rss.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sat, 20 Mar 2021 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Sat, 10 Apr 2021 00:00:00 UT</lastBuildDate>
         <item>
+    <title>The Movement Principle</title>
+    <link>https://chrisdone.com/posts/the-movement-principle</link>
+    <description><![CDATA[The Movement Principle]]></description>
+    <pubDate>Sat, 10 Apr 2021 00:00:00 UT</pubDate>
+    <guid>https://chrisdone.com/posts/the-movement-principle</guid>
+    <dc:creator>Chris Done</dc:creator>
+</item>
+<item>
     <title>What's wrong with ImplicitParams</title>
     <link>https://chrisdone.com/posts/whats-wrong-with-implicitparams</link>
     <description><![CDATA[What's wrong with ImplicitParams]]></description>
@@ -78,14 +86,6 @@
     <description><![CDATA[Defaulting fields in a record]]></description>
     <pubDate>Sat, 07 Dec 2019 00:00:00 UT</pubDate>
     <guid>https://chrisdone.com/posts/defaulting-fields-in-a-record</guid>
-    <dc:creator>Chris Done</dc:creator>
-</item>
-<item>
-    <title>Statically Checked Overloaded Strings</title>
-    <link>https://chrisdone.com/posts/statically-checked-overloaded-strings</link>
-    <description><![CDATA[Statically Checked Overloaded Strings]]></description>
-    <pubDate>Wed, 13 Nov 2019 00:00:00 UT</pubDate>
-    <guid>https://chrisdone.com/posts/statically-checked-overloaded-strings</guid>
     <dc:creator>Chris Done</dc:creator>
 </item>
 
