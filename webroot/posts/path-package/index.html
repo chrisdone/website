@@ -120,29 +120,29 @@
 <h2 id="implementation">Implementation</h2>
 <h3 id="the-data-types">The data types</h3>
 <p>Here is the type:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">newtype</span> <span class="dt">Path</span> b t <span class="fu">=</span> <span class="dt">Path</span> FilePath</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">  <span class="kw">deriving</span> (<span class="dt">Typeable</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">newtype</span> <span class="dt">Path</span> b t <span class="ot">=</span> <span class="dt">Path</span> <span class="dt">FilePath</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>  <span class="kw">deriving</span> (<span class="dt">Typeable</span>)</span></code></pre></div>
 <p>The type variables are:</p>
 <ul>
 <li><code>b</code> - base, the base location of the path; absolute or relative.</li>
 <li><code>t</code> - type, whether file or directory.</li>
 </ul>
 <p>The base types can be filled with these:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Abs</span> <span class="kw">deriving</span> (<span class="dt">Typeable</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">data</span> <span class="dt">Rel</span> <span class="kw">deriving</span> (<span class="dt">Typeable</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Abs</span> <span class="kw">deriving</span> (<span class="dt">Typeable</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Rel</span> <span class="kw">deriving</span> (<span class="dt">Typeable</span>)</span></code></pre></div>
 <p>And the type can be filled with these:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">data</span> <span class="dt">File</span> <span class="kw">deriving</span> (<span class="dt">Typeable</span>)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">data</span> <span class="dt">Dir</span> <span class="kw">deriving</span> (<span class="dt">Typeable</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">File</span> <span class="kw">deriving</span> (<span class="dt">Typeable</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Dir</span> <span class="kw">deriving</span> (<span class="dt">Typeable</span>)</span></code></pre></div>
 <p>(Why not use data kinds like <code>data Type = File | Dir</code>? Because that imposes an extension overhead of adding <code>{-# LANGUAGE DataKinds #-}</code> to every module you might want to write out a path type in. Given that one cannot construct paths of types other than these, via the operations in the module, it’s not a concern for me.)</p>
 <p>There is a conversion function to give you back the filepath:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ot">toFilePath ::</span> <span class="dt">Path</span> b t <span class="ot">-&gt;</span> FilePath</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">toFilePath (<span class="dt">Path</span> l) <span class="fu">=</span> l</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="ot">toFilePath ::</span> <span class="dt">Path</span> b t <span class="ot">-&gt;</span> <span class="dt">FilePath</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>toFilePath (<span class="dt">Path</span> l) <span class="ot">=</span> l</span></code></pre></div>
 <h3 id="parsers">Parsers</h3>
 <p>To get a path value, you need to use one of the four parsers:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="ot">parseAbsDir  ::</span> <span class="dt">MonadThrow</span> m <span class="ot">=&gt;</span> FilePath <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="ot">parseRelDir  ::</span> <span class="dt">MonadThrow</span> m <span class="ot">=&gt;</span> FilePath <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">Dir</span>)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="ot">parseAbsFile ::</span> <span class="dt">MonadThrow</span> m <span class="ot">=&gt;</span> FilePath <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">File</span>)</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4"><span class="ot">parseRelFile ::</span> <span class="dt">MonadThrow</span> m <span class="ot">=&gt;</span> FilePath <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ot">parseAbsDir  ::</span> <span class="dt">MonadThrow</span> m <span class="ot">=&gt;</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="ot">parseRelDir  ::</span> <span class="dt">MonadThrow</span> m <span class="ot">=&gt;</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">Dir</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="ot">parseAbsFile ::</span> <span class="dt">MonadThrow</span> m <span class="ot">=&gt;</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">File</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="ot">parseRelFile ::</span> <span class="dt">MonadThrow</span> m <span class="ot">=&gt;</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>)</span></code></pre></div>
 <p>The following properties apply:</p>
 <ul>
 <li>Absolute parsers will reject non-absolute paths.</li>
@@ -153,99 +153,99 @@
 </ul>
 <p>It was discussed briefly whether we should just have a class for parsing rather than four separate parsing functions. In my experience so far, I have had type errors where I wrote something like <code>x &lt;- parseAbsDir someAbsDirString</code> because x was then passed to a place that expected a relative directory. In this way, overloading the return value would’ve just been accepted. So I don’t think having a class is a good idea. Being explicit here doesn’t exactly waste our time, either.</p>
 <p>Why are these functions in <code>MonadThrow</code>? Because it means I can have it return an Either, or a Maybe, if I’m in pure code, and if I’m in IO, and I don’t expect parsing to ever fail, I can use it in IO like this:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">do</span> x <span class="ot">&lt;-</span> parseRelFile (fromCabalFileName x)</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">   foo x</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">   …</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">do</span> x <span class="ot">&lt;-</span> parseRelFile (fromCabalFileName x)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>   foo x</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>   …</span></code></pre></div>
 <p>That’s really convenient and we take advantage of this at FP Complete a lot.</p>
 <h3 id="the-instances">The instances</h3>
 <p>Equality, ordering and printing are simply re-using the String instances:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Eq</span> (<span class="dt">Path</span> b t) <span class="kw">where</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">  (<span class="fu">==</span>) (<span class="dt">Path</span> x) (<span class="dt">Path</span> y) <span class="fu">=</span> x <span class="fu">==</span> y</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="kw">instance</span> <span class="dt">Ord</span> (<span class="dt">Path</span> b t) <span class="kw">where</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">  compare (<span class="dt">Path</span> x) (<span class="dt">Path</span> y) <span class="fu">=</span> compare x y</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7"><span class="kw">instance</span> <span class="dt">Show</span> (<span class="dt">Path</span> b t) <span class="kw">where</span></a>
-<a class="sourceLine" id="cb7-8" data-line-number="8">  show (<span class="dt">Path</span> x) <span class="fu">=</span> show x</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Eq</span> (<span class="dt">Path</span> b t) <span class="kw">where</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>  (<span class="op">==</span>) (<span class="dt">Path</span> x) (<span class="dt">Path</span> y) <span class="ot">=</span> x <span class="op">==</span> y</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Ord</span> (<span class="dt">Path</span> b t) <span class="kw">where</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>  <span class="fu">compare</span> (<span class="dt">Path</span> x) (<span class="dt">Path</span> y) <span class="ot">=</span> <span class="fu">compare</span> x y</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Show</span> (<span class="dt">Path</span> b t) <span class="kw">where</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a>  <span class="fu">show</span> (<span class="dt">Path</span> x) <span class="ot">=</span> <span class="fu">show</span> x</span></code></pre></div>
 <p>Which gives us for free the following equational properties:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1">toFilePath x <span class="fu">==</span> toFilePath y        ≡ x <span class="fu">==</span> y           <span class="co">-- Eq instance</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">toFilePath x <span class="ot">`compare`</span> toFilePath y ≡ x <span class="ot">`compare`</span> y    <span class="co">-- Ord instance</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">toFilePath x <span class="fu">==</span> toFilePath y        ≡ show x <span class="fu">==</span> show y <span class="co">-- Show instance</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>toFilePath x <span class="op">==</span> toFilePath y        ≡ x <span class="op">==</span> y           <span class="co">-- Eq instance</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>toFilePath x <span class="ot">`compare`</span> toFilePath y ≡ x <span class="ot">`compare`</span> y    <span class="co">-- Ord instance</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>toFilePath x <span class="op">==</span> toFilePath y        ≡ <span class="fu">show</span> x <span class="op">==</span> <span class="fu">show</span> y <span class="co">-- Show instance</span></span></code></pre></div>
 <p>In other words, the representation and the path you get out at the end are the same. Two paths that are equal will always give you back the same thing.</p>
 <h3 id="smart-constructors">Smart constructors</h3>
 <p>For when you know what a path will be at compile-time, there are constructors for that:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="fu">$</span>(mkAbsDir <span class="st">&quot;/home/chris&quot;</span>)</a>
-<a class="sourceLine" id="cb9-2" data-line-number="2"><span class="fu">$</span>(mkRelDir <span class="st">&quot;chris&quot;</span>)</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3"><span class="fu">$</span>(mkAbsFile <span class="st">&quot;/home/chris/x.txt&quot;</span>)</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4"><span class="fu">$</span>(mkRelFile <span class="st">&quot;chris/x.txt&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="op">$</span>(mkAbsDir <span class="st">&quot;/home/chris&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="op">$</span>(mkRelDir <span class="st">&quot;chris&quot;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="op">$</span>(mkAbsFile <span class="st">&quot;/home/chris/x.txt&quot;</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a><span class="op">$</span>(mkRelFile <span class="st">&quot;chris/x.txt&quot;</span>)</span></code></pre></div>
 <p>These will run at compile-time and underneath use the appropriate parser.</p>
 <h3 id="overloaded-strings">Overloaded strings</h3>
 <p>No <code>IsString</code> instance is provided, because that has no way to statically determine whether the path is correct, and would otherwise have to be a partial function.</p>
-<p>In practice I have written the wrong path format in a <code>$(mk… &quot;&quot;)</code> and been thankful it was caught early.</p>
+<p>In practice I have written the wrong path format in a <code>$(mk… "")</code> and been thankful it was caught early.</p>
 <h3 id="operations">Operations</h3>
 <p>There is path concatenation:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="ot">(&lt;/&gt;) ::</span> <span class="dt">Path</span> b <span class="dt">Dir</span> <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="dt">Rel</span> t <span class="ot">-&gt;</span> <span class="dt">Path</span> b t</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="ot">(&lt;/&gt;) ::</span> <span class="dt">Path</span> b <span class="dt">Dir</span> <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="dt">Rel</span> t <span class="ot">-&gt;</span> <span class="dt">Path</span> b t</span></code></pre></div>
 <p>Get the parent directory of a path:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="ot">parent ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> t <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span></a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="ot">parent ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> t <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span></span></code></pre></div>
 <p>Get the filename of a file path:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="ot">filename ::</span> <span class="dt">Path</span> b <span class="dt">File</span> <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span></a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="ot">filename ::</span> <span class="dt">Path</span> b <span class="dt">File</span> <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span></span></code></pre></div>
 <p>Get the directory name of a directory path:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="ot">dirname ::</span> <span class="dt">Path</span> b <span class="dt">Dir</span> <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">Dir</span></a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="ot">dirname ::</span> <span class="dt">Path</span> b <span class="dt">Dir</span> <span class="ot">-&gt;</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">Dir</span></span></code></pre></div>
 <p>Stripping the parent directory from a path:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="ot">stripDir ::</span> <span class="dt">MonadThrow</span> m <span class="ot">=&gt;</span> <span class="dt">Path</span> b <span class="dt">Dir</span> <span class="ot">-&gt;</span> <span class="dt">Path</span> b t <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Rel</span> t)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="ot">stripDir ::</span> <span class="dt">MonadThrow</span> m <span class="ot">=&gt;</span> <span class="dt">Path</span> b <span class="dt">Dir</span> <span class="ot">-&gt;</span> <span class="dt">Path</span> b t <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Rel</span> t)</span></code></pre></div>
 <h2 id="review">Review</h2>
 <p>Let’s review my initial list of complaints and see if they’ve been satisfied.</p>
 <h3 id="relative-vs-absolute-confusion">Relative vs absolute confusion</h3>
 <p>Paths now distinguish in the type system whether they are relative or absolute. You can’t append two absolute paths, for example:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" data-line-number="1">λ<span class="fu">&gt;</span> <span class="fu">$</span>(mkAbsDir <span class="st">&quot;/home/chris&quot;</span>) <span class="fu">&lt;/&gt;</span> <span class="fu">$</span>(mkAbsDir <span class="st">&quot;/home/chris&quot;</span>)</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2"><span class="fu">&lt;</span>interactive<span class="fu">&gt;:</span><span class="dv">23</span><span class="fu">:</span><span class="dv">31</span><span class="fu">-</span><span class="dv">55</span><span class="fu">:</span></a>
-<a class="sourceLine" id="cb15-3" data-line-number="3">    <span class="dt">Couldn't</span> match <span class="kw">type</span> ‘<span class="dt">Abs</span>’ with ‘<span class="dt">Rel</span>’</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> <span class="op">$</span>(mkAbsDir <span class="st">&quot;/home/chris&quot;</span>) <span class="op">&lt;/&gt;</span> <span class="op">$</span>(mkAbsDir <span class="st">&quot;/home/chris&quot;</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a><span class="op">&lt;</span>interactive<span class="op">&gt;:</span><span class="dv">23</span><span class="op">:</span><span class="dv">31</span><span class="op">-</span><span class="dv">55</span><span class="op">:</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>    <span class="dt">Couldn't</span> match <span class="kw">type</span> ‘<span class="dt">Abs</span>’ with ‘<span class="dt">Rel</span>’</span></code></pre></div>
 <h3 id="the-equality-problem">The equality problem</h3>
 <p>Paths are now stringently normalized. They have to be a valid path, and they only support single path separators, and all directories are suffixed with a trailing path separator:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" data-line-number="1">λ<span class="fu">&gt;</span> <span class="fu">$</span>(mkAbsDir <span class="st">&quot;/home/chris//&quot;</span>) <span class="fu">==</span> <span class="fu">$</span>(mkAbsDir <span class="st">&quot;/./home//chris&quot;</span>)</a>
-<a class="sourceLine" id="cb16-2" data-line-number="2"><span class="dt">True</span></a>
-<a class="sourceLine" id="cb16-3" data-line-number="3">λ<span class="fu">&gt;</span> toFilePath <span class="fu">$</span>(mkAbsDir <span class="st">&quot;/home/chris//&quot;</span>) <span class="fu">==</span></a>
-<a class="sourceLine" id="cb16-4" data-line-number="4">   toFilePath <span class="fu">$</span>(mkAbsDir <span class="st">&quot;/./home//chris&quot;</span>)</a>
-<a class="sourceLine" id="cb16-5" data-line-number="5"><span class="dt">True</span></a>
-<a class="sourceLine" id="cb16-6" data-line-number="6">λ<span class="fu">&gt;</span> (<span class="fu">$</span>(mkAbsDir <span class="st">&quot;/home/chris//&quot;</span>),toFilePath <span class="fu">$</span>(mkAbsDir <span class="st">&quot;/./home//chris&quot;</span>))</a>
-<a class="sourceLine" id="cb16-7" data-line-number="7">(<span class="st">&quot;/home/chris/&quot;</span>,<span class="st">&quot;/home/chris/&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> <span class="op">$</span>(mkAbsDir <span class="st">&quot;/home/chris//&quot;</span>) <span class="op">==</span> <span class="op">$</span>(mkAbsDir <span class="st">&quot;/./home//chris&quot;</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a><span class="dt">True</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a>λ<span class="op">&gt;</span> toFilePath <span class="op">$</span>(mkAbsDir <span class="st">&quot;/home/chris//&quot;</span>) <span class="op">==</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>   toFilePath <span class="op">$</span>(mkAbsDir <span class="st">&quot;/./home//chris&quot;</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a><span class="dt">True</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a>λ<span class="op">&gt;</span> (<span class="op">$</span>(mkAbsDir <span class="st">&quot;/home/chris//&quot;</span>),toFilePath <span class="op">$</span>(mkAbsDir <span class="st">&quot;/./home//chris&quot;</span>))</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a>(<span class="st">&quot;/home/chris/&quot;</span>,<span class="st">&quot;/home/chris/&quot;</span>)</span></code></pre></div>
 <h3 id="unpredictable-concatenation-issues">Unpredictable concatenation issues</h3>
 <p>Because of the stringent normalization, path concatenation, as seen above, is simply string concatenation. This is about as predictable as it can get:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb17-1" data-line-number="1">λ<span class="fu">&gt;</span> toFilePath <span class="fu">$</span>(mkAbsDir <span class="st">&quot;/home/chris//&quot;</span>)</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2"><span class="st">&quot;/home/chris/&quot;</span></a>
-<a class="sourceLine" id="cb17-3" data-line-number="3">λ<span class="fu">&gt;</span> toFilePath <span class="fu">$</span>(mkRelDir <span class="st">&quot;foo//bar&quot;</span>)</a>
-<a class="sourceLine" id="cb17-4" data-line-number="4"><span class="st">&quot;foo/bar/&quot;</span></a>
-<a class="sourceLine" id="cb17-5" data-line-number="5">λ<span class="fu">&gt;</span> <span class="fu">$</span>(mkAbsDir <span class="st">&quot;/home/chris//&quot;</span>) <span class="fu">&lt;/&gt;</span> <span class="fu">$</span>(mkRelDir <span class="st">&quot;foo//bar&quot;</span>)</a>
-<a class="sourceLine" id="cb17-6" data-line-number="6"><span class="st">&quot;/home/chris/foo/bar/&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> toFilePath <span class="op">$</span>(mkAbsDir <span class="st">&quot;/home/chris//&quot;</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a><span class="st">&quot;/home/chris/&quot;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>λ<span class="op">&gt;</span> toFilePath <span class="op">$</span>(mkRelDir <span class="st">&quot;foo//bar&quot;</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a><span class="st">&quot;foo/bar/&quot;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a>λ<span class="op">&gt;</span> <span class="op">$</span>(mkAbsDir <span class="st">&quot;/home/chris//&quot;</span>) <span class="op">&lt;/&gt;</span> <span class="op">$</span>(mkRelDir <span class="st">&quot;foo//bar&quot;</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a><span class="st">&quot;/home/chris/foo/bar/&quot;</span></span></code></pre></div>
 <h3 id="confusing-files-and-directories">Confusing files and directories</h3>
 <p>Now that the path type is encoded in the type system, our <code>&lt;/&gt;</code> operator prevents improper appending:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb18-1" data-line-number="1">λ<span class="fu">&gt;</span> <span class="fu">$</span>(mkAbsDir <span class="st">&quot;/home/chris/&quot;</span>) <span class="fu">&lt;/&gt;</span> <span class="fu">$</span>(mkRelFile <span class="st">&quot;foo//bar&quot;</span>)</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2"><span class="st">&quot;/home/chris/foo/bar&quot;</span></a>
-<a class="sourceLine" id="cb18-3" data-line-number="3">λ<span class="fu">&gt;</span> <span class="fu">$</span>(mkAbsFile <span class="st">&quot;/home/chris&quot;</span>) <span class="fu">&lt;/&gt;</span> <span class="fu">$</span>(mkRelFile <span class="st">&quot;foo//bar&quot;</span>)</a>
-<a class="sourceLine" id="cb18-4" data-line-number="4"><span class="fu">&lt;</span>interactive<span class="fu">&gt;:</span><span class="dv">35</span><span class="fu">:</span><span class="dv">1</span><span class="fu">-</span><span class="dv">26</span><span class="fu">:</span></a>
-<a class="sourceLine" id="cb18-5" data-line-number="5">    <span class="dt">Couldn't</span> match <span class="kw">type</span> ‘<span class="dt">File</span>’ with ‘<span class="dt">Dir</span>’</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> <span class="op">$</span>(mkAbsDir <span class="st">&quot;/home/chris/&quot;</span>) <span class="op">&lt;/&gt;</span> <span class="op">$</span>(mkRelFile <span class="st">&quot;foo//bar&quot;</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="st">&quot;/home/chris/foo/bar&quot;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a>λ<span class="op">&gt;</span> <span class="op">$</span>(mkAbsFile <span class="st">&quot;/home/chris&quot;</span>) <span class="op">&lt;/&gt;</span> <span class="op">$</span>(mkRelFile <span class="st">&quot;foo//bar&quot;</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a><span class="op">&lt;</span>interactive<span class="op">&gt;:</span><span class="dv">35</span><span class="op">:</span><span class="dv">1</span><span class="op">-</span><span class="dv">26</span><span class="op">:</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a>    <span class="dt">Couldn't</span> match <span class="kw">type</span> ‘<span class="dt">File</span>’ with ‘<span class="dt">Dir</span>’</span></code></pre></div>
 <h3 id="self-documentation">Self-documentation</h3>
 <p>Now I can read the path like:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" data-line-number="1">{<span class="ot"> fooPath ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">Dir</span>, <span class="fu">...</span> }</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a>{<span class="ot"> fooPath ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">Dir</span>, <span class="op">...</span> }</span></code></pre></div>
 <p>And know that this refers to the directory relative to some other path, meaning I should be careful to consider the current directory when using this in IO, or that I’ll probably need a parent to append to it at some point.</p>
 <h2 id="in-practice">In practice</h2>
 <p>We’ve been using this at FP Complete in a number of packages for some months now, it’s turned out surprisingly sufficient for most of our path work with only one bug found. We weren’t sure initially whether it would just be too much of a pain to use, but really it’s quite acceptable given the advantages. You can see its use all over the <a href="http://github.com/fpco/stack">stack</a> codebase.</p>
 <h2 id="doing-io">Doing I/O</h2>
 <p>Currently any operations involving I/O can be done by using the existing I/O library:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb20-1" data-line-number="1">doesFileExist (toFilePath fp)</a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">readFile (toFilePath fp)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>doesFileExist (toFilePath fp)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a><span class="fu">readFile</span> (toFilePath fp)</span></code></pre></div>
 <p>etc. This has problems with respect to accidentally running something like:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb21-1" data-line-number="1">doesFileExist <span class="fu">$</span>(mkRelDir <span class="st">&quot;foo&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a>doesFileExist <span class="op">$</span>(mkRelDir <span class="st">&quot;foo&quot;</span>)</span></code></pre></div>
 <p>But I/O is currently outside the scope of what this package solves. Once you leave the realm of the Path type invariants are back to your responsibility.</p>
 <p>As with the original version of this library, we’re currently building up a set of functions in a <a href="https://github.com/commercialhaskell/stack/blob/master/src/Path/IO.hs#L1"><code>Path.IO</code></a> module over time that fits our real-world use-cases. It may or may not appear in the path package eventually. It’ll need cleaning up and considering what should really be included.</p>
 <h2 id="doing-textual-manipulations">Doing textual manipulations</h2>
 <p>One problem that crops up sometimes is wanting to manipulate paths. Currently the way we do it is via the filepath library and re-parsing the path:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb22-1" data-line-number="1">parseAbsFile <span class="fu">.</span> addExtension <span class="st">&quot;/directory/path&quot;</span> <span class="st">&quot;ext&quot;</span> <span class="fu">.</span> toFilePath</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a>parseAbsFile <span class="op">.</span> addExtension <span class="st">&quot;/directory/path&quot;</span> <span class="st">&quot;ext&quot;</span> <span class="op">.</span> toFilePath</span></code></pre></div>
 <p>It doesn’t happen too often, in our experience, to the extent this needs to be more convenient.</p>
 <h2 id="accepting-user-input">Accepting user input</h2>
 <p>Sometimes you have user input that contains <code>../</code>. The solution we went with is to have a function like <code>resolveDir</code>:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb23-1" data-line-number="1"><span class="ot">resolveDir ::</span> (<span class="dt">MonadIO</span> m, <span class="dt">MonadThrow</span> m)</a>
-<a class="sourceLine" id="cb23-2" data-line-number="2">           <span class="ot">=&gt;</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span> <span class="ot">-&gt;</span> FilePath <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="ot">resolveDir ::</span> (<span class="dt">MonadIO</span> m, <span class="dt">MonadThrow</span> m)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a>           <span class="ot">=&gt;</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span> <span class="ot">-&gt;</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> m (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>)</span></code></pre></div>
 <p>Which will call <code>canonicalizePath</code> which collapses and normalizes a path and then we parse with regular old <code>parseAbsDir</code> and we’re cooking with gas. This and others like it might get added to the <code>path</code> package.</p>
 <h2 id="comparing-with-existing-path-libraries">Comparing with existing path libraries</h2>
 <h3 id="filepath-and-system-filepath">filepath and system-filepath</h3>
@@ -261,38 +261,38 @@
 <li><p>There is an <code>IsString</code> instance, which means people <em>will</em> use it, and <em>will</em> make mistakes.</p></li>
 <li><p>Paths are not normalized into a predictable format, leading to me being unsure when equality will succeed. This is the same problem I encountered in system-filepath. The equality function normalizes, but according to what properties I can reason about? I don’t know.</p></li>
 </ul>
-<div class="sourceCode" id="cb24"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> (<span class="st">&quot;/tmp//&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a <span class="dt">Dir</span>) <span class="fu">==</span> (<span class="st">&quot;/tmp&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a <span class="dt">Dir</span>)</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="dt">True</span></a>
-<a class="sourceLine" id="cb24-3" data-line-number="3"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> (<span class="st">&quot;tmp&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a <span class="dt">Dir</span>) <span class="fu">==</span> (<span class="st">&quot;/tmp&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a <span class="dt">Dir</span>)</a>
-<a class="sourceLine" id="cb24-4" data-line-number="4"><span class="dt">True</span></a>
-<a class="sourceLine" id="cb24-5" data-line-number="5"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> (<span class="st">&quot;/etc/passwd/&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a b) <span class="fu">==</span> (<span class="st">&quot;/etc/passwd&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a b)</a>
-<a class="sourceLine" id="cb24-6" data-line-number="6"><span class="dt">True</span></a>
-<a class="sourceLine" id="cb24-7" data-line-number="7"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> (<span class="st">&quot;/tmp//&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>) <span class="fu">==</span> (<span class="st">&quot;/tmp/./&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>)</a>
-<a class="sourceLine" id="cb24-8" data-line-number="8"><span class="dt">False</span></a>
-<a class="sourceLine" id="cb24-9" data-line-number="9"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> (<span class="st">&quot;/tmp/../&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>) <span class="fu">==</span> (<span class="st">&quot;/&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>)</a>
-<a class="sourceLine" id="cb24-10" data-line-number="10"><span class="dt">False</span></a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> (<span class="st">&quot;/tmp//&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a <span class="dt">Dir</span>) <span class="op">==</span> (<span class="st">&quot;/tmp&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a <span class="dt">Dir</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a><span class="dt">True</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> (<span class="st">&quot;tmp&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a <span class="dt">Dir</span>) <span class="op">==</span> (<span class="st">&quot;/tmp&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a <span class="dt">Dir</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a><span class="dt">True</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> (<span class="st">&quot;/etc/passwd/&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a b) <span class="op">==</span> (<span class="st">&quot;/etc/passwd&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> a b)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true"></a><span class="dt">True</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> (<span class="st">&quot;/tmp//&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>) <span class="op">==</span> (<span class="st">&quot;/tmp/./&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true"></a><span class="dt">False</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> (<span class="st">&quot;/tmp/../&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>) <span class="op">==</span> (<span class="st">&quot;/&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true"></a><span class="dt">False</span></span></code></pre></div>
 <ul>
 <li>Empty string should not be allowed, and introduction of <code>.</code> due to that gets weird:</li>
 </ul>
-<div class="sourceCode" id="cb25"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb25-1" data-line-number="1"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> fmap getPathString (<span class="dt">Right</span> (<span class="st">&quot;.&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>))</a>
-<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="dt">Right</span> <span class="st">&quot;.&quot;</span></a>
-<a class="sourceLine" id="cb25-3" data-line-number="3"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> fmap getPathString (mkPathAbsOrRel <span class="st">&quot;&quot;</span>)</a>
-<a class="sourceLine" id="cb25-4" data-line-number="4"><span class="dt">Right</span> <span class="st">&quot;.&quot;</span></a>
-<a class="sourceLine" id="cb25-5" data-line-number="5"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> (<span class="dt">Right</span> (<span class="st">&quot;.&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>)) <span class="fu">==</span> (mkPathAbsOrRel <span class="st">&quot;&quot;</span>)</a>
-<a class="sourceLine" id="cb25-6" data-line-number="6"><span class="dt">False</span></a>
-<a class="sourceLine" id="cb25-7" data-line-number="7"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> takeDirectory (<span class="st">&quot;tmp&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">Dir</span>)</a>
-<a class="sourceLine" id="cb25-8" data-line-number="8"><span class="fu">.</span></a>
-<a class="sourceLine" id="cb25-9" data-line-number="9"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> (getPathString (<span class="st">&quot;.&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>) <span class="fu">==</span></a>
-<a class="sourceLine" id="cb25-10" data-line-number="10">                    getPathString (<span class="st">&quot;&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>))</a>
-<a class="sourceLine" id="cb25-11" data-line-number="11"><span class="dt">True</span></a>
-<a class="sourceLine" id="cb25-12" data-line-number="12"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> ((<span class="st">&quot;.&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>) <span class="fu">==</span> (<span class="st">&quot;&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>))</a>
-<a class="sourceLine" id="cb25-13" data-line-number="13"><span class="dt">False</span></a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> <span class="fu">fmap</span> getPathString (<span class="dt">Right</span> (<span class="st">&quot;.&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="dt">Right</span> <span class="st">&quot;.&quot;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> <span class="fu">fmap</span> getPathString (mkPathAbsOrRel <span class="st">&quot;&quot;</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a><span class="dt">Right</span> <span class="st">&quot;.&quot;</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> (<span class="dt">Right</span> (<span class="st">&quot;.&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>)) <span class="op">==</span> (mkPathAbsOrRel <span class="st">&quot;&quot;</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true"></a><span class="dt">False</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> takeDirectory (<span class="st">&quot;tmp&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">Dir</span>)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true"></a><span class="op">.</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> (getPathString (<span class="st">&quot;.&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>) <span class="op">==</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true"></a>                    getPathString (<span class="st">&quot;&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>))</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true"></a><span class="dt">True</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> ((<span class="st">&quot;.&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>) <span class="op">==</span> (<span class="st">&quot;&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>))</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true"></a><span class="dt">False</span></span></code></pre></div>
 <ul>
 <li><p>It has functions like <code>&lt;.&gt;</code>/<code>addExtension</code> which lets you insert an arbitrary string into a path.</p></li>
 <li><p>Some functions let you produce nonsense (could be prevented by a stricter type), for example:</p></li>
 </ul>
-<div class="sourceCode" id="cb26"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="dt">System.Path.Posix</span><span class="fu">&gt;</span> takeFileName (<span class="st">&quot;/tmp/&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>)</a>
-<a class="sourceLine" id="cb26-2" data-line-number="2">tmp</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="dt">System.Path.Posix</span><span class="op">&gt;</span> takeFileName (<span class="st">&quot;/tmp/&quot;</span><span class="ot"> ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>tmp</span></code></pre></div>
 <p>I’m being a bit picky here, a bit unfair. But the point is really to show the kind of things I tried to avoid in <code>path</code>. In summary, it’s just hard to know where things can go wrong, similar to what was going on in system-filepath.</p>
 <h3 id="data-filepath">data-filepath</h3>
 <p>The <a href="http://hackage.haskell.org/package/data-filepath-2.2.0.0/docs/Data-FilePath.html">data-filepath</a> is also very similar, I discovered it after writing my own at work and was pleased to see it’s mostly the same. The main differences are:</p>

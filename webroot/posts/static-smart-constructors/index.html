@@ -99,59 +99,59 @@
 <p>Sometimes you’re making a DSL and you need a way to make a smart constructor that is static. You want to validate a value at compile-time (possibly because the validation logic is harder to do in the type-system or not ergonomic enough), and also return the run-time value, without having to <code>lift</code> the whole structure from TH-land to real-land. Perhaps your data type is a funky GADT with functions in it, and therefore has no <code>Lift</code> instance anyway!</p>
 <p>One pattern to achieve the desired result is using a double splice.</p>
 <p>Here’s a really trivial example with strings:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="fu">&gt;</span> <span class="fu">:</span>t <span class="fu">$$</span>(<span class="fu">$$</span>(notNull [<span class="fu">||</span> thename <span class="fu">||</span>]))</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="fu">$$</span>(<span class="fu">$$</span>(notNull [<span class="fu">||</span> thename <span class="fu">||</span>]))<span class="ot"> ::</span> <span class="dt">NonEmptyString</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="fu">&gt;</span> <span class="fu">$$</span>(<span class="fu">$$</span>(notNull [<span class="fu">||</span> thename <span class="fu">||</span>]))</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="st">&quot;Hello!&quot;</span></a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="fu">&gt;</span> <span class="fu">:</span>t <span class="fu">$$</span>(<span class="fu">$$</span>(notNull [<span class="fu">||</span> thename_empty <span class="fu">||</span>]))</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="fu">&lt;</span>interactive<span class="fu">&gt;:</span><span class="dv">1</span><span class="fu">:</span><span class="dv">4</span><span class="fu">:</span> error<span class="fu">:</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">    • <span class="dt">Exception</span> when trying to run compile<span class="fu">-</span>time code<span class="fu">:</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">        <span class="dt">String</span> is not empty<span class="fu">.</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="op">&gt;</span> <span class="op">:</span>t <span class="op">$$</span>(<span class="op">$$</span>(notNull [<span class="op">||</span> thename <span class="op">||</span>]))</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="op">$$</span>(<span class="op">$$</span>(notNull [<span class="op">||</span> thename <span class="op">||</span>]))<span class="ot"> ::</span> <span class="dt">NonEmptyString</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="op">&gt;</span> <span class="op">$$</span>(<span class="op">$$</span>(notNull [<span class="op">||</span> thename <span class="op">||</span>]))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="st">&quot;Hello!&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="op">&gt;</span> <span class="op">:</span>t <span class="op">$$</span>(<span class="op">$$</span>(notNull [<span class="op">||</span> thename_empty <span class="op">||</span>]))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="op">&lt;</span>interactive<span class="op">&gt;:</span><span class="dv">1</span><span class="op">:</span><span class="dv">4</span><span class="op">:</span> <span class="fu">error</span><span class="op">:</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>    • <span class="dt">Exception</span> when trying to run compile<span class="op">-</span>time code<span class="op">:</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>        <span class="dt">String</span> is <span class="fu">not</span> empty<span class="op">.</span></span></code></pre></div>
 <p>Note that the <code>notNull</code> validator is well-typed (which is commonly lacking in Template-Haskell, but here works well):</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="fu">&gt;</span> <span class="fu">:</span>t notNull</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ot">notNull ::</span> <span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> <span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">NonEmptyString</span>)))</a></code></pre></div>
-<p>The above uses typed splices <code>$$( ... )</code> and typed quotes <code>[|| ... ||]</code>. However, you can implement the same technique with regular <code>$(..)</code> and <code>[| .. |]</code> if typed splices are too long for you.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="op">&gt;</span> <span class="op">:</span>t notNull</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="ot">notNull ::</span> <span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> <span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">NonEmptyString</span>)))</span></code></pre></div>
+<p>The above uses typed splices <code>$$( ... )</code> and typed quotes <code>[|| ... ||]</code>. However, you can implement the same technique with regular <code>$(..)</code> and <code>[| .. |]</code> if typed splices are too long for you.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <p>Here is the implementation:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ot">{-# LANGUAGE TemplateHaskell #-}</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">import</span> <span class="dt">Language.Haskell.TH</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Instances</span> ()</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Syntax</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Lift</span> ()</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">-- Here is a simple validator.</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="ot">valueFine ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10">valueFine <span class="fu">=</span> not <span class="fu">.</span> null</a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">-- The static smart constructor with the nested expressions returned.</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="ot">notNull ::</span> <span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> <span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">NonEmptyString</span>)))</a>
-<a class="sourceLine" id="cb3-15" data-line-number="15">notNull q <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16">  <span class="dt">TExp</span> expr <span class="ot">&lt;-</span> q</a>
-<a class="sourceLine" id="cb3-17" data-line-number="17">  <span class="kw">let</span> name <span class="fu">=</span> '<span class="dt">NonEmptyString</span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18">  [<span class="fu">||</span> <span class="kw">if</span> valueFine <span class="fu">$$</span>(q)</a>
-<a class="sourceLine" id="cb3-19" data-line-number="19">      <span class="kw">then</span> <span class="dt">TExp</span> <span class="fu">&lt;$&gt;</span> (appE (conE name) (pure expr))</a>
-<a class="sourceLine" id="cb3-20" data-line-number="20">      <span class="kw">else</span> error <span class="st">&quot;String is not empty.&quot;</span> <span class="fu">||</span>]</a>
-<a class="sourceLine" id="cb3-21" data-line-number="21"></a>
-<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">-- A smart constructor.</span></a>
-<a class="sourceLine" id="cb3-23" data-line-number="23"></a>
-<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="kw">data</span> <span class="dt">NonEmptyString</span> <span class="fu">=</span> <span class="dt">NonEmptyString</span> <span class="dt">String</span></a>
-<a class="sourceLine" id="cb3-25" data-line-number="25"> <span class="kw">deriving</span> (<span class="dt">Show</span>)</a>
-<a class="sourceLine" id="cb3-26" data-line-number="26"></a>
-<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="co">-- Some example values.</span></a>
-<a class="sourceLine" id="cb3-28" data-line-number="28"></a>
-<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="ot">thename ::</span> [<span class="dt">Char</span>]</a>
-<a class="sourceLine" id="cb3-30" data-line-number="30">thename <span class="fu">=</span> <span class="st">&quot;Hello!&quot;</span></a>
-<a class="sourceLine" id="cb3-31" data-line-number="31"></a>
-<a class="sourceLine" id="cb3-32" data-line-number="32"><span class="ot">thename_empty ::</span> [<span class="dt">Char</span>]</a>
-<a class="sourceLine" id="cb3-33" data-line-number="33">thename_empty <span class="fu">=</span> <span class="st">&quot;&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE TemplateHaskell #-}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Language.Haskell.TH</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Instances</span> ()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Syntax</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Lift</span> ()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="co">-- Here is a simple validator.</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="ot">valueFine ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>valueFine <span class="ot">=</span> <span class="fu">not</span> <span class="op">.</span> <span class="fu">null</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a><span class="co">-- The static smart constructor with the nested expressions returned.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a><span class="ot">notNull ::</span> <span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">String</span>) <span class="ot">-&gt;</span> <span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">NonEmptyString</span>)))</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a>notNull q <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a>  <span class="dt">TExp</span> expr <span class="ot">&lt;-</span> q</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a>  <span class="kw">let</span> name <span class="ot">=</span> <span class="dt">'NonEmptyString</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true"></a>  [<span class="op">||</span> <span class="kw">if</span> valueFine <span class="op">$$</span>(q)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true"></a>      <span class="kw">then</span> <span class="dt">TExp</span> <span class="op">&lt;$&gt;</span> (appE (conE name) (<span class="fu">pure</span> expr))</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true"></a>      <span class="kw">else</span> <span class="fu">error</span> <span class="st">&quot;String is not empty.&quot;</span> <span class="op">||</span>]</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true"></a><span class="co">-- A smart constructor.</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">NonEmptyString</span> <span class="ot">=</span> <span class="dt">NonEmptyString</span> <span class="dt">String</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true"></a> <span class="kw">deriving</span> (<span class="dt">Show</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true"></a><span class="co">-- Some example values.</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true"></a><span class="ot">thename ::</span> [<span class="dt">Char</span>]</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true"></a>thename <span class="ot">=</span> <span class="st">&quot;Hello!&quot;</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true"></a><span class="ot">thename_empty ::</span> [<span class="dt">Char</span>]</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true"></a>thename_empty <span class="ot">=</span> <span class="st">&quot;&quot;</span></span></code></pre></div>
 <p>Thanks to <a href="https://mgsloan.com/">Michael Sloan</a> for the idea to have an expression return another expression.</p>
-<section class="footnotes">
+<section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>In my case, the length doesn’t matter too much, just the correctness properties, because it’ll be used once or twice per codebase to validate a much larger DSL AST.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn1" role="doc-endnote"><p>In my case, the length doesn’t matter too much, just the correctness properties, because it’ll be used once or twice per codebase to validate a much larger DSL AST.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

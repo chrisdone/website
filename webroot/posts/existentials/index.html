@@ -106,7 +106,7 @@
 <p>(I’m not sure what “methodological weakness” is supposed to mean, but let’s ignore that.)</p>
 <p>There are two problems with this argument and demonstration:</p>
 <ol type="1">
-<li>It’s contrived. I’ve written about as much Emacs Lisp and JavaScript as I have written Haskell and C#, and I cannot with all intellectual honesty remember wanting a heterogenous list.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></li>
+<li>It’s contrived. I’ve written about as much Emacs Lisp and JavaScript as I have written Haskell and C#, and I cannot with all intellectual honesty remember wanting a heterogenous list.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
 <li>It’s ill-defined. What is this data structure? What can I assume about the elements so that I can write operations generically? Which, I presume, is the only reason I would be using a list in the first place (otherwise a record would be the correct thing to use); to write algorithms that apply generally to any index.</li>
 </ol>
 <p>Even cutting the author some slack and assuming they might want to just temporarily put some things together as a tuple, static languages have tuples, which are heterogenous.</p>
@@ -119,7 +119,7 @@
 <p>So the list contains a bunch of disparate things and the implicit invariant here is that we can print each of them out. So we can model that with an existential data type <code>Py</code> (for “Python”) that holds some type <code>a</code> that is showable.</p>
 <pre><code>data Py = forall a. Show a =&gt; Py a
 instance Show Py where show (Py s) = show s</code></pre>
-<p>(Oh, Haskell doesn’t define an instance for printing functions, so let’s use <code>instance Show (a -&gt; b) where show _ = &quot;&lt;function&gt;&quot;</code> to vaguely match Python.)</p>
+<p>(Oh, Haskell doesn’t define an instance for printing functions, so let’s use <code>instance Show (a -&gt; b) where show _ = "&lt;function&gt;"</code> to vaguely match Python.)</p>
 <p>I may not know, or care, <em>what</em> the type is, but I at least need to know <em>something about it</em>, in a duck-typing kind of way. If it walks like a duck, quacks like a duck, etc. then it’s a good enough duck for my purposes. In this case, <code>Py</code> says, is it at least showable?</p>
 <p>Now we can wrap up any type which is an instance of <code>Show</code> with that:</p>
 <pre><code>λ&gt; [Py 1,Py 'a',Py &quot;hello&quot;,Py (\x -&gt; x ** 2)]
@@ -146,10 +146,10 @@ Traceback (most recent call last):
   File &quot;&lt;stdin&gt;&quot;, line 1, in pow2
 TypeError: unsupported operand type(s) for ** or pow(): 'str' and 'int'</code></pre>
 <p>The difference being the Haskell error was signaled statically at compile-time and the Python error was signalled dynamically at run-time.</p>
-<section class="footnotes">
+<section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>To demonstrate my good faith, I have constructed heterogenous lists in Emacs Lisp to model a record, but this is because Emacs Lisp lacks native records. JavaScript, on the other hand, has records.<a href="#fnref1" class="footnote-back">↩</a></p></li>
+<li id="fn1" role="doc-endnote"><p>To demonstrate my good faith, I have constructed heterogenous lists in Emacs Lisp to model a record, but this is because Emacs Lisp lacks native records. JavaScript, on the other hand, has records.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

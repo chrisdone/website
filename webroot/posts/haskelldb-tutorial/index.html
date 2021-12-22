@@ -94,15 +94,15 @@
     <div class="page-wrap">
       <h1>HaskellDB: A long tutorial</h1>
 
-<p>I’ve been using HaskellDB in production for about two years. I decided that I’d write a proper, up-to-date description, or tutorial, about what it is, how it works, what it can do, and my experience using it in projects.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>I’ve been using HaskellDB in production for about two years. I decided that I’d write a proper, up-to-date description, or tutorial, about what it is, how it works, what it can do, and my experience using it in projects.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <h2 id="what-is-haskelldb">What is HaskellDB?</h2>
 <p><a href="http://hackage.haskell.org/package/haskelldb">HaskellDB</a> is a database interface library for Haskell which features</p>
 <ul>
 <li>explicit declaration of schema of entities and fields,</li>
-<li>an EDSL<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>—a <code>Query</code> monad—for making queries and statements based on using operations based on the relational algebra<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>,</li>
+<li>an EDSL<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>—a <code>Query</code> monad—for making queries and statements based on using operations based on the relational algebra<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>,</li>
 <li>a simple record system for dealing with entities and fields.</li>
 </ul>
-<p>It was originally developed for Hugs making use of the TRex, but was later made portable and is now happy in both Hugs and GHC<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a>.</p>
+<p>It was originally developed for Hugs making use of the TRex, but was later made portable and is now happy in both Hugs and GHC<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
 <p>The <a href="http://rubyonrails.org/">Ruby on Rails project</a> recently adopted <a href="http://github.com/rails/arel">ARel, a library based on the same idea</a>.</p>
 <h2 id="connecting">Connecting</h2>
 <p>So to connect to a database with HaskellDB, you can use different backends. In this case, I’ll assume you’re using HDBC as a backend.</p>
@@ -124,7 +124,7 @@ opts = [(&quot;host&quot;,&quot;localhost&quot;)
 <p>Usually you ought to combine this with configuration options.</p>
 <h2 id="orm-approach">ORM approach</h2>
 <h3 id="fields">Fields</h3>
-<p>The approach for the object relational mapping is that one defines the column types and entity schemas up front. So, supposing our project is named Caturday, in a module named <code>Caturday.Model.Fields</code>,<a href="#fn5" class="footnote-ref" id="fnref5"><sup>5</sup></a> using the <code>field</code> macro,<a href="#fn6" class="footnote-ref" id="fnref6"><sup>6</sup></a> one declares fields. For example:</p>
+<p>The approach for the object relational mapping is that one defines the column types and entity schemas up front. So, supposing our project is named Caturday, in a module named <code>Caturday.Model.Fields</code>,<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> using the <code>field</code> macro,<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> one declares fields. For example:</p>
 <pre><code>{-# LANGUAGE TemplateHaskell #-}
 
 -- | All database fields.
@@ -146,7 +146,7 @@ field &quot;Title&quot; &quot;title&quot; &quot;title&quot; [t|String|]</code></
 </ul>
 <p>In other words, a Haskell-level representation of the database field “title”.</p>
 <h3 id="tables">Tables</h3>
-<p>Then one defines the entities that use those fields in a module such as <code>Caturday.Model.Tables</code>, using the <code>table</code> macro<a href="#fn7" class="footnote-ref" id="fnref7"><sup>7</sup></a>. For example:</p>
+<p>Then one defines the entities that use those fields in a module such as <code>Caturday.Model.Tables</code>, using the <code>table</code> macro<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>. For example:</p>
 <pre><code>{-# LANGUAGE TemplateHaskell #-}
 
 -- | Database tables and entities.
@@ -163,7 +163,7 @@ table &quot;content&quot; &quot;content&quot;
   ['id
   ,'title
   ]</code></pre>
-<p>The first argument is the Haskell-level value name for the table, and the second is the SQL-level name of the entity. To import <code>Fields as Fields</code> is a good idea.<a href="#fn8" class="footnote-ref" id="fnref8"><sup>8</sup></a></p>
+<p>The first argument is the Haskell-level value name for the table, and the second is the SQL-level name of the entity. To import <code>Fields as Fields</code> is a good idea.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
 <h3 id="importing">Importing</h3>
 <p>Once the model schema has been defined in these two modules, one ought to import them like so:</p>
 <pre><code>import qualified Caturday.Model.Fields as F
@@ -201,7 +201,7 @@ import Database.HaskellDB.HDBRec</code></pre>
   content &lt;- table T.content
   project $ F.id    &lt;&lt; constant 123
           # F.title &lt;&lt; constant &quot;Hello, World!&quot;</code></pre>
-<p>Personally in my use, I have renamed <code>constant</code> to <code>val</code>.<a href="#fn9" class="footnote-ref" id="fnref9"><sup>9</sup></a> I just find this more convenient. I will use this henceforth.</p>
+<p>Personally in my use, I have renamed <code>constant</code> to <code>val</code>.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> I just find this more convenient. I will use this henceforth.</p>
 <pre><code>import Database.HaskellDB.Extra</code></pre>
 <h3 id="restriction">Restriction</h3>
 <p>We restrict results using the <code>restrict</code> function:</p>
@@ -283,7 +283,7 @@ FROM (SELECT id as id2,
              title as title1
       FROM content as T1) as T2</code></pre>
 <p>In fact, subqueries are created in all cases.</p>
-<p>For normal query optimizers, e.g. PostgreSQL, the subquery is lifted as to be equivalent to there being one query. I am not sure about MySQL; it may have trouble when joins are involved. Don’t expect good performance from HaskellDB if you’re using MySQL.<a href="#fn10" class="footnote-ref" id="fnref10"><sup>10</sup></a></p>
+<p>For normal query optimizers, e.g. PostgreSQL, the subquery is lifted as to be equivalent to there being one query. I am not sure about MySQL; it may have trouble when joins are involved. Don’t expect good performance from HaskellDB if you’re using MySQL.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></p>
 <p>For example, PostgreSQL sees such use of sub-query as equivalent to direct join:</p>
 <pre><code>=&gt; explain SELECT id2 as id,
            title2 as title
@@ -322,7 +322,7 @@ FROM (SELECT id as id2,
 <pre><code>field &quot;Abstract&quot; &quot;abstract&quot; &quot;abstract&quot; [t|Maybe String|]</code></pre>
 <p>This is how to encode a database text field that is nullable. When one is encoding their database schema into the Haskell type system, one finds that it really needs to be thought of properly of what types are there in the database, particularly nullability.</p>
 <p>In my day to day work, I have to work with database schemas that aren’t mine, I have to interface with them. Due to my use of HaskellDB, I have a lot of correctness questions about these schemas I’m working with to the authors, if they are available for consultation.</p>
-<p>Often it comes up, that I ask “why is this field nullable?” and the question often comes back, “I don’t know.” As the PostgreSQL documentation says, in most database designs the majority of columns should be marked not null.<a href="#fn11" class="footnote-ref" id="fnref11"><sup>11</sup></a></p>
+<p>Often it comes up, that I ask “why is this field nullable?” and the question often comes back, “I don’t know.” As the PostgreSQL documentation says, in most database designs the majority of columns should be marked not null.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
 <p>Note that in Haskell nullability is not implicit. No values can be null. But you can have choice between a value or not a value, as in <code>Maybe</code>:</p>
 <pre><code>data Maybe a = Just a | Nothing</code></pre>
 <p>And so if we use the abstract field, as mentioned, and use it as a string, it’s not a string, it’s a <code>Maybe String</code>, so we get a compile error such as:</p>
@@ -348,7 +348,7 @@ simpleRestriction = do
 <h2 id="extension">Extension</h2>
 <h3 id="pagination-and-composing-queries">Pagination and composing queries</h3>
 <p>Because the query DSL is a monad (as plenty of Haskell DSLs are), it is really nicely composable. This means it’s trivial to split up queries into discrete parts that have meaningful and generic purposes.</p>
-<p>For example, to implement pagination, which is essentially the simple problem of an offset and a count. I implemented this in <code>HaskellDB.Database.Pagination</code>.<a href="#fn12" class="footnote-ref" id="fnref12"><sup>12</sup></a></p>
+<p>For example, to implement pagination, which is essentially the simple problem of an offset and a count. I implemented this in <code>HaskellDB.Database.Pagination</code>.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a></p>
 <p>Thus the following implementation is possible. Suppose we write some functions to search the articles by title in the database, but paginated. Two things we need for this are:</p>
 <ul>
 <li>The count of total articles filtered by the search query, <code>q</code>.</li>
@@ -519,21 +519,21 @@ Error: Demo.hs:39:13:
 <p>The error actually makes sense if you understand the API well enough, but otherwise it can be very confusing and worrying. Don’t worry about it, you didn’t break something complicated, you just made a typo somewhere. It shows the offending expression; you realised you tried to use a table as a field, and you correct.</p>
 <h2 id="files">Files</h2>
 <p>The complete files for this demo including patched libraries are <a href="https://github.com/chrisdone/haskelldb-demo">here in Github flavour.</a></p>
-<section class="footnotes">
+<section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Afterwards it would seem like a good idea to get a proper comprehensive tutorial on the HaskellWiki, or much better yet, embed a tutorial in the Haddock documentation for HaskellDB. At the moment the haddock docs are literally just an API listing, with no elaborative explanation or examples. Writing in Haddock mark-up is quite a painful, boring experience. Regardless, I believe the haddock docs of a project should (most of the time) be sufficient to explain its use, linking to external papers and blog posts and whatnot is annoyingly terse and quickly becomes out of date.<a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>Embedded domain-specific language. A common notion in Haskell and Lisp languages, though implemented differently in each.<a href="#fnref2" class="footnote-back">↩</a></p></li>
-<li id="fn3"><p>See <a href="http://hackage.haskell.org/package/haskelldb">package description for HaskellDB</a>.<a href="#fnref3" class="footnote-back">↩</a></p></li>
-<li id="fn4"><p>See the <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.136.3828&amp;rep=rep1&amp;type=pdf">“HaskellDB Improved” paper.</a><a href="#fnref4" class="footnote-back">↩</a></p></li>
-<li id="fn5"><p>This is the convention I have chosen to use. It makes good sense and can be very helpful for all fields used in the project to be defined on a per-project basis, rather than per-entity, and of the same type.<a href="#fnref5" class="footnote-back">↩</a></p></li>
-<li id="fn6"><p>A macro that you can get from <a href="http://hpaste.org/53595">Database.HaskellDB.TH</a>, which I have yet to put into a library or get added to HaskellDB mainline. I don’t care to debate API decisions with the HaskellDB maintainers right now.<a href="#fnref6" class="footnote-back">↩</a></p></li>
-<li id="fn7"><p>A macro that you can get from <a href="http://hpaste.org/53595">Database.HaskellDB.TH</a>, which I have yet to put into a library or get added to HaskellDB mainline. I don’t care to debate API decisions with the HaskellDB maintainers right now.<a href="#fnref7" class="footnote-back">↩</a></p></li>
-<li id="fn8"><p>When table names conflict with field names—and eventually it happens—this is useful to have. Alternatively <code>as F</code> also makes sense, to be consistent.<a href="#fnref8" class="footnote-back">↩</a></p></li>
-<li id="fn9"><p>I have defined a few extra functions for HaskellDB in <a href="http://hpaste.org/53599">Database.HaskellDB.Extra</a>.<a href="#fnref9" class="footnote-back">↩</a></p></li>
-<li id="fn10"><p><a href="http://pseudofish.com/blog/2008/05/18/haskelldb-performance/">Geoff Wilson on HaskellDB performance.</a><a href="#fnref10" class="footnote-back">↩</a></p></li>
-<li id="fn11"><p><a href="http://www.postgresql.org/docs/8.3/static/ddl-constraints.html">PostgreSQL manual on constraints.</a><a href="#fnref11" class="footnote-back">↩</a></p></li>
-<li id="fn12"><p><a href="http://hpaste.org/53619">Another simple module</a> and <a href="http://hpaste.org/53607">another</a> that would be cool to put in a package, but for now remains in my utility box.<a href="#fnref12" class="footnote-back">↩</a></p></li>
+<li id="fn1" role="doc-endnote"><p>Afterwards it would seem like a good idea to get a proper comprehensive tutorial on the HaskellWiki, or much better yet, embed a tutorial in the Haddock documentation for HaskellDB. At the moment the haddock docs are literally just an API listing, with no elaborative explanation or examples. Writing in Haddock mark-up is quite a painful, boring experience. Regardless, I believe the haddock docs of a project should (most of the time) be sufficient to explain its use, linking to external papers and blog posts and whatnot is annoyingly terse and quickly becomes out of date.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Embedded domain-specific language. A common notion in Haskell and Lisp languages, though implemented differently in each.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>See <a href="http://hackage.haskell.org/package/haskelldb">package description for HaskellDB</a>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>See the <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.136.3828&amp;rep=rep1&amp;type=pdf">“HaskellDB Improved” paper.</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5" role="doc-endnote"><p>This is the convention I have chosen to use. It makes good sense and can be very helpful for all fields used in the project to be defined on a per-project basis, rather than per-entity, and of the same type.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6" role="doc-endnote"><p>A macro that you can get from <a href="http://hpaste.org/53595">Database.HaskellDB.TH</a>, which I have yet to put into a library or get added to HaskellDB mainline. I don’t care to debate API decisions with the HaskellDB maintainers right now.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7" role="doc-endnote"><p>A macro that you can get from <a href="http://hpaste.org/53595">Database.HaskellDB.TH</a>, which I have yet to put into a library or get added to HaskellDB mainline. I don’t care to debate API decisions with the HaskellDB maintainers right now.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8" role="doc-endnote"><p>When table names conflict with field names—and eventually it happens—this is useful to have. Alternatively <code>as F</code> also makes sense, to be consistent.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9" role="doc-endnote"><p>I have defined a few extra functions for HaskellDB in <a href="http://hpaste.org/53599">Database.HaskellDB.Extra</a>.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10" role="doc-endnote"><p><a href="http://pseudofish.com/blog/2008/05/18/haskelldb-performance/">Geoff Wilson on HaskellDB performance.</a><a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11" role="doc-endnote"><p><a href="http://www.postgresql.org/docs/8.3/static/ddl-constraints.html">PostgreSQL manual on constraints.</a><a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn12" role="doc-endnote"><p><a href="http://hpaste.org/53619">Another simple module</a> and <a href="http://hpaste.org/53607">another</a> that would be cool to put in a package, but for now remains in my utility box.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

@@ -103,7 +103,7 @@
 <li>How well general tooling works with it: do diff and things like that work well?</li>
 <li>How easily you can absorb the structure: do you have to spend time hunting around for the start and end of syntactical nodes? Can’t see the tree for the forest?</li>
 <li>How quickly you can write it: can you just write code or do you have to spend time thinking about how it’s going to be laid out before writing, or editing the layout afterwards?</li>
-<li>How aesthetically offended you are<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>: does the code you’re looking at assault your sense of beauty?</li>
+<li>How aesthetically offended you are<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>: does the code you’re looking at assault your sense of beauty?</li>
 </ul>
 <p>Code style is important! Let’s have a code style discussion. I propose to solve it with tooling.</p>
 <h2 id="is-this-really-an-issue-though">Is this really an issue, though?</h2>
@@ -142,11 +142,11 @@
 </ul>
 <h2 id="everyone-has-their-own-style">Everyone has their own style</h2>
 <p>So then let’s make a tool with a select number of styles, you might say. The problem is that people don’t even use the standards that exist out there. They used slightly varying versions. Ask any Haskeller what style they use, and they will say “mostly like X, but with some differences.”</p>
-<p>For example <a href="http://www.quora.com/What-are-some-good-style-guides-for-writing-Haskell-code">What are some good style guides for writing Haskell code?</a><a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<p>For example <a href="http://www.quora.com/What-are-some-good-style-guides-for-writing-Haskell-code">What are some good style guides for writing Haskell code?</a><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 <blockquote>
 <p>I use a very similar style, with a few modifications. […] Perhaps I should write out my own style guide at some point, especially as I’ve become pretty set in my style lately.</p>
 </blockquote>
-<p>And <a href="http://robertmassaioli.wordpress.com/2011/02/19/good-haskell-coding-style/">Good Haskell Coding Style</a><a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>:</p>
+<p>And <a href="http://robertmassaioli.wordpress.com/2011/02/19/good-haskell-coding-style/">Good Haskell Coding Style</a><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>:</p>
 <blockquote>
 <p>My Personal Pet Peeves</p>
 <p>For the most part the style guides that I have added above (and the tools provided) mirror my own style guide (or perhaps my guide mirrors them). However, there is one item of style that particularly annoys me on a regular basis. […]</p>
@@ -159,147 +159,147 @@
 <pre><code>$ hindent
 hindent: arguments: --style [fundamental|chris-done|johan-tibell]</code></pre>
 <p>hindent has the concept of styles built in. There is <a href="http://chrisdone.github.io/hindent/HIndent-Types.html#t:Style">a type</a> for it:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Style</span> <span class="fu">=</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">  forall s<span class="fu">.</span> <span class="dt">Style</span> {<span class="ot">styleName ::</span> <span class="fu">!</span><span class="dt">Text</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">                  ,<span class="ot">styleAuthor ::</span> <span class="fu">!</span><span class="dt">Text</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">                  ,<span class="ot">styleDescription ::</span> <span class="fu">!</span><span class="dt">Text</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">                  ,<span class="ot">styleInitialState ::</span> <span class="fu">!</span>s</a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">                  ,<span class="ot">styleExtenders ::</span> <span class="fu">!</span>[<span class="dt">Extender</span> s]</a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">                  ,<span class="ot">styleDefConfig ::</span> <span class="fu">!</span><span class="dt">Config</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">                  }</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Style</span> <span class="ot">=</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>  <span class="kw">forall</span> s<span class="op">.</span> <span class="dt">Style</span> {<span class="ot">styleName ::</span> <span class="op">!</span><span class="dt">Text</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>                  ,<span class="ot">styleAuthor ::</span> <span class="op">!</span><span class="dt">Text</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>                  ,<span class="ot">styleDescription ::</span> <span class="op">!</span><span class="dt">Text</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>                  ,<span class="ot">styleInitialState ::</span> <span class="op">!</span>s</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>                  ,<span class="ot">styleExtenders ::</span> <span class="op">!</span>[<span class="dt">Extender</span> s]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>                  ,<span class="ot">styleDefConfig ::</span> <span class="op">!</span><span class="dt">Config</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>                  }</span></code></pre></div>
 <p>It contains authorship metadata. It holds an initial state which can be used during printing. Most importantly, it has a list of extenders. Means to extend the printer and change its behaviour on a node-type-specific basis.</p>
 <p>Take a normal pretty printing approach. It’s usually something like:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">class</span> <span class="dt">Pretty</span> a <span class="kw">where</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="ot">  pretty ::</span> a <span class="ot">-&gt;</span> <span class="dt">String</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">class</span> <span class="dt">Pretty</span> a <span class="kw">where</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="ot">  pretty ::</span> a <span class="ot">-&gt;</span> <span class="dt">String</span></span></code></pre></div>
 <p>Then for all the types in <a href="http://hackage.haskell.org/package/haskell-src-exts-1.15.0.1/docs/Language-Haskell-Exts-Annotated-Syntax.html">the AST</a> we implement an instance of <code>Pretty</code>.</p>
 <p>The limitation here is that we can’t, as a user of the library, decide to print one particular node type differently.</p>
 <p>Instead, here’s a new class:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">class</span> (<span class="dt">Annotated</span> ast,<span class="dt">Typeable</span> ast) <span class="ot">=&gt;</span> <span class="dt">Pretty</span> ast <span class="kw">where</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="ot">  prettyInternal ::</span> ast <span class="dt">NodeInfo</span> <span class="ot">-&gt;</span> <span class="dt">Printer</span> ()</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">class</span> (<span class="dt">Annotated</span> ast,<span class="dt">Typeable</span> ast) <span class="ot">=&gt;</span> <span class="dt">Pretty</span> ast <span class="kw">where</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="ot">  prettyInternal ::</span> ast <span class="dt">NodeInfo</span> <span class="ot">-&gt;</span> <span class="dt">Printer</span> ()</span></code></pre></div>
 <p>(It runs in a <code>Printer</code> type to store some state about the current column and indentation level, things like that.)</p>
 <p>Now, we implement the <code>prettyInternal</code> method for all our types. But when implementing instances, we never use the <code>prettyInternal</code> method directly. Instead, we use another function, <code>pretty</code>, which can be considered the main “API” for printing, like before. Here’s the type:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="ot">pretty ::</span> (<span class="dt">Pretty</span> ast) <span class="ot">=&gt;</span> ast <span class="dt">NodeInfo</span> <span class="ot">-&gt;</span> <span class="dt">Printer</span> ()</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ot">pretty ::</span> (<span class="dt">Pretty</span> ast) <span class="ot">=&gt;</span> ast <span class="dt">NodeInfo</span> <span class="ot">-&gt;</span> <span class="dt">Printer</span> ()</span></code></pre></div>
 <p>We’ll look at its implementation in a moment. Here is an example instance of <code>Pretty</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Pretty</span> <span class="dt">ClassDecl</span> <span class="kw">where</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">  prettyInternal x <span class="fu">=</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">    <span class="kw">case</span> x <span class="kw">of</span></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">      <span class="dt">ClsTyDef</span> _ this that <span class="ot">-&gt;</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">        <span class="kw">do</span> write <span class="st">&quot;type &quot;</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">           pretty this</a>
-<a class="sourceLine" id="cb6-7" data-line-number="7">           write <span class="st">&quot; = &quot;</span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8">           pretty that</a>
-<a class="sourceLine" id="cb6-9" data-line-number="9">      …</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Pretty</span> <span class="dt">ClassDecl</span> <span class="kw">where</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>  prettyInternal x <span class="ot">=</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>    <span class="kw">case</span> x <span class="kw">of</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>      <span class="dt">ClsTyDef</span> _ this that <span class="ot">-&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>        <span class="kw">do</span> write <span class="st">&quot;type &quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a>           pretty this</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>           write <span class="st">&quot; = &quot;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a>           pretty that</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>      …</span></code></pre></div>
 <p>See how <code>pretty this</code> and <code>pretty that</code> are used for recursing instead of <code>prettyInternal</code>? This approach is used for <a href="http://chrisdone.github.io/hindent/HIndent-Pretty.html#g:1">all instances</a>.</p>
 <p>Now let’s see what that affords us:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="ot">pretty ::</span> (<span class="dt">Pretty</span> ast) <span class="ot">=&gt;</span> ast <span class="dt">NodeInfo</span> <span class="ot">-&gt;</span> <span class="dt">Printer</span> ()</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">pretty a <span class="fu">=</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="kw">do</span> st <span class="ot">&lt;-</span> get</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">     <span class="kw">case</span> st <span class="kw">of</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">       <span class="dt">PrintState</span>{psExtenders <span class="fu">=</span> es,psUserState <span class="fu">=</span> s} <span class="ot">-&gt;</span></a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">         <span class="kw">do</span> <span class="kw">case</span> listToMaybe (mapMaybe (makePrinter s) es) <span class="kw">of</span></a>
-<a class="sourceLine" id="cb7-7" data-line-number="7">              <span class="dt">Just</span> m <span class="ot">-&gt;</span> m</a>
-<a class="sourceLine" id="cb7-8" data-line-number="8">              <span class="dt">Nothing</span> <span class="ot">-&gt;</span> prettyNoExt a</a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">            printComments a</a>
-<a class="sourceLine" id="cb7-10" data-line-number="10">  <span class="kw">where</span> makePrinter s (<span class="dt">Extender</span> f) <span class="fu">=</span></a>
-<a class="sourceLine" id="cb7-11" data-line-number="11">          <span class="kw">case</span> cast a <span class="kw">of</span></a>
-<a class="sourceLine" id="cb7-12" data-line-number="12">            <span class="dt">Just</span> v <span class="ot">-&gt;</span> <span class="dt">Just</span> (f s v)</a>
-<a class="sourceLine" id="cb7-13" data-line-number="13">            <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span></a>
-<a class="sourceLine" id="cb7-14" data-line-number="14">        makePrinter s (<span class="dt">CatchAll</span> f) <span class="fu">=</span> (f s a)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="ot">pretty ::</span> (<span class="dt">Pretty</span> ast) <span class="ot">=&gt;</span> ast <span class="dt">NodeInfo</span> <span class="ot">-&gt;</span> <span class="dt">Printer</span> ()</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>pretty a <span class="ot">=</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>  <span class="kw">do</span> st <span class="ot">&lt;-</span> get</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>     <span class="kw">case</span> st <span class="kw">of</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>       <span class="dt">PrintState</span>{psExtenders <span class="ot">=</span> es,psUserState <span class="ot">=</span> s} <span class="ot">-&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>         <span class="kw">do</span> <span class="kw">case</span> listToMaybe (mapMaybe (makePrinter s) es) <span class="kw">of</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>              <span class="dt">Just</span> m <span class="ot">-&gt;</span> m</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a>              <span class="dt">Nothing</span> <span class="ot">-&gt;</span> prettyNoExt a</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a>            printComments a</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a>  <span class="kw">where</span> makePrinter s (<span class="dt">Extender</span> f) <span class="ot">=</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a>          <span class="kw">case</span> cast a <span class="kw">of</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true"></a>            <span class="dt">Just</span> v <span class="ot">-&gt;</span> <span class="dt">Just</span> (f s v)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true"></a>            <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="dt">Nothing</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true"></a>        makePrinter s (<span class="dt">CatchAll</span> f) <span class="ot">=</span> (f s a)</span></code></pre></div>
 <p>In this function, we’re grabbing our (mentioned earlier) list of <code>[Extender s]</code> values from <code>psExtenders</code> and then looking up to see if any of the types match. To clarify, here is the <code>Extender</code> type:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">data</span> <span class="dt">Extender</span> s <span class="kw">where</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="dt">Extender</span><span class="ot"> ::</span> forall s a<span class="fu">.</span> (<span class="dt">Typeable</span> a) <span class="ot">=&gt;</span> (s <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Printer</span> ())</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">           <span class="ot">-&gt;</span> <span class="dt">Extender</span> s</a>
-<a class="sourceLine" id="cb8-4" data-line-number="4">  <span class="dt">CatchAll</span><span class="ot"> ::</span> forall s<span class="fu">.</span> (forall a<span class="fu">.</span> <span class="dt">Typeable</span> a <span class="ot">=&gt;</span> s <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Printer</span> ()))</a>
-<a class="sourceLine" id="cb8-5" data-line-number="5">           <span class="ot">-&gt;</span> <span class="dt">Extender</span> s</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Extender</span> s <span class="kw">where</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>  <span class="dt">Extender</span><span class="ot"> ::</span> <span class="kw">forall</span> s a<span class="op">.</span> (<span class="dt">Typeable</span> a) <span class="ot">=&gt;</span> (s <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Printer</span> ())</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a>           <span class="ot">-&gt;</span> <span class="dt">Extender</span> s</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a>  <span class="dt">CatchAll</span><span class="ot"> ::</span> <span class="kw">forall</span> s<span class="op">.</span> (<span class="kw">forall</span> a<span class="op">.</span> <span class="dt">Typeable</span> a <span class="ot">=&gt;</span> s <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Printer</span> ()))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a>           <span class="ot">-&gt;</span> <span class="dt">Extender</span> s</span></code></pre></div>
 <p>Both constructors are rank-n. Both accept the current state as an argument and the current node. The <code>Extender</code> constructor is Prismesque. It’s existential, and lets you say “I want things of this type”. The <code>CatchAll</code> will just accept anything.</p>
 <p>All that adds up to me being able to do something like this. Here’s a demo style:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1">demo <span class="fu">=</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">  <span class="dt">Style</span> {styleName <span class="fu">=</span> <span class="st">&quot;demo&quot;</span></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">        ,styleAuthor <span class="fu">=</span> <span class="st">&quot;Chris Done&quot;</span></a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">        ,styleDescription <span class="fu">=</span> <span class="st">&quot;Demo for hindent.&quot;</span></a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">        ,styleInitialState <span class="fu">=</span> ()</a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">        ,styleExtenders <span class="fu">=</span></a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">           [<span class="dt">Extender</span> (\_ x <span class="ot">-&gt;</span></a>
-<a class="sourceLine" id="cb9-8" data-line-number="8">                        <span class="kw">case</span> x <span class="kw">of</span></a>
-<a class="sourceLine" id="cb9-9" data-line-number="9">                          <span class="dt">InfixApp</span> _ a op b <span class="ot">-&gt;</span></a>
-<a class="sourceLine" id="cb9-10" data-line-number="10">                            <span class="kw">do</span> pretty a</a>
-<a class="sourceLine" id="cb9-11" data-line-number="11">                               pretty op</a>
-<a class="sourceLine" id="cb9-12" data-line-number="12">                               pretty b</a>
-<a class="sourceLine" id="cb9-13" data-line-number="13">                          _ <span class="ot">-&gt;</span> prettyNoExt x)]</a>
-<a class="sourceLine" id="cb9-14" data-line-number="14">        ,styleDefConfig <span class="fu">=</span> def}</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>demo <span class="ot">=</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>  <span class="dt">Style</span> {styleName <span class="ot">=</span> <span class="st">&quot;demo&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>        ,styleAuthor <span class="ot">=</span> <span class="st">&quot;Chris Done&quot;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>        ,styleDescription <span class="ot">=</span> <span class="st">&quot;Demo for hindent.&quot;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a>        ,styleInitialState <span class="ot">=</span> ()</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a>        ,styleExtenders <span class="ot">=</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a>           [<span class="dt">Extender</span> (\_ x <span class="ot">-&gt;</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a>                        <span class="kw">case</span> x <span class="kw">of</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a>                          <span class="dt">InfixApp</span> _ a op b <span class="ot">-&gt;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true"></a>                            <span class="kw">do</span> pretty a</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true"></a>                               pretty op</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true"></a>                               pretty b</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true"></a>                          _ <span class="ot">-&gt;</span> prettyNoExt x)]</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true"></a>        ,styleDefConfig <span class="ot">=</span> def}</span></code></pre></div>
 <p>(The <code>prettyNoExt</code> is a publicly exposed version of the (private) method <code>prettyInternal</code>.)</p>
 <p>Now let’s test the <code>fundamental</code> style versus our <code>demo</code> style:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1">λ<span class="fu">&gt;</span> test fundamental <span class="st">&quot;x = foo (a * b) + what&quot;</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">x <span class="fu">=</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">  foo</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">    (a <span class="fu">*</span> b) <span class="fu">+</span> what</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">λ<span class="fu">&gt;</span> test demo <span class="st">&quot;x = foo (a * b) + what&quot;</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">x <span class="fu">=</span></a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">  foo</a>
-<a class="sourceLine" id="cb10-8" data-line-number="8">    (a<span class="fu">*</span>b)<span class="fu">+</span>what</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> test fundamental <span class="st">&quot;x = foo (a * b) + what&quot;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>x <span class="ot">=</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>  foo</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>    (a <span class="op">*</span> b) <span class="op">+</span> what</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>λ<span class="op">&gt;</span> test demo <span class="st">&quot;x = foo (a * b) + what&quot;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>x <span class="ot">=</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a>  foo</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a>    (a<span class="op">*</span>b)<span class="op">+</span>what</span></code></pre></div>
 <p>Viola! We’ve configured how to pretty print infix operators in a few lines of code.</p>
 <p>In practice, there are three styles. Here’s a larger example:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1">foo <span class="fu">=</span> <span class="kw">do</span> print <span class="st">&quot;OK, go&quot;</span>; foo (foo bar) <span class="co">-- Yep.</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">          (<span class="kw">if</span> bar <span class="kw">then</span> bob <span class="kw">else</span> pif) (<span class="kw">case</span> mu <span class="co">{- cool -}</span> zot <span class="kw">of</span></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">            <span class="dt">Just</span> x <span class="ot">-&gt;</span> return ();</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4">            <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span> putStrLn <span class="st">&quot;yay&quot;</span>; return (<span class="dv">1</span>,<span class="dv">2</span>)) bill <span class="co">-- Etc</span></a>
-<a class="sourceLine" id="cb11-5" data-line-number="5">  <span class="kw">where</span> potato <span class="dt">Cakes</span> {} <span class="fu">=</span> <span class="dv">2</span> <span class="fu">*</span> x foo <span class="fu">*</span> bar <span class="fu">/</span> <span class="dv">5</span></a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>foo <span class="ot">=</span> <span class="kw">do</span> <span class="fu">print</span> <span class="st">&quot;OK, go&quot;</span>; foo (foo bar) <span class="co">-- Yep.</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>          (<span class="kw">if</span> bar <span class="kw">then</span> bob <span class="kw">else</span> pif) (<span class="kw">case</span> mu <span class="co">{- cool -}</span> zot <span class="kw">of</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>            <span class="dt">Just</span> x <span class="ot">-&gt;</span> <span class="fu">return</span> ();</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>            <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span> <span class="fu">putStrLn</span> <span class="st">&quot;yay&quot;</span>; <span class="fu">return</span> (<span class="dv">1</span>,<span class="dv">2</span>)) bill <span class="co">-- Etc</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a>  <span class="kw">where</span> potato <span class="dt">Cakes</span> {} <span class="ot">=</span> <span class="dv">2</span> <span class="op">*</span> x foo <span class="op">*</span> bar <span class="op">/</span> <span class="dv">5</span></span></code></pre></div>
 <p>Fundamental style:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb12-1" data-line-number="1">foo <span class="fu">=</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2">  <span class="kw">do</span> print</a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">       <span class="st">&quot;OK, go&quot;</span></a>
-<a class="sourceLine" id="cb12-4" data-line-number="4">     foo</a>
-<a class="sourceLine" id="cb12-5" data-line-number="5">       (foo</a>
-<a class="sourceLine" id="cb12-6" data-line-number="6">          bar)</a>
-<a class="sourceLine" id="cb12-7" data-line-number="7">       (<span class="kw">if</span> bar</a>
-<a class="sourceLine" id="cb12-8" data-line-number="8">           <span class="kw">then</span> bob</a>
-<a class="sourceLine" id="cb12-9" data-line-number="9">           <span class="kw">else</span> pif)</a>
-<a class="sourceLine" id="cb12-10" data-line-number="10">       (<span class="kw">case</span> mu <span class="co">{- cool -}</span></a>
-<a class="sourceLine" id="cb12-11" data-line-number="11">               zot <span class="kw">of</span></a>
-<a class="sourceLine" id="cb12-12" data-line-number="12">          <span class="dt">Just</span> x <span class="ot">-&gt;</span></a>
-<a class="sourceLine" id="cb12-13" data-line-number="13">            return</a>
-<a class="sourceLine" id="cb12-14" data-line-number="14">              ()</a>
-<a class="sourceLine" id="cb12-15" data-line-number="15">          <span class="dt">Nothing</span> <span class="ot">-&gt;</span></a>
-<a class="sourceLine" id="cb12-16" data-line-number="16">            <span class="kw">do</span> putStrLn</a>
-<a class="sourceLine" id="cb12-17" data-line-number="17">                 <span class="st">&quot;yay&quot;</span></a>
-<a class="sourceLine" id="cb12-18" data-line-number="18">               return</a>
-<a class="sourceLine" id="cb12-19" data-line-number="19">                 (<span class="dv">1</span>,<span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb12-20" data-line-number="20">       bill <span class="co">-- Etc</span></a>
-<a class="sourceLine" id="cb12-21" data-line-number="21">  <span class="kw">where</span> potato <span class="dt">Cakes</span>{} <span class="fu">=</span></a>
-<a class="sourceLine" id="cb12-22" data-line-number="22">          <span class="dv">2</span> <span class="fu">*</span> x</a>
-<a class="sourceLine" id="cb12-23" data-line-number="23">                foo <span class="fu">*</span> bar <span class="fu">/</span> <span class="dv">5</span></a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>foo <span class="ot">=</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>  <span class="kw">do</span> <span class="fu">print</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>       <span class="st">&quot;OK, go&quot;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a>     foo</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>       (foo</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>          bar)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a>       (<span class="kw">if</span> bar</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>           <span class="kw">then</span> bob</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a>           <span class="kw">else</span> pif)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true"></a>       (<span class="kw">case</span> mu <span class="co">{- cool -}</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true"></a>               zot <span class="kw">of</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true"></a>          <span class="dt">Just</span> x <span class="ot">-&gt;</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true"></a>            <span class="fu">return</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true"></a>              ()</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true"></a>          <span class="dt">Nothing</span> <span class="ot">-&gt;</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true"></a>            <span class="kw">do</span> <span class="fu">putStrLn</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true"></a>                 <span class="st">&quot;yay&quot;</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true"></a>               <span class="fu">return</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true"></a>                 (<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true"></a>       bill <span class="co">-- Etc</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true"></a>  <span class="kw">where</span> potato <span class="dt">Cakes</span>{} <span class="ot">=</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true"></a>          <span class="dv">2</span> <span class="op">*</span> x</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true"></a>                foo <span class="op">*</span> bar <span class="op">/</span> <span class="dv">5</span></span></code></pre></div>
 <p>Johan Tibell’s style (which I’ve only started implementing, there’re some things I need to clarify):</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" data-line-number="1">foo <span class="fu">=</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">    print <span class="st">&quot;OK, go&quot;</span></a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">    foo</a>
-<a class="sourceLine" id="cb13-4" data-line-number="4">        (foo bar)</a>
-<a class="sourceLine" id="cb13-5" data-line-number="5">        (<span class="kw">if</span> bar</a>
-<a class="sourceLine" id="cb13-6" data-line-number="6">             <span class="kw">then</span> bob</a>
-<a class="sourceLine" id="cb13-7" data-line-number="7">             <span class="kw">else</span> pif)</a>
-<a class="sourceLine" id="cb13-8" data-line-number="8">        (<span class="kw">case</span> mu <span class="co">{- cool -}</span> zot <span class="kw">of</span></a>
-<a class="sourceLine" id="cb13-9" data-line-number="9">             <span class="dt">Just</span> x <span class="ot">-&gt;</span></a>
-<a class="sourceLine" id="cb13-10" data-line-number="10">                 return ()</a>
-<a class="sourceLine" id="cb13-11" data-line-number="11">             <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb13-12" data-line-number="12">                 putStrLn <span class="st">&quot;yay&quot;</span></a>
-<a class="sourceLine" id="cb13-13" data-line-number="13">                 return (<span class="dv">1</span>, <span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb13-14" data-line-number="14">        bill <span class="co">-- Etc</span></a>
-<a class="sourceLine" id="cb13-15" data-line-number="15">  <span class="kw">where</span></a>
-<a class="sourceLine" id="cb13-16" data-line-number="16">    potato <span class="dt">Cakes</span>{} <span class="fu">=</span></a>
-<a class="sourceLine" id="cb13-17" data-line-number="17">        <span class="dv">2</span> <span class="fu">*</span> x foo <span class="fu">*</span> bar <span class="fu">/</span> <span class="dv">5</span></a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>foo <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>    <span class="fu">print</span> <span class="st">&quot;OK, go&quot;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>    foo</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>        (foo bar)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>        (<span class="kw">if</span> bar</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>             <span class="kw">then</span> bob</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a>             <span class="kw">else</span> pif)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>        (<span class="kw">case</span> mu <span class="co">{- cool -}</span> zot <span class="kw">of</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a>             <span class="dt">Just</span> x <span class="ot">-&gt;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true"></a>                 <span class="fu">return</span> ()</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true"></a>             <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true"></a>                 <span class="fu">putStrLn</span> <span class="st">&quot;yay&quot;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true"></a>                 <span class="fu">return</span> (<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true"></a>        bill <span class="co">-- Etc</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true"></a>  <span class="kw">where</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true"></a>    potato <span class="dt">Cakes</span>{} <span class="ot">=</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true"></a>        <span class="dv">2</span> <span class="op">*</span> x foo <span class="op">*</span> bar <span class="op">/</span> <span class="dv">5</span></span></code></pre></div>
 <p>My style (pretty much complete):</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb14-1" data-line-number="1">foo <span class="fu">=</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">  <span class="kw">do</span> print <span class="st">&quot;OK, go&quot;</span></a>
-<a class="sourceLine" id="cb14-3" data-line-number="3">     foo (foo bar)</a>
-<a class="sourceLine" id="cb14-4" data-line-number="4">         (<span class="kw">if</span> bar</a>
-<a class="sourceLine" id="cb14-5" data-line-number="5">             <span class="kw">then</span> bob</a>
-<a class="sourceLine" id="cb14-6" data-line-number="6">             <span class="kw">else</span> pif)</a>
-<a class="sourceLine" id="cb14-7" data-line-number="7">         (<span class="kw">case</span> mu <span class="co">{- cool -}</span> zot <span class="kw">of</span></a>
-<a class="sourceLine" id="cb14-8" data-line-number="8">            <span class="dt">Just</span> x <span class="ot">-&gt;</span> return ()</a>
-<a class="sourceLine" id="cb14-9" data-line-number="9">            <span class="dt">Nothing</span> <span class="ot">-&gt;</span></a>
-<a class="sourceLine" id="cb14-10" data-line-number="10">              <span class="kw">do</span> putStrLn <span class="st">&quot;yay&quot;</span></a>
-<a class="sourceLine" id="cb14-11" data-line-number="11">                 return (<span class="dv">1</span>,<span class="dv">2</span>))</a>
-<a class="sourceLine" id="cb14-12" data-line-number="12">         bill <span class="co">-- Etc</span></a>
-<a class="sourceLine" id="cb14-13" data-line-number="13">  <span class="kw">where</span> potato <span class="dt">Cakes</span>{} <span class="fu">=</span> <span class="dv">2</span> <span class="fu">*</span> x foo <span class="fu">*</span> bar <span class="fu">/</span> <span class="dv">5</span></a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>foo <span class="ot">=</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>  <span class="kw">do</span> <span class="fu">print</span> <span class="st">&quot;OK, go&quot;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>     foo (foo bar)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a>         (<span class="kw">if</span> bar</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>             <span class="kw">then</span> bob</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a>             <span class="kw">else</span> pif)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a>         (<span class="kw">case</span> mu <span class="co">{- cool -}</span> zot <span class="kw">of</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a>            <span class="dt">Just</span> x <span class="ot">-&gt;</span> <span class="fu">return</span> ()</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a>            <span class="dt">Nothing</span> <span class="ot">-&gt;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true"></a>              <span class="kw">do</span> <span class="fu">putStrLn</span> <span class="st">&quot;yay&quot;</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true"></a>                 <span class="fu">return</span> (<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true"></a>         bill <span class="co">-- Etc</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true"></a>  <span class="kw">where</span> potato <span class="dt">Cakes</span>{} <span class="ot">=</span> <span class="dv">2</span> <span class="op">*</span> x foo <span class="op">*</span> bar <span class="op">/</span> <span class="dv">5</span></span></code></pre></div>
 <p>The styles are part of the <a href="http://chrisdone.github.io/hindent/">module hierarchy of the package</a>.</p>
 <h2 id="write-your-own-style">Write your own style!</h2>
 <p>I welcome anyone to write their own style. All styles are based upon the fundamental style, which should never change, by extending it. You can base yours off of another style, or start from scratch. While you can keep your style locally, like your XMonad configuration, it’s encouraged to contribute your style as a module.</p>
@@ -319,21 +319,21 @@ hindent: arguments: --style [fundamental|chris-done|johan-tibell]</code></pre>
 <h2 id="remaining-ideas">Remaining ideas</h2>
 <p>Currently you can only reformat a declaration. I don’t yet trust (any) Haskell printer with my whole file. I invoke it on a per-declaration basis and I see the result. That’s good for me at the moment. But in the future I might extend it to support whole modules.</p>
 <p>Implement some operator-specific layouts. There are some operators that can really only be laid out in a certain way. Control.Applicative operators spring to mind:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="dt">Foo</span> <span class="fu">&lt;$&gt;</span> foo</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2">    <span class="fu">&lt;*&gt;</span> bar</a>
-<a class="sourceLine" id="cb15-3" data-line-number="3">    <span class="fu">&lt;*&gt;</span> mu</a></code></pre></div>
-<p>This can easily be handled as part of a style. Other considerations might be strings of lens operators. I’ve noticed that people tend not to put spaces around them, like:<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" data-line-number="1">foo<span class="fu">^.</span>bar<span class="fu">.^</span>mu<span class="fu">.~</span>blah</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="dt">Foo</span> <span class="op">&lt;$&gt;</span> foo</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>    <span class="op">&lt;*&gt;</span> bar</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>    <span class="op">&lt;*&gt;</span> mu</span></code></pre></div>
+<p>This can easily be handled as part of a style. Other considerations might be strings of lens operators. I’ve noticed that people tend not to put spaces around them, like:<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>foo<span class="op">^.</span>bar<span class="op">.^</span>mu<span class="op">.~</span>blah</span></code></pre></div>
 <p>There’s also alignment, which is another possibility and easily implemented. The challenge will be deciding when alignment will look good versus making the code too wide and whitespacey. In my own style I personally haven’t implemented any alignment as it’s not that important to me, but I might one day.</p>
 <h2 id="summary">Summary</h2>
 <p>Hopefully I’ve motivated the case that style is important, that formalizing style is important, and that automating it is practical and something we should solve and then move on, redirect our energy that was wasted on manually laying things out and debating.</p>
-<section class="footnotes">
+<section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Granted, this isn’t a technical consideration. But it’s a real one.<a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>Both of these are referring to conventions other than simple layout, but I don’t think that detracts the point.<a href="#fnref2" class="footnote-back">↩</a></p></li>
-<li id="fn3"><p>Both of these are referring to conventions other than simple layout, but I don’t think that detracts the point.<a href="#fnref3" class="footnote-back">↩</a></p></li>
-<li id="fn4"><p>I don’t know lens’s operators so that might not be real code, but the point is that could be a style to implement.<a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn1" role="doc-endnote"><p>Granted, this isn’t a technical consideration. But it’s a real one.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Both of these are referring to conventions other than simple layout, but I don’t think that detracts the point.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>Both of these are referring to conventions other than simple layout, but I don’t think that detracts the point.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4" role="doc-endnote"><p>I don’t know lens’s operators so that might not be real code, but the point is that could be a style to implement.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

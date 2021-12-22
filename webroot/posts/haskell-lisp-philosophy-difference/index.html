@@ -103,53 +103,53 @@
 <p>Which one is better can be discussed in another post. I just want to make the simple case that there is indeed a difference in philosophy and practice. Having written my fair share of non-trivial Emacs Lisp (and a small share of Common Lisp; I’ve maintained Common Lisp systems) and my fair share of non-trivial Haskell I think I’m in a position to judge.</p>
 <p>Full disclosure: We’ll just look at some trivial examples anyone can understand, with the (unproven but asserted) implication that these examples are representative of the general way software is written in these languages.</p>
 <p>An example which should be readily familiar to any programmer of any background is working on lists. For example, CL has the <code>remove-if-not</code> procedure. Its documentation signature is like this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><a class="sourceLine" id="cb1-1" data-line-number="1">(REMOVE-IF-NOT predicate seq <span class="bu">:key</span> <span class="bu">:count</span> <span class="bu">:start</span> <span class="bu">:end</span> <span class="bu">:from-end</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>(REMOVE-IF-NOT predicate seq <span class="bu">:key</span> <span class="bu">:count</span> <span class="bu">:start</span> <span class="bu">:end</span> <span class="bu">:from-end</span>)</span></code></pre></div>
 <p>It packs a number of ideas into one procedure.</p>
 <p>By comparison, Haskell has the <code>filter</code> function:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1">filter<span class="ot"> ::</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="fu">filter</span><span class="ot"> ::</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</span></code></pre></div>
 <p>Given a problem statement “take all elements from the list–except the first three–that satisfy predicate <code>p</code>, and take only the first five of those”, in Common Lisp you’d express it quite concisely as this:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><a class="sourceLine" id="cb3-1" data-line-number="1">(<span class="kw">remove-if-not</span> #'p xs <span class="bu">:count</span> <span class="dv">5</span> <span class="bu">:start</span> <span class="dv">3</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>(<span class="kw">remove-if-not</span> #'p xs <span class="bu">:count</span> <span class="dv">5</span> <span class="bu">:start</span> <span class="dv">3</span>)</span></code></pre></div>
 <p>The same in Haskell would be expressed as this:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1">take <span class="dv">5</span> <span class="fu">.</span> filter p <span class="fu">.</span> drop <span class="dv">3</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="fu">take</span> <span class="dv">5</span> <span class="op">.</span> <span class="fu">filter</span> p <span class="op">.</span> <span class="fu">drop</span> <span class="dv">3</span></span></code></pre></div>
 <p>The difference which should be obvious whether you know Haskell or Lisp is that in the Lisp code the function does a few behaviours and accepts arguments to configure them. In the Haskell code, we use three different functions which do one task:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1">take <span class="ot">∷</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">filter <span class="ot">∷</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">drop <span class="ot">∷</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="fu">take</span> <span class="ot">∷</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="fu">filter</span> <span class="ot">∷</span> (a <span class="ot">-&gt;</span> <span class="dt">Bool</span>) <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="fu">drop</span> <span class="ot">∷</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> [a] <span class="ot">-&gt;</span> [a]</span></code></pre></div>
 <p>The <code>.</code> operator composes functions together, just like pipes in UNIX. We might express this in UNIX something like:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ex">bash-3.2</span>$ cat <span class="kw">|</span> <span class="fu">tail</span> -n <span class="st">'+4'</span> <span class="kw">|</span> <span class="fu">grep</span> -v <span class="st">'^p'</span> <span class="kw">|</span> <span class="fu">head</span> -n 5</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="ex">1</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3"><span class="ex">2</span></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4"><span class="ex">3</span></a>
-<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="ex">4</span></a>
-<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="ex">5</span></a>
-<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="ex">6</span></a>
-<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="ex">7</span></a>
-<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="ex">8</span></a>
-<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="ex">9</span></a>
-<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="ex">10</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="ex">bash-3.2</span>$ cat <span class="kw">|</span> <span class="fu">tail</span> -n <span class="st">'+4'</span> <span class="kw">|</span> <span class="fu">grep</span> -v <span class="st">'^p'</span> <span class="kw">|</span> <span class="fu">head</span> -n 5</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="ex">1</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="ex">2</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="ex">3</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="ex">4</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="ex">5</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="ex">6</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="ex">7</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a><span class="ex">8</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a><span class="ex">9</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a><span class="ex">10</span></span></code></pre></div>
 <p>Press Ctrl-d here we get:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="ex">4</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="ex">5</span></a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="ex">6</span></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="ex">7</span></a>
-<a class="sourceLine" id="cb7-5" data-line-number="5"><span class="ex">8</span></a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="ex">4</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="ex">5</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="ex">6</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="ex">7</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="ex">8</span></span></code></pre></div>
 <p>Like pipes in UNIX, the functions are clever enough to be performant when composed together–we don’t traverse the whole list and generate a new list each time, each item is generated on demand. In fact, due to <a href="http://chrisdone.com/posts/stream-composability">stream fusion</a>, the code will be compiled into one fast loop.</p>
 <p>If we want things that don’t satisfy the predicate, we just compose again with <code>not</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1">take <span class="dv">5</span> <span class="fu">.</span> filter (not <span class="fu">.</span> p) <span class="fu">.</span> drop <span class="dv">3</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="fu">take</span> <span class="dv">5</span> <span class="op">.</span> <span class="fu">filter</span> (<span class="fu">not</span> <span class="op">.</span> p) <span class="op">.</span> <span class="fu">drop</span> <span class="dv">3</span></span></code></pre></div>
 <p>In Common Lisp composition is a bit wordier because it’s rarely if ever used, so instead there is another function for that:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1">(remove<span class="fu">-</span><span class="kw">if</span> <span class="fu">#</span>'p xs <span class="fu">:</span>count <span class="dv">5</span> <span class="fu">:</span>start <span class="dv">3</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>(remove<span class="op">-</span><span class="kw">if</span> <span class="op">#</span>'p xs <span class="op">:</span>count <span class="dv">5</span> <span class="op">:</span>start <span class="dv">3</span>)</span></code></pre></div>
 <p>(Probably a more Lispy approach would’ve been to have a <code>:not</code> keyword argument to the <code>remove-if</code> function.)</p>
 <p>The most pathological example of such a kitchen sink in Lisp is the well known LOOP macro.</p>
 <p>Problem: get all elements less than 5, then just the even ones of that set.</p>
 <p>With the LOOP macro this can be expressed quite readily:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="op">&gt;</span> (<span class="kw">loop</span> for i in '(<span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span> <span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">        <span class="kw">when</span> (<span class="kw">evenp</span> i)</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">        collect i</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">        <span class="kw">when</span> (<span class="op">&gt;</span> i <span class="dv">5</span>) <span class="kw">do</span> (<span class="kw">return</span>))</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">(<span class="dv">2</span> <span class="dv">4</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="op">&gt;</span> (<span class="kw">loop</span> for i in '(<span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span> <span class="dv">4</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>        <span class="kw">when</span> (<span class="kw">evenp</span> i)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>        collect i</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>        <span class="kw">when</span> (<span class="op">&gt;</span> i <span class="dv">5</span>) <span class="kw">do</span> (<span class="kw">return</span>))</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>(<span class="dv">2</span> <span class="dv">4</span>)</span></code></pre></div>
 <p>In Haskell this is expressed with two separate functions:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1">λ<span class="fu">&gt;</span> (filter even <span class="fu">.</span> takeWhile (<span class="fu">&lt;</span> <span class="dv">5</span>)) [<span class="dv">1</span><span class="fu">..</span><span class="dv">4</span>]</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">[<span class="dv">2</span>,<span class="dv">4</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> (<span class="fu">filter</span> <span class="fu">even</span> <span class="op">.</span> <span class="fu">takeWhile</span> (<span class="op">&lt;</span> <span class="dv">5</span>)) [<span class="dv">1</span><span class="op">..</span><span class="dv">4</span>]</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>[<span class="dv">2</span>,<span class="dv">4</span>]</span></code></pre></div>
 <p>In Haskell the same applies to vector libraries and text libraries and bytes libraries, which can be fused. Fusion is chiefly an advantage of purity – you can fuse n loops together into one loop if you know that they don’t do side-effects. Such an advantage can also be applied to other pure languages like Idris or PureScript or Elm.</p>
 
 

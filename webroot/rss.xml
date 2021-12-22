@@ -7,8 +7,16 @@
         <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
         <atom:link href="https://chrisdone.com/rss.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>Sat, 10 Apr 2021 00:00:00 UT</lastBuildDate>
+        <lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>
         <item>
+    <title>My negative views on Rust</title>
+    <link>https://chrisdone.com/posts/rust</link>
+    <description><![CDATA[My negative views on Rust]]></description>
+    <pubDate>Wed, 22 Dec 2021 00:00:00 UT</pubDate>
+    <guid>https://chrisdone.com/posts/rust</guid>
+    <dc:creator>Chris Done</dc:creator>
+</item>
+<item>
     <title>The Movement Principle</title>
     <link>https://chrisdone.com/posts/the-movement-principle</link>
     <description><![CDATA[The Movement Principle]]></description>
@@ -78,14 +86,6 @@
     <description><![CDATA[Ghosts of Departed Proofs Convenience]]></description>
     <pubDate>Sat, 07 Dec 2019 00:00:00 UT</pubDate>
     <guid>https://chrisdone.com/posts/ghost-of-departed-proofs-conveniences</guid>
-    <dc:creator>Chris Done</dc:creator>
-</item>
-<item>
-    <title>Defaulting fields in a record</title>
-    <link>https://chrisdone.com/posts/defaulting-fields-in-a-record</link>
-    <description><![CDATA[Defaulting fields in a record]]></description>
-    <pubDate>Sat, 07 Dec 2019 00:00:00 UT</pubDate>
-    <guid>https://chrisdone.com/posts/defaulting-fields-in-a-record</guid>
     <dc:creator>Chris Done</dc:creator>
 </item>
 

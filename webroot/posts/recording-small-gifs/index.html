@@ -95,13 +95,13 @@
       <h1>Recording simple GIFs for demos</h1>
 
 <p>Sometimes you might like to record little GIF animations of your screen to demonstrate an Emacs feature you did (hey, some of you might…). For example, <a href="https://github.com/chrisdone/structured-haskell-mode#features">these</a>. I made a wee F9 keybinding for Emacs to run this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><a class="sourceLine" id="cb1-1" data-line-number="1">(<span class="kw">defun</span><span class="fu"> screenshot-frame </span>()</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">  <span class="st">&quot;Take a screenshot of 400x200 pixels of the Emacs frame.&quot;</span></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">  (interactive)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">  (shell-command-to-string</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">   (concat <span class="st">&quot;sleep 1; &quot;</span></a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">           <span class="st">&quot;import -window 0x3c000a3 &quot;</span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">           <span class="st">&quot;-crop 400x200+13+0 +repage /tmp/frames/`date +%s`.png&quot;</span>)))</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>(<span class="kw">defun</span><span class="fu"> screenshot-frame </span>()</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>  <span class="st">&quot;Take a screenshot of 400x200 pixels of the Emacs frame.&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>  (interactive)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>  (shell-command-to-string</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>   (concat <span class="st">&quot;sleep 1; &quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>           <span class="st">&quot;import -window 0x3c000a3 &quot;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>           <span class="st">&quot;-crop 400x200+13+0 +repage /tmp/frames/`date +%s`.png&quot;</span>)))</span></code></pre></div>
 <p>Replace the window id with the window id of your target window, which you can get with <code>xwininfo -display :0</code>.</p>
 <p>I would execute <code>screenshot-frame</code> after running a command or pressing a key (it sounds painful but it’s not, and it allows you to make mistakes). The <code>sleep</code> call is to ensure that the buffer has finished updating. I also disabled <code>blink-cursor-mode</code>. Then to preview the animation so far I would use</p>
 <pre><code>animate -delay 35 /tmp/frames/*.png</code></pre>

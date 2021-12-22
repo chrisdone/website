@@ -12,3 +12,5 @@ WORKDIR /home/chris/w
 RUN whoami && stack build --copy-bins
 
 RUN rm -rf /home/chris/w
+
+CMD /home/chris/.local/bin/site

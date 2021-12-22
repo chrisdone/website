@@ -115,7 +115,7 @@
 <p>Questions begin. This is a good start.</p>
 <blockquote>
 <ul>
-<li><strong>Huizi</strong>: So, say I am expecting a string of <code>&quot;2 3&quot;</code>, how would I convert that to a <code>[Int]</code>?</li>
+<li><strong>Huizi</strong>: So, say I am expecting a string of <code>"2 3"</code>, how would I convert that to a <code>[Int]</code>?</li>
 </ul>
 </blockquote>
 <p>A very specific, easy to investigate question is proposed. What’s the best approach to proceed? First, establish the person’s experience.</p>
@@ -291,7 +291,7 @@
 <li><strong>Socrates</strong>: Huizi, check this out:</li>
 <li><strong>Socrates</strong>: <code>:t ' '</code></li>
 <li><strong>Minerva</strong>: <code>Char</code></li>
-<li><strong>Socrates</strong>: <code>:t &quot; &quot;</code></li>
+<li><strong>Socrates</strong>: <code>:t " "</code></li>
 <li><strong>Minerva</strong>: <code>[Char]</code></li>
 </ul>
 </blockquote>
@@ -308,10 +308,10 @@
 <blockquote>
 <ul>
 <li><strong>Socrates</strong>: Huizi, it does – I think the <em>first</em> argument to <code>splitOn</code> is your problem here, right? Is this the error message you got?</li>
-<li><strong>Socrates</strong>: <code>&gt; splitOn ' ' &quot;hello world&quot;</code></li>
+<li><strong>Socrates</strong>: <code>&gt; splitOn ' ' "hello world"</code></li>
 <li><strong>Minerva</strong>: Couldn’t match expected type ‘[Char]’ with actual type ‘Char’</li>
-<li><strong>Confucius</strong>: <code>&gt; splitOn &quot; &quot; &quot;hello world&quot;</code></li>
-<li><strong>Minerva</strong>: <code>[&quot;hello&quot;,&quot;world&quot;]</code></li>
+<li><strong>Confucius</strong>: <code>&gt; splitOn " " "hello world"</code></li>
+<li><strong>Minerva</strong>: <code>["hello","world"]</code></li>
 </ul>
 </blockquote>
 <p>Here comes the epiphany!</p>
@@ -325,8 +325,8 @@
 <p>Then they try it out:</p>
 <blockquote>
 <ul>
-<li><strong>Huizi</strong>: <code>&gt; splitOn &quot;o w&quot; &quot;hello world&quot;</code></li>
-<li><strong>Minerva</strong>: <code>[&quot;hell&quot;,&quot;orld&quot;]</code></li>
+<li><strong>Huizi</strong>: <code>&gt; splitOn "o w" "hello world"</code></li>
+<li><strong>Minerva</strong>: <code>["hell","orld"]</code></li>
 </ul>
 </blockquote>
 <p>Now they describe the problem they had with full understanding:</p>

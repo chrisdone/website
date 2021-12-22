@@ -95,20 +95,20 @@
       <h1>Lucid: templating DSL for HTML</h1>
 
 <p>I’m not big on custom templating languages, for reasons I’ll write about another time. I prefer EDSLs. I preferred the <a href="http://hackage.haskell.org/package/xhtml">xhtml</a> package back when that was what everybody used. It looked like this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1">header <span class="fu">&lt;&lt;</span> thetitle <span class="fu">&lt;&lt;</span> <span class="st">&quot;Page title&quot;</span></a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">thediv noHtml <span class="fu">!</span> [theclass <span class="st">&quot;logo&quot;</span>] <span class="fu">&lt;&lt;</span> <span class="st">&quot;…&quot;</span></a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">thediv noHtml <span class="fu">!</span> [identifier <span class="st">&quot;login&quot;</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>header <span class="op">&lt;&lt;</span> thetitle <span class="op">&lt;&lt;</span> <span class="st">&quot;Page title&quot;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>thediv noHtml <span class="op">!</span> [theclass <span class="st">&quot;logo&quot;</span>] <span class="op">&lt;&lt;</span> <span class="st">&quot;…&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>thediv noHtml <span class="op">!</span> [identifier <span class="st">&quot;login&quot;</span>]</span></code></pre></div>
 <p>Pretty line-noisy to read, write and hard to edit in a reasonable manner.</p>
 <p>Later, <a href="http://hackage.haskell.org/package/blaze-html">blaze-html</a> became the new goto HTML writing library. It improved upon the XHTML package by being faster and having a convenient monad instance. It looks like this:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1">page1 <span class="fu">=</span> html <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">    head <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">        title <span class="st">&quot;Introduction page.&quot;</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">        link <span class="fu">!</span> rel <span class="st">&quot;stylesheet&quot;</span> <span class="fu">!</span> type_ <span class="st">&quot;text/css&quot;</span> <span class="fu">!</span> href <span class="st">&quot;screen.css&quot;</span></a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">    body <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb2-6" data-line-number="6">        div <span class="fu">!</span> id <span class="st">&quot;header&quot;</span> <span class="fu">$</span> <span class="st">&quot;Syntax&quot;</span></a>
-<a class="sourceLine" id="cb2-7" data-line-number="7">        p <span class="st">&quot;This is an example of BlazeMarkup syntax.&quot;</span></a>
-<a class="sourceLine" id="cb2-8" data-line-number="8">        ul <span class="fu">$</span> mapM_ (li <span class="fu">.</span> toMarkup <span class="fu">.</span> show) [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>page1 <span class="ot">=</span> html <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>    <span class="fu">head</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>        title <span class="st">&quot;Introduction page.&quot;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>        link <span class="op">!</span> rel <span class="st">&quot;stylesheet&quot;</span> <span class="op">!</span> type_ <span class="st">&quot;text/css&quot;</span> <span class="op">!</span> href <span class="st">&quot;screen.css&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>    body <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>        <span class="fu">div</span> <span class="op">!</span> <span class="fu">id</span> <span class="st">&quot;header&quot;</span> <span class="op">$</span> <span class="st">&quot;Syntax&quot;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>        p <span class="st">&quot;This is an example of BlazeMarkup syntax.&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>        ul <span class="op">$</span> <span class="fu">mapM_</span> (li <span class="op">.</span> toMarkup <span class="op">.</span> <span class="fu">show</span>) [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</span></code></pre></div>
 <p>Much easier to read, write and edit thanks to the monad instance.</p>
 <p>However, after several years of using that, I’ve come to write my own. I’ll cover the infelicities about Blaze and then discuss my alternative approach.</p>
 <p>Reading back through what I’ve written below, it could be read as a bit attacky, and some of the issues are less philosophical and more incidental. I think of it more that the work on writing HTML in a DSL is incomplete and to some degree people somewhat gave up on doing it more conveniently at some point. So I’m re-igniting that.</p>
@@ -118,10 +118,10 @@
 <p>The first problem is that Blaze exports many names which conflict with base. Examples:</p>
 <p><code>div</code>, <code>id</code>, <code>head</code>, <code>map</code></p>
 <p>The obvious problem with this is that you either have to qualify any use of those names, which means you have to qualify Blaze, and end up with something inconsistent like this:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1">H.div <span class="fu">!</span> A.id <span class="st">&quot;logo&quot;</span> <span class="fu">$</span> <span class="st">&quot;…&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>H.div <span class="op">!</span> A.id <span class="st">&quot;logo&quot;</span> <span class="op">$</span> <span class="st">&quot;…&quot;</span></span></code></pre></div>
 <p>Where <code>H</code> and <code>A</code> come from importing the element and attribute modules like this:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Text.Blaze.Html5</span>            <span class="kw">as</span> <span class="dt">H</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Text.Blaze.Html5.Attributes</span> <span class="kw">as</span> <span class="dt">A</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Text.Blaze.Html5</span>            <span class="kw">as</span> <span class="dt">H</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Text.Blaze.Html5.Attributes</span> <span class="kw">as</span> <span class="dt">A</span></span></code></pre></div>
 <p>Or you don’t import <code>Prelude</code> and only import Blaze, but then you can’t do a simple <code>map</code> without qualification.</p>
 <p>You might’ve noticed in the old <code>xhtml</code> package that <code>thediv</code> and <code>identifier</code> are used instead. The problem with using different names from the actual things they refer to is that they’re hard to learn and remember, both for regular Haskellers and newbies coming to edit your templates.</p>
 <h2 id="names-that-are-keywords">Names that are keywords</h2>
@@ -129,90 +129,90 @@
 <p>Again, the problem with this is that it is inconsistent with the other naming conventions. It’s another exception to the rule that you have to remember and makes the code look bad.</p>
 <h2 id="conflicting-attribute-and-element-names">Conflicting attribute and element names</h2>
 <p>There are also names which are used for both attributes and elements. Examples are <code>style</code> and <code>map</code>. That means you can’t write:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb5-1" data-line-number="1">H.head <span class="fu">$</span> style <span class="st">&quot;body { background: red; }&quot;</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">body <span class="fu">$</span> p <span class="fu">!</span> style <span class="st">&quot;foo&quot;</span> <span class="fu">$</span> …</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>H.head <span class="op">$</span> style <span class="st">&quot;body { background: red; }&quot;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>body <span class="op">$</span> p <span class="op">!</span> style <span class="st">&quot;foo&quot;</span> <span class="op">$</span> …</span></code></pre></div>
 <p>You end up writing:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb6-1" data-line-number="1">H.head <span class="fu">$</span> H.style <span class="st">&quot;body { background: red; }&quot;</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">body <span class="fu">$</span> p <span class="fu">!</span> A.style <span class="st">&quot;foo&quot;</span> <span class="fu">$</span> …</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>H.head <span class="op">$</span> H.style <span class="st">&quot;body { background: red; }&quot;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>body <span class="op">$</span> p <span class="op">!</span> A.style <span class="st">&quot;foo&quot;</span> <span class="op">$</span> …</span></code></pre></div>
 <h2 id="inconsistency-is-difficult-and-ugly">Inconsistency is difficult and ugly</h2>
 <p>What the above problems amount to is ending up with code like this:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb7-1" data-line-number="1">body <span class="fu">$</span> H.div <span class="fu">!</span> A.id <span class="st">&quot;logo&quot;</span> <span class="fu">!</span> class_ <span class="st">&quot;left&quot;</span> <span class="fu">!</span> hidden <span class="fu">$</span> <span class="st">&quot;Content&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>body <span class="op">$</span> H.div <span class="op">!</span> A.id <span class="st">&quot;logo&quot;</span> <span class="op">!</span> class_ <span class="st">&quot;left&quot;</span> <span class="op">!</span> hidden <span class="op">$</span> <span class="st">&quot;Content&quot;</span></span></code></pre></div>
 <p>At this point users of Blaze give up with second-guessing every markup term they write and decide it’s more consistent to qualify <em>everything</em>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb8-1" data-line-number="1">H.body <span class="fu">$</span> H.div <span class="fu">!</span> A.id <span class="st">&quot;logo&quot;</span> <span class="fu">!</span> A.class_ <span class="st">&quot;left&quot;</span> <span class="fu">!</span> A.hidden <span class="fu">$</span> <span class="st">&quot;Content&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>H.body <span class="op">$</span> H.div <span class="op">!</span> A.id <span class="st">&quot;logo&quot;</span> <span class="op">!</span> A.class_ <span class="st">&quot;left&quot;</span> <span class="op">!</span> A.hidden <span class="op">$</span> <span class="st">&quot;Content&quot;</span></span></code></pre></div>
 <p>Or, taken from some real code online:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb9-1" data-line-number="1">H.input <span class="fu">H.!</span> A.type_ <span class="st">&quot;checkbox&quot;</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">        <span class="fu">H.!</span> A.checked <span class="dt">True</span></a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">        <span class="fu">H.!</span> A.readonly <span class="st">&quot;true&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>H.input <span class="op">H.!</span> A.type_ <span class="st">&quot;checkbox&quot;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>        <span class="op">H.!</span> A.checked <span class="dt">True</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>        <span class="op">H.!</span> A.readonly <span class="st">&quot;true&quot;</span></span></code></pre></div>
 <p>This ends up being too much. Inconvenient to type, ugly to read, and one more step removed from the HTML we’re supposed to be generating.</p>
 <h2 id="the-monad-instance-isnt">The Monad instance isn’t</h2>
 <p>The monad instance was originally conceived as a handy way to write HTML nicely without having to use <code>&lt;&gt;</code> or lists of lists and other less wieldy syntax.</p>
 <p>In the end the monad ended up being defined like this:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">Monad</span> <span class="dt">MarkupM</span> <span class="kw">where</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">  return _ <span class="fu">=</span> <span class="dt">Empty</span></a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">  <span class="ot">{-# INLINE return #-}</span></a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">  (<span class="fu">&gt;&gt;</span>) <span class="fu">=</span> <span class="dt">Append</span></a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">  <span class="ot">{-# INLINE (&gt;&gt;) #-}</span></a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">  h1 <span class="fu">&gt;&gt;=</span> f <span class="fu">=</span> h1 <span class="fu">&gt;&gt;</span> f</a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">      (error <span class="st">&quot;Text.Blaze.Internal.MarkupM: invalid use of monadic bind&quot;</span>)</a>
-<a class="sourceLine" id="cb10-8" data-line-number="8">  <span class="ot">{-# INLINE (&gt;&gt;=) #-}</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Monad</span> <span class="dt">MarkupM</span> <span class="kw">where</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>  <span class="fu">return</span> _ <span class="ot">=</span> <span class="dt">Empty</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>  <span class="ot">{-# INLINE return #-}</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>  (<span class="op">&gt;&gt;</span>) <span class="ot">=</span> <span class="dt">Append</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>  <span class="ot">{-# INLINE (&gt;&gt;) #-}</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>  h1 <span class="op">&gt;&gt;=</span> f <span class="ot">=</span> h1 <span class="op">&gt;&gt;</span> f</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a>      (<span class="fu">error</span> <span class="st">&quot;Text.Blaze.Internal.MarkupM: invalid use of monadic bind&quot;</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a>  <span class="ot">{-# INLINE (&gt;&gt;=) #-}</span></span></code></pre></div>
 <p>And has been for some years. Let’s take a trivial example of why this is not good. You render some HTML and while doing so build a result to be used later:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">do</span> xs <span class="ot">&lt;-</span> foldM (\c i <span class="ot">-&gt;</span> …)</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">               mempty</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">               ys</a>
-<a class="sourceLine" id="cb11-4" data-line-number="4">   mapM_ dd xs</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">do</span> xs <span class="ot">&lt;-</span> foldM (\c i <span class="ot">-&gt;</span> …)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>               <span class="fu">mempty</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>               ys</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>   <span class="fu">mapM_</span> dd xs</span></code></pre></div>
 <p>Uh-oh:</p>
 <pre><code>*** Exception: Text.Blaze.Internal.MarkupM: invalid use of monadic bind</code></pre>
 <h2 id="the-overloaded-strings-instance-is-bad">The overloaded strings instance is bad</h2>
 <p>The previous point leads onto this next point, which is that due to this phantomesque monad type, the instance is like this:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">MarkupM</span> a) <span class="kw">where</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">    fromString <span class="fu">=</span> <span class="dt">Content</span> <span class="fu">.</span> fromString</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">    <span class="ot">{-# INLINE fromString #-}</span></a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">MarkupM</span> a) <span class="kw">where</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>    fromString <span class="ot">=</span> <span class="dt">Content</span> <span class="op">.</span> fromString</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>    <span class="ot">{-# INLINE fromString #-}</span></span></code></pre></div>
 <p>How can it make this value? It cannot. If you want to go ahead and extract that `a’, you get:</p>
 <pre><code>*** Exception: Text.Blaze.Internal.MarkupM: invalid use of monadic bind</code></pre>
 <p>Additionally, this instance is too liberal. You end up getting this warning:</p>
 <blockquote>
 <p>A do-notation statement discarded a result of type <code>GHC.Prim.Any</code></p>
-<p>Suppress this warning by saying <code>_ &lt;- &quot;Example&quot;</code> or by using the flag <code>-fno-warn-unused-do-bind</code></p>
+<p>Suppress this warning by saying <code>_ &lt;- "Example"</code> or by using the flag <code>-fno-warn-unused-do-bind</code></p>
 </blockquote>
 <p>So you end up having to write in practice (again, taken from a real Blaze codebase by one of the authors):</p>
 <pre><code>void &quot;Hello!&quot;</code></pre>
 <p>Which pretty much negates the point of using <code>IsString</code> in the first-place. Alternatively, you use <code>-fno-warn-unused-do-bind</code> in your module.</p>
 <h2 id="working-with-attributes-is-awkward">Working with attributes is awkward</h2>
 <p>The ! syntax seems pretty convenient from superficial inspection:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb16-1" data-line-number="1">link <span class="fu">!</span> rel <span class="st">&quot;stylesheet&quot;</span> <span class="fu">!</span> type_ <span class="st">&quot;text/css&quot;</span> <span class="fu">!</span> href <span class="st">&quot;screen.css&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>link <span class="op">!</span> rel <span class="st">&quot;stylesheet&quot;</span> <span class="op">!</span> type_ <span class="st">&quot;text/css&quot;</span> <span class="op">!</span> href <span class="st">&quot;screen.css&quot;</span></span></code></pre></div>
 <p>But in practice it means you always have the same combination:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb17-1" data-line-number="1">div <span class="fu">!</span> H.class_ <span class="st">&quot;logo&quot;</span> <span class="fu">$</span> <span class="st">&quot;…&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="fu">div</span> <span class="op">!</span> H.class_ <span class="st">&quot;logo&quot;</span> <span class="op">$</span> <span class="st">&quot;…&quot;</span></span></code></pre></div>
 <p>Which I find—personally speaking—a bit distasteful to read, it’s not far from what we saw in the old xhtml package:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb18-1" data-line-number="1">thediv <span class="fu">!</span> [theclass <span class="st">&quot;logo&quot;</span>] <span class="fu">&lt;&lt;</span> <span class="st">&quot;…&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a>thediv <span class="op">!</span> [theclass <span class="st">&quot;logo&quot;</span>] <span class="op">&lt;&lt;</span> <span class="st">&quot;…&quot;</span></span></code></pre></div>
 <p>Did we really save that much in the attribute department? Operators are evil.</p>
 <p>But mostly presents an editing challenge. Operators like this make it tricky to navigate, format in a regular way and do code transformations on. All Haskell code has operators, so this is a general problem. But if your DSL doesn’t actually need these operators, I consider this a smell.</p>
 <h2 id="attributes-dont-compose">Attributes don’t compose</h2>
 <p>You should be able to compose <code>with</code>. For example, let’s say you want to define a re-usable component with bootstrap:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb19-1" data-line-number="1">container inner <span class="fu">=</span> div <span class="fu">!</span> class_ <span class="st">&quot;container&quot;</span> <span class="fu">$</span> inner</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a>container inner <span class="ot">=</span> <span class="fu">div</span> <span class="op">!</span> class_ <span class="st">&quot;container&quot;</span> <span class="op">$</span> inner</span></code></pre></div>
 <p>Now you can use it to make a container. But consider now that you also want to add additional attributes to it later. You can do that with another call to with:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb20-1" data-line-number="1">container <span class="fu">!</span> class_ <span class="st">&quot;main&quot;</span> <span class="fu">$</span> <span class="st">&quot;zot&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>container <span class="op">!</span> class_ <span class="st">&quot;main&quot;</span> <span class="op">$</span> <span class="st">&quot;zot&quot;</span></span></code></pre></div>
 <p>In Blaze this produces:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb21-1" data-line-number="1">λ<span class="fu">&gt;</span> main</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="st">&quot;&lt;div class=\&quot;container\&quot; class=\&quot;main\&quot;&gt;My content!&lt;/div&gt;&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> main</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a><span class="st">&quot;&lt;div class=\&quot;container\&quot; class=\&quot;main\&quot;&gt;My content!&lt;/div&gt;&quot;</span></span></code></pre></div>
 <p>Browsers ignore the latter main, so the composition didn’t work.</p>
 <h2 id="ceremony-is-tiring">Ceremony is tiring</h2>
 <p>Here’s the example from Blaze’s package, that’s introduced to users.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">import</span> <span class="dt">Prelude</span> <span class="kw">hiding</span> (head, id, div)</a>
-<a class="sourceLine" id="cb22-2" data-line-number="2"><span class="kw">import</span> <span class="dt">Text.Blaze.Html4.Strict</span> <span class="kw">hiding</span> (map)</a>
-<a class="sourceLine" id="cb22-3" data-line-number="3"><span class="kw">import</span> <span class="dt">Text.Blaze.Html4.Strict.Attributes</span> <span class="kw">hiding</span> (title)</a>
-<a class="sourceLine" id="cb22-4" data-line-number="4"><span class="kw">import</span> <span class="dt">Text.Blaze.Renderer.Utf8</span> (renderMarkup)</a>
-<a class="sourceLine" id="cb22-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb22-6" data-line-number="6"><span class="ot">page1 ::</span> <span class="dt">Markup</span></a>
-<a class="sourceLine" id="cb22-7" data-line-number="7">page1 <span class="fu">=</span> html <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb22-8" data-line-number="8">    head <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb22-9" data-line-number="9">        title <span class="st">&quot;Introduction page.&quot;</span></a>
-<a class="sourceLine" id="cb22-10" data-line-number="10">        link <span class="fu">!</span> rel <span class="st">&quot;stylesheet&quot;</span> <span class="fu">!</span> type_ <span class="st">&quot;text/css&quot;</span> <span class="fu">!</span> href <span class="st">&quot;screen.css&quot;</span></a>
-<a class="sourceLine" id="cb22-11" data-line-number="11">    body <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb22-12" data-line-number="12">        div <span class="fu">!</span> id <span class="st">&quot;header&quot;</span> <span class="fu">$</span> <span class="st">&quot;Syntax&quot;</span></a>
-<a class="sourceLine" id="cb22-13" data-line-number="13">        p <span class="st">&quot;This is an example of BlazeMarkup syntax.&quot;</span></a>
-<a class="sourceLine" id="cb22-14" data-line-number="14">        ul <span class="fu">$</span> mapM_ (li <span class="fu">.</span> toMarkup <span class="fu">.</span> show) [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</a>
-<a class="sourceLine" id="cb22-15" data-line-number="15"></a>
-<a class="sourceLine" id="cb22-16" data-line-number="16">main <span class="fu">=</span> print (renderMarkup page1)</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Prelude</span> <span class="kw">hiding</span> (head, id, div)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Text.Blaze.Html4.Strict</span> <span class="kw">hiding</span> (map)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Text.Blaze.Html4.Strict.Attributes</span> <span class="kw">hiding</span> (title)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Text.Blaze.Renderer.Utf8</span> (renderMarkup)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a><span class="ot">page1 ::</span> <span class="dt">Markup</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a>page1 <span class="ot">=</span> html <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a>    <span class="fu">head</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true"></a>        title <span class="st">&quot;Introduction page.&quot;</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true"></a>        link <span class="op">!</span> rel <span class="st">&quot;stylesheet&quot;</span> <span class="op">!</span> type_ <span class="st">&quot;text/css&quot;</span> <span class="op">!</span> href <span class="st">&quot;screen.css&quot;</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true"></a>    body <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true"></a>        <span class="fu">div</span> <span class="op">!</span> <span class="fu">id</span> <span class="st">&quot;header&quot;</span> <span class="op">$</span> <span class="st">&quot;Syntax&quot;</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true"></a>        p <span class="st">&quot;This is an example of BlazeMarkup syntax.&quot;</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true"></a>        ul <span class="op">$</span> <span class="fu">mapM_</span> (li <span class="op">.</span> toMarkup <span class="op">.</span> <span class="fu">show</span>) [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true"></a></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true"></a>main <span class="ot">=</span> <span class="fu">print</span> (renderMarkup page1)</span></code></pre></div>
 <p>Apart from the import backflips you have to do to resolve names properly, you have at least three imports to make just to render some HTML. Call me lazy, or stupid, but I never remember this deep hierarchy of modules and always have to look it up every single time. And I’ve been using Blaze for as long as the authors have.</p>
 <h2 id="transforming">Transforming</h2>
 <p>A smaller complaint is that it would sometimes be nice to transform over another monad. Simplest example is storing the read-only model information in a reader monad and then you don’t have to pass around a bunch of things as arguments to all your view functions. I’m a big fan of function arguments for explicit state, but not so much if it’s the same argument every time.</p>
@@ -234,104 +234,104 @@
 <p>No import problems or qualification. Just write code without worrying about it.</p>
 <h2 id="how-it-looks">How it looks</h2>
 <p>Plain text is written using the <code>OverloadedStrings</code> and <code>ExtendedDefaultRules</code> extensions, and is automatically escaped:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb24-1" data-line-number="1">λ<span class="fu">&gt;</span> <span class="st">&quot;123 &lt; 456&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</a>
-<a class="sourceLine" id="cb24-2" data-line-number="2"><span class="dv">123</span> <span class="fu">&amp;</span>lt; <span class="dv">456</span></a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> <span class="st">&quot;123 &lt; 456&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a><span class="dv">123</span> <span class="op">&amp;</span>lt; <span class="dv">456</span></span></code></pre></div>
 <p>Elements nest by function application:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb25-1" data-line-number="1">λ<span class="fu">&gt;</span> table_ (tr_ (td_ (p_ <span class="st">&quot;Hello, World!&quot;</span>)))</a>
-<a class="sourceLine" id="cb25-2" data-line-number="2"><span class="fu">&lt;</span>table<span class="fu">&gt;&lt;</span>tr<span class="fu">&gt;&lt;</span>td<span class="fu">&gt;&lt;</span>p<span class="fu">&gt;</span><span class="dt">Hello</span>, <span class="dt">World</span><span class="fu">!&lt;/</span>p<span class="fu">&gt;&lt;/</span>td<span class="fu">&gt;&lt;/</span>tr<span class="fu">&gt;&lt;/</span>table<span class="fu">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> table_ (tr_ (td_ (p_ <span class="st">&quot;Hello, World!&quot;</span>)))</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="op">&lt;</span>table<span class="op">&gt;&lt;</span>tr<span class="op">&gt;&lt;</span>td<span class="op">&gt;&lt;</span>p<span class="op">&gt;</span><span class="dt">Hello</span>, <span class="dt">World</span><span class="op">!&lt;/</span>p<span class="op">&gt;&lt;/</span>td<span class="op">&gt;&lt;/</span>tr<span class="op">&gt;&lt;/</span>table<span class="op">&gt;</span></span></code></pre></div>
 <p>Elements are juxtaposed via monoidal append:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb26-1" data-line-number="1">λ<span class="fu">&gt;</span> p_ <span class="st">&quot;hello&quot;</span> <span class="fu">&lt;&gt;</span> p_ <span class="st">&quot;sup&quot;</span></a>
-<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="fu">&lt;</span>p<span class="fu">&gt;</span>hello<span class="fu">&lt;/</span>p<span class="fu">&gt;&lt;</span>p<span class="fu">&gt;</span>sup<span class="fu">&lt;/</span>p<span class="fu">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> p_ <span class="st">&quot;hello&quot;</span> <span class="op">&lt;&gt;</span> p_ <span class="st">&quot;sup&quot;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a><span class="op">&lt;</span>p<span class="op">&gt;</span>hello<span class="op">&lt;/</span>p<span class="op">&gt;&lt;</span>p<span class="op">&gt;</span>sup<span class="op">&lt;/</span>p<span class="op">&gt;</span></span></code></pre></div>
 <p>Or monadic sequencing:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb27-1" data-line-number="1">λ<span class="fu">&gt;</span> div_ (<span class="kw">do</span> p_ <span class="st">&quot;hello&quot;</span>; p_ <span class="st">&quot;sup&quot;</span>)</a>
-<a class="sourceLine" id="cb27-2" data-line-number="2"><span class="fu">&lt;</span>div<span class="fu">&gt;&lt;</span>p<span class="fu">&gt;</span>hello<span class="fu">&lt;/</span>p<span class="fu">&gt;&lt;</span>p<span class="fu">&gt;</span>sup<span class="fu">&lt;/</span>p<span class="fu">&gt;&lt;/</span>div<span class="fu">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> div_ (<span class="kw">do</span> p_ <span class="st">&quot;hello&quot;</span>; p_ <span class="st">&quot;sup&quot;</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a><span class="op">&lt;</span><span class="fu">div</span><span class="op">&gt;&lt;</span>p<span class="op">&gt;</span>hello<span class="op">&lt;/</span>p<span class="op">&gt;&lt;</span>p<span class="op">&gt;</span>sup<span class="op">&lt;/</span>p<span class="op">&gt;&lt;/</span><span class="fu">div</span><span class="op">&gt;</span></span></code></pre></div>
 <p>Attributes are set using the with combinator:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb28-1" data-line-number="1">λ<span class="fu">&gt;</span> with p_ [class_ <span class="st">&quot;brand&quot;</span>] <span class="st">&quot;Lucid Inc&quot;</span></a>
-<a class="sourceLine" id="cb28-2" data-line-number="2"><span class="fu">&lt;</span>p <span class="kw">class</span><span class="fu">=</span><span class="st">&quot;brand&quot;</span><span class="fu">&gt;</span><span class="dt">Lucid</span> <span class="dt">Inc</span><span class="fu">&lt;/</span>p<span class="fu">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> with p_ [class_ <span class="st">&quot;brand&quot;</span>] <span class="st">&quot;Lucid Inc&quot;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a><span class="op">&lt;</span>p <span class="kw">class</span><span class="ot">=</span><span class="st">&quot;brand&quot;</span><span class="op">&gt;</span><span class="dt">Lucid</span> <span class="dt">Inc</span><span class="op">&lt;/</span>p<span class="op">&gt;</span></span></code></pre></div>
 <p>Conflicting attributes (like <code>style_</code>) work for attributes or elements:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb29-1" data-line-number="1">λ<span class="fu">&gt;</span> html_ (head_ (style_ <span class="st">&quot;body{background:red}&quot;</span>) <span class="fu">&lt;&gt;</span></a>
-<a class="sourceLine" id="cb29-2" data-line-number="2">                 with body_ [style_ <span class="st">&quot;color:white&quot;</span>]</a>
-<a class="sourceLine" id="cb29-3" data-line-number="3">                      <span class="st">&quot;Look ma, no qualification!&quot;</span>)</a>
-<a class="sourceLine" id="cb29-4" data-line-number="4"><span class="fu">&lt;</span>html<span class="fu">&gt;&lt;</span>head<span class="fu">&gt;&lt;</span>style<span class="fu">&gt;</span>body{background<span class="fu">:</span>red}<span class="fu">&lt;/</span>style<span class="fu">&gt;&lt;/</span>head<span class="fu">&gt;</span></a>
-<a class="sourceLine" id="cb29-5" data-line-number="5"><span class="fu">&lt;</span>body style<span class="fu">=</span><span class="st">&quot;color:white&quot;</span><span class="fu">&gt;</span><span class="dt">Look</span> ma, no qualification<span class="fu">!&lt;/</span>body<span class="fu">&gt;&lt;/</span>html<span class="fu">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> html_ (head_ (style_ <span class="st">&quot;body{background:red}&quot;</span>) <span class="op">&lt;&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a>                 with body_ [style_ <span class="st">&quot;color:white&quot;</span>]</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a>                      <span class="st">&quot;Look ma, no qualification!&quot;</span>)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a><span class="op">&lt;</span>html<span class="op">&gt;&lt;</span><span class="fu">head</span><span class="op">&gt;&lt;</span>style<span class="op">&gt;</span>body{background<span class="op">:</span>red}<span class="op">&lt;/</span>style<span class="op">&gt;&lt;/</span><span class="fu">head</span><span class="op">&gt;</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a><span class="op">&lt;</span>body style<span class="ot">=</span><span class="st">&quot;color:white&quot;</span><span class="op">&gt;</span><span class="dt">Look</span> ma, no qualification<span class="op">!&lt;/</span>body<span class="op">&gt;&lt;/</span>html<span class="op">&gt;</span></span></code></pre></div>
 <h2 id="the-blaze-example">The Blaze example</h2>
 <p>For comparison, here’s the Blaze example again:</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb30-1" data-line-number="1">page1 <span class="fu">=</span> html <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb30-2" data-line-number="2">    head <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb30-3" data-line-number="3">        title <span class="st">&quot;Introduction page.&quot;</span></a>
-<a class="sourceLine" id="cb30-4" data-line-number="4">        link <span class="fu">!</span> rel <span class="st">&quot;stylesheet&quot;</span> <span class="fu">!</span> type_ <span class="st">&quot;text/css&quot;</span> <span class="fu">!</span> href <span class="st">&quot;screen.css&quot;</span></a>
-<a class="sourceLine" id="cb30-5" data-line-number="5">    body <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb30-6" data-line-number="6">        div <span class="fu">!</span> id <span class="st">&quot;header&quot;</span> <span class="fu">$</span> <span class="st">&quot;Syntax&quot;</span></a>
-<a class="sourceLine" id="cb30-7" data-line-number="7">        p <span class="st">&quot;This is an example of BlazeMarkup syntax.&quot;</span></a>
-<a class="sourceLine" id="cb30-8" data-line-number="8">        ul <span class="fu">$</span> mapM_ (li <span class="fu">.</span> toMarkup <span class="fu">.</span> show) [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a>page1 <span class="ot">=</span> html <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a>    <span class="fu">head</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a>        title <span class="st">&quot;Introduction page.&quot;</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a>        link <span class="op">!</span> rel <span class="st">&quot;stylesheet&quot;</span> <span class="op">!</span> type_ <span class="st">&quot;text/css&quot;</span> <span class="op">!</span> href <span class="st">&quot;screen.css&quot;</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a>    body <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true"></a>        <span class="fu">div</span> <span class="op">!</span> <span class="fu">id</span> <span class="st">&quot;header&quot;</span> <span class="op">$</span> <span class="st">&quot;Syntax&quot;</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true"></a>        p <span class="st">&quot;This is an example of BlazeMarkup syntax.&quot;</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true"></a>        ul <span class="op">$</span> <span class="fu">mapM_</span> (li <span class="op">.</span> toMarkup <span class="op">.</span> <span class="fu">show</span>) [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>]</span></code></pre></div>
 <p>And the same thing in Lucid:</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb31-1" data-line-number="1">page2 <span class="fu">=</span> html_ <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb31-2" data-line-number="2">    head_ <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb31-3" data-line-number="3">      title_ <span class="st">&quot;Introduction page.&quot;</span></a>
-<a class="sourceLine" id="cb31-4" data-line-number="4">      with link_ [rel_ <span class="st">&quot;stylesheet&quot;</span>,type_ <span class="st">&quot;text/css&quot;</span>,href_ <span class="st">&quot;screen.css&quot;</span>]</a>
-<a class="sourceLine" id="cb31-5" data-line-number="5">    body_ <span class="fu">$</span> <span class="kw">do</span></a>
-<a class="sourceLine" id="cb31-6" data-line-number="6">        with div_ [id_ <span class="st">&quot;header&quot;</span>] <span class="st">&quot;Syntax&quot;</span></a>
-<a class="sourceLine" id="cb31-7" data-line-number="7">        p_ <span class="st">&quot;This is an example of Lucid syntax.&quot;</span></a>
-<a class="sourceLine" id="cb31-8" data-line-number="8">        ul_ <span class="fu">$</span> mapM_ (li_ <span class="fu">.</span> toHtml <span class="fu">.</span> show) [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a>page2 <span class="ot">=</span> html_ <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a>    head_ <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true"></a>      title_ <span class="st">&quot;Introduction page.&quot;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true"></a>      with link_ [rel_ <span class="st">&quot;stylesheet&quot;</span>,type_ <span class="st">&quot;text/css&quot;</span>,href_ <span class="st">&quot;screen.css&quot;</span>]</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true"></a>    body_ <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true"></a>        with div_ [id_ <span class="st">&quot;header&quot;</span>] <span class="st">&quot;Syntax&quot;</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true"></a>        p_ <span class="st">&quot;This is an example of Lucid syntax.&quot;</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true"></a>        ul_ <span class="op">$</span> <span class="fu">mapM_</span> (li_ <span class="op">.</span> toHtml <span class="op">.</span> <span class="fu">show</span>) [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>]</span></code></pre></div>
 <p>I’m not into operators like <code>($)</code> and swung indentation like that, but I followed the same format.</p>
 <p>I’d write it in a more Lispy style and run my hindent tool on it:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb32-1" data-line-number="1">page1 <span class="fu">=</span></a>
-<a class="sourceLine" id="cb32-2" data-line-number="2">  html_ (<span class="kw">do</span> head_ (<span class="kw">do</span> title_ <span class="st">&quot;Introduction page.&quot;</span></a>
-<a class="sourceLine" id="cb32-3" data-line-number="3">                      with link_</a>
-<a class="sourceLine" id="cb32-4" data-line-number="4">                           [rel_ <span class="st">&quot;stylesheet&quot;</span></a>
-<a class="sourceLine" id="cb32-5" data-line-number="5">                           ,type_ <span class="st">&quot;text/css&quot;</span></a>
-<a class="sourceLine" id="cb32-6" data-line-number="6">                           ,href_ <span class="st">&quot;screen.css&quot;</span>])</a>
-<a class="sourceLine" id="cb32-7" data-line-number="7">            body_ (<span class="kw">do</span> with div_ [id_ <span class="st">&quot;header&quot;</span>] <span class="st">&quot;Syntax&quot;</span></a>
-<a class="sourceLine" id="cb32-8" data-line-number="8">                      p_ <span class="st">&quot;This is an example of Lucid syntax.&quot;</span></a>
-<a class="sourceLine" id="cb32-9" data-line-number="9">                      ul_ (mapM_ (li_ <span class="fu">.</span> toHtml <span class="fu">.</span> show)</a>
-<a class="sourceLine" id="cb32-10" data-line-number="10">                                 [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>])))</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a>page1 <span class="ot">=</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a>  html_ (<span class="kw">do</span> head_ (<span class="kw">do</span> title_ <span class="st">&quot;Introduction page.&quot;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a>                      with link_</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true"></a>                           [rel_ <span class="st">&quot;stylesheet&quot;</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true"></a>                           ,type_ <span class="st">&quot;text/css&quot;</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true"></a>                           ,href_ <span class="st">&quot;screen.css&quot;</span>])</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true"></a>            body_ (<span class="kw">do</span> with div_ [id_ <span class="st">&quot;header&quot;</span>] <span class="st">&quot;Syntax&quot;</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true"></a>                      p_ <span class="st">&quot;This is an example of Lucid syntax.&quot;</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true"></a>                      ul_ (<span class="fu">mapM_</span> (li_ <span class="op">.</span> toHtml <span class="op">.</span> <span class="fu">show</span>)</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true"></a>                                 [<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>])))</span></code></pre></div>
 <p>But that’s another discussion.</p>
 <h2 id="its-a-real-monad">It’s a real monad</h2>
 <p>Normal monadic operations work properly:</p>
-<div class="sourceCode" id="cb33"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb33-1" data-line-number="1">λ<span class="fu">&gt;</span> (return <span class="st">&quot;OK!&quot;</span> <span class="fu">&gt;&gt;=</span> p_)</a>
-<a class="sourceLine" id="cb33-2" data-line-number="2"><span class="fu">&lt;</span>p<span class="fu">&gt;</span><span class="dt">OK</span><span class="fu">!&lt;/</span>p<span class="fu">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> (<span class="fu">return</span> <span class="st">&quot;OK!&quot;</span> <span class="op">&gt;&gt;=</span> p_)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a><span class="op">&lt;</span>p<span class="op">&gt;</span><span class="dt">OK</span><span class="op">!&lt;/</span>p<span class="op">&gt;</span></span></code></pre></div>
 <p>It’s basically a writer monad.</p>
 <p>In fact, it’s also a monad transformer:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb34-1" data-line-number="1">λ<span class="fu">&gt;</span> runReader (renderTextT (html_ (body_ (<span class="kw">do</span> name <span class="ot">&lt;-</span> lift ask</a>
-<a class="sourceLine" id="cb34-2" data-line-number="2">                                            p_ (toHtml name)))))</a>
-<a class="sourceLine" id="cb34-3" data-line-number="3">             (<span class="st">&quot;Chris&quot;</span><span class="ot"> ::</span> <span class="dt">String</span>)</a>
-<a class="sourceLine" id="cb34-4" data-line-number="4"><span class="st">&quot;&lt;html&gt;&lt;body&gt;&lt;p&gt;Chris&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> runReader (renderTextT (html_ (body_ (<span class="kw">do</span> name <span class="ot">&lt;-</span> lift ask</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a>                                            p_ (toHtml name)))))</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true"></a>             (<span class="st">&quot;Chris&quot;</span><span class="ot"> ::</span> <span class="dt">String</span>)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true"></a><span class="st">&quot;&lt;html&gt;&lt;body&gt;&lt;p&gt;Chris&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span></span></code></pre></div>
 <h2 id="overloaded-strings-instance-is-fine">Overloaded strings instance is fine</h2>
 <p>The instance is constrained over the return type being <code>()</code>. So string literals can only be type <code>HtmlT m ()</code>.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb35-1" data-line-number="1">λ<span class="fu">&gt;</span> <span class="kw">do</span> <span class="st">&quot;x&quot;</span> <span class="fu">&gt;&gt;</span> <span class="st">&quot;y&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</a>
-<a class="sourceLine" id="cb35-2" data-line-number="2">xy</a>
-<a class="sourceLine" id="cb35-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb35-4" data-line-number="4">λ<span class="fu">&gt;</span> <span class="kw">do</span> x <span class="ot">&lt;-</span> <span class="st">&quot;x&quot;</span>; toHtml (show x)</a>
-<a class="sourceLine" id="cb35-5" data-line-number="5">x()</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> <span class="kw">do</span> <span class="st">&quot;x&quot;</span> <span class="op">&gt;&gt;</span> <span class="st">&quot;y&quot;</span><span class="ot"> ::</span> <span class="dt">Html</span> ()</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a>xy</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true"></a>λ<span class="op">&gt;</span> <span class="kw">do</span> x <span class="ot">&lt;-</span> <span class="st">&quot;x&quot;</span>; toHtml (<span class="fu">show</span> x)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true"></a>x()</span></code></pre></div>
 <h2 id="attributes">Attributes</h2>
 <p>Attributes are simply written as a list. That’s all. Easy to manipulate as a data structure, easy to write and edit, and automatically indent in a predictable way:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb36-1" data-line-number="1">λ<span class="fu">&gt;</span> with p_ [id_ <span class="st">&quot;person-name&quot;</span>,class_ <span class="st">&quot;attribute&quot;</span>] <span class="st">&quot;Mary&quot;</span></a>
-<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="fu">&lt;</span>p id<span class="fu">=</span><span class="st">&quot;person-name&quot;</span> <span class="kw">class</span><span class="fu">=</span><span class="st">&quot;attribute&quot;</span><span class="fu">&gt;</span><span class="dt">Mary</span><span class="fu">&lt;/</span>p<span class="fu">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> with p_ [id_ <span class="st">&quot;person-name&quot;</span>,class_ <span class="st">&quot;attribute&quot;</span>] <span class="st">&quot;Mary&quot;</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true"></a><span class="op">&lt;</span>p <span class="fu">id</span><span class="ot">=</span><span class="st">&quot;person-name&quot;</span> <span class="kw">class</span><span class="ot">=</span><span class="st">&quot;attribute&quot;</span><span class="op">&gt;</span><span class="dt">Mary</span><span class="op">&lt;/</span>p<span class="op">&gt;</span></span></code></pre></div>
 <p>No custom operators are required. Just the <code>with</code> combinator. If you want to indent it, just indent it like normal function application:</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb37-1" data-line-number="1">with p_</a>
-<a class="sourceLine" id="cb37-2" data-line-number="2">     [id_ <span class="st">&quot;person-name&quot;</span>,class_ <span class="st">&quot;attribute&quot;</span>]</a>
-<a class="sourceLine" id="cb37-3" data-line-number="3">     <span class="st">&quot;Mary&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a>with p_</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true"></a>     [id_ <span class="st">&quot;person-name&quot;</span>,class_ <span class="st">&quot;attribute&quot;</span>]</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true"></a>     <span class="st">&quot;Mary&quot;</span></span></code></pre></div>
 <p>And you’re done.</p>
 <h2 id="composing-attributes">Composing attributes</h2>
 <p>You should be able to compose <code>with</code>. For example, let’s say you want to define a re-usable component with bootstrap:</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb38-1" data-line-number="1">λ<span class="fu">&gt;</span> <span class="kw">let</span> container_ <span class="fu">=</span> with div_ [class_ <span class="st">&quot;container &quot;</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> <span class="kw">let</span> container_ <span class="ot">=</span> with div_ [class_ <span class="st">&quot;container &quot;</span>]</span></code></pre></div>
 <p>Now you can use it to make a container:</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb39-1" data-line-number="1">λ<span class="fu">&gt;</span> container_ <span class="st">&quot;My content!&quot;</span></a>
-<a class="sourceLine" id="cb39-2" data-line-number="2"><span class="fu">&lt;</span>div <span class="kw">class</span><span class="fu">=</span><span class="st">&quot;container &quot;</span><span class="fu">&gt;</span><span class="dt">My</span> content<span class="fu">!&lt;/</span>div<span class="fu">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> container_ <span class="st">&quot;My content!&quot;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true"></a><span class="op">&lt;</span><span class="fu">div</span> <span class="kw">class</span><span class="ot">=</span><span class="st">&quot;container &quot;</span><span class="op">&gt;</span><span class="dt">My</span> content<span class="op">!&lt;/</span><span class="fu">div</span><span class="op">&gt;</span></span></code></pre></div>
 <p>But consider now that you also want to add additional attributes to it later. You can do that with another call to with:</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb40-1" data-line-number="1">λ<span class="fu">&gt;</span> with container_ [class_ <span class="st">&quot;main&quot;</span>] <span class="st">&quot;My content!&quot;</span></a>
-<a class="sourceLine" id="cb40-2" data-line-number="2"><span class="fu">&lt;</span>div <span class="kw">class</span><span class="fu">=</span><span class="st">&quot;container main&quot;</span><span class="fu">&gt;</span><span class="dt">My</span> content<span class="fu">!&lt;/</span>div<span class="fu">&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> with container_ [class_ <span class="st">&quot;main&quot;</span>] <span class="st">&quot;My content!&quot;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true"></a><span class="op">&lt;</span><span class="fu">div</span> <span class="kw">class</span><span class="ot">=</span><span class="st">&quot;container main&quot;</span><span class="op">&gt;</span><span class="dt">My</span> content<span class="op">!&lt;/</span><span class="fu">div</span><span class="op">&gt;</span></span></code></pre></div>
 <p>Duplicate attributes are composed with normal monoidal append. Note that I added a space in my definition of container anticipating further extension later. Other attributes might not compose with spaces.</p>
 <h2 id="unceremonious">Unceremonious</h2>
 <p>Another part I made sure was right was lack of import nightmare. You just <code>import Lucid</code> and away you go:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb41-1" data-line-number="1">λ<span class="fu">&gt;</span> <span class="kw">import</span> <span class="dt">Lucid</span></a>
-<a class="sourceLine" id="cb41-2" data-line-number="2">λ<span class="fu">&gt;</span> p_ <span class="st">&quot;OK!&quot;</span></a>
-<a class="sourceLine" id="cb41-3" data-line-number="3"><span class="fu">&lt;</span>p<span class="fu">&gt;</span><span class="dt">OK</span><span class="fu">!&lt;/</span>p<span class="fu">&gt;</span></a>
-<a class="sourceLine" id="cb41-4" data-line-number="4">λ<span class="fu">&gt;</span> p_ (span_ (strong_ <span class="st">&quot;Woot!&quot;</span>))</a>
-<a class="sourceLine" id="cb41-5" data-line-number="5"><span class="fu">&lt;</span>p<span class="fu">&gt;&lt;</span>span<span class="fu">&gt;&lt;</span>strong<span class="fu">&gt;</span><span class="dt">Woot</span><span class="fu">!&lt;/</span>strong<span class="fu">&gt;&lt;/</span>span<span class="fu">&gt;&lt;/</span>p<span class="fu">&gt;</span></a>
-<a class="sourceLine" id="cb41-6" data-line-number="6">λ<span class="fu">&gt;</span> renderBS (p_ (span_ (strong_ <span class="st">&quot;Woot!&quot;</span>)))</a>
-<a class="sourceLine" id="cb41-7" data-line-number="7"><span class="st">&quot;&lt;p&gt;&lt;span&gt;&lt;strong&gt;Woot!&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;&quot;</span></a>
-<a class="sourceLine" id="cb41-8" data-line-number="8">λ<span class="fu">&gt;</span> renderToFile <span class="st">&quot;/tmp/foo.html&quot;</span> (p_ (span_ (strong_ <span class="st">&quot;Woot!&quot;</span>)))</a></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> <span class="kw">import</span> <span class="dt">Lucid</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true"></a>λ<span class="op">&gt;</span> p_ <span class="st">&quot;OK!&quot;</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true"></a><span class="op">&lt;</span>p<span class="op">&gt;</span><span class="dt">OK</span><span class="op">!&lt;/</span>p<span class="op">&gt;</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true"></a>λ<span class="op">&gt;</span> p_ (span_ (strong_ <span class="st">&quot;Woot!&quot;</span>))</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true"></a><span class="op">&lt;</span>p<span class="op">&gt;&lt;</span><span class="fu">span</span><span class="op">&gt;&lt;</span>strong<span class="op">&gt;</span><span class="dt">Woot</span><span class="op">!&lt;/</span>strong<span class="op">&gt;&lt;/</span><span class="fu">span</span><span class="op">&gt;&lt;/</span>p<span class="op">&gt;</span></span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true"></a>λ<span class="op">&gt;</span> renderBS (p_ (span_ (strong_ <span class="st">&quot;Woot!&quot;</span>)))</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true"></a><span class="st">&quot;&lt;p&gt;&lt;span&gt;&lt;strong&gt;Woot!&lt;/strong&gt;&lt;/span&gt;&lt;/p&gt;&quot;</span></span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true"></a>λ<span class="op">&gt;</span> renderToFile <span class="st">&quot;/tmp/foo.html&quot;</span> (p_ (span_ (strong_ <span class="st">&quot;Woot!&quot;</span>)))</span></code></pre></div>
 <p>If I want to do more advanced stuff, it’s all available in <code>Lucid</code>. But by default it’s absolutely trivial to get going and output something.</p>
 <h2 id="speed">Speed</h2>
 <p>Actually, despite having a trivial implementation, being a real monad and a monad transformer, it’s not far from Blaze. You can compare the <a href="http://imgur.com/a/iyzBl">benchmark reports here</a>. A quick test of writing 38M of HTML to file yielded the same speed (about 1.5s) for both Lucid and Blaze. With such decent performance for very little work I’m already ready to start using it for real work.</p>

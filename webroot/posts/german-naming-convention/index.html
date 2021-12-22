@@ -112,39 +112,39 @@
 <li>“Hungarian” notation: any prefix or suffix notation in which a single letter is used to refer to a <em>type</em> or <em>property</em> of the variable, as in sigils like <code>$foo</code> (“scalar foo”), <code>lpszFoo</code> (“long pointer string zero-terminated”), or <code>fooL</code> (list of foo).</li>
 <li>Acronyms: using initial letters to refer to concepts: <code>throwVE</code> (“throw validation error”).</li>
 </ol>
-<p>Most of these are unnecessary<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> and/or harmful.</p>
+<p>Most of these are unnecessary<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> and/or harmful.</p>
 <h2 id="its-all-greek-to-me">It’s All Greek To Me</h2>
 <p>A word on this convention. Single letter naming comes from mathematical tradition; it means “there isn’t a good noun for this because it’s general”. A person of X height. In some cases, this is actually reasonable. Consider:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb1-1" data-line-number="1">identity x <span class="fu">=</span> x</a></code></pre></div>
-<p>The <code>identity</code> function isn’t enhanced by calling its parameter <code>thing</code>; it literally doesn’t matter what it is, especially in some typed languages<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a>. In fact, one could argue that it’s harmful to try to using a meaningful English name.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>identity x <span class="ot">=</span> x</span></code></pre></div>
+<p>The <code>identity</code> function isn’t enhanced by calling its parameter <code>thing</code>; it literally doesn’t matter what it is, especially in some typed languages<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. In fact, one could argue that it’s harmful to try to using a meaningful English name.</p>
 <p>However, anywhere that your variables have some meaning, by using “Greek convention”, you’re throwing away information that could help someone to digest your code better. You’re not trying to fit your code on a napkin.</p>
 <h2 id="german-naming-convention">German Naming Convention</h2>
 <p>This is what I consider good naming convention. I discovered this convention while working with a German colleague, who, I’d always joked, uses long variable names, and almost never abbreviates anything. However, the more I read his code, the more I realised I was able to read the story he was trying to tell, and appreciated it a lot: Using as many words as necessary to clearly name something. <em>Everything</em>.</p>
-<p>I called this “German” naming convention as a reference to the fact that the German language is known for its compound words, which can become comically long and specific at times. Some examples include, <em>Betäubungsmittelverschreibungsverordnung</em> (“regulation requiring a prescription for an anaesthetic”), <em>Rechtsschutzversicherungsgesellschaften</em> (&quot;“legal protection insurance companies”), and the 1999 German “Word of the Year”: <em>Rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz</em> (“beef labelling regulation and delegation of supervision law”).</p>
+<p>I called this “German” naming convention as a reference to the fact that the German language is known for its compound words, which can become comically long and specific at times. Some examples include, <em>Betäubungsmittelverschreibungsverordnung</em> (“regulation requiring a prescription for an anaesthetic”), <em>Rechtsschutzversicherungsgesellschaften</em> ("“legal protection insurance companies”), and the 1999 German “Word of the Year”: <em>Rindfleischetikettierungsüberwachungsaufgabenübertragungsgesetz</em> (“beef labelling regulation and delegation of supervision law”).</p>
 <p>Don’t write <code>fopen</code> when you can write <code>openFile</code>. Write <code>throwValidationError</code> and not <code>throwVE</code>. Call that name <code>function</code> and not <code>fct</code>. That’s German naming convention. Do this and your readers will appreciate it.</p>
 <h2 id="isomorphic-naming">Isomorphic Naming</h2>
 <p>This convention complements German naming convention completely.</p>
-<p><em>Isomorphic naming</em> is to say that the name of the variable is the same form<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a> of the name of the type. A simple heuristic, in other words: <strong>just use the name of the type.</strong></p>
+<p><em>Isomorphic naming</em> is to say that the name of the variable is the same form<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> of the name of the type. A simple heuristic, in other words: <strong>just use the name of the type.</strong></p>
 <p>Here’s a real sample where better naming convention would make this easier to read without being a cryptographer:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb2-1" data-line-number="1">updateColExp</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="ot">  ::</span> <span class="dt">QualifiedTable</span> <span class="ot">-&gt;</span> <span class="dt">RenameField</span> <span class="ot">-&gt;</span> <span class="dt">ColExp</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ColExp</span></a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">updateColExp qt rf (<span class="dt">ColExp</span> fld val) <span class="fu">=</span></a>
-<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="dt">ColExp</span> updatedFld <span class="fu">&lt;$&gt;</span> updatedVal</a>
-<a class="sourceLine" id="cb2-5" data-line-number="5">  <span class="fu">...</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>updateColExp</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="ot">  ::</span> <span class="dt">QualifiedTable</span> <span class="ot">-&gt;</span> <span class="dt">RenameField</span> <span class="ot">-&gt;</span> <span class="dt">ColExp</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ColExp</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>updateColExp qt rf (<span class="dt">ColExp</span> fld val) <span class="ot">=</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>  <span class="dt">ColExp</span> updatedFld <span class="op">&lt;$&gt;</span> updatedVal</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>  <span class="op">...</span></span></code></pre></div>
 <p>Look at this naming convention. This may be appropriate if you’re in some kind of code golfing competition, but I can’t even pronounce these names. Applying the type-based naming heuristic, we get:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><a class="sourceLine" id="cb3-1" data-line-number="1">updateColumnExpression</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="ot">  ::</span> <span class="dt">QualifiedTable</span> <span class="ot">-&gt;</span> <span class="dt">RenameField</span> <span class="ot">-&gt;</span> <span class="dt">ColumnExpression</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ColumnExpression</span></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">updateColumnExpression qualifiedTable renameField (<span class="dt">ColumnExpression</span> field value) <span class="fu">=</span></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">  <span class="dt">ColumnExpression</span> updatedField <span class="fu">&lt;$&gt;</span> updatedValue</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">  <span class="fu">...</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>updateColumnExpression</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="ot">  ::</span> <span class="dt">QualifiedTable</span> <span class="ot">-&gt;</span> <span class="dt">RenameField</span> <span class="ot">-&gt;</span> <span class="dt">ColumnExpression</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">ColumnExpression</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>updateColumnExpression qualifiedTable renameField (<span class="dt">ColumnExpression</span> field value) <span class="ot">=</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>  <span class="dt">ColumnExpression</span> updatedField <span class="op">&lt;$&gt;</span> updatedValue</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>  <span class="op">...</span></span></code></pre></div>
 <p>Look, it’s readable, plain English! Isn’t this a huge improvement? Any maintainer reading this code can read each variable and know what it is. I can even pronounce the names out loud.</p>
 <p>Note that this convention only works well when your <em>types</em> are well-named too, by German naming convention.</p>
-<section class="footnotes">
+<section class="footnotes" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Especially for e.g. Haskell, C#, Rust, TypeScript or Java. I give more legroom to unityped languages like Python, Perl, JavaScript, etc. because your editor typically can’t tell you the type of a name, and there typically isn’t a lexical indication of the type anywhere nearby, like a type signature.<a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p><a href="https://www.well-typed.com/blog/2015/05/parametricity/">Parametricity</a> ensures that this really does not matter in a formal theory sense.<a href="#fnref2" class="footnote-back">↩</a></p></li>
-<li id="fn3"><p>From iso- “equal, identical” + -morphic, from Greek morphē “form, shape,” See the Etymology Online entry for <a href="https://www.etymonline.com/word/isomorphic">isomorphic</a>.<a href="#fnref3" class="footnote-back">↩</a></p></li>
+<li id="fn1" role="doc-endnote"><p>Especially for e.g. Haskell, C#, Rust, TypeScript or Java. I give more legroom to unityped languages like Python, Perl, JavaScript, etc. because your editor typically can’t tell you the type of a name, and there typically isn’t a lexical indication of the type anywhere nearby, like a type signature.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p><a href="https://www.well-typed.com/blog/2015/05/parametricity/">Parametricity</a> ensures that this really does not matter in a formal theory sense.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3" role="doc-endnote"><p>From iso- “equal, identical” + -morphic, from Greek morphē “form, shape,” See the Etymology Online entry for <a href="https://www.etymonline.com/word/isomorphic">isomorphic</a>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
