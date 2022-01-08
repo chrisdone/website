@@ -1,5 +1,7 @@
 name: Generate
 
+on: push
+
 jobs:
   generate:
     runs-on: self-hosted
