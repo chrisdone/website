@@ -197,6 +197,8 @@ choice. Other things considered: ClojureScript, TypeScript, Rust,
 [ReasonML](https://reasonml.github.io/), Elm,
 [OCaml](https://ocsigen.org/js_of_ocaml/3.1.0/manual/overview).
 
+As of today, I am personally still using PureScript with Halogen.
+
 [^1]: In retrospect, if it was marketed in the same way Elm was, and
 less "academic", it may have taken off. But it could just be that it
 arrived before anyone was ready to try alternative languages. Or
