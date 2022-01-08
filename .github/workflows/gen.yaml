@@ -1,0 +1,17 @@
+name: Generate
+
+jobs:
+  generate:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Try to login to docker hub registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Run hakyll build
+        run: |
+          cd hakyll
+          docker run -it -v`pwd`:`pwd` -w`pwd` --rm chrisdone/website-hakyll2 site build
+          sudo mv _site/* /var/www/html/
