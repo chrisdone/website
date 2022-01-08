@@ -15,5 +15,5 @@ jobs:
       - name: Run hakyll build
         run: |
           cd hakyll
-          docker run -it -v`pwd`:`pwd` -w`pwd` --rm chrisdone/website-hakyll2 site build
+          docker run -v`pwd`:`pwd` -w`pwd` --rm chrisdone/website-hakyll2 site build
           sudo mv _site/* /var/www/html/
