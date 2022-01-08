@@ -6,7 +6,7 @@ author: Chris Done
 tags: haskell
 ---
 
-At the beginning of this decade, a few of us Haskellers were exploring
+At the beginning of this decade (2010), a few of us Haskellers were exploring
 how best to do client-side web programming. We didn't want to write
 JavaScript. There's a surprising number of techniques we tried to
 avoid doing so. There was work coming from academia and
