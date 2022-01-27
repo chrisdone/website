@@ -390,7 +390,7 @@ difference, but there is a difference. See the next section.
 
 ## Time travelling solution
 
-Michael Zuser demonstrated a time travelling solution based on
+Mel Zuser demonstrated a time travelling solution based on
 [the Tardis monad](http://hackage.haskell.org/package/tardis-0.3.0.0/docs/Control-Monad-Tardis.html):
 
 ``` haskell
@@ -407,6 +407,10 @@ water = flip evalTardis (minBound, minBound) . foldM go 0
         modifyBackwards $ max height
         return $ total + min leftmax rightmax - height
 ```
+
+**Update 2022-01-27 sent by Mel:**
+
+> I also have an addendum as to why the comonad solution is so slow. The wfix operator doesn't tie the knot, so it has has to do asymptotically more work than you would expect recalculating results. The way to fix it is to use the kfix operator which has since been added to Control.Comonad instead. See also: [Kenneth Foner - Getting a Quick Fix on Comonads](https://www.youtube.com/watch?v=F7F-BzOB670)   
 
 ## Fastest
 
