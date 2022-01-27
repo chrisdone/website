@@ -322,7 +322,7 @@ simpler.
 
 ## Update with comonads & pointed lists
 
-Michael Zuser pointed out another cool insight from
+Mel Zuser pointed out another cool insight from
 _[Comonads and reading from the future](http://blog.sigfpe.com/2007/02/comonads-and-reading-from-future.html?showComment=1171056660000#c2284986681058924897)_
 (Dan Piponi’s blog is a treasure trove!)
 that while `loeb` lets you look at the _whole_ container, giving you
@@ -362,6 +362,10 @@ mind instead, it seems entirely natural!
 
 Sadly, this is the slowest algorithm on the page. I'm not sure how to
 optimize it to be better.
+
+**Update 2022-01-27 sent by Mel:**
+
+> I also have an addendum as to why the comonad solution is so slow. The wfix operator doesn't tie the knot, so it has has to do asymptotically more work than you would expect recalculating results. The way to fix it is to use the kfix operator which has since been added to Control.Comonad instead. See also: [Kenneth Foner - Getting a Quick Fix on Comonads](https://www.youtube.com/watch?v=F7F-BzOB670)   
 
 ## Update on lens
 
@@ -406,11 +410,7 @@ water = flip evalTardis (minBound, minBound) . foldM go 0
         rightmax <- getFuture
         modifyBackwards $ max height
         return $ total + min leftmax rightmax - height
-```
-
-**Update 2022-01-27 sent by Mel:**
-
-> I also have an addendum as to why the comonad solution is so slow. The wfix operator doesn't tie the knot, so it has has to do asymptotically more work than you would expect recalculating results. The way to fix it is to use the kfix operator which has since been added to Control.Comonad instead. See also: [Kenneth Foner - Getting a Quick Fix on Comonads](https://www.youtube.com/watch?v=F7F-BzOB670)   
+``` 
 
 ## Fastest
 
