@@ -512,5 +512,4 @@ Here are benchmarks for all versions presented in this page.
 I never bothered waiting around for the comonad or the time traveller
 ones to complete. They're slow, let's say that.
 
-[Here's the source code](http://lpaste.net/95686) to the benchmarks,
-let me know if I made a mistake in the benchmark setup.
+**2022-01-27:** The benchmark sources are no longer available.
