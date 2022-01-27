@@ -365,7 +365,7 @@ optimize it to be better.
 
 **Update 2022-01-27 sent by Mel:**
 
-> I also have an addendum as to why the comonad solution is so slow. The wfix operator doesn't tie the knot, so it has has to do asymptotically more work than you would expect recalculating results. The way to fix it is to use the kfix operator which has since been added to Control.Comonad instead. See also: [Kenneth Foner - Getting a Quick Fix on Comonads](https://www.youtube.com/watch?v=F7F-BzOB670)   
+> I have an addendum as to why the comonad solution is so slow. The wfix operator doesn't tie the knot, so it has to do asymptotically more work than you would expect recalculating results. The way to fix it is to use the kfix operator which has since been added to Control.Comonad instead. See also: [Kenneth Foner - Getting a Quick Fix on Comonads](https://www.youtube.com/watch?v=F7F-BzOB670)   
 
 ## Update on lens
 
