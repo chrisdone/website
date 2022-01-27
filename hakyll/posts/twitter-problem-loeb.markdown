@@ -327,7 +327,7 @@ _[Comonads and reading from the future](http://blog.sigfpe.com/2007/02/comonads-
 (Dan Piponi’s blog is a treasure trove!)
 that while `loeb` lets you look at the _whole_ container, giving you
 _absolute_ references, the equivalent corecursive fix (below `wfix`) on a comonad
-gives you _relative_ references. Michael demonstrates below using Jeff
+gives you _relative_ references. Mel demonstrates below using Jeff
 Wheeler’s
 [pointed list](http://hackage.haskell.org/package/pointedlist-0.4.0.3/docs/Data-List-PointedList.html)
 library and Edward Kmett's
