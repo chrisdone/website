@@ -19,11 +19,11 @@ that doesn't involve Haskell code.[^3] That's easier.
 You can re-use your intuition from existing common place chaining of things 
 in other popular languages: 
 
-* Async chains (JS)
-* Parser combinator chains (Rust, JS)
-* Optional or erroneous value chains (TypeScript, Rust)
+* Async chains ([JS](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise))
+* Parser combinator chains ([Rust](https://github.com/Geal/nom), JS)
+* Optional or erroneous value chains (TypeScript, [Rust](https://doc.rust-lang.org/std/result/))
 * Continuation passing style (you can do this in Lisp and JS)
-* Cartesian products/SQL (C#’s LINQ)
+* Cartesian products/SQL ([C#’s LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query))
 
 One of the Haskell designers in the 90s just came up with a **class/interface 
 that worked for all of these**. As he was into category theory, related it 
