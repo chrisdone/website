@@ -9,7 +9,7 @@ tags: haskell
 Monads are notorious in the programming world for their use in the Haskell
 programming language and for being hard to grasp. There's even a joke that
 writing a "monad tutorial" is a rite of passage for new Haskellers, and been 
-described as pointless[^2]. I've been
+described as pointless.[^2] I've been
 using Haskell for over a decade and have refrained from writing 
 yet another monad tutorial. 
 
