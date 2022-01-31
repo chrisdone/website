@@ -1,7 +1,7 @@
 ---
 date: 2022-01-31
-title: A Haskeller's plain English description of monads without Haskell code
-description: A Haskeller's plain English description of monads without Haskell code
+title: A plain English description of monads without Haskell code
+description: A plain English description of monads without Haskell code
 author: Chris Done
 tags: haskell
 ---
