@@ -25,7 +25,7 @@ in other popular languages:
 * Continuation passing style (you can do this in Lisp and JS)
 * Cartesian products/SQL ([C#’s LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query))
 
-One of the Haskell designers in the 90s just came up with a **class/interface 
+One of the Haskell designers[^6] in the 90s just came up with a **class/interface 
 that worked for all of these**. As he was into category theory, related it 
 to the idea of a Monad. The types also sort of match the theory if you 
 squint hard enough.
@@ -78,3 +78,5 @@ you a big list of Haskell type signatures, which you need to know Haskell to und
 but that's an implementation detail. 
 
 [^5]: Well, OCaml and other ML-descendents do dabble with this these days.
+
+[^6]: [Monads for functional programming](https://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf)
