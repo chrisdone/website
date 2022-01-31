@@ -26,8 +26,8 @@ in other popular languages:
 * Cartesian products/SQL ([C#’s LINQ](https://en.wikipedia.org/wiki/Language_Integrated_Query))
 
 One of the Haskell designers[^6] in the 90s just came up with a **class/interface 
-that worked for all of these**. As he was into category theory, related it 
-to the idea of a Monad. The types also sort of match the theory if you 
+that worked for all of these**. As he was into category theory, he related it 
+to the idea of a "monad". The types also sort of match the theory if you 
 squint hard enough.
 
 Then they came up with a syntax (actually, two[^1]) that was syntactic sugar for 
