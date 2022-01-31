@@ -40,7 +40,7 @@ popular programming languages:
 getThing.and_then(x => putThingElsewhere(x+4)).and_then(..)
 ```
 
-For a parser you track position in the string and plumb that through. For 
+For a parser you track the position in the string and plumb that through. For 
 an "optional" it just short circuits if the left hand side of `and_then` is 
 nil/null/undefined. For async it would do something async, like make
 a web request to get the thing, and then call the callback, etc.
