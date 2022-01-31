@@ -49,7 +49,7 @@ a web request to get the thing, and then call the callback, etc.
 with some laws for how it should behave predictably, and then a bunch of 
 library code works on anything that implements “and_then”. 
 
-Apart from F# or Haskell (or descendants), no other language embraces 
+Apart from F# or Haskell (or descendants), no other language[^5] embraces 
 the abstraction with syntax so it’s hard to find a good explanation without 
 them. It’s like explaining Lisp macros without using a Lisp, the 
 explanation tends to be awkward and unconvincing.
@@ -76,3 +76,5 @@ looks pretty attractive to them.
 things that implement the Monad class--some really weird stuff--but linking to them would just give
 you a big list of Haskell type signatures, which you need to know Haskell to understand. It's not called "and_then", either
 but that's an implementation detail. 
+
+[^5]: Well, OCaml and other ML-descendents do dabble with this these days.
