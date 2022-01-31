@@ -60,7 +60,7 @@ on a parse error. If your language supports returning early from
 functions then you can just use that to short circuit (Rust does this). 
 If your language puts in a special case for async with “await” 
 syntax (JS, Rust, C#), you’ll just use that. Other ways of doing 
-things just make the idea of a monad abstraction kind of unnecessary
+things just make the idea of a monad abstraction kind of unnecessary.
 
 Haskellers don’t like to throw exceptions, or use mutation, and 
 functions can’t return early, etc. Suddenly Monad and syntactic sugar for it 
