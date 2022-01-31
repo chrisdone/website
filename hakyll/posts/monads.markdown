@@ -33,7 +33,8 @@ squint hard enough.
 Then they came up with a syntax (actually, two[^1]) that was syntactic sugar for 
 calling the class methods to make it feel more ergonomic.
 
-Parsers, CPS, async, optional chaining, all look like this:
+Parsers, CPS, async, optional chaining, all look more or less like this in most modern
+popular programming languages:
 
 ```javascript
 getThing.and_then(x => putThingElsewhere(x+4)).and_then(..)
