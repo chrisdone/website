@@ -6,6 +6,10 @@ author: Chris Done
 tags: haskell
 ---
 
+> "That's actually the first time I read an explanation about monads that I understand." -- Commenter
+
+> "I just read your explanation, and suddenly I think I understand monads." -- Reviewer
+
 Monads are notorious in the programming world for their use in the Haskell
 programming language and for being hard to grasp. There's even a joke that
 writing a "monad tutorial" is a rite of passage for new Haskellers, and been 
