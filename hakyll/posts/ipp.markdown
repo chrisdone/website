@@ -140,7 +140,7 @@ type. *You* changed a namespace.
 I'll repeat myself: the IPP is about valuing the user's time over the maintainer's time. *It's not
 all about you and your needs.* Think about others who have to consume your work.
 
-##### Why have package versions when you are going to duplicate an entire module or package when you make a breaking change?
+#### Why have package versions when you are going to duplicate an entire module or package when you make a breaking change?
 
 I already covered this above, but let's rewrite in a different way: Package versions in Haskell are broken.
 They force all package maintainers to move in lock step. You can only practically use **one** version of a package in your installed package scope. 
