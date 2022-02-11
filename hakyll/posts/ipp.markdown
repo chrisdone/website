@@ -42,7 +42,7 @@ Haskell-specific note:
 
 ### Steps
 
-This **differs substantially to [the PVP](https://pvp.haskell.org/).** :warning:
+This **differs substantially to [the PVP](https://pvp.haskell.org/).** ⚠️
 
 * If you want to change a thing `foo`, just make a copy of it and call it `foo2`.
 * If it's impractical to add another version of a thing (because,
