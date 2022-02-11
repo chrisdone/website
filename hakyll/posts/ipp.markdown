@@ -15,7 +15,8 @@ and "package" is the level above.
 
 * If you **require more**, that's a break.
   * E.g. adding an extra field to a record or requiring a class
-  constraint, or another package dependency or newer major version of a package that wasn't needed before.
+    constraint, add an extra constructor which users can pattern match on, or another 
+    package dependency or newer major version of a package that wasn't needed before.
 * If you **provide less**, that's a break.
   * E.g. if you remove an export or a field of a record, return less or different
   from a function, remove a module, or an instance of an exposed type.
@@ -129,3 +130,21 @@ to bully them into changing their programs because you know better.
 #### Shouldn't old code be garbage collected?
 
 Yes, I covered deprecation above. I also covered removing old code and the ending of maintenance above.
+
+#### What if *I* add a constructor to a type? *I'd* have to duplicate my whole API!
+
+Yes. If *you* add a new constructor then *you'll* indeed **require more** 
+of the consumer of your package to form a complete pattern match. Duplicate the 
+type. *You* changed a namespace.
+
+I'll repeat myself: the IPP is about valuing the user's time over the maintainer's time. *It's not
+all about you and your needs.* Think about others who have to consume your work.
+
+##### Why have package versions when you are going to duplicate an entire module or package when you make a breaking change?
+
+I already covered this above, but let's rewrite in a different way: Package versions in Haskell are broken.
+They force all package maintainers to move in lock step. You can only practically use **one** version of a package in your installed package scope. 
+
+If you want to keep using foo-1.2.3 and another package
+you're using wants foo-2.0.0, you shouldn't be forced to change all your code. You should be given the option
+to migrate between them.
