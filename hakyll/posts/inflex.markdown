@@ -38,3 +38,5 @@ Related posts where you can get more of a feel of where I'm coming from:
 * [What’s wrong with the grid?](https://chrisdone.com/posts/whats-wrong-with-the-grid/)
 * [Bibliography](https://chrisdone.com/posts/inflex-bibliography/)
 * [Tech talk slides](https://docs.google.com/presentation/d/10aw_x3NbJSwDA9rIBhTa1CfdJS-aKwu7UyDIE4g8vQU/edit#slide=id.p) - these are very technical.
+
+More to come soon! Check back later.
