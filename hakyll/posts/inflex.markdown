@@ -11,7 +11,7 @@ Inflex® is a new creative digital workspace: powerful functional language (Hask
 That's the tagline.
 
 The frank explanation is that Inflex is a project that I've
-been working on in my spare time, along with my wife,
+been working on in my spare time, along with my partner,
 Giulia Costa, for 2 years. Progress is slow.
 
 You can (for now) checkout our Twitter [InflexHQ](https://twitter.com/InflexHQ)
