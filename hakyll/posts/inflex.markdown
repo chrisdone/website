@@ -14,7 +14,7 @@ The frank explanation is that Inflex is a project that I've
 been working on in my spare time, along with my wife,
 Giulia Costa, for 2 years. Progress is slow.
 
-You can (for now) checkout our Twitter [@InflexHQ](https://twitter.com/InflexHQ)
+You can (for now) checkout our Twitter [InflexHQ](https://twitter.com/InflexHQ)
 feed for screenshots, videos and updates.
 
 There used to be a homepage on inflex.io on a beefy Hetzner 
