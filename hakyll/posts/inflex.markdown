@@ -24,3 +24,9 @@ desktop experience.
 
 I'll expand on this in future updates. There will be a desktop
 program to download, more explanations, screenshots, etc.
+
+Related posts:
+
+* [The language of spreadsheets is bad](https://chrisdone.com/posts/language-of-spreadsheets-is-bad/)
+* [What’s wrong with the grid?](https://chrisdone.com/posts/whats-wrong-with-the-grid/)
+* [Bibliography](https://chrisdone.com/posts/inflex-bibliography/)
