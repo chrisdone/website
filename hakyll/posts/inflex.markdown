@@ -1,3 +1,11 @@
+---
+date: 2022-10-21
+title: Inflex
+description: Inflex
+author: Chris Done
+tags: haskell, designs
+---
+
 Inflex® is a new creative digital workspace: powerful functional language (Haskell-inspired), rich data structures (no grid!), browser-based.
 
 That's the tagline.
