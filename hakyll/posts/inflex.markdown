@@ -10,7 +10,7 @@ tags: haskell, designs
 
 <style>h1{display:none}
 body{background-color:#15263b;color:#aaa;font-family:sans-serif} a { color: #a7bdd9;
-text-decoration: none; }</style>
+text-decoration: none; } footer { display: none }</style>
 
 Inflex[®](https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00003503076) is a new creative digital workspace: powerful functional language (Haskell-inspired), rich data structures (no grid!), browser-based.
 
