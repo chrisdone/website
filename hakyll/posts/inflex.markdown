@@ -10,7 +10,7 @@ tags: haskell, designs
 
 <style>h1{display:none}</style>
 
-Inflex® is a new creative digital workspace: powerful functional language (Haskell-inspired), rich data structures (no grid!), browser-based.
+Inflex[®](https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00003503076) is a new creative digital workspace: powerful functional language (Haskell-inspired), rich data structures (no grid!), browser-based.
 
 That's the tagline.
 
@@ -29,8 +29,9 @@ desktop experience.
 I'll expand on this in future updates. There will be a desktop
 program to download, more explanations, screenshots, etc.
 
-Related posts:
+Related posts where you can get more of a feel of where I'm coming from:
 
 * [The language of spreadsheets is bad](https://chrisdone.com/posts/language-of-spreadsheets-is-bad/)
 * [What’s wrong with the grid?](https://chrisdone.com/posts/whats-wrong-with-the-grid/)
 * [Bibliography](https://chrisdone.com/posts/inflex-bibliography/)
+* [Tech talk slides](https://docs.google.com/presentation/d/10aw_x3NbJSwDA9rIBhTa1CfdJS-aKwu7UyDIE4g8vQU/edit#slide=id.gc28f59af57_0_162) - these are very technical.
