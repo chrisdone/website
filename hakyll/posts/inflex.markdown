@@ -29,6 +29,8 @@ server, but that's shut down now to cut expenses. Besides,
 I am moving away from the cloud towards a more user-empowering
 desktop experience.
 
+**We are no longer a SaaS!**
+
 I'll expand on this in future updates. There will be a desktop
 program to download, more explanations, screenshots, etc.
 
