@@ -42,3 +42,10 @@ Related posts where you can get more of a feel of where I'm coming from:
 * [Tech talk slides](https://docs.google.com/presentation/d/10aw_x3NbJSwDA9rIBhTa1CfdJS-aKwu7UyDIE4g8vQU/edit#slide=id.p) - these are very technical.
 
 More to come soon! Check back later.
+
+## Technical nerd details
+
+I'm attempting to get a static amd64 Linux build of Inflex working. 
+I'll be using sdl2 and x11 for the UI. This should be portable across
+all Linux distributions and, hopefully, should stand the test of time
+for e.g. 10 years. 
