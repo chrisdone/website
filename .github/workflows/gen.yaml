@@ -21,3 +21,6 @@ jobs:
           docker run -v`pwd`:`pwd` -w`pwd` --rm ghcr.io/chrisdone/website-hakyll2@sha256:ab4fff3cb18b46ed3fb47fad9de442d778043a7b62a50637a08eb489cb65be0c site build
           cd _site
           sudo cp -r * /var/www/html/
+          cd ../../webroot
+          sudo cp -r toys pdfs txt /var/www/html/
+          sudo cp -r posts/z /var/www/html/posts/
