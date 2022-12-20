@@ -10,28 +10,36 @@ Here's a small blog post to end 2022. I've put together a list of things I've ch
 mind about over the past few years, since the epoch (covid). I'm likely to flesh out each 
 of these in future posts.
 
-Things I’ve changed my mind about:
+Things I have a new appreciation for:
 
-1. Product types
-2. Excel
-3. Static types, dependent types, Rich Hickey, TLA+
-4. Haskell and Haskellers, Rust
-5. The cloud
-6. Federation
-7. Error handling/Erlang
-8. Fat clients/ the SPA
-9. React
-10. macOS: it isn’t that great
-11. Open source
-12. Performance is easy
-13. Kubernetes
-14. Email
-15. REST/hypermedia, Alan Kay
-16. Code vs data
-17. Modules
-18. Go
-19. Effect systems 
-20. Twitter, federation, blogging, RSS
+1. Excel
+2. Rich Hickey
+3. Model checkers, TLA+
+4. Federation
+5. Kubernetes
+6. Email
+7. Alan Kay
+8. REST/Hypermedia
+9. Go
+10. RSS, blogging
+11. Error handling in Erlang
+
+Things I view more negatively:
+
+1. Product types (as opposed to record types)
+4. Static types, dependent types
+5. Haskell and Haskellers, Rust
+6. The cloud
+9. Fat clients/ the SPA
+10. React
+11. macOS: it isn’t that great
+12. Open source
+13. "Performance is easy"
+14. Kubernetes (yaml)
+17. Code vs data
+18. Modules
+20. Effect systems 
+21. Twitter
 
 New things I believe/in:
 
