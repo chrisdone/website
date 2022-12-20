@@ -39,7 +39,7 @@ Things I view more negatively:
 17. Code vs data
 18. Modules
 20. Effect systems 
-21. Twitter
+21. Twitter, and microblogging
 
 New things I believe/in:
 
