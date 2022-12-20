@@ -1,13 +1,14 @@
 ---
 date: 2022-12-20
 title: Things I've changed my mind about
-description: 
+description: Rundown of things I've changed my mind about to round up Covid until 2022
 author: Chris Done
 tags: haskell
 ---
 
 Here's a small blog post to end 2022. I've put together a list of things I've changed my
-mind about over the past few years. I'm likely to flesh out each of these in future posts.
+mind about over the past few years, since the before times. I'm likely to flesh out each 
+of these in future posts.
 
 Things I’ve changed my mind about:
 
