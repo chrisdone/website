@@ -23,6 +23,7 @@ Things I have a new appreciation for:
 9. Go
 10. RSS, blogging
 11. Error handling in Erlang
+12. Code vs data
 
 Things I view more negatively:
 
@@ -36,7 +37,6 @@ Things I view more negatively:
 12. Open source, copyleft, GitHub
 13. "Performance is easy"
 14. Kubernetes (yaml)
-17. Code vs data
 18. Modules
 20. Effect systems 
 21. Twitter, and microblogging
