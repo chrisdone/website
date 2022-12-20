@@ -7,7 +7,7 @@ tags: haskell
 ---
 
 Here's a small blog post to end 2022. I've put together a list of things I've changed my
-mind about over the past few years, since the before times. I'm likely to flesh out each 
+mind about over the past few years, since the epoch (covid). I'm likely to flesh out each 
 of these in future posts.
 
 Things I’ve changed my mind about:
