@@ -29,11 +29,11 @@ Things I view more negatively:
 1. Product types (as opposed to record types)
 4. Static types, dependent types
 5. Haskell and Haskellers, Rust
-6. The cloud
+6. The cloud and SaaS
 9. Fat clients/ the SPA
 10. React
 11. macOS: it isn’t that great
-12. Open source
+12. Open source, copyleft, GitHub
 13. "Performance is easy"
 14. Kubernetes (yaml)
 17. Code vs data
