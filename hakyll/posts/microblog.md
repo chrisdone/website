@@ -6,7 +6,9 @@ author: Chris Done
 tags: microblog
 ---
 
-## 2023-01-07 19:38
+## Three questions of lang design
+
+*2023-01-07 19:38*
 
 There seem to be three interesting questions when I look at a new (mainstream/practical) programming language:
 
