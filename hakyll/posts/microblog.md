@@ -6,7 +6,7 @@ author: Chris Done
 tags: microblog
 ---
 
-<h2 id="2023-01-07-langs">2023-01-07 19:38</h2>
+## 2023-01-07 19:38
 
 There seem to be three interesting questions when I look at a new (mainstream/practical) programming language:
 
