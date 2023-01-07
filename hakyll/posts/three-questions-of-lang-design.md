@@ -1,14 +1,10 @@
 ---
 date: 2023-01-07
-title: Microblog
-description: Microblog
+title: Three questions of language design
+description: Three questions of language design
 author: Chris Done
 tags: microblog
 ---
-
-## Three questions of lang design
-
-*2023-01-07 19:38*
 
 There seem to be three interesting questions when I look at a new (mainstream/practical) programming language:
 
