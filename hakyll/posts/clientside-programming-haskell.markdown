@@ -197,7 +197,13 @@ choice. Other things considered: ClojureScript, TypeScript, Rust,
 [ReasonML](https://reasonml.github.io/), Elm,
 [OCaml](https://ocsigen.org/js_of_ocaml/3.1.0/manual/overview).
 
-As of today, I am personally still using PureScript with Halogen.
+2019: As of today, I am personally still using PureScript with Halogen.
+
+**2023 update:** I have pushed for our team at Artificial Labs 
+to start trying [Htmx](https://htmx.org/) 
+combined with Haskell. So far, the experience is good. Complexity 
+is low, performance is adequate, code is maintainable, toolchain 
+burden is nonexistent.
 
 [^1]: In retrospect, if it was marketed in the same way Elm was, and
 less "academic", it may have taken off. But it could just be that it
