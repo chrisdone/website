@@ -6,7 +6,20 @@ author: Chris Done
 tags: haskell
 ---
 
-This is a policy for publishing Haskell packages.
+## Summary
+
+This is a policy for publishing Haskell packages. It was published 
+in **February of 2022**. The aim of this policy is to remove all
+breaking changes to downstream users of packages, where feasible.
+It is most applicable to packages which have users, and/or have 
+a more or less stable API. It prioritizes downstream users at the 
+expense of author convenience.
+
+It has been implemented in the 
+[lucid](https://github.com/chrisdone/lucid)
+package.
+
+### Terms
 
 By "levels" in this description, we mean "module" is the first level,
 and "package" is the level above.
@@ -65,7 +78,6 @@ This **differs substantially to [the PVP](https://pvp.haskell.org/).** ⚠️
   [Spec-ulation](https://www.youtube.com/watch?v=oyLBGkS5ICk).
 * Related mantra of the Linux kernel: _[don't break user-space](https://unix.stackexchange.com/questions/235335/why-is-there-a-linux-kernel-policy-to-never-break-user-space)_
 * I don't agree at all with [this post](http://blog.ezyang.com/2016/12/thoughts-about-spec-ulation-rich-hickey/) by ezyang
-
 
 ### Long-term steps
 
