@@ -13,39 +13,28 @@ body{background-color:#15263b;color:#aaa;font-family:sans-serif} a { color: #a7b
 text-decoration: none; } footer { display: none } a:hover {   text-decoration: underline;
             color: #fff;}</style>
 
-Inflex[®](https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00003503076) is a new creative digital workspace: powerful functional language (Haskell-inspired), rich data structures (no grid!), browser-based.
+Inflex[®](https://trademarks.ipo.gov.uk/ipo-tmcase/page/Results/1/UK00003503076) was a new creative digital workspace: powerful functional language (Haskell-inspired), rich data structures (no grid!), browser-based.
 
-That's the tagline.
-
-The frank explanation is that Inflex is a project that I've
+Inflex was a project that I had
 been working on in my spare time, along with my partner,
-Giulia Costa, for 2 years. Progress is slow.
+Giulia Costa, for 2 years. Progress ground to a halt when
+I had a kid.
 
-You can (for now) checkout our Twitter [InflexHQ](https://twitter.com/InflexHQ)
-feed for screenshots, videos and updates.
+I'm no longer working on it.
 
-There used to be a homepage on inflex.io on a beefy Hetzner
-server, but that's shut down now to cut expenses. Besides,
-I am moving away from the cloud towards a more user-empowering
-desktop experience.
+There is an archive of its source code available under AGPL (that means running it as a service counts as distribution) license:
 
-**We are no longer a SaaS!**
+* https://github.com/chrisdone/inflex
+* https://git.sr.ht/~chrisdone/inflex
 
-I'll expand on this in future updates. There will be a desktop
-program to download, more explanations, screenshots, etc.
+The compiler source might be of interest to language implementation nerds.
 
-Related posts where you can get more of a feel of where I'm coming from:
+You can checkout the [dead] Twitter account [InflexHQ](https://twitter.com/InflexHQ)
+feed for screenshots, videos.
+
+Related posts where you can get more of a feel of where my head was at:
 
 * [The language of spreadsheets is bad](https://chrisdone.com/posts/language-of-spreadsheets-is-bad/)
 * [What’s wrong with the grid?](https://chrisdone.com/posts/whats-wrong-with-the-grid/)
 * [Bibliography](https://chrisdone.com/posts/inflex-bibliography/)
 * [Tech talk slides](https://docs.google.com/presentation/d/10aw_x3NbJSwDA9rIBhTa1CfdJS-aKwu7UyDIE4g8vQU/edit#slide=id.p) - these are very technical.
-
-More to come soon! Check back later.
-
-## Technical nerd details
-
-I'm attempting to get a static amd64 Linux build of Inflex working. 
-I'll be using sdl2 and x11 for the UI. This should be portable across
-all Linux distributions and, hopefully, should stand the test of time
-for e.g. 10 years. 
