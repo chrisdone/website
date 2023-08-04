@@ -20,7 +20,7 @@ methodologies (scrum, open source). All quite good used in moderation,
 but tend to be used like violence.
 
 All downsides become mere setbacks, all potholes become user error or
-ignorance, alternatives are black holes of complexity! It's quite hard
+ignorance, alternative hammers are black holes of complexity! It's quite hard
 to reason with people who are doing this. _O ye, of little faith!_
 
 That's reasoning violently.
