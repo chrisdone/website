@@ -22,5 +22,5 @@ jobs:
           cd _site
           sudo cp -r * /var/www/html/
           cd ../../webroot
-          sudo cp -r toys pdfs txt /var/www/html/
+          sudo cp -r toys pdfs txt images /var/www/html/
           sudo cp -r posts/z /var/www/html/posts/
