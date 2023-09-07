@@ -1,6 +1,6 @@
 ---
 date: 2023-09-07
-title: Pickling: The really obvious missing feature of all web browsers
+title: "Pickling: The really obvious missing feature of all web browsers"
 description: The really obvious missing featuee of all web browsers
 author: Chris Done
 tags: browsers
