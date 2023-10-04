@@ -1,5 +1,5 @@
 ---
-date: 2011-09-23
+date: 2023-09-23
 title: AI and Machine Thinking
 description: AI and Machine Thinking
 author: Chris Done
