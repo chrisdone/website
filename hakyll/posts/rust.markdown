@@ -30,7 +30,7 @@ reading.
 ## Take Sugar?
 
 Rust's use of magical sugar constructs, where the compiler will
-automatically insert dereferences and copies and clones and drops for
+automatically insert dereferences and copies and drops for
 you has an initial appealing "it's all simple underneath" quality to
 it, but in practice this leads to bad compile errors: The worst kind
 of compile error is the one where the compiler is complaining about
