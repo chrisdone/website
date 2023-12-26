@@ -27,7 +27,6 @@ based on Haskell.
 * Source code: [Hell.hs](https://github.com/chrisdone/hell/blob/main/Hell.hs)
 * Examples: [examples/](https://github.com/chrisdone/hell/tree/main/examples)
 * Downloads: [Releases](https://github.com/chrisdone/hell/releases)
-* Documentation: [README](https://github.com/chrisdone/hell/blob/main/readme.md)
 
 **Quick example**
 
