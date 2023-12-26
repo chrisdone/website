@@ -11,7 +11,7 @@ language
 and implementation
 based on Haskell.
 
-Supports:
+**Supports**
 
 * UTF-8 and binary file I/O
 * UTF-8 text operations (via `text`)
