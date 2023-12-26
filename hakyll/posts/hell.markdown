@@ -11,6 +11,17 @@ language
 and implementation
 based on Haskell.
 
+Supports:
+
+* UTF-8 and binary file I/O
+* UTF-8 text operations (via `text`)
+* Stdout/stderr/stdin I/O
+* Directory, arguments, environment variables
+* Concurrency (via `async`)
+* Recursion (via `fix`)
+* Running processes (via `typed-process`)
+
+
 **Links**
 
 * Source code: [Hell.hs](https://github.com/chrisdone/hell/blob/main/Hell.hs)
