@@ -1,6 +1,6 @@
 ---
 date: 2023-12-26
-title: Hell: Shell scripting based on Haskell
+title: "Hell: Shell scripting based on Haskell"
 description: Shell scripting based on Haskell
 author: Chris Done
 tags: haskell
