@@ -6,8 +6,8 @@ author: Chris Done
 tags: haskell
 ---
 
-Hell is a shell scripting 
-language 
+Hell is a shell scripting
+language
 and implementation
 based on Haskell.
 
@@ -30,32 +30,32 @@ based on Haskell.
 
 **Quick example**
 
-This script demonstrates 
+This script demonstrates
 using `curl`
-to download things 
+to download things
 concurrently.
 
 ```haskell
 main = do
 
   -- Run two things concurrently and return both results
-  (left, right) :: (Text, Text) <-
-    Async.concurrently @Text @Text
+  (left, right) <-
+    Async.concurrently
        (Main.curl "https://worldtimeapi.org/api/timezone/Europe/London")
        (Main.curl "https://worldtimeapi.org/api/timezone/Europe/Rome")
   Text.putStrLn left
   Text.putStrLn right
 
   -- Run two things concurrently and return the one that completes first
-  result :: Either Text Text <-
-    Async.race @Text @Text
+  result <-
+    Async.race
        (Main.curl "https://worldtimeapi.org/api/timezone/Europe/London")
        (Main.curl "https://worldtimeapi.org/api/timezone/Europe/Rome")
-  Either.either @Text @Text @(IO ()) Text.putStrLn Text.putStrLn result
+  Either.either Text.putStrLn Text.putStrLn result
 
-curl = \(url :: Text) -> do
-  (out, err) :: (Text, Text) <- Text.readProcess_ (Process.proc "curl" [url])
-  IO.pure @Text out
+curl = \url -> do
+  (out, err) <- Text.readProcess_ (Process.proc "curl" [url])
+  IO.pure out
 ```
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
@@ -135,8 +135,9 @@ scripting purposes.
 * Some primitives that can be polymorphic (but require immediately
   applied type applications).
 * Polymorphic primitives such as `id` require passing the type of the
-  argument as `id @Int 123`. You cannot define polymorphic lambdas of
-  your own. It's not full System-F.
+  argument as `id @Int 123`, but type inference can infer `id 123` for
+  you. You cannot define polymorphic lambdas of your own. It's not
+  full System-F.
 * Recursion is not supported. Use `Function.fix`.
 * Supports type-classes (`Eq`, `Ord` and `Show` only), but the type
   must still be explicitly supplied. You can't define classes, or data
@@ -144,9 +145,8 @@ scripting purposes.
 * The types and functions available lean directly on the host language
   (Haskell) and are either directly lifted, or a simplified layer over
   the original things.
-* There is presently no type inference (but I will add it). All
-  parameters of lambdas, or do-notation let bindings, must have their
-  type declared via a pattern signature: `\(x :: Int) -> x`
+* There is basic type inference, so you can omit type signatures, but
+  not there are no polytypes.
 * Globals of any kind must be fully qualified (`Main.foo` and
   `Text.putstrLn`), including the current module.
 
@@ -198,10 +198,10 @@ main = do
   Text.putStrLn (Int.show (Main.fib 30))
 
 fib =
-  Function.fix @(Int -> Int)
-    (\(fib :: Int -> Int) -> \(i :: Int) ->
-      Bool.bool @Int
-        (Bool.bool @Int
+  Function.fix
+    (\fib i ->
+      Bool.bool
+        (Bool.bool
            (Int.plus (fib (Int.subtract 1 i))
                      (fib (Int.subtract 2 i)))
            1
