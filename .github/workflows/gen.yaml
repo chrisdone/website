@@ -15,6 +15,4 @@ jobs:
       - name: hell website.hell
         run: |
           time hell website.hell
-          cd webroot
-          sudo cp -r posts/ /var/www/html/
-          sudo cp -r toys pdfs txt images /var/www/html/
+          rsync -r webroot/* /var/www/html/

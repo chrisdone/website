@@ -6,14 +6,14 @@ author: Chris Done
 tags: rust
 ---
 
-**2023-10-13** Edited based on feedback, but preserves the same content.
+**2023-10-13:** Edited based on feedback, but preserves the same content.
 
 This is a little summary of my current thoughts on Rust. I wonder
 whether I'll look back in five years and see if my views have changed.
 
 ## The Good
 
-So that Gentle Reader knows that I'm not entirely biased 
+So that Gentle Reader knows that I'm not entirely biased
 against the language, there are obviously positive things
 to appreciate about it:
 
@@ -32,14 +32,14 @@ to appreciate about it:
 
 The use of unsafe is a little disturbing, because many libraries
 feature it, and people are tempted to use it on private work projects
-to quickly get around the language's limitations. But it's not much 
-different to using an FFI. I don't see this is a big downside. 
+to quickly get around the language's limitations. But it's not much
+different to using an FFI. I don't see this is a big downside.
 
-`panic` is a little more bothersome, because 
+`panic` is a little more bothersome, because
 Rust libraries go to great pains (with many syntactic tricks like `?`
-and auto-conversions from smaller error types to larger ones) to handle 
-errors explicitly, but then panics unwind the stack to the top of the 
-process, and panics inside a panic don't run destructors, etc. The overall 
+and auto-conversions from smaller error types to larger ones) to handle
+errors explicitly, but then panics unwind the stack to the top of the
+process, and panics inside a panic don't run destructors, etc. The overall
 effect is that, like [my three questions of language design](https://chrisdone.com/posts/three-questions-of-lang-design/),
 the answer to "how you handle errors" is "at least two, incompatible ways."
 
@@ -71,15 +71,15 @@ wonderfully. There's nothing wrong with that, but it's a theme.
 This touches on another topic I'd like to write about elsewhere: the
 difference between practice and theory and how users of languages like
 Rust and Haskell that make big promises and require big sacrifices
-don't seem to distinguish the difference. [It's not the technology 
+don't seem to distinguish the difference. [It's not the technology
 that's working poorly, it's that you're using it wrongly.](https://chrisdone.com/posts/reasoning-violently/)
 
 In practice, people just want to be able to write a tree-like type
 without having to play Chess against the compiler. I predict that
 tracing garbage collectors will become popular in Rust eventually.
 
-This is both Rust's main goal--be like C, no garbage collection,[^2] 
-but safe--and also its main downside. People waste time 
+This is both Rust's main goal--be like C, no garbage collection,[^2]
+but safe--and also its main downside. People waste time
 on trivialities that will never make a difference.
 
 ## The Rewrite Fallacy
@@ -92,14 +92,14 @@ performance discipline.
 
 ## Complexity
 
-Rust has arrived at the complexity of Haskell and C++, each year 
+Rust has arrived at the complexity of Haskell and C++, each year
 requiring more knowledge to keep up with the latest and greatest. Go was
-designed as the antidote to this kind of endlessly increasing language 
-surface area. Endless libraries re-treading existing patterns (web 
-services, parsers, etc.) in Rust. As a long-term Haskeller, I've done 
+designed as the antidote to this kind of endlessly increasing language
+surface area. Endless libraries re-treading existing patterns (web
+services, parsers, etc.) in Rust. As a long-term Haskeller, I've done
 more than 15 years of riding a hamster wheel like that. It is fun for
-a while, but at some point I grew 
-tired of it. This aspect of Rust puts me off. I don't need another 
+a while, but at some point I grew
+tired of it. This aspect of Rust puts me off. I don't need another
 [tamagotchi](https://chrisdone.com/posts/tamagotchi-tooling/).
 
 ## The "Friendly" Community
@@ -125,10 +125,10 @@ Rust is going through the same thing, much more rapidly. Is it a
 reason to avoid Rust? No. But a "nice" community isn't a reason to
 join an upcoming language, either.
 
-Since I wrote this, people are already trying to [fork Rust](https://news.ycombinator.com/item?id=36122270) 
+Since I wrote this, people are already trying to [fork Rust](https://news.ycombinator.com/item?id=36122270)
 because they're not happy with the governance of it. This doesn't mean
-anything deep other than that people are using Rust now, as stated 
-above, and the "friendly, welcoming" starts to become mixed with more diverse 
+anything deep other than that people are using Rust now, as stated
+above, and the "friendly, welcoming" starts to become mixed with more diverse
 moods and motivations.
 
 ## Async is highly problematic
@@ -162,14 +162,14 @@ pudding. Async introduces
 [long, heated discussions.](https://github.com/diesel-rs/diesel/issues/399)
 
 The problem for Rust is that its users want a runtime, but want the
-option of not having one. The result is a mess. When combined with 
+option of not having one. The result is a mess. When combined with
 iterators, I think understanding such code is quite
 difficult.
 
 Generally, I think Go, Erlang and Haskell are the better choice
-here for general purpose use. A tracing garbage collector and green 
-threads make programmers more productive for general purpose 
-programming (not systems programming). 
+here for general purpose use. A tracing garbage collector and green
+threads make programmers more productive for general purpose
+programming (not systems programming).
 Which brings me to the next section.
 
 ## As a general purpose language
@@ -188,25 +188,25 @@ but that's their problem, not mine.
 ## Conclusions, if any
 
 I won't be using Rust for any of my own personal projects for the above
-stated reasons. But it was used at my job at the time of writing, so I 
+stated reasons. But it was used at my job at the time of writing, so I
 felt the need to express myself about it.
 
 But I wouldn't mind using it as a replacement for single-threaded C if
 I just use the standard library, that might be fun, although I don't do
 any embedded work, so I wouldn't hold my breath.
 
-I think that the excellent tooling and dev team for Rust, [subsidized by 
-Big Tech](https://www.youtube.com/watch?v=XZ3w_jec1v8), pulls the wool 
+I think that the excellent tooling and dev team for Rust, [subsidized by
+Big Tech](https://www.youtube.com/watch?v=XZ3w_jec1v8), pulls the wool
 over people's eyes and convinces them that this is a good language that is
 simple and worth investing in. There's danger in that type of thinking.
 
 [^1]: Having done my fair share of C code, there's nothing new here for me.
 
-[^2]: Of course, `Rc` and `Arc` are reference counters, which is a form 
-      of garbage collection. See _The Garbage Collection Handbook: The 
+[^2]: Of course, `Rc` and `Arc` are reference counters, which is a form
+      of garbage collection. See _The Garbage Collection Handbook: The
       Art of Automatic Memory Management_ published in 1996. But most
       developers have a superficial understanding of garbage collection
       as a technical subject, and therefore "garbage collection" for them
-      means "tracing garbage collector." Hence bizarre discussions that 
-      pit "garbage collecion versus reference counting." It's like saying 
+      means "tracing garbage collector." Hence bizarre discussions that
+      pit "garbage collecion versus reference counting." It's like saying
       fruit versus apples.
