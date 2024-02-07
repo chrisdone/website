@@ -87,73 +87,122 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>The constraint trick for instances</h1>
+
+<h1>The constraint trick for instances</h1>
 
 <p>Ever seen this in a library,</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">instance</span> (var <span class="op">~</span> <span class="dt">AType</span>) <span class="ot">=&gt;</span> <span class="dt">ClassName</span> (<span class="dt">SomeType</span> var)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (var <span class="op">~</span> <span class="dt">AType</span>) <span class="ot">=&gt;</span> <span class="dt">ClassName</span> (<span class="dt">SomeType</span> var)</span></code></pre></div>
 <p>and thought, “Shenanigans! Why not just have this?”</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">ClassName</span> (<span class="dt">SomeType</span> <span class="dt">AType</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">ClassName</span> (<span class="dt">SomeType</span> <span class="dt">AType</span>)</span></code></pre></div>
 <p>Me too!</p>
-<p>I only learned of this solution relatively recently, and I know experienced Haskellers who also only understood this recently or still don’t. Hence this quick write up. Here’s the thought process.</p>
-<p>We’re writing a trivial pretty printer and we’re using <code>Writer</code>. We write things like:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> execWriter (<span class="kw">do</span> tell <span class="st">&quot;hello&quot;</span>; tell <span class="st">&quot;world&quot;</span><span class="ot"> ::</span> <span class="dt">Writer</span> <span class="dt">String</span> ())</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="st">&quot;helloworld&quot;</span></span></code></pre></div>
-<p>Quality. But writing <code>tell</code> every time is so boring! How about we use the <code>IsString</code> class so that we can just write the string literals like this?</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">do</span> <span class="st">&quot;hello&quot;</span>; <span class="st">&quot;world&quot;</span></span></code></pre></div>
+<p>I only learned of this solution relatively recently, and I know
+experienced Haskellers who also only understood this recently or still
+don’t. Hence this quick write up. Here’s the thought process.</p>
+<p>We’re writing a trivial pretty printer and we’re using
+<code>Writer</code>. We write things like:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> execWriter (<span class="kw">do</span> tell <span class="st">&quot;hello&quot;</span>; tell <span class="st">&quot;world&quot;</span><span class="ot"> ::</span> <span class="dt">Writer</span> <span class="dt">String</span> ())</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;helloworld&quot;</span></span></code></pre></div>
+<p>Quality. But writing <code>tell</code> every time is so boring! How
+about we use the <code>IsString</code> class so that we can just write
+the string literals like this?</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">do</span> <span class="st">&quot;hello&quot;</span>; <span class="st">&quot;world&quot;</span></span></code></pre></div>
 <p>Let’s write the <code>IsString</code> instance:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Writer</span> <span class="dt">String</span> a) <span class="kw">where</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>  fromString <span class="ot">=</span> tell</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Writer</span> <span class="dt">String</span> a) <span class="kw">where</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  fromString <span class="ot">=</span> tell</span></code></pre></div>
 <p>What do you say, GHC?</p>
 <blockquote>
 <p>Couldn’t match type ‘a’ with ‘()’</p>
 <p>‘a’ is a rigid type variable bound by the instance declaration</p>
 </blockquote>
-<p>Oh. Good point. The type of our <code>tell</code> call results in <code>Writer String ()</code>. A small set back. Fine, let’s change the instance declaration to just be <code>()</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Writer</span> <span class="dt">String</span> ()) <span class="kw">where</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>  fromString <span class="ot">=</span> tell</span></code></pre></div>
+<p>Oh. Good point. The type of our <code>tell</code> call results in
+<code>Writer String ()</code>. A small set back. Fine, let’s change the
+instance declaration to just be <code>()</code>:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Writer</span> <span class="dt">String</span> ()) <span class="kw">where</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  fromString <span class="ot">=</span> tell</span></code></pre></div>
 <p>GHC loves it!</p>
 <p>Let’s try using it:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> execWriter (<span class="kw">do</span> <span class="st">&quot;hello&quot;</span>; <span class="st">&quot;world&quot;</span><span class="ot"> ::</span> <span class="dt">Writer</span> <span class="dt">String</span> ())</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="op">&lt;</span>interactive<span class="op">&gt;:</span><span class="dv">42</span><span class="op">:</span><span class="dv">16</span><span class="op">:</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>    <span class="dt">No</span> <span class="kw">instance</span> for (<span class="dt">IsString</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">Identity</span> a))</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>      arising from the literal ‘<span class="st">&quot;hello&quot;</span>’</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>    <span class="dt">The</span> <span class="kw">type</span> variable ‘a’ is ambiguous</span></code></pre></div>
-<p>This displeases me. But it adds up given the type of <code>(&gt;&gt;)</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="ot">(&gt;&gt;) ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> m a <span class="ot">-&gt;</span> m b <span class="ot">-&gt;</span> m b</span></code></pre></div>
-<p>In <code>_ &gt;&gt; return () :: Writer String ()</code>, the type of <code>_</code> is <code>Writer String a</code>, so we really need an <code>IsString</code> instance that matches that. But we <em>already</em> tried that. Oh, woe<em>!</em></p>
-<p>Some people reading this will be nodding in recognition of this same problem they had while writing that perfect API that <em>just</em> won’t work because of this niggling issue.</p>
-<p>Here comes the trick.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> So let’s go back to a basic instance:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">MyTuple</span> a b <span class="ot">=</span> <span class="dt">MyTuple</span> a b</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Show</span> (<span class="dt">MyTuple</span> a b) <span class="kw">where</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>  <span class="fu">show</span> _ <span class="ot">=</span> <span class="st">&quot;MyTuple &lt;some value&gt; &lt;some value&gt;&quot;</span></span></code></pre></div>
-<p>Suppose I replace this instance with a new instance that has constraints:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="kw">instance</span> (<span class="dt">Show</span> a,<span class="dt">Show</span> b) <span class="ot">=&gt;</span> <span class="dt">Show</span> (<span class="dt">MyTuple</span> a b) <span class="kw">where</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>  <span class="fu">show</span> (<span class="dt">MyTuple</span> a b) <span class="ot">=</span> <span class="st">&quot;MyTuple &quot;</span> <span class="op">++</span> <span class="fu">show</span> a <span class="op">++</span> <span class="st">&quot; &quot;</span> <span class="op">++</span> <span class="fu">show</span> b</span></code></pre></div>
-<p>Question: Does that change whether GHC decides to pick this new version of instance over others that may be available, compared to the one above? Have a think.</p>
-<p>The answer is: nein! The constraints of an instance don’t have anything to do with deciding whether an instance is picked from the list of instances available. Constraints only apply <em>after GHC has already decided it’s going with this instance</em>.</p>
-<p>So, cognizant of this obvious-after-the-fact property, let’s use the equality constraint that was introduced with GADTs and type families (enabling either brings in <code>~</code>):</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="kw">instance</span> a <span class="op">~</span> () <span class="ot">=&gt;</span> <span class="dt">IsString</span> (<span class="dt">Writer</span> <span class="dt">String</span> a) <span class="kw">where</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>  fromString <span class="ot">=</span> tell</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> execWriter (<span class="kw">do</span> <span class="st">&quot;hello&quot;</span>; <span class="st">&quot;world&quot;</span><span class="ot"> ::</span> <span class="dt">Writer</span> <span class="dt">String</span> ())</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>interactive<span class="op">&gt;:</span><span class="dv">42</span><span class="op">:</span><span class="dv">16</span><span class="op">:</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">No</span> <span class="kw">instance</span> for (<span class="dt">IsString</span> (<span class="dt">WriterT</span> <span class="dt">String</span> <span class="dt">Identity</span> a))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>      arising from the literal ‘<span class="st">&quot;hello&quot;</span>’</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">The</span> <span class="kw">type</span> variable ‘a’ is ambiguous</span></code></pre></div>
+<p>This displeases me. But it adds up given the type of
+<code>(&gt;&gt;)</code>:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ot">(&gt;&gt;) ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> m a <span class="ot">-&gt;</span> m b <span class="ot">-&gt;</span> m b</span></code></pre></div>
+<p>In <code>_ &gt;&gt; return () :: Writer String ()</code>, the type of
+<code>_</code> is <code>Writer String a</code>, so we really need an
+<code>IsString</code> instance that matches that. But we
+<em>already</em> tried that. Oh, woe<em>!</em></p>
+<p>Some people reading this will be nodding in recognition of this same
+problem they had while writing that perfect API that <em>just</em> won’t
+work because of this niggling issue.</p>
+<p>Here comes the trick.<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> So let’s go back to a basic
+instance:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">MyTuple</span> a b <span class="ot">=</span> <span class="dt">MyTuple</span> a b</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> (<span class="dt">MyTuple</span> a b) <span class="kw">where</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">show</span> _ <span class="ot">=</span> <span class="st">&quot;MyTuple &lt;some value&gt; &lt;some value&gt;&quot;</span></span></code></pre></div>
+<p>Suppose I replace this instance with a new instance that has
+constraints:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">Show</span> a,<span class="dt">Show</span> b) <span class="ot">=&gt;</span> <span class="dt">Show</span> (<span class="dt">MyTuple</span> a b) <span class="kw">where</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">show</span> (<span class="dt">MyTuple</span> a b) <span class="ot">=</span> <span class="st">&quot;MyTuple &quot;</span> <span class="op">++</span> <span class="fu">show</span> a <span class="op">++</span> <span class="st">&quot; &quot;</span> <span class="op">++</span> <span class="fu">show</span> b</span></code></pre></div>
+<p>Question: Does that change whether GHC decides to pick this new
+version of instance over others that may be available, compared to the
+one above? Have a think.</p>
+<p>The answer is: nein! The constraints of an instance don’t have
+anything to do with deciding whether an instance is picked from the list
+of instances available. Constraints only apply <em>after GHC has already
+decided it’s going with this instance</em>.</p>
+<p>So, cognizant of this obvious-after-the-fact property, let’s use the
+equality constraint that was introduced with GADTs and type families
+(enabling either brings in <code>~</code>):</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> a <span class="op">~</span> () <span class="ot">=&gt;</span> <span class="dt">IsString</span> (<span class="dt">Writer</span> <span class="dt">String</span> a) <span class="kw">where</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  fromString <span class="ot">=</span> tell</span></code></pre></div>
 <p>Let’s try it:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> execWriter (<span class="kw">do</span> <span class="st">&quot;hello&quot;</span> ; <span class="st">&quot;world&quot;</span><span class="ot"> ::</span> <span class="dt">Writer</span> <span class="dt">String</span> ())</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="st">&quot;helloworld&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> execWriter (<span class="kw">do</span> <span class="st">&quot;hello&quot;</span> ; <span class="st">&quot;world&quot;</span><span class="ot"> ::</span> <span class="dt">Writer</span> <span class="dt">String</span> ())</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;helloworld&quot;</span></span></code></pre></div>
 <p><img src="http://i.imgur.com/v4j4izS.gif"></p>
-<p>This instance is picked by GHC, as we hoped, because of the <code>a</code>. The instance method also type checks, because the constraint applies when type checking the instance methods, just like if you write a regular declaration like:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="ot">foo ::</span> (a <span class="op">~</span> ()) <span class="ot">=&gt;</span> a</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>foo <span class="ot">=</span> ()</span></code></pre></div>
-<p>That’s it! This crops up in a number of my own libraries and knowing this really helped me. Here is <a href="https://github.com/chrisdone/lucid/blob/16c4b09ee90e2e61fef0e1070c0c3ebaf6246da1/src/Lucid/Base.hs#L81">a real example from my <code>lucid</code> library</a>:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="kw">instance</span> (a <span class="op">~</span> (),<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Monoid</span> (<span class="dt">HtmlT</span> m a) <span class="kw">where</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a>  <span class="fu">mempty</span>  <span class="ot">=</span> <span class="fu">return</span> <span class="fu">mempty</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>  <span class="fu">mappend</span> <span class="ot">=</span> liftM2 <span class="fu">mappend</span></span></code></pre></div>
+<p>This instance is picked by GHC, as we hoped, because of the
+<code>a</code>. The instance method also type checks, because the
+constraint applies when type checking the instance methods, just like if
+you write a regular declaration like:</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">foo ::</span> (a <span class="op">~</span> ()) <span class="ot">=&gt;</span> a</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>foo <span class="ot">=</span> ()</span></code></pre></div>
+<p>That’s it! This crops up in a number of my own libraries and knowing
+this really helped me. Here is <a
+href="https://github.com/chrisdone/lucid/blob/16c4b09ee90e2e61fef0e1070c0c3ebaf6246da1/src/Lucid/Base.hs#L81">a
+real example from my <code>lucid</code> library</a>:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (a <span class="op">~</span> (),<span class="dt">Monad</span> m) <span class="ot">=&gt;</span> <span class="dt">Monoid</span> (<span class="dt">HtmlT</span> m a) <span class="kw">where</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mempty</span>  <span class="ot">=</span> <span class="fu">return</span> <span class="fu">mempty</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mappend</span> <span class="ot">=</span> liftM2 <span class="fu">mappend</span></span></code></pre></div>
 <p>Hope this was helpful!</p>
-<section class="footnotes" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>Actually, it’s a natural consequence to grokking how instance resolution works (but calling it a “trick” makes for a catchy title).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Actually, it’s a natural consequence to grokking how
+instance resolution works (but calling it a “trick” makes for a catchy
+title).<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -161,8 +210,8 @@
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2015-06-19 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2015-06-19 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

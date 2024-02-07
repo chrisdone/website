@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Thoughts on type class implementation</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Thoughts on type class implementation</h1>
+
+<p>While designing and implementing Inflex, I discovered that there’s a
+lot of space in design decisions around type classes. Haskell’s
+implementation of them has a number of pre-made decisions built into
+Haskell 98. Many extensions (multiple type params, functional
+dependencies, associated types) have been added to support type level
+programming since then. Inflex’s needs are more modest.</p>
+<p><a href="https://okmij.org/ftp/Haskell/TypeClass.html#Haskell1">Oleg
+Kiselyov has shown</a> that in practice you only really need one type
+class, with clever use of instances. So you could imagine that a
+language with just a single type class and open instances would be
+called ClosedClassOpenInstances.</p>
+<p>You might not permit new classes and instances, only built in ones.
+So an alternative language might be called ClosedClassesClosedInstances.
+A language that would benefit from this would be Elm.</p>
+<p>I decided not to support multiple methods for a single class. This
+makes the feature more like “generic functions.” For any multi method
+class in Haskell, I can often find a type that would be an instance if
+it weren’t for one method.</p>
+<p>Another consideration is whether to permit superclasses. Haskellers
+are very tempted to make class hierarchies. People like <a
+href="https://github.com/fsharp/fslang-suggestions/issues/243#issuecomment-916079347">Don
+Syme would argue</a> that this urge leads nowhere good. Haskell’s own
+Prelude has a very questionable hierarchy. I decided against
+superclasses too.</p>
+<p>Elsewhere there are other surprises. A really simple compiler like
+Inflex goes through stages like this:</p>
+<ul>
+<li>Lex, parse, rename</li>
+<li>Generate constraints (elaboration)</li>
+<li>Solve constraints</li>
+<li>Generalize (insert poly types)</li>
+<li>Resolve (resolve class method calls to instances)</li>
+<li>Defaulter</li>
+</ul>
+<p>This is reasonable enough. Very easy to understand each stage.</p>
+<p>But there’s a non-obvious limitation in this approach which is that
+if you want to support instance contexts, then, after resolving an
+instance, you need to add the constraints from the context, and then go
+back to solving constraints again. Inflex doesn’t support instance
+contexts, but if it did, it would need a different pipeline.</p>
+<p>There’s a bunch of papers about type classes, especially getting
+inference to work well for them. Other things like <a
+href="https://dl.acm.org/doi/abs/10.1145/1932681.1863596">instance
+chains</a> as implemented in PureScript are also a departure from
+Haskell.</p>
+<p>I’ll write more another time with more code examples.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2022-01-09 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>

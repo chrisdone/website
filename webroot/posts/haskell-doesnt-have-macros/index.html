@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Haskell doesn't have macros</title>
+    <title>Haskell doesn’t have macros</title>
     <style>
       body {
       max-width: 40em;
@@ -87,123 +87,238 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Haskell doesn't have macros</h1>
 
-<p>I wanted to underscore a specific point about Haskell’s metaprogramming capabilities. It doesn’t have a macro system, the kind that Lispers love. It has metaprogramming, yes. But not the kind that’s useful in the same way.</p>
+<h1>Haskell doesn’t have macros</h1>
+
+<p>I wanted to underscore a specific point about Haskell’s
+metaprogramming capabilities. It doesn’t have a macro system, the kind
+that Lispers love. It has metaprogramming, yes. But not the kind that’s
+useful in the same way.</p>
 <h2 id="what-macros-are">What macros are</h2>
 <p>In Lisp, macros are:</p>
 <ol type="1">
 <li>Syntactically light-weight.</li>
-<li>Don’t require writing a parser to deal with the language’s native syntax.</li>
-<li>They work on trees of lexical tokens of the language; <em>not</em> abstract syntax trees. At best, they are incomplete ASTs.</li>
+<li>Don’t require writing a parser to deal with the language’s native
+syntax.</li>
+<li>They work on trees of lexical tokens of the language; <em>not</em>
+abstract syntax trees. At best, they are incomplete ASTs.</li>
 </ol>
-<p>Macros are functions that take in this tree of tokens, either atomic lexical tokens, or lists denoted by balanced parentheses, and do some transforms, and return the same as output.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>foo</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="st">&quot;bar&quot;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="dv">123</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>(foo <span class="st">&quot;bar&quot;</span> (<span class="dv">123</span>) <span class="kw">nil</span> (blob x))</span></code></pre></div>
+<p>Macros are functions that take in this tree of tokens, either atomic
+lexical tokens, or lists denoted by balanced parentheses, and do some
+transforms, and return the same as output.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>foo</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;bar&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dv">123</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(foo <span class="st">&quot;bar&quot;</span> (<span class="dv">123</span>) <span class="kw">nil</span> (blob x))</span></code></pre></div>
 <h2 id="quoting-in-lisp-vs-haskell">Quoting in Lisp vs Haskell</h2>
-<p>In Haskell, we have GHC’s Template Haskell. What that provides is:</p>
+<p>In Haskell, we have GHC’s Template Haskell. What that provides
+is:</p>
 <ol type="1">
-<li>Splices: <code>$(foo)</code> – this syntax means: run the code <code>foo</code>, in the <code>Q</code> monad, at compile time, and it should produce a valid Haskell abstract syntax tree.</li>
-<li>Quotation: <code>[|bar|]</code> – this means: produce an action in the <code>Q</code> monad which will produce the abstract syntax tree for the code <code>bar</code>.</li>
-<li>Quasiquotation: <code>[zot|anything|]</code> – this means: the <code>zot</code> is a parser that will parse the string contents <code>anything</code> and produce an abstract syntax tree in the <code>Q</code> monad.</li>
+<li>Splices: <code>$(foo)</code> – this syntax means: run the code
+<code>foo</code>, in the <code>Q</code> monad, at compile time, and it
+should produce a valid Haskell abstract syntax tree.</li>
+<li>Quotation: <code>[|bar|]</code> – this means: produce an action in
+the <code>Q</code> monad which will produce the abstract syntax tree for
+the code <code>bar</code>.</li>
+<li>Quasiquotation: <code>[zot|anything|]</code> – this means: the
+<code>zot</code> is a parser that will parse the string contents
+<code>anything</code> and produce an abstract syntax tree in the
+<code>Q</code> monad.</li>
 </ol>
 <p>This code is ran at compile-time. That’s different to Lisp.</p>
 <p>In Lisp, e.g. Common Lisp, we have:</p>
 <ol type="1">
 <li>Splices: <code>,foo</code> – run the code to produce a tree.</li>
-<li>Quotation: <code>'bar</code> or <code>'(bar abc)</code> – quote the code, that’s all.</li>
-<li>Quasiquotation: <code>`bar</code> or <code>`(bar ,foo)</code> – this is like a regular quotation, but I can place <code>,</code> anywhere to mean “run this code”.</li>
+<li>Quotation: <code>'bar</code> or <code>'(bar abc)</code> – quote the
+code, that’s all.</li>
+<li>Quasiquotation: <code>`bar</code> or <code>`(bar ,foo)</code> – this
+is like a regular quotation, but I can place <code>,</code> anywhere to
+mean “run this code”.</li>
 </ol>
-<p>The code runs at <strong>runtime</strong> at this point, not compile-time yet.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>The code runs at <strong>runtime</strong> at this point, not
+compile-time yet.<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
 <h2 id="macros">Macros</h2>
-<p>To have macros run at compile-time, Common Lisp specifically has <code>defmacro</code> to define a macro. Here’s an example of the famous <em>anaphoric if</em>. It’s a short-hand for let-binding followed by an immediate if, testing that the value is “true-ish” (non-nil), and makes whatever it is available as <code>it</code> in the if:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>(<span class="kw">defmacro</span><span class="fu"> aif </span>(test-form then-form else-form)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>  `(<span class="kw">let</span> ((it ,test-form))</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>    (<span class="kw">if</span> it ,then-form ,else-form)))</span></code></pre></div>
+<p>To have macros run at compile-time, Common Lisp specifically has
+<code>defmacro</code> to define a macro. Here’s an example of the famous
+<em>anaphoric if</em>. It’s a short-hand for let-binding followed by an
+immediate if, testing that the value is “true-ish” (non-nil), and makes
+whatever it is available as <code>it</code> in the if:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">defmacro</span><span class="fu"> aif </span>(test-form then-form else-form)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  `(<span class="kw">let</span> ((it ,test-form))</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">if</span> it ,then-form ,else-form)))</span></code></pre></div>
 <p>You use it like this:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>(aif (calculate-something) (use it) (do-something-else))</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(aif (calculate-something) (use it) (do-something-else))</span></code></pre></div>
 <p>Here’s how we implement the same thing in Template Haskell:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>aif testForm thenForm elseForm <span class="ot">=</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>  [<span class="op">|</span> <span class="kw">let</span> it <span class="ot">=</span> <span class="op">$</span>testForm</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>     <span class="kw">in</span> <span class="kw">if</span> it</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>     <span class="kw">then</span> <span class="op">$</span>thenForm</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>     <span class="kw">else</span> <span class="op">$</span>elseForm</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>  <span class="op">|</span>]</span></code></pre></div>
-<p>So far so good, apart from the fact no one would write this macro in Haskell.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Here’s how we use it:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="op">$</span>(aif [<span class="op">|</span>calculate something<span class="op">|</span>] [<span class="op">|</span>use it<span class="op">|</span>] [<span class="op">|</span>something other<span class="op">|</span>])</span></code></pre></div>
-<p>Oh no! I have to manually quote every argument myself! The quotation syntax isn’t even short, I have to write <code>[| .. |]</code> around everything. No one will use your macros if they are like that.</p>
-<h2 id="quasiquotes-dont-solve-the-problem">Quasiquotes don’t solve the problem</h2>
-<p>Haskell has what it calls “quasiquotes” which are like Lisp’s reader macros: You can parse an arbitrary string and produce an AST for the compiler. They’re actually great for embedding other languages into Haskell like JSON, YAML, HTML, etc.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>aif testForm thenForm elseForm <span class="ot">=</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  [<span class="op">|</span> <span class="kw">let</span> it <span class="ot">=</span> <span class="op">$</span>testForm</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>     <span class="kw">in</span> <span class="kw">if</span> it</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>     <span class="kw">then</span> <span class="op">$</span>thenForm</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>     <span class="kw">else</span> <span class="op">$</span>elseForm</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span>]</span></code></pre></div>
+<p>So far so good, apart from the fact no one would write this macro in
+Haskell.<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a> Here’s how we use it:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">$</span>(aif [<span class="op">|</span>calculate something<span class="op">|</span>] [<span class="op">|</span>use it<span class="op">|</span>] [<span class="op">|</span>something other<span class="op">|</span>])</span></code></pre></div>
+<p>Oh no! I have to manually quote every argument myself! The quotation
+syntax isn’t even short, I have to write <code>[| .. |]</code> around
+everything. No one will use your macros if they are like that.</p>
+<h2 id="quasiquotes-dont-solve-the-problem">Quasiquotes don’t solve the
+problem</h2>
+<p>Haskell has what it calls “quasiquotes” which are like Lisp’s reader
+macros: You can parse an arbitrary string and produce an AST for the
+compiler. They’re actually great for embedding other languages into
+Haskell like JSON, YAML, HTML, etc.</p>
 <p>Maybe that could make writing this easy? Perhaps something like:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>[aif|calculate something; use it; something other|]</span></code></pre></div>
-<p>On the surface this looks like we’re there. But we’re not, because remember that Haskell’s metaprogramming requires you to produce an AST. The type <code>Exp</code> forms the abstract syntax tree and looks like this:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Exp</span> <span class="ot">=</span> <span class="dt">VarE</span> <span class="dt">Name</span> <span class="op">|</span> <span class="dt">ConE</span> <span class="dt">Name</span> <span class="op">|</span> <span class="dt">LitE</span> <span class="dt">Lit</span> <span class="op">|</span> <span class="dt">AppE</span> <span class="dt">Exp</span> <span class="dt">Exp</span> <span class="op">|</span> <span class="dt">AppTypeE</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="dt">Exp</span> <span class="dt">Type</span> <span class="op">|</span> <span class="op">...</span></span></code></pre></div>
-<p>So you can’t go from the string above into the compiler without converting to an AST. <strong>You need a parse step</strong>.</p>
-<p>Fine, let’s just import GHC’s own parser to produce the AST. Surely that’s possible? Sadly, not. GHC’s own API parser has a completely different tree type to the one in Template Haskell.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> This is where we get stuck.</p>
-<p>Implementing such a translation might be the way to salvage quasi-quote syntax into a macro system. It might be a little slow, though. It’d need long-term maintenance.</p>
-<p>Quasiquotes in GHC optimise a different use-case to macros: they let you deal with <em>foreign</em> languages. Macros let you add slight enhancements to your <em>existing</em> language.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>[aif|calculate something; use it; something other|]</span></code></pre></div>
+<p>On the surface this looks like we’re there. But we’re not, because
+remember that Haskell’s metaprogramming requires you to produce an AST.
+The type <code>Exp</code> forms the abstract syntax tree and looks like
+this:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Exp</span> <span class="ot">=</span> <span class="dt">VarE</span> <span class="dt">Name</span> <span class="op">|</span> <span class="dt">ConE</span> <span class="dt">Name</span> <span class="op">|</span> <span class="dt">LitE</span> <span class="dt">Lit</span> <span class="op">|</span> <span class="dt">AppE</span> <span class="dt">Exp</span> <span class="dt">Exp</span> <span class="op">|</span> <span class="dt">AppTypeE</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Exp</span> <span class="dt">Type</span> <span class="op">|</span> <span class="op">...</span></span></code></pre></div>
+<p>So you can’t go from the string above into the compiler without
+converting to an AST. <strong>You need a parse step</strong>.</p>
+<p>Fine, let’s just import GHC’s own parser to produce the AST. Surely
+that’s possible? Sadly, not. GHC’s own API parser has a completely
+different tree type to the one in Template Haskell.<a href="#fn3"
+class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>
+This is where we get stuck.</p>
+<p>Implementing such a translation might be the way to salvage
+quasi-quote syntax into a macro system. It might be a little slow,
+though. It’d need long-term maintenance.</p>
+<p>Quasiquotes in GHC optimise a different use-case to macros: they let
+you deal with <em>foreign</em> languages. Macros let you add slight
+enhancements to your <em>existing</em> language.</p>
 <h2 id="a-quick-fix">A quick fix</h2>
-<p>A quick fix to at least let us get at the parse tree would be to have some special syntax, e.g. to make something up completely<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a>aif<span class="op">!</span>(<span class="kw">if</span> calculate something <span class="kw">then</span> use it <span class="kw">else</span> something other)</span></code></pre></div>
+<p>A quick fix to at least let us get at the parse tree would be to have
+some special syntax, e.g. to make something up completely<a href="#fn4"
+class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a>:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>aif<span class="op">!</span>(<span class="kw">if</span> calculate something <span class="kw">then</span> use it <span class="kw">else</span> something other)</span></code></pre></div>
 <p>Could produce:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="op">$</span>(aif [<span class="op">|</span> <span class="kw">if</span> calculate something <span class="kw">then</span> use it <span class="kw">else</span> something other <span class="op">|</span>])</span></code></pre></div>
-<p>The limitation here is that the input to the macro has to parse correctly into an AST. You can’t have the branches of the <code>if</code> separately from the <code>if</code> itself.</p>
-<p>The surface syntax of Lisp (token trees), used by the macro system, is a superset of the core syntax of Lisp (let/setf/cond/progn, etc.). Unfortunately, the surface syntax of Haskell (used by the metaprogramming) is exactly the core syntax:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="op">&gt;</span> <span class="op">:</span>t <span class="op">$</span>(lamE [varP (mkName <span class="st">&quot;x&quot;</span>)] (varE (mkName <span class="st">&quot;x&quot;</span>)))</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a><span class="op">&lt;</span>interactive<span class="op">&gt;:</span><span class="dv">1</span><span class="op">:</span><span class="dv">3</span><span class="op">-</span><span class="dv">46</span><span class="op">:</span> <span class="dt">Splicing</span> expression lamE [varP (mkName <span class="st">&quot;x&quot;</span>)] (varE (mkName <span class="st">&quot;x&quot;</span>))</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="op">======&gt;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>\ x <span class="ot">-&gt;</span> x</span></code></pre></div>
-<p>This is how you have to construct the AST in Haskell: it has to be of the right schema immediately, there’s no way to produce a “loose tree of tokens” that TH will consume for you.</p>
-<p>Additionally, quotation demands correct syntax too: <code>[| let |]</code> is a syntax error. What if I wanted to define my own variation on let? Too bad.</p>
-<p>This would encourage strange warping and re-using of existing syntax to achieve what you want. I don’t think this is a good idea on the whole.</p>
-<p>Therefore, we either have to fit our macros into existing syntax (as above), or parse strings (quasiquotes). We need the middle ground that Lisp offers.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">$</span>(aif [<span class="op">|</span> <span class="kw">if</span> calculate something <span class="kw">then</span> use it <span class="kw">else</span> something other <span class="op">|</span>])</span></code></pre></div>
+<p>The limitation here is that the input to the macro has to parse
+correctly into an AST. You can’t have the branches of the
+<code>if</code> separately from the <code>if</code> itself.</p>
+<p>The surface syntax of Lisp (token trees), used by the macro system,
+is a superset of the core syntax of Lisp (let/setf/cond/progn, etc.).
+Unfortunately, the surface syntax of Haskell (used by the
+metaprogramming) is exactly the core syntax:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> <span class="op">:</span>t <span class="op">$</span>(lamE [varP (mkName <span class="st">&quot;x&quot;</span>)] (varE (mkName <span class="st">&quot;x&quot;</span>)))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>interactive<span class="op">&gt;:</span><span class="dv">1</span><span class="op">:</span><span class="dv">3</span><span class="op">-</span><span class="dv">46</span><span class="op">:</span> <span class="dt">Splicing</span> expression lamE [varP (mkName <span class="st">&quot;x&quot;</span>)] (varE (mkName <span class="st">&quot;x&quot;</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="op">======&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>\ x <span class="ot">-&gt;</span> x</span></code></pre></div>
+<p>This is how you have to construct the AST in Haskell: it has to be of
+the right schema immediately, there’s no way to produce a “loose tree of
+tokens” that TH will consume for you.</p>
+<p>Additionally, quotation demands correct syntax too:
+<code>[| let |]</code> is a syntax error. What if I wanted to define my
+own variation on let? Too bad.</p>
+<p>This would encourage strange warping and re-using of existing syntax
+to achieve what you want. I don’t think this is a good idea on the
+whole.</p>
+<p>Therefore, we either have to fit our macros into existing syntax (as
+above), or parse strings (quasiquotes). We need the middle ground that
+Lisp offers.</p>
 <h2 id="an-ideal-design">An ideal design</h2>
 <p>Going back to the original definition of macros, we had:</p>
 <ol type="1">
 <li>Syntactically light-weight.</li>
-<li>Don’t require writing a parser to deal with the language’s native syntax.</li>
-<li>They work on trees of lexical tokens of the language; <em>not</em> abstract syntax trees.</li>
+<li>Don’t require writing a parser to deal with the language’s native
+syntax.</li>
+<li>They work on trees of lexical tokens of the language; <em>not</em>
+abstract syntax trees.</li>
 </ol>
-<p>Let’s explore this in Haskell. If we had this, it might look like:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>aif<span class="op">!</span>(calculate something; use it; something other)</span></code></pre></div>
-<p>This is light-weight. It doesn’t require a parser. We could receive the lexical tokens as:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>calculate  something  ;  use  it  ;  something  other</span></code></pre></div>
-<p>The only special addendum would be that bracketing syntax be balanced into a tree, so: <code>() {} []</code>.<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> Just like in Lisp. Finally, the Template Haskell API would provide a trivial way to go from a token tree to an abstract syntax tree: <code>[if,x,then,y,else,z]</code> into <code>CondE ...</code></p>
+<p>Let’s explore this in Haskell. If we had this, it might look
+like:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>aif<span class="op">!</span>(calculate something; use it; something other)</span></code></pre></div>
+<p>This is light-weight. It doesn’t require a parser. We could receive
+the lexical tokens as:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>calculate  something  ;  use  it  ;  something  other</span></code></pre></div>
+<p>The only special addendum would be that bracketing syntax be balanced
+into a tree, so: <code>() {} []</code>.<a href="#fn5"
+class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>
+Just like in Lisp. Finally, the Template Haskell API would provide a
+trivial way to go from a token tree to an abstract syntax tree:
+<code>[if,x,then,y,else,z]</code> into <code>CondE ...</code></p>
 <h2 id="motivating-examples">Motivating examples</h2>
 <p>So the following constructs would be fine:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a>nat<span class="op">!</span><span class="dv">1</span>      <span class="co">-- natural number.</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>ne<span class="op">!</span>[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>] <span class="co">-- non-empty list.</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>sha1<span class="op">!</span>cf23df2207d99a74fbe169e3eba035e633b65d94 <span class="co">-- compile-time validated sha1</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>email<span class="op">!</span><span class="st">&quot;chrisdone@gmail.com&quot;</span> <span class="co">-- compile-time validated email</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>set<span class="op">!</span>{<span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span> c <span class="dv">4</span>}</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>vec<span class="op">!</span>[ <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span> ] <span class="co">-- vector type</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a><span class="fu">map</span><span class="op">!</span>{ x<span class="op">:</span> <span class="dv">1</span>, y<span class="op">:</span> <span class="dv">2</span>, z<span class="op">:</span> <span class="dv">3</span> } <span class="co">-- easier-to-read compile-time constructed map</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>ado<span class="op">!</span>(x <span class="ot">&lt;-</span> y</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a>     y <span class="ot">&lt;-</span> z</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true"></a>     x)  <span class="co">-- applicative or qualified do could have been macros</span></span></code></pre></div>
-<p>(If you don’t find those examples enticing there’s no hope for you.)</p>
-<p>As it happens, Rust’s macros work just like this. Lisp’s do. Haskell could potentially have this. It depends whether the community wants it, and/or whether someone is willing to implement a patch for GHC and lobby for it. But it seemed worth pointing out.</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>nat<span class="op">!</span><span class="dv">1</span>      <span class="co">-- natural number.</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>ne<span class="op">!</span>[<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>] <span class="co">-- non-empty list.</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>sha1<span class="op">!</span>cf23df2207d99a74fbe169e3eba035e633b65d94 <span class="co">-- compile-time validated sha1</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>email<span class="op">!</span><span class="st">&quot;chrisdone@gmail.com&quot;</span> <span class="co">-- compile-time validated email</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>set<span class="op">!</span>{<span class="dv">1</span> <span class="dv">2</span> <span class="dv">3</span> c <span class="dv">4</span>}</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>vec<span class="op">!</span>[ <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span> ] <span class="co">-- vector type</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span><span class="op">!</span>{ x<span class="op">:</span> <span class="dv">1</span>, y<span class="op">:</span> <span class="dv">2</span>, z<span class="op">:</span> <span class="dv">3</span> } <span class="co">-- easier-to-read compile-time constructed map</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>ado<span class="op">!</span>(x <span class="ot">&lt;-</span> y</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>     y <span class="ot">&lt;-</span> z</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>     x)  <span class="co">-- applicative or qualified do could have been macros</span></span></code></pre></div>
+<p>(If you don’t find those examples enticing there’s no hope for
+you.)</p>
+<p>As it happens, Rust’s macros work just like this. Lisp’s do. Haskell
+could potentially have this. It depends whether the community wants it,
+and/or whether someone is willing to implement a patch for GHC and lobby
+for it. But it seemed worth pointing out.</p>
 <hr />
-<p>Thanks <a href="https://www.jonis.lv/">Jānis ǅeriņš</a> and <a href="http://lisperator.net/">Mihai Bazon</a> for reviewing this post.</p>
-<section class="footnotes" role="doc-endnotes">
+<p>Thanks <a href="https://www.jonis.lv/">Jānis ǅeriņš</a> and <a
+href="http://lisperator.net/">Mihai Bazon</a> for reviewing this
+post.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>They’re also syntactic sugar for <code>QUOTE</code>, <code>UNQUOTE</code>, and <code>QUASIQUOTE</code>. The latter can be implemented with macros.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>No one would write this because Haskell doesn’t have “true-ish-ness” or implicit null, so this would simply produce a type error. But we’re going with a very typical example.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>Feel like writing that translation? Haskell’s surface syntax is big; be my guest. See Nikita Volkov’s famous <a href="http://nikita-volkov.github.io/record/">records library post</a> for an example of where this bites:</p>
+<li id="fn1"><p>They’re also syntactic sugar for <code>QUOTE</code>,
+<code>UNQUOTE</code>, and <code>QUASIQUOTE</code>. The latter can be
+implemented with macros.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>No one would write this because Haskell doesn’t have
+“true-ish-ness” or implicit null, so this would simply produce a type
+error. But we’re going with a very typical example.<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Feel like writing that translation? Haskell’s surface
+syntax is big; be my guest. See Nikita Volkov’s famous <a
+href="http://nikita-volkov.github.io/record/">records library post</a>
+for an example of where this bites:</p>
 <blockquote>
-<p>Unfortunately since the introduced syntax is not supported by “haskell-src-exts” and since neither does that library expose a parser API, Haskell syntax parsing needs to be reimplemented in the “record” library. This is not a trivial task, so currently the quasi-quoters do not support all of the Haskell syntax. All the basic stuff is supported however: variables, literals, tuple and list syntax. Don’t worry though, if you’ll try to use something unsupported, you’ll get notified during compilation.</p>
+<p>Unfortunately since the introduced syntax is not supported by
+“haskell-src-exts” and since neither does that library expose a parser
+API, Haskell syntax parsing needs to be reimplemented in the “record”
+library. This is not a trivial task, so currently the quasi-quoters do
+not support all of the Haskell syntax. All the basic stuff is supported
+however: variables, literals, tuple and list syntax. Don’t worry though,
+if you’ll try to use something unsupported, you’ll get notified during
+compilation.</p>
 </blockquote>
 <a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></li>
-<li id="fn4" role="doc-endnote"><p>Actually, this is very similar to Rust syntax.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5" role="doc-endnote"><p>An open question would be whether you would include whitespace-aligned lines as “these are a list of trees”, to support Haskell’s indentation-sensitive syntax. Personally, I never liked that part of Haskell. But it’s a real consideration, it’s how people code in reality. Infix operators are another consideration: you may want to resolve their precedence, or not. If you want <code>*</code> in prefix/postfix position, then balancing shouldn’t get in your way.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Actually, this is very similar to Rust syntax.<a
+href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>An open question would be whether you would include
+whitespace-aligned lines as “these are a list of trees”, to support
+Haskell’s indentation-sensitive syntax. Personally, I never liked that
+part of Haskell. But it’s a real consideration, it’s how people code in
+reality. Infix operators are another consideration: you may want to
+resolve their precedence, or not. If you want <code>*</code> in
+prefix/postfix position, then balancing shouldn’t get in your way.<a
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -211,8 +326,8 @@
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2020-12-29 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2020-12-29 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

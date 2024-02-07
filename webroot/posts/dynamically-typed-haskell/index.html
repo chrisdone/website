@@ -87,21 +87,54 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Dynamically typed Haskell</h1>
 
-<p>For a while I’ve been intending to make a package that provides a dynamic type and a trivial means to read/write that type to/from CSV/JSON and web requests. I thought that this would be enough to provide a convenient package for doing exploratory work against unknown data.</p>
-<p>In Haskell, typically we would model all the types of the data that we want to work with ahead of time. That’s inconvenient if you want to just quickly look through a JSON or CSV file and do some quick calculation: that’s where you would reach for Python. Even type providers<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> don’t provide that level of convenience.</p>
-<p>I thought, well, it’s pretty easy to define a <code>Dynamic</code> type which is an instance of a bunch of classes like <code>Num</code>, <code>FromCSV</code> and <code>FromJSON</code>, etc. with which one could program like they do in a dynamically typed language.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> But I had other things to work on.</p>
-<p>April 1st came around the corner, so I decided that would be a good time to publish such a package then, that way any detractors could be dismissed by “April fools!” <a href="https://github.com/chrisdone/dynamic">Here is the package</a> in all its glory. I have actually already used it several times to play with some public APIs. It’s nice to be able to use regular Haskell once I want to actually write some logic. I can see myself using this fairly often.</p>
-<section class="footnotes" role="doc-endnotes">
+<h1>Dynamically typed Haskell</h1>
+
+<p>For a while I’ve been intending to make a package that provides a
+dynamic type and a trivial means to read/write that type to/from
+CSV/JSON and web requests. I thought that this would be enough to
+provide a convenient package for doing exploratory work against unknown
+data.</p>
+<p>In Haskell, typically we would model all the types of the data that
+we want to work with ahead of time. That’s inconvenient if you want to
+just quickly look through a JSON or CSV file and do some quick
+calculation: that’s where you would reach for Python. Even type
+providers<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> don’t provide that level of
+convenience.</p>
+<p>I thought, well, it’s pretty easy to define a <code>Dynamic</code>
+type which is an instance of a bunch of classes like <code>Num</code>,
+<code>FromCSV</code> and <code>FromJSON</code>, etc. with which one
+could program like they do in a dynamically typed language.<a
+href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a> But I had other things to work
+on.</p>
+<p>April 1st came around the corner, so I decided that would be a good
+time to publish such a package then, that way any detractors could be
+dismissed by “April fools!” <a
+href="https://github.com/chrisdone/dynamic">Here is the package</a> in
+all its glory. I have actually already used it several times to play
+with some public APIs. It’s nice to be able to use regular Haskell once
+I want to actually write some logic. I can see myself using this fairly
+often.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>Such as <a href="https://docs.microsoft.com/en-us/dotnet/fsharp/tutorials/type-providers/">those in F#</a>: An F# type provider is a component that provides types, properties, and methods for use in your program.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Oddly, no one seems to have done this. There are plenty of “dynamic type” packages in Haskell, but their authors couldn’t resist making it well-typed in some way.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Such as <a
+href="https://docs.microsoft.com/en-us/dotnet/fsharp/tutorials/type-providers/">those
+in F#</a>: An F# type provider is a component that provides types,
+properties, and methods for use in your program.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Oddly, no one seems to have done this. There are plenty
+of “dynamic type” packages in Haskell, but their authors couldn’t resist
+making it well-typed in some way.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -109,8 +142,8 @@
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2019-04-06 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2019-04-06 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

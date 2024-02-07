@@ -87,14 +87,27 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>‘amb’ operator and the list monad</h1>
 
-<p>A friend was <a href="http://mihai.bazon.net/blog/amb-in-javascript/take-two">messing about with the <code>amb</code> operator</a> in JavaScript after seeing it in Common Lisp. The <code>amb</code> (or <em>ambiguous</em>) operator, first described by our pal John McCarthy (1967), and something I first <a href="http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-28.html#%_sec_4.3">encountered in SICP.</a></p>
-<p>These kind of constraint/logic puzzles seem naturally solved by the list monad, <a href="http://hpaste.org/45504/who_owns_the_fish">here’s an example of solving ‘Who owns the fish?’</a> Similar to <a href="http://en.wikipedia.org/wiki/Zebra_Puzzle">the Zebra puzzle.</a></p>
+<h1>‘amb’ operator and the list monad</h1>
+
+<p>A friend was <a
+href="http://mihai.bazon.net/blog/amb-in-javascript/take-two">messing
+about with the <code>amb</code> operator</a> in JavaScript after seeing
+it in Common Lisp. The <code>amb</code> (or <em>ambiguous</em>)
+operator, first described by our pal John McCarthy (1967), and something
+I first <a
+href="http://mitpress.mit.edu/sicp/full-text/book/book-Z-H-28.html#%_sec_4.3">encountered
+in SICP.</a></p>
+<p>These kind of constraint/logic puzzles seem naturally solved by the
+list monad, <a href="http://hpaste.org/45504/who_owns_the_fish">here’s
+an example of solving ‘Who owns the fish?’</a> Similar to <a
+href="http://en.wikipedia.org/wiki/Zebra_Puzzle">the Zebra
+puzzle.</a></p>
 <pre><code>-- Translation of
 -- http://mihai.bazon.net/blog/amb-in-javascript/take-two#wotf
 
@@ -157,8 +170,8 @@ iff x y = guard $ x == y</code></pre>
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2011-04-10 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2011-04-10 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

@@ -87,14 +87,20 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Fast pagination on PostgreSQL</h1>
 
-<p><strong>UPDATE: 2014-11-19:</strong> Some people asked me how much creating an index on <code>event(channel,id)</code> helps. Answer: <a href="http://lpaste.net/114584">not much</a>.</p>
-<p>During the implementation of <a href="http://ircbrowse.net/">IRCBrowse</a> I discovered that Postgres’s built-in offset is not very fast.</p>
+<h1>Fast pagination on PostgreSQL</h1>
+
+<p><strong>UPDATE: 2014-11-19:</strong> Some people asked me how much
+creating an index on <code>event(channel,id)</code> helps. Answer: <a
+href="http://lpaste.net/114584">not much</a>.</p>
+<p>During the implementation of <a
+href="http://ircbrowse.net/">IRCBrowse</a> I discovered that Postgres’s
+built-in offset is not very fast.</p>
 <p>Here are the characteristics of my data:</p>
 <pre><code>ircbrowse=&gt; \d event
                                     Table &quot;public.event&quot;
@@ -125,7 +131,9 @@ Indexes:
   count
 ----------
  19340467</code></pre>
-<p>When you’re working with data on this scale (large, but not “big data”), PostgreSQL handles it beautifully. But the speed of <code>OFFSET</code>/<code>LIMIT</code> is not great:</p>
+<p>When you’re working with data on this scale (large, but not “big
+data”), PostgreSQL handles it beautifully. But the speed of
+<code>OFFSET</code>/<code>LIMIT</code> is not great:</p>
 <pre><code>ircbrowse=&gt; explain analyze select * from event where channel = 1
                             order by id offset 500000 limit 30;
 QUERY PLAN
@@ -135,19 +143,25 @@ Limit  (cost=5648.81..5818.28 rows=30 width=85)
    (cost=0.00..81914674.39 rows=14501220 width=85)
    (actual time=0.020..0.288 rows=1030 loops=1)
          Filter: (channel = 1)</code></pre>
-<p>I think that this index scan is simply too expensive. Notice that I’m ordering by id which has a unique btree index on it. Check out the speed:</p>
+<p>I think that this index scan is simply too expensive. Notice that I’m
+ordering by id which has a unique btree index on it. Check out the
+speed:</p>
 <pre><code>ircbrowse=&gt; select * from event where channel = 1
             order by id offset 1000 limit 30;
 Time: 0.721 ms
 ircbrowse=&gt; select * from event where channel = 1
             order by id offset 500000 limit 30;
 Time: 191.926 ms</code></pre>
-<p>You might think less than a second to sift through 500,000 rows of a 28million row table is pretty good, but I think it sucks. It’s also deceptive. Let’s increase it to 1,000,000 rows (of 19,000,00):</p>
+<p>You might think less than a second to sift through 500,000 rows of a
+28million row table is pretty good, but I think it sucks. It’s also
+deceptive. Let’s increase it to 1,000,000 rows (of 19,000,00):</p>
 <pre><code>ircbrowse=&gt; select * from event where channel = 1
             order by id offset 1000000 limit 30;
 Time: 35022.464 ms</code></pre>
-<p>This is getting worse and worse! It’s probably linear in its poor performance.</p>
-<p>However, there’s a solution. Use an index table. A separate table which contains foreign keys pointing to this table:</p>
+<p>This is getting worse and worse! It’s probably linear in its poor
+performance.</p>
+<p>However, there’s a solution. Use an index table. A separate table
+which contains foreign keys pointing to this table:</p>
 <pre><code>ircbrowse=&gt; \d event_order_index
 Table &quot;public.event_order_index&quot;
  Column |  Type   | Modifiers
@@ -165,8 +179,10 @@ Indexes:
  id | origin | idx
 ----+--------+------
   1 |      1 | 1000</code></pre>
-<p>(I used idx=1000 for channel 1, 2000 for channel 2, etc. so that I would have space for other numerical indexes for the same channel.)</p>
-<p>Now you can make a very efficient query for the same data as above:</p>
+<p>(I used idx=1000 for channel 1, 2000 for channel 2, etc. so that I
+would have space for other numerical indexes for the same channel.)</p>
+<p>Now you can make a very efficient query for the same data as
+above:</p>
 <pre><code>ircbrowse=&gt; SELECT idx.id,e.timestamp,e.network,e.channel,
 ircbrowse=&gt; e.type,e.nick,e.text FROM event e,
 ircbrowse-&gt; event_order_index idx
@@ -176,21 +192,27 @@ ircbrowse-&gt; ORDER BY e.id asc
 ircbrowse-&gt; LIMIT 30;
 Time: 1.001 ms</code></pre>
 <p>This is more or less constant time.</p>
-<p>And you can see this in action on the site. Takes about 30ms to load and render the page if I run this on the server:</p>
-<pre><code>$ time curl 'http://ircbrowse.net/browse/haskell?events_page=234'
+<p>And you can see this in action on the site. Takes about 30ms to load
+and render the page if I run this on the server:</p>
+<pre><code>$ time curl &#39;http://ircbrowse.net/browse/haskell?events_page=234&#39;
 
-real	0m0.031s
-user	0m0.000s
+real    0m0.031s
+user    0m0.000s
 sys     0m0.004s</code></pre>
-<p>Of course, sending a request in your browser will take longer due to the connection overhead and assets, but generally the goal was for it to be very snappy. The old ircbrowse.com (by another individual, who kindly let me have the name) was very slow indeed. You’d see the page loading the data incrementally from the database.</p>
-<p>Anyhoo, thought that was a decent, practical PostgreSQL-specific optimization regarding pagination. Hope it was worth writing up.</p>
+<p>Of course, sending a request in your browser will take longer due to
+the connection overhead and assets, but generally the goal was for it to
+be very snappy. The old ircbrowse.com (by another individual, who kindly
+let me have the name) was very slow indeed. You’d see the page loading
+the data incrementally from the database.</p>
+<p>Anyhoo, thought that was a decent, practical PostgreSQL-specific
+optimization regarding pagination. Hope it was worth writing up.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2014-10-28 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2014-10-28 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

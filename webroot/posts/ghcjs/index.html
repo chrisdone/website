@@ -3,7 +3,8 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Experimenting with GHCJS, the Haskell→JavaScript compiler</title>
+    <title>Experimenting with GHCJS, the Haskell→JavaScript
+compiler</title>
     <style>
       body {
       max-width: 40em;
@@ -87,32 +88,116 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Experimenting with GHCJS, the Haskell→JavaScript compiler</h1>
+
+<h1>Experimenting with GHCJS, the Haskell→JavaScript compiler</h1>
 
 <!-- Part 1: Explain what's wrong with JavaScript -->
-<p>JavaScript <em>per se</em> is insufficient. The depths to which JavaScript fails is well-documented and well-understood. Its main faults are its verbose function syntax<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, late binding<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, which has led to the creation of various static analysis tools to alleviate this language flaw<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, but with limited success<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> (there is even a static type checker<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>), <a href="http://stackoverflow.com/questions/5447153/javascript-equality-transitivity-is-weird/5447170#5447170">finicky equality</a>, <code>this</code> behaviour, and lack of static types and modules<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>.</p>
+<p>JavaScript <em>per se</em> is insufficient. The depths to which
+JavaScript fails is well-documented and well-understood. Its main faults
+are its verbose function syntax<a href="#fn1" class="footnote-ref"
+id="fnref1" role="doc-noteref"><sup>1</sup></a>, late binding<a
+href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>, which has led to the creation of
+various static analysis tools to alleviate this language flaw<a
+href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a>, but with limited success<a
+href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a> (there is even a static type
+checker<a href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a>), <a
+href="http://stackoverflow.com/questions/5447153/javascript-equality-transitivity-is-weird/5447170#5447170">finicky
+equality</a>, <code>this</code> behaviour, and lack of static types and
+modules<a href="#fn6" class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a>.</p>
 <!-- Part 2: Explain the ways in which we fix JavaScript -->
-<p>Using JavaScript for what it is good for<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>, but not using the language <em>per se</em>, is therefore desirable, and many are working to achieve this<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a>, in some form or another. There various ways to do it<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a>, but I will opt for compiling an existing language, Haskell, to JavaScript, because I do not have time to learn or teach other people a new language, garner a new library set and a new type checker and all that Haskell implementations provide.</p>
+<p>Using JavaScript for what it is good for<a href="#fn7"
+class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>,
+but not using the language <em>per se</em>, is therefore desirable, and
+many are working to achieve this<a href="#fn8" class="footnote-ref"
+id="fnref8" role="doc-noteref"><sup>8</sup></a>, in some form or
+another. There various ways to do it<a href="#fn9" class="footnote-ref"
+id="fnref9" role="doc-noteref"><sup>9</sup></a>, but I will opt for
+compiling an existing language, Haskell, to JavaScript, because I do not
+have time to learn or teach other people a new language, garner a new
+library set and a new type checker and all that Haskell implementations
+provide.</p>
 <!-- Part 3: Explain compiler choice -->
-<p>Given the option, I’d choose <a href="http://www.haskell.org/ghc/">GHC</a> because it is the flagship Haskell compiler, with <a href="http://www.haskell.org/ghc/docs/latest/html/users_guide/ghc-language-features.html">the most features</a>, which most Haskellers write all their projects with. Haskell has a standard, <a href="http://www.haskell.org/pipermail/haskell/2009-November/021750.html">presently Haskell 2010</a>, but I think that most projects out there use quite a few language extensions<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a> outside of the standard; Haskellers target GHC. This is not to say that for compiling to JS, Haskell 98 wouldn’t be a vast improvement.</p>
+<p>Given the option, I’d choose <a
+href="http://www.haskell.org/ghc/">GHC</a> because it is the flagship
+Haskell compiler, with <a
+href="http://www.haskell.org/ghc/docs/latest/html/users_guide/ghc-language-features.html">the
+most features</a>, which most Haskellers write all their projects with.
+Haskell has a standard, <a
+href="http://www.haskell.org/pipermail/haskell/2009-November/021750.html">presently
+Haskell 2010</a>, but I think that most projects out there use quite a
+few language extensions<a href="#fn10" class="footnote-ref" id="fnref10"
+role="doc-noteref"><sup>10</sup></a> outside of the standard; Haskellers
+target GHC. This is not to say that for compiling to JS, Haskell 98
+wouldn’t be a vast improvement.</p>
 <!-- Part 4: Introduce GHCJS -->
-<p>Fortunately there is a project maintained by <a href="http://asviraspossible.livejournal.com/">Victor Nazarov</a> called <a href="https://github.com/sviperll/ghcjs">GHCJS</a>. You can use GHC 6.12.3 or GHC 7+. For my experimentation I am using 6.12.3. I followed <a href="https://github.com/sviperll/ghcjs/blob/master/README.markdown">the instructions given</a>, with a fix for the build process<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>, and some tweaks to the libraries<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a>. In order to build the libraries and copy them to the <code>examples/</code> directory, I wrote a little script<a href="#fn13" class="footnote-ref" id="fnref13" role="doc-noteref"><sup>13</sup></a>, which helps automate this. There is also <code>BuildTest.hs</code> in the <code>examples/</code> dir which gentle reader should try first.</p>
+<p>Fortunately there is a project maintained by <a
+href="http://asviraspossible.livejournal.com/">Victor Nazarov</a> called
+<a href="https://github.com/sviperll/ghcjs">GHCJS</a>. You can use GHC
+6.12.3 or GHC 7+. For my experimentation I am using 6.12.3. I followed
+<a
+href="https://github.com/sviperll/ghcjs/blob/master/README.markdown">the
+instructions given</a>, with a fix for the build process<a href="#fn11"
+class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a>,
+and some tweaks to the libraries<a href="#fn12" class="footnote-ref"
+id="fnref12" role="doc-noteref"><sup>12</sup></a>. In order to build the
+libraries and copy them to the <code>examples/</code> directory, I wrote
+a little script<a href="#fn13" class="footnote-ref" id="fnref13"
+role="doc-noteref"><sup>13</sup></a>, which helps automate this. There
+is also <code>BuildTest.hs</code> in the <code>examples/</code> dir
+which gentle reader should try first.</p>
 <!-- Part 5: First GHCJS example -->
-<p>After much twiddling and fudging with the example file and the provided FFI, some help from Victor Nazarov, with some trial and error, I managed to get some fundamental things working that are necessary to be able to write effectively in the JavaScript environment<a href="#fn14" class="footnote-ref" id="fnref14" role="doc-noteref"><sup>14</sup></a>. Timers work (and AJAX requests will), but <a href="http://hpaste.org/50477#line128">this example</a> is merely a clickable blank page which alerts “‘Ello, World!”. Uninteresting functionally, but a good test of the fundamentals (see the pasted Haskell source).</p>
+<p>After much twiddling and fudging with the example file and the
+provided FFI, some help from Victor Nazarov, with some trial and error,
+I managed to get some fundamental things working that are necessary to
+be able to write effectively in the JavaScript environment<a
+href="#fn14" class="footnote-ref" id="fnref14"
+role="doc-noteref"><sup>14</sup></a>. Timers work (and AJAX requests
+will), but <a href="http://hpaste.org/50477#line128">this example</a> is
+merely a clickable blank page which alerts “’Ello, World!”.
+Uninteresting functionally, but a good test of the fundamentals (see the
+pasted Haskell source).</p>
 <!-- Part 6: Where next -->
-<p>Next up, I will write a simple pong game<a href="#fn15" class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a> to test integration with the canvas element and speed of the runtime and establish some sort of base library and project template from which other Haskellers can more easily experiment. Perhaps we could even have in the future a browser-based IDE and compiler which can of course run the compiled code in the user’s browser. That would be nice.</p>
-<section class="footnotes" role="doc-endnotes">
+<p>Next up, I will write a simple pong game<a href="#fn15"
+class="footnote-ref" id="fnref15" role="doc-noteref"><sup>15</sup></a>
+to test integration with the canvas element and speed of the runtime and
+establish some sort of base library and project template from which
+other Haskellers can more easily experiment. Perhaps we could even have
+in the future a browser-based IDE and compiler which can of course run
+the compiled code in the user’s browser. That would be nice.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>Its support for closures is commonly noted as being one of JavaScript’s redeeming features.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Early binding allows for static verification of the existence of method-signature pairs (e.g. v-tables). Late binding does not give the compiler (or an IDE) enough information for existence verification, it has to be looked up at run-time.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>There are several hinting libraries, which developers insist are indispensable tools when developing JavaScript seriously, such as <a href="http://www.javascriptlint.com/">JavaScript lint</a>, <a href="http://www.jslint.com/">JSLint</a>, and <a href="http://aurochs.fr/jsure.html">JSure</a>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4" role="doc-endnote"><p>“Any non-trivial analysis is very difficult due to Javascript’s dynamic nature.” — Berke Durak, Ph.D., author of jsure.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5" role="doc-endnote"><p>Google Inc. thought it necessary to develop <a href="http://code.google.com/closure/compiler/">a compiler which does type-checking and limited inference</a>, e.g.</p>
+<li id="fn1"><p>Its support for closures is commonly noted as being one
+of JavaScript’s redeeming features.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Early binding allows for static verification of the
+existence of method-signature pairs (e.g. v-tables). Late binding does
+not give the compiler (or an IDE) enough information for existence
+verification, it has to be looked up at run-time.<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>There are several hinting libraries, which developers
+insist are indispensable tools when developing JavaScript seriously,
+such as <a href="http://www.javascriptlint.com/">JavaScript lint</a>, <a
+href="http://www.jslint.com/">JSLint</a>, and <a
+href="http://aurochs.fr/jsure.html">JSure</a>.<a href="#fnref3"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>“Any non-trivial analysis is very difficult due to
+Javascript’s dynamic nature.” — Berke Durak, Ph.D., author of jsure.<a
+href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>Google Inc. thought it necessary to develop <a
+href="http://code.google.com/closure/compiler/">a compiler which does
+type-checking and limited inference</a>, e.g.</p>
 <pre><code>/**
  * Queries a Baz for items.
  * @param {number} groupNum Subgroup id to query.
@@ -122,23 +207,104 @@
 goog.Baz.prototype.query = function(groupNum, term) {
   ...
 };</code></pre>
-<p>This will ensure that invocations to <code>Bad.query()</code> will be well-typed. See the <a href="http://code.google.com/closure/compiler/docs/js-for-compiler.html">Google closure docs</a> for more examples. Developers I’ve spoken to at Google say this makes JS bearable with sufficient self-discipline, but without it, maintaining a large codebase in JS is unrealistic.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6" role="doc-endnote"><p>A <a href="http://www.google.com/search?aq=f&amp;sourceid=chrome&amp;ie=UTF-8&amp;q=javascript+module+system">quick Google search</a> demonstrates easily enough that there is a need for a module system.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7" role="doc-endnote"><p>It is established that JavaScript is now a target platform due to its browser ubiquity. If we want to write tools, applications, games, etc. that will reach a wide audience with little effort on the user’s part, targetting the browser and therefore JavaScript is an excellent option.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn8" role="doc-endnote"><p>There are already many projects underway for doing this, such as <a href="http://pyjs.org/">Pyjamas</a>, <a href="http://hotruby.yukoba.jp/">HotRuby</a>, <a href="http://ejohn.org/blog/running-java-in-javascript/">Orto</a>, <a href="http://www.zkoss.org/">ZK</a>, and <a href="https://github.com/jashkenas/coffee-script/wiki/List-of-languages-that-compile-to-JS">many which merely provide a layer ontop of JavaScript</a> to make using it marginally less painful. Some Haskell ones include <a href="http://utrechthaskellcompiler.wordpress.com/2010/10/18/haskell-to-javascript-backend/">UHC</a>, <a href="http://www.haskell.org/haskellwiki/Yhc/Javascript">YHC</a>, <a href="http://code.google.com/p/jshaskell/">jshaskell</a> and <a href="https://github.com/valderman/lambdascript">lambdascript</a>.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn9" role="doc-endnote"><p>Some ways that I see are:</p>
+<p>This will ensure that invocations to <code>Bad.query()</code> will be
+well-typed. See the <a
+href="http://code.google.com/closure/compiler/docs/js-for-compiler.html">Google
+closure docs</a> for more examples. Developers I’ve spoken to at Google
+say this makes JS bearable with sufficient self-discipline, but without
+it, maintaining a large codebase in JS is unrealistic.<a href="#fnref5"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>A <a
+href="http://www.google.com/search?aq=f&amp;sourceid=chrome&amp;ie=UTF-8&amp;q=javascript+module+system">quick
+Google search</a> demonstrates easily enough that there is a need for a
+module system.<a href="#fnref6" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>It is established that JavaScript is now a target
+platform due to its browser ubiquity. If we want to write tools,
+applications, games, etc. that will reach a wide audience with little
+effort on the user’s part, targetting the browser and therefore
+JavaScript is an excellent option.<a href="#fnref7"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>There are already many projects underway for doing this,
+such as <a href="http://pyjs.org/">Pyjamas</a>, <a
+href="http://hotruby.yukoba.jp/">HotRuby</a>, <a
+href="http://ejohn.org/blog/running-java-in-javascript/">Orto</a>, <a
+href="http://www.zkoss.org/">ZK</a>, and <a
+href="https://github.com/jashkenas/coffee-script/wiki/List-of-languages-that-compile-to-JS">many
+which merely provide a layer ontop of JavaScript</a> to make using it
+marginally less painful. Some Haskell ones include <a
+href="http://utrechthaskellcompiler.wordpress.com/2010/10/18/haskell-to-javascript-backend/">UHC</a>,
+<a href="http://www.haskell.org/haskellwiki/Yhc/Javascript">YHC</a>, <a
+href="http://code.google.com/p/jshaskell/">jshaskell</a> and <a
+href="https://github.com/valderman/lambdascript">lambdascript</a>.<a
+href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>Some ways that I see are:</p>
 <ul>
-<li>Write JavaScript with a functional/OO/“better” standard library, a la <a href="https://github.com/runarorama/LambdaScript">LambdaScript</a> or <a href="http://www.commonjs.org/">CommonJS</a>.</li>
-<li>Write JavaScript with additional tools to provide static semantics (a la Google Closure).</li>
-<li>Write JavaScript in an EDSL in another more powerful language, e.g. <a href="http://common-lisp.net/project/parenscript/">ParenScript</a> and <a href="http://hackage.haskell.org/package/HJScript">HJScript</a>.</li>
-<li>Create a new language that mostly preserves JavaScript semantics but adds some additional layer, e.g. <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a>.</li>
+<li>Write JavaScript with a functional/OO/“better” standard library, a
+la <a href="https://github.com/runarorama/LambdaScript">LambdaScript</a>
+or <a href="http://www.commonjs.org/">CommonJS</a>.</li>
+<li>Write JavaScript with additional tools to provide static semantics
+(a la Google Closure).</li>
+<li>Write JavaScript in an EDSL in another more powerful language,
+e.g. <a
+href="http://common-lisp.net/project/parenscript/">ParenScript</a> and
+<a href="http://hackage.haskell.org/package/HJScript">HJScript</a>.</li>
+<li>Create a new language that mostly preserves JavaScript semantics but
+adds some additional layer, e.g. <a
+href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a>.</li>
 <li>Interpret an existing language in JavaScript.</li>
 <li>Compile an existing language to JavaScript.</li>
 </ul>
-<p>I prefer the last option.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn10" role="doc-endnote"><p>To put it in perspective, here are the extensions available in GHC as of 6.12.3: OverlappingInstances NoOverlappingInstances, IncoherentInstances, NoIncoherentInstances UndecidableInstances, NoUndecidableInstances, Arrows, NoArrows DisambiguateRecordFields, NoDisambiguateRecordFields ForeignFunctionInterface, NoForeignFunctionInterface, Generics NoGenerics, ImplicitParams, NoImplicitParams, NoImplicitPrelude ImplicitPrelude, NoMonomorphismRestriction, MonomorphismRrestriction NoNPlusKPatterns, NPlusKPatterns, NoMonoPatBinds, MonoPatBinds RelaxedPolyRec, NoRelaxedPolyRec, ExtendedDefaultRules NoExtendedDefaultRules, OverloadedStrings, NoOverloadedStrings, GADTs NoGADTs, TypeFamilies, NoTypeFamilies, ScopedTypeVariables NoScopedTypeVariables, MonoLocalBinds, NoMonoLocalBinds, TemplateHaskell NoTemplateHaskell, QuasiQuotes, NoQuasiQuotes, BangPatterns NoBangPatterns, CPP, NoCPP, PatternGuards, NoPatternGuards, ViewPatterns NoViewPatterns, UnicodeSyntax, NoUnicodeSyntax, MagicHash, NoMagicHash NewQualifiedOperators, NoNewQualifiedOperators, ExplicitForALl NoExplicitForAll, PolymorphicComponents, NoPolymorphicComponents Rank2Types, NoRank2Types, RankNTypes, NoRankNTypes, ImpredicativeTypes NoImpredicativeTypes, ExistentialQuantification NoExistentialQuantification, KindSignatures, NoKindSignatures EmptyDataDecls, NoEmptyDataDecls, ParallelListComp, NoParallelListComp TransformListComp, NoTransformListComp, UnliftedFFITypes NoUnliftedFFITypes, LiberalTypeSynonyms, NoLiberalTypeSynonyms TypeOperators, NoTypeOperators, DoRec, NoDoRec, RecursiveDo, NoRecursiveDo PArr, NoPArr, RecordWildCards, NoRecordWildCards, NamedFieldPuns NoNamedFieldPuns, DisambiguateRecordFields, NoDisambiguateRecordFields UnboxedTuples, NoUnboxedTuples, StandaloneDeriving, NoStandaloneDeriving DeriveDataTypeable, NoDeriveDataTypeable, GeneralizedNewtypeDeriving NoGeneralizedNewtypeDeriving, TypeSynonymInstances NoTypeSynonymInstances, FlexibleContexts, NoFlexibleContexts FlexibleInstances, NoFlexibleInstances, ConstrainedClassMethods NoConstrainedClassMethods, MultiParamTypeClasses NoMultiParamTypeClasses, FunctionalDependencies NoFunctionalDependencies, PackageImports, and NoPackageImports.<a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn11" role="doc-endnote"><p>On Ubuntu, I had to explicitly add -pthread to the build configuration of libraries/unix, otherwise it didn’t figure it out automatically.<a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn12" role="doc-endnote"><p>There were maybe 5 <code>foo#</code> shaped functions that were out of scope throughout the base libraries, particularly in GHC. I simply replaced these with <code>undefined</code>, or because that’s not available, <code>let    a = a in a</code>, or whatever bottom value to stop it complaining. I don’t know whether GHC will detect <code>let a = a in a</code>, I think it does. So the runtime will just throw an exception on these values.</p>
+<p>I prefer the last option.<a href="#fnref9" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p>To put it in perspective, here are the extensions
+available in GHC as of 6.12.3: OverlappingInstances
+NoOverlappingInstances, IncoherentInstances, NoIncoherentInstances
+UndecidableInstances, NoUndecidableInstances, Arrows, NoArrows
+DisambiguateRecordFields, NoDisambiguateRecordFields
+ForeignFunctionInterface, NoForeignFunctionInterface, Generics
+NoGenerics, ImplicitParams, NoImplicitParams, NoImplicitPrelude
+ImplicitPrelude, NoMonomorphismRestriction, MonomorphismRrestriction
+NoNPlusKPatterns, NPlusKPatterns, NoMonoPatBinds, MonoPatBinds
+RelaxedPolyRec, NoRelaxedPolyRec, ExtendedDefaultRules
+NoExtendedDefaultRules, OverloadedStrings, NoOverloadedStrings, GADTs
+NoGADTs, TypeFamilies, NoTypeFamilies, ScopedTypeVariables
+NoScopedTypeVariables, MonoLocalBinds, NoMonoLocalBinds, TemplateHaskell
+NoTemplateHaskell, QuasiQuotes, NoQuasiQuotes, BangPatterns
+NoBangPatterns, CPP, NoCPP, PatternGuards, NoPatternGuards, ViewPatterns
+NoViewPatterns, UnicodeSyntax, NoUnicodeSyntax, MagicHash, NoMagicHash
+NewQualifiedOperators, NoNewQualifiedOperators, ExplicitForALl
+NoExplicitForAll, PolymorphicComponents, NoPolymorphicComponents
+Rank2Types, NoRank2Types, RankNTypes, NoRankNTypes, ImpredicativeTypes
+NoImpredicativeTypes, ExistentialQuantification
+NoExistentialQuantification, KindSignatures, NoKindSignatures
+EmptyDataDecls, NoEmptyDataDecls, ParallelListComp, NoParallelListComp
+TransformListComp, NoTransformListComp, UnliftedFFITypes
+NoUnliftedFFITypes, LiberalTypeSynonyms, NoLiberalTypeSynonyms
+TypeOperators, NoTypeOperators, DoRec, NoDoRec, RecursiveDo,
+NoRecursiveDo PArr, NoPArr, RecordWildCards, NoRecordWildCards,
+NamedFieldPuns NoNamedFieldPuns, DisambiguateRecordFields,
+NoDisambiguateRecordFields UnboxedTuples, NoUnboxedTuples,
+StandaloneDeriving, NoStandaloneDeriving DeriveDataTypeable,
+NoDeriveDataTypeable, GeneralizedNewtypeDeriving
+NoGeneralizedNewtypeDeriving, TypeSynonymInstances
+NoTypeSynonymInstances, FlexibleContexts, NoFlexibleContexts
+FlexibleInstances, NoFlexibleInstances, ConstrainedClassMethods
+NoConstrainedClassMethods, MultiParamTypeClasses
+NoMultiParamTypeClasses, FunctionalDependencies
+NoFunctionalDependencies, PackageImports, and NoPackageImports.<a
+href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p>On Ubuntu, I had to explicitly add -pthread to the
+build configuration of libraries/unix, otherwise it didn’t figure it out
+automatically.<a href="#fnref11" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p>There were maybe 5 <code>foo#</code> shaped functions
+that were out of scope throughout the base libraries, particularly in
+GHC. I simply replaced these with <code>undefined</code>, or because
+that’s not available, <code>let    a = a in a</code>, or whatever bottom
+value to stop it complaining. I don’t know whether GHC will detect
+<code>let a = a in a</code>, I think it does. So the runtime will just
+throw an exception on these values.</p>
 <pre><code>   chris@cn-done:~$ cat &gt; loop.hs
    main = putStrLn $ let r = r in r
    chris@cn-done:~$ ghc --make loop.hs -O2
@@ -146,8 +312,11 @@ goog.Baz.prototype.query = function(groupNum, term) {
    Linking loop ...
    chris@cn-done:~$ ./loop
    loop: &lt;&lt;loop&gt;&gt;</code></pre>
-<p>Looks OK.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn13" role="doc-endnote"><p>I called it <code>ghcjs_buildlibs</code>, and run it from the <code>ghc-6.12.3</code> directory. I think it should work fine for GHC 7, too.</p>
+<p>Looks OK.<a href="#fnref12" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn13"><p>I called it <code>ghcjs_buildlibs</code>, and run it
+from the <code>ghc-6.12.3</code> directory. I think it should work fine
+for GHC 7, too.</p>
 <pre><code> JSDIR=$1
 
  cd libraries/ghc-prim &amp;&amp;
@@ -196,8 +365,16 @@ goog.Baz.prototype.query = function(groupNum, term) {
  cp $1/base/* \
     $1/../main/ -R</code></pre>
 <a href="#fnref13" class="footnote-back" role="doc-backlink">↩︎</a></li>
-<li id="fn14" role="doc-endnote"><p>I.e. a way to use closure callbacks for e.g. setInterval/setTimeout and AJAX, a way to serialize data structures like strings and arrays from/to Haskell and JavaScript, and a way to access the DOM and bind events to it.<a href="#fnref14" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn15" role="doc-endnote"><p>Pong is a good demo. I’ve already started work on this, but hit some walls when trying to separate the build into a more generic and less example-y structure. It’s quite easy to break this system at present.<a href="#fnref15" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn14"><p>I.e. a way to use closure callbacks for
+e.g. setInterval/setTimeout and AJAX, a way to serialize data structures
+like strings and arrays from/to Haskell and JavaScript, and a way to
+access the DOM and bind events to it.<a href="#fnref14"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn15"><p>Pong is a good demo. I’ve already started work on this,
+but hit some walls when trying to separate the build into a more generic
+and less example-y structure. It’s quite easy to break this system at
+present.<a href="#fnref15" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -205,8 +382,8 @@ goog.Baz.prototype.query = function(groupNum, term) {
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2011-08-20 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2011-08-20 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

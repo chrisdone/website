@@ -3,7 +3,8 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Stream fusion and composability (Java 8 and Haskell) for newbies</title>
+    <title>Stream fusion and composability (Java 8 and Haskell) for
+newbies</title>
     <style>
       body {
       max-width: 40em;
@@ -87,76 +88,119 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Stream fusion and composability (Java 8 and Haskell) for newbies</h1>
 
-<p>In an online discussion, when Java 8 released their stream API, written about <a href="http://www.deadcoderising.com/java-8-no-more-loops/">here</a>, you can write e.g.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode java"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">public</span> <span class="bu">List</span>&lt;Article&gt; <span class="fu">getAllJavaArticles</span>() {</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>    <span class="kw">return</span> articles.<span class="fu">stream</span>()</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>        .<span class="fu">filter</span>(article -&gt; article.<span class="fu">getTags</span>().<span class="fu">contains</span>(<span class="st">&quot;Java&quot;</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>        .<span class="fu">collect</span>(Collectors.<span class="fu">toList</span>());</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>}</span></code></pre></div>
-<p>Someone asked, “But my question: would the streams be faster than loops? Or is the only benefit better readability?” Someone answered that the benefit is that streams compose and loops don’t. What does composable mean here? Below is my answer, using two languages I know, JavaScript and Haskell.</p>
-<p>Composable in this context means: To be able to compose two things into one without redundancy or overhead. For example, consider you want to map a function <code>f</code> over an array <code>arr</code> to produce a new array, you might do this:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">var</span> arr2 <span class="op">=</span> []<span class="op">;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> arr<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>    arr2<span class="op">.</span><span class="fu">push</span>(<span class="fu">f</span>(arr[i]))<span class="op">;</span></span></code></pre></div>
-<p>If you want to filter the array based on a predicate <code>p</code>, you might do this:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">var</span> arr3 <span class="op">=</span> []<span class="op">;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> arr2<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>    <span class="cf">if</span> (<span class="fu">p</span>(arr2[i]))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>        arr3<span class="op">.</span><span class="fu">push</span>(arr2[i])<span class="op">;</span></span></code></pre></div>
-<p>Or maybe you want to take all elements until a a predicate <code>p2</code> is not satisfied:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">var</span> arr4 <span class="op">=</span> []<span class="op">;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> arr3<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>    <span class="cf">if</span> (<span class="fu">p2</span>(arr3[i]))</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>        arr4<span class="op">.</span><span class="fu">push</span>(arr3[i])<span class="op">;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>    <span class="cf">else</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>        <span class="cf">break</span><span class="op">;</span></span></code></pre></div>
-<p>Now, if you want to do that all in one process you have a few options:</p>
+<h1>Stream fusion and composability (Java 8 and Haskell) for
+newbies</h1>
+
+<p>In an online discussion, when Java 8 released their stream API,
+written about <a
+href="http://www.deadcoderising.com/java-8-no-more-loops/">here</a>, you
+can write e.g.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode java"><code class="sourceCode java"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">public</span> <span class="bu">List</span><span class="op">&lt;</span>Article<span class="op">&gt;</span> <span class="fu">getAllJavaArticles</span><span class="op">()</span> <span class="op">{</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> articles<span class="op">.</span><span class="fu">stream</span><span class="op">()</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">filter</span><span class="op">(</span>article <span class="op">-&gt;</span> article<span class="op">.</span><span class="fu">getTags</span><span class="op">().</span><span class="fu">contains</span><span class="op">(</span><span class="st">&quot;Java&quot;</span><span class="op">))</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">collect</span><span class="op">(</span>Collectors<span class="op">.</span><span class="fu">toList</span><span class="op">());</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Someone asked, “But my question: would the streams be faster than
+loops? Or is the only benefit better readability?” Someone answered that
+the benefit is that streams compose and loops don’t. What does
+composable mean here? Below is my answer, using two languages I know,
+JavaScript and Haskell.</p>
+<p>Composable in this context means: To be able to compose two things
+into one without redundancy or overhead. For example, consider you want
+to map a function <code>f</code> over an array <code>arr</code> to
+produce a new array, you might do this:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> arr2 <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> arr<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    arr2<span class="op">.</span><span class="fu">push</span>(<span class="fu">f</span>(arr[i]))<span class="op">;</span></span></code></pre></div>
+<p>If you want to filter the array based on a predicate <code>p</code>,
+you might do this:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> arr3 <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> arr2<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">p</span>(arr2[i]))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        arr3<span class="op">.</span><span class="fu">push</span>(arr2[i])<span class="op">;</span></span></code></pre></div>
+<p>Or maybe you want to take all elements until a a predicate
+<code>p2</code> is not satisfied:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> arr4 <span class="op">=</span> []<span class="op">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (<span class="kw">var</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> arr3<span class="op">.</span><span class="at">length</span><span class="op">;</span> i<span class="op">++</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">p2</span>(arr3[i]))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        arr4<span class="op">.</span><span class="fu">push</span>(arr3[i])<span class="op">;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span><span class="op">;</span></span></code></pre></div>
+<p>Now, if you want to do that all in one process you have a few
+options:</p>
 <ul>
-<li>Put them all one after the other verbatim as I’ve written above. Redundant, a maintenance issue and inefficient.</li>
-<li>Merge them all into one clever loop. Also redundant (re-implementing the same concept of mapping, filtering and taking), error prone (it’s easy to get manual loops wrong, especially merging several concepts together), and a maintenance burden.</li>
-<li>Put them each into a method on your language’s Array type as <code>map()</code>, <code>filter()</code>, and <code>takeWhile()</code> and then write <code>arr.map(f).filter(p).takeWhile(p2)</code>. Good abstraction, very low maintenance because the functions are black boxes. But inefficient.</li>
+<li>Put them all one after the other verbatim as I’ve written above.
+Redundant, a maintenance issue and inefficient.</li>
+<li>Merge them all into one clever loop. Also redundant (re-implementing
+the same concept of mapping, filtering and taking), error prone (it’s
+easy to get manual loops wrong, especially merging several concepts
+together), and a maintenance burden.</li>
+<li>Put them each into a method on your language’s Array type as
+<code>map()</code>, <code>filter()</code>, and <code>takeWhile()</code>
+and then write <code>arr.map(f).filter(p).takeWhile(p2)</code>. Good
+abstraction, very low maintenance because the functions are black boxes.
+But inefficient.</li>
 </ul>
-<p>An ideal stream API will give you the last point, but be able to understand concepts like mapping and filtering and know how to merge them together into an efficient loop. This is called stream fusion, which you can google if you want to know more.</p>
+<p>An ideal stream API will give you the last point, but be able to
+understand concepts like mapping and filtering and know how to merge
+them together into an efficient loop. This is called stream fusion,
+which you can google if you want to know more.</p>
 <p>I don’t know Java but I can give a Haskell example:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="fu">map</span> f <span class="op">.</span> <span class="fu">filter</span> p <span class="op">.</span> <span class="fu">takeWhile</span> p2</span></code></pre></div>
-<p>(Note: In Haskell the operations separated by <code>.</code> are run right to left, like <code>map f (filter p (takeWhile p2 …))</code>.)</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span> f <span class="op">.</span> <span class="fu">filter</span> p <span class="op">.</span> <span class="fu">takeWhile</span> p2</span></code></pre></div>
+<p>(Note: In Haskell the operations separated by <code>.</code> are run
+right to left, like <code>map f (filter p (takeWhile p2 …))</code>.)</p>
 <p>If I compile this with GHC, e.g.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>main <span class="ot">=</span> <span class="fu">print</span> ((<span class="fu">map</span> f <span class="op">.</span> <span class="fu">filter</span> p <span class="op">.</span> <span class="fu">takeWhile</span> p2) [<span class="dv">1</span><span class="op">..</span><span class="dv">10</span>])</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>  <span class="kw">where</span> p2 <span class="ot">=</span> (<span class="op">&lt;</span><span class="dv">5</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>        p <span class="ot">=</span> <span class="fu">even</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>        f <span class="ot">=</span> (<span class="op">+</span><span class="dv">2</span>)</span></code></pre></div>
-<p>and look at the reduced output called Core, a language the compiler generates code for before generating assembly or byte code, the <code>map f . filter p</code> are both compiled into a single loop (Core output is verbose, so I collapsed it into this more readable form). This just walks over the list, checks whether the item is even, if so, keeps it and adds 2 to it, otherwise skips that item:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>mainzugo xs <span class="ot">=</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>  <span class="kw">case</span> xs <span class="kw">of</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>    [] <span class="ot">-&gt;</span> []</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a>    (x<span class="op">:</span>ys) <span class="ot">-&gt;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a>      <span class="kw">case</span> <span class="fu">even</span> x <span class="kw">of</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>        <span class="dt">False</span> <span class="ot">-&gt;</span> mainzugo ys</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>        <span class="dt">True</span> <span class="ot">-&gt;</span> x <span class="op">+</span> <span class="dv">2</span> <span class="op">:</span> mainzugo ys</span></code></pre></div>
-<p>Which is pretty nifty. Furthermore, if you fold (also called reducing) e.g.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="fu">foldr</span> (<span class="op">+</span>) <span class="dv">0</span> <span class="op">.</span> <span class="fu">map</span> f <span class="op">.</span> <span class="fu">filter</span> p</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="fu">print</span> ((<span class="fu">map</span> f <span class="op">.</span> <span class="fu">filter</span> p <span class="op">.</span> <span class="fu">takeWhile</span> p2) [<span class="dv">1</span><span class="op">..</span><span class="dv">10</span>])</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span> p2 <span class="ot">=</span> (<span class="op">&lt;</span><span class="dv">5</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        p <span class="ot">=</span> <span class="fu">even</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        f <span class="ot">=</span> (<span class="op">+</span><span class="dv">2</span>)</span></code></pre></div>
+<p>and look at the reduced output called Core, a language the compiler
+generates code for before generating assembly or byte code, the
+<code>map f . filter p</code> are both compiled into a single loop (Core
+output is verbose, so I collapsed it into this more readable form). This
+just walks over the list, checks whether the item is even, if so, keeps
+it and adds 2 to it, otherwise skips that item:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mainzugo xs <span class="ot">=</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> xs <span class="kw">of</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    [] <span class="ot">-&gt;</span> []</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    (x<span class="op">:</span>ys) <span class="ot">-&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">case</span> <span class="fu">even</span> x <span class="kw">of</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">False</span> <span class="ot">-&gt;</span> mainzugo ys</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">True</span> <span class="ot">-&gt;</span> x <span class="op">+</span> <span class="dv">2</span> <span class="op">:</span> mainzugo ys</span></code></pre></div>
+<p>Which is pretty nifty. Furthermore, if you fold (also called
+reducing) e.g.</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">foldr</span> (<span class="op">+</span>) <span class="dv">0</span> <span class="op">.</span> <span class="fu">map</span> f <span class="op">.</span> <span class="fu">filter</span> p</span></code></pre></div>
 <p>Then that whole thing is also compiled into one loop:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>mainzugo xs <span class="ot">=</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>  <span class="kw">case</span> xs <span class="kw">of</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a>    [] <span class="ot">-&gt;</span> <span class="dv">0</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>    (x<span class="op">:</span>ys) <span class="ot">-&gt;</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a>      <span class="kw">case</span> <span class="fu">even</span> x <span class="kw">of</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a>        <span class="dt">False</span> <span class="ot">-&gt;</span> mainzugo ys</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a>        <span class="dt">True</span> <span class="ot">-&gt;</span> (x <span class="op">+</span> <span class="dv">2</span>) <span class="op">+</span> mainzugo ys</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mainzugo xs <span class="ot">=</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> xs <span class="kw">of</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    [] <span class="ot">-&gt;</span> <span class="dv">0</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    (x<span class="op">:</span>ys) <span class="ot">-&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>      <span class="kw">case</span> <span class="fu">even</span> x <span class="kw">of</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">False</span> <span class="ot">-&gt;</span> mainzugo ys</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="dt">True</span> <span class="ot">-&gt;</span> (x <span class="op">+</span> <span class="dv">2</span>) <span class="op">+</span> mainzugo ys</span></code></pre></div>
 <p>There’re limits to what can compose with what, though.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2015-06-11 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2015-06-11 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

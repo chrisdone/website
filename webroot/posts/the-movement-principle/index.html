@@ -87,62 +87,112 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>The Movement Principle</h1>
 
-<p>A language design principle I wanted to highlight in a page of its own is what I’m calling the movement principle.</p>
-<p>In particular, for statically-typed languages, type-classes are what I have in mind for this post.</p>
+<h1>The Movement Principle</h1>
+
+<p>A language design principle I wanted to highlight in a page of its
+own is what I’m calling the movement principle.</p>
+<p>In particular, for statically-typed languages, type-classes are what
+I have in mind for this post.</p>
 <h2 id="type-classes">Type-classes</h2>
 <p>We can write a piece of code like this:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>thing <span class="ot">=</span> <span class="ch">'a'</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>example <span class="ot">=</span> <span class="fu">length</span> (<span class="fu">show</span> thing) <span class="op">*</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">7</span></span></code></pre></div>
-<p>There’s a type for this <code>example</code> expression: <code>Int</code></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>thing <span class="ot">=</span> <span class="ch">&#39;a&#39;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>example <span class="ot">=</span> <span class="fu">length</span> (<span class="fu">show</span> thing) <span class="op">*</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">7</span></span></code></pre></div>
+<p>There’s a type for this <code>example</code> expression:
+<code>Int</code></p>
 <p>The language compiler infers that. Some observations:</p>
 <ul>
-<li>The operators <code>*</code> and <code>+</code> are generic functions that will work on any numeric type.</li>
-<li>The <code>length</code> function returns the length of a sequence as a specific <code>Int</code> type.</li>
-<li>The <code>show</code> function is a generic function that will show a value as a string.</li>
+<li>The operators <code>*</code> and <code>+</code> are generic
+functions that will work on any numeric type.</li>
+<li>The <code>length</code> function returns the length of a sequence as
+a specific <code>Int</code> type.</li>
+<li>The <code>show</code> function is a generic function that will show
+a value as a string.</li>
 </ul>
-<p>Now I can perform a step to move this logic out of this function into its own:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>thing <span class="ot">=</span> <span class="ch">'a'</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>example <span class="ot">=</span> work thing</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>work x <span class="ot">=</span> <span class="fu">length</span> (<span class="fu">show</span> x) <span class="op">*</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">7</span></span></code></pre></div>
-<p>There’s a type for <code>work</code>, too: <code>Show a =&gt; a -&gt; Int</code></p>
-<p>The language compiler infers that too. That means: the input is <code>a</code> and, by the way, it has a constraint that there’s an instance of the class <code>Show</code> for that <code>a</code>, and the output is <code>Int</code>.</p>
-<p>We can do it again. Let’s move the arithmetic to its own function:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>thing <span class="ot">=</span> <span class="ch">'a'</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>example <span class="ot">=</span> work thing</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>work x <span class="ot">=</span> arith (<span class="fu">length</span> (<span class="fu">show</span> x))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>arith n <span class="ot">=</span> n <span class="op">*</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">7</span></span></code></pre></div>
-<p>There’s a type for <code>arith</code>, too: <code>Num a =&gt; a -&gt; a</code></p>
-<p>The language compiler infers that too. As above, this means: input and output is a type <code>a</code> that is an instance of <code>Num</code> (numbers).</p>
-<p>What’s going on here? The type system is saying: I don’t know which instance to use for this function, so I’m going to make it someone else’s problem and throw a constraint on the type. Job done.</p>
-<p>This is what I’m calling “movement”. I can move my code freely and there is still a type for the code and the compiler will accept it.</p>
-<h2 id="type-directed-name-resolution">Type-directed name resolution</h2>
-<p>If we suppose that instead of type-classes we had type-directed name resolution, such as seen in Idris, or C++ (function overloading), we run into a problem at the first step. Consider an imaginary Haskell where operator overloading is achieved via this mechanism instead of type-classes:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="ot">n ::</span> <span class="dt">Int</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>n <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>example <span class="ot">=</span> n <span class="op">+</span> <span class="dv">5</span></span></code></pre></div>
-<p>If we imagine that <code>+</code> is one of many functions called <code>+</code>: one for <code>Int</code>, one for <code>Float</code>, etc. and then the compiler picks which one you intended based on the type, then it can see <code>n</code> is an <code>Int</code> and then pick the right <code>+</code> which has type <code>Int -&gt; Int -&gt; Int</code>.</p>
+<p>Now I can perform a step to move this logic out of this function into
+its own:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>thing <span class="ot">=</span> <span class="ch">&#39;a&#39;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>example <span class="ot">=</span> work thing</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>work x <span class="ot">=</span> <span class="fu">length</span> (<span class="fu">show</span> x) <span class="op">*</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">7</span></span></code></pre></div>
+<p>There’s a type for <code>work</code>, too:
+<code>Show a =&gt; a -&gt; Int</code></p>
+<p>The language compiler infers that too. That means: the input is
+<code>a</code> and, by the way, it has a constraint that there’s an
+instance of the class <code>Show</code> for that <code>a</code>, and the
+output is <code>Int</code>.</p>
+<p>We can do it again. Let’s move the arithmetic to its own
+function:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>thing <span class="ot">=</span> <span class="ch">&#39;a&#39;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>example <span class="ot">=</span> work thing</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>work x <span class="ot">=</span> arith (<span class="fu">length</span> (<span class="fu">show</span> x))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>arith n <span class="ot">=</span> n <span class="op">*</span> <span class="dv">2</span> <span class="op">+</span> <span class="dv">7</span></span></code></pre></div>
+<p>There’s a type for <code>arith</code>, too:
+<code>Num a =&gt; a -&gt; a</code></p>
+<p>The language compiler infers that too. As above, this means: input
+and output is a type <code>a</code> that is an instance of
+<code>Num</code> (numbers).</p>
+<p>What’s going on here? The type system is saying: I don’t know which
+instance to use for this function, so I’m going to make it someone
+else’s problem and throw a constraint on the type. Job done.</p>
+<p>This is what I’m calling “movement”. I can move my code freely and
+there is still a type for the code and the compiler will accept it.</p>
+<h2 id="type-directed-name-resolution">Type-directed name
+resolution</h2>
+<p>If we suppose that instead of type-classes we had type-directed name
+resolution, such as seen in Idris, or C++ (function overloading), we run
+into a problem at the first step. Consider an imaginary Haskell where
+operator overloading is achieved via this mechanism instead of
+type-classes:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">n ::</span> <span class="dt">Int</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>example <span class="ot">=</span> n <span class="op">+</span> <span class="dv">5</span></span></code></pre></div>
+<p>If we imagine that <code>+</code> is one of many functions called
+<code>+</code>: one for <code>Int</code>, one for <code>Float</code>,
+etc. and then the compiler picks which one you intended based on the
+type, then it can see <code>n</code> is an <code>Int</code> and then
+pick the right <code>+</code> which has type
+<code>Int -&gt; Int -&gt; Int</code>.</p>
 <p>However, if we try to abstract this:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ot">n ::</span> <span class="dt">Int</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>n <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a>example <span class="ot">=</span> oops n</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a>oops x <span class="ot">=</span> x <span class="op">+</span> <span class="dv">5</span></span></code></pre></div>
-<p>What is the type for <code>oops</code>? We can’t give one, because we don’t know which <code>+</code> is intended. We don’t know what the type of <code>x</code> will be. So this is a compile error. At this point we’ve interrupted the programmer with an awkward problem.</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">n ::</span> <span class="dt">Int</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>example <span class="ot">=</span> oops n</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>oops x <span class="ot">=</span> x <span class="op">+</span> <span class="dv">5</span></span></code></pre></div>
+<p>What is the type for <code>oops</code>? We can’t give one, because we
+don’t know which <code>+</code> is intended. We don’t know what the type
+of <code>x</code> will be. So this is a compile error. At this point
+we’ve interrupted the programmer with an awkward problem.</p>
 <p>This is a very leaky abstraction. I can’t even move code.</p>
 <h2 id="exercise">Exercise</h2>
-<p>Here’s an exercise. Try this in your statically-typed language of choice. If you can use overloading of some kind in an expression, and then abstract the generic part of it into its own function, then your language’s overloading satisfies the movement principle.</p>
+<p>Here’s an exercise. Try this in your statically-typed language of
+choice. If you can use overloading of some kind in an expression, and
+then abstract the generic part of it into its own function, then your
+language’s overloading satisfies the movement principle.</p>
 <h2 id="summary">Summary</h2>
-<p>There are many factors that go into making a language let you move code easily. One is making everything an expression, rather than distinguishing between statements and expressions, for example. Another is to avoid things like move semantics and ownership as seen in Rust, which puts a lot of friction on moving code.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<p>I think type-classes are overlooked in contributing to this quality in a language. They enable generic programming, but in a way that preserves the movement principle.</p>
-<section class="footnotes" role="doc-endnotes">
+<p>There are many factors that go into making a language let you move
+code easily. One is making everything an expression, rather than
+distinguishing between statements and expressions, for example. Another
+is to avoid things like move semantics and ownership as seen in Rust,
+which puts a lot of friction on moving code.<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>I think type-classes are overlooked in contributing to this quality
+in a language. They enable generic programming, but in a way that
+preserves the movement principle.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>In Rust, the designers wanted this property.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>In Rust, the designers wanted this property.<a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -150,8 +200,8 @@
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2021-04-10 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2021-04-10 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

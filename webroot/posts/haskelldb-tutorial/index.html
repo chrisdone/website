@@ -87,24 +87,41 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>HaskellDB: A long tutorial</h1>
 
-<p>I’ve been using HaskellDB in production for about two years. I decided that I’d write a proper, up-to-date description, or tutorial, about what it is, how it works, what it can do, and my experience using it in projects.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<h1>HaskellDB: A long tutorial</h1>
+
+<p>I’ve been using HaskellDB in production for about two years. I
+decided that I’d write a proper, up-to-date description, or tutorial,
+about what it is, how it works, what it can do, and my experience using
+it in projects.<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
 <h2 id="what-is-haskelldb">What is HaskellDB?</h2>
-<p><a href="http://hackage.haskell.org/package/haskelldb">HaskellDB</a> is a database interface library for Haskell which features</p>
+<p><a href="http://hackage.haskell.org/package/haskelldb">HaskellDB</a>
+is a database interface library for Haskell which features</p>
 <ul>
 <li>explicit declaration of schema of entities and fields,</li>
-<li>an EDSL<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>—a <code>Query</code> monad—for making queries and statements based on using operations based on the relational algebra<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>,</li>
+<li>an EDSL<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>—a <code>Query</code> monad—for
+making queries and statements based on using operations based on the
+relational algebra<a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a>,</li>
 <li>a simple record system for dealing with entities and fields.</li>
 </ul>
-<p>It was originally developed for Hugs making use of the TRex, but was later made portable and is now happy in both Hugs and GHC<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
-<p>The <a href="http://rubyonrails.org/">Ruby on Rails project</a> recently adopted <a href="http://github.com/rails/arel">ARel, a library based on the same idea</a>.</p>
+<p>It was originally developed for Hugs making use of the TRex, but was
+later made portable and is now happy in both Hugs and GHC<a href="#fn4"
+class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a>.</p>
+<p>The <a href="http://rubyonrails.org/">Ruby on Rails project</a>
+recently adopted <a href="http://github.com/rails/arel">ARel, a library
+based on the same idea</a>.</p>
 <h2 id="connecting">Connecting</h2>
-<p>So to connect to a database with HaskellDB, you can use different backends. In this case, I’ll assume you’re using HDBC as a backend.</p>
+<p>So to connect to a database with HaskellDB, you can use different
+backends. In this case, I’ll assume you’re using HDBC as a backend.</p>
 <p>Pop them in a separate module:</p>
 <pre><code>module Caturday.Model.Connect where
 
@@ -123,7 +140,14 @@ opts = [(&quot;host&quot;,&quot;localhost&quot;)
 <p>Usually you ought to combine this with configuration options.</p>
 <h2 id="orm-approach">ORM approach</h2>
 <h3 id="fields">Fields</h3>
-<p>The approach for the object relational mapping is that one defines the column types and entity schemas up front. So, supposing our project is named Caturday, in a module named <code>Caturday.Model.Fields</code>,<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> using the <code>field</code> macro,<a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a> one declares fields. For example:</p>
+<p>The approach for the object relational mapping is that one defines
+the column types and entity schemas up front. So, supposing our project
+is named Caturday, in a module named
+<code>Caturday.Model.Fields</code>,<a href="#fn5" class="footnote-ref"
+id="fnref5" role="doc-noteref"><sup>5</sup></a> using the
+<code>field</code> macro,<a href="#fn6" class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a> one declares fields. For
+example:</p>
 <pre><code>{-# LANGUAGE TemplateHaskell #-}
 
 -- | All database fields.
@@ -141,11 +165,16 @@ field &quot;Title&quot; &quot;title&quot; &quot;title&quot; [t|String|]</code></
 <ul>
 <li>A type called <code>Title</code>.</li>
 <li>A field variable called <code>title</code>.</li>
-<li>An instance of the field class which can be used to reference <code>title</code> in the database.</li>
+<li>An instance of the field class which can be used to reference
+<code>title</code> in the database.</li>
 </ul>
-<p>In other words, a Haskell-level representation of the database field “title”.</p>
+<p>In other words, a Haskell-level representation of the database field
+“title”.</p>
 <h3 id="tables">Tables</h3>
-<p>Then one defines the entities that use those fields in a module such as <code>Caturday.Model.Tables</code>, using the <code>table</code> macro<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>. For example:</p>
+<p>Then one defines the entities that use those fields in a module such
+as <code>Caturday.Model.Tables</code>, using the <code>table</code>
+macro<a href="#fn7" class="footnote-ref" id="fnref7"
+role="doc-noteref"><sup>7</sup></a>. For example:</p>
 <pre><code>{-# LANGUAGE TemplateHaskell #-}
 
 -- | Database tables and entities.
@@ -159,25 +188,35 @@ import Prelude ()
 
 -- | Content table.
 table &quot;content&quot; &quot;content&quot;
-  ['id
-  ,'title
+  [&#39;id
+  ,&#39;title
   ]</code></pre>
-<p>The first argument is the Haskell-level value name for the table, and the second is the SQL-level name of the entity. To import <code>Fields as Fields</code> is a good idea.<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
+<p>The first argument is the Haskell-level value name for the table, and
+the second is the SQL-level name of the entity. To import
+<code>Fields as Fields</code> is a good idea.<a href="#fn8"
+class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a></p>
 <h3 id="importing">Importing</h3>
-<p>Once the model schema has been defined in these two modules, one ought to import them like so:</p>
+<p>Once the model schema has been defined in these two modules, one
+ought to import them like so:</p>
 <pre><code>import qualified Caturday.Model.Fields as F
 import qualified Caturday.Model.Tables as T
 
 import Database.HaskellDB
 import Database.HaskellDB.HDBRec</code></pre>
-<p>So that later we will refer to fields as <code>F.foo</code> and tables as <code>T.bar</code>.</p>
+<p>So that later we will refer to fields as <code>F.foo</code> and
+tables as <code>T.bar</code>.</p>
 <h2 id="querying">Querying</h2>
 <h3 id="selection">Selection</h3>
-<p>Queries and statements in HaskellDB are composed with the <code>Query</code> monad. For example, simple selection works like this:</p>
+<p>Queries and statements in HaskellDB are composed with the
+<code>Query</code> monad. For example, simple selection works like
+this:</p>
 <pre><code>simpleSelection = do
   table T.content</code></pre>
-<p>We use the <code>table</code> function to select tables from our predefined set of tables. It returns a relation of some kind; i.e. tables or result of a sub-select or projection, etc.</p>
-<p>To select more tables (i.e., <em>joining</em>) we just list more tables:</p>
+<p>We use the <code>table</code> function to select tables from our
+predefined set of tables. It returns a relation of some kind;
+i.e. tables or result of a sub-select or projection, etc.</p>
+<p>To select more tables (i.e., <em>joining</em>) we just list more
+tables:</p>
 <pre><code>simpleDoubleSelection = do
   table T.content
   table T.content</code></pre>
@@ -185,22 +224,31 @@ import Database.HaskellDB.HDBRec</code></pre>
 <pre><code>λ&gt; fmap (take 1) $ withDB opts $ \db -&gt; query db simpleSelection
 [[(&quot;id&quot;,&quot;34750&quot;),(&quot;title&quot;,&quot;\&quot;Spanner Based Distributed Channel Assignment in Wireless Mesh Networks\&quot;&quot;)]]</code></pre>
 <h3 id="projection">Projection</h3>
-<p>For projection we use the <code>project</code> function defined in <code>Database.HaskellDB.Query</code>:</p>
+<p>For projection we use the <code>project</code> function defined in
+<code>Database.HaskellDB.Query</code>:</p>
 <pre><code>simpleProjection = do
   content &lt;- table T.content
   project $ F.id &lt;&lt; content!F.id</code></pre>
-<p>For each field we want to project, we specify a value for it using the <code>(&lt;&lt;)</code> function, defined in <code>Database.HaskellDB.Query</code>. To project more fields, we use the record constructing operator, <code>(#)</code>:</p>
+<p>For each field we want to project, we specify a value for it using
+the <code>(&lt;&lt;)</code> function, defined in
+<code>Database.HaskellDB.Query</code>. To project more fields, we use
+the record constructing operator, <code>(#)</code>:</p>
 <pre><code>simpleProjection2 = do
   content &lt;- table T.content
   project $ F.id    &lt;&lt; content!F.id
           # F.title &lt;&lt; content!F.title</code></pre>
-<p>One can see this operator as akin to the tuple constructor <code>(,)</code> as in <code>(1,2)</code>.</p>
-<p>We can also project our own Haskell-level values as SQL constants:</p>
+<p>One can see this operator as akin to the tuple constructor
+<code>(,)</code> as in <code>(1,2)</code>.</p>
+<p>We can also project our own Haskell-level values as SQL
+constants:</p>
 <pre><code>simpleStringProjection = do
   content &lt;- table T.content
   project $ F.id    &lt;&lt; constant 123
           # F.title &lt;&lt; constant &quot;Hello, World!&quot;</code></pre>
-<p>Personally in my use, I have renamed <code>constant</code> to <code>val</code>.<a href="#fn9" class="footnote-ref" id="fnref9" role="doc-noteref"><sup>9</sup></a> I just find this more convenient. I will use this henceforth.</p>
+<p>Personally in my use, I have renamed <code>constant</code> to
+<code>val</code>.<a href="#fn9" class="footnote-ref" id="fnref9"
+role="doc-noteref"><sup>9</sup></a> I just find this more convenient. I
+will use this henceforth.</p>
 <pre><code>import Database.HaskellDB.Extra</code></pre>
 <h3 id="restriction">Restriction</h3>
 <p>We restrict results using the <code>restrict</code> function:</p>
@@ -212,7 +260,8 @@ import Database.HaskellDB.HDBRec</code></pre>
 <pre><code>λ&gt; :i restrict
 restrict :: Expr Bool -&gt; Query ()
         -- Defined in Database.HaskellDB.Query</code></pre>
-<p>For boolean expressions there are a bunch of logical operators that commonly appear in SQL:</p>
+<p>For boolean expressions there are a bunch of logical operators that
+commonly appear in SQL:</p>
 <pre><code>-- | Equality comparison on Exprs, = in SQL.
 (.==.) :: Eq a =&gt; Expr a -&gt; Expr a -&gt; Expr Bool
 
@@ -221,14 +270,17 @@ restrict :: Expr Bool -&gt; Query ()
 (.&lt;.) :: Ord a =&gt; Expr a -&gt; Expr a -&gt; Expr Bool
 (.&gt;=.) :: Ord a =&gt; Expr a -&gt; Expr a -&gt; Expr Bool
 
--- | \&quot;Logical and\&quot; on 'Expr', AND in SQL.
+-- | \&quot;Logical and\&quot; on &#39;Expr&#39;, AND in SQL.
 (.&amp;&amp;.):: Expr Bool -&gt; Expr Bool -&gt; Expr Bool
 
--- | \&quot;Logical or\&quot; on 'Expr'. OR in SQL.
+-- | \&quot;Logical or\&quot; on &#39;Expr&#39;. OR in SQL.
 (.||.) :: Expr Bool -&gt; Expr Bool -&gt; Expr Bool</code></pre>
-<p>Note that the convention is for operators in HaskellDB to be surrounded by periods. For more see the Operators section of Database.HaskellDB.Query.</p>
+<p>Note that the convention is for operators in HaskellDB to be
+surrounded by periods. For more see the Operators section of
+Database.HaskellDB.Query.</p>
 <h3 id="raw-sql-output">Raw SQL Output</h3>
-<p>To get a concrete feeling of what SQL this code will produce, let’s observe the output. To do that, we can use <code>ppSqlUnOpt</code>:</p>
+<p>To get a concrete feeling of what SQL this code will produce, let’s
+observe the output. To do that, we can use <code>ppSqlUnOpt</code>:</p>
 <pre><code>λ&gt; :i ppSqlUnOpt
 ppSqlUnOpt :: Query (Rel r) -&gt; Text.PrettyPrint.HughesPJ.Doc
         -- Defined in Database.HaskellDB.PrintQuery</code></pre>
@@ -245,7 +297,7 @@ FROM content as T1</code></pre>
 <p>The constant value example:</p>
 <pre><code>λ&gt; ppSqlUnOpt simpleStringProjection
 SELECT 123 as id,
-       'Hello, World!' as title,
+       &#39;Hello, World!&#39; as title,
        id1,
        title1
 FROM (SELECT id as id1,
@@ -253,25 +305,30 @@ FROM (SELECT id as id1,
       FROM content as T1) as T1</code></pre>
 <p>The code is clear to read and not that surprising.</p>
 <h3 id="insertion-delete-update">Insertion, delete, update</h3>
-<p>Insertion uses the <code>insert</code> function. Similar to the <code>query</code> function, it takes a connection value. Pretty self-explanatory:</p>
+<p>Insertion uses the <code>insert</code> function. Similar to the
+<code>query</code> function, it takes a connection value. Pretty
+self-explanatory:</p>
 <pre><code>simpleInsert conn = do
   insert conn
          T.content
          ( F.id    &lt;&lt; val 123
          # F.title &lt;&lt; val &quot;What is Love?&quot;)</code></pre>
-<p>The delete function takes a restriction clause for the row to delete, with the ability to inspect the row for the condition.</p>
+<p>The delete function takes a restriction clause for the row to delete,
+with the ability to inspect the row for the condition.</p>
 <pre><code>simpleDelete conn = do
   delete conn
          T.content
          (\content -&gt; content!F.title .==. val &quot;Coco Jambo&quot;)</code></pre>
-<p>Updating is the same as insert, but we provide a function for the update:</p>
+<p>Updating is the same as insert, but we provide a function for the
+update:</p>
 <pre><code>simpleUpdate conn = do
   update conn
          T.content
          (\content -&gt; content!F.title .==. val &quot;Coco Jambo&quot;)
          (\content -&gt; F.title &lt;&lt; val &quot;What is Love?&quot;)</code></pre>
 <h2 id="speed-and-optimisation">Speed and optimisation</h2>
-<p>But the subquery is useless in this example, so clearly the optimizer isn’t magic.</p>
+<p>But the subquery is useless in this example, so clearly the optimizer
+isn’t magic.</p>
 <pre><code>λ&gt; ppSqlUnOpt simpleDoubleSelection
 SELECT id2 as id,
        title2 as title
@@ -282,8 +339,14 @@ FROM (SELECT id as id2,
              title as title1
       FROM content as T1) as T2</code></pre>
 <p>In fact, subqueries are created in all cases.</p>
-<p>For normal query optimizers, e.g. PostgreSQL, the subquery is lifted as to be equivalent to there being one query. I am not sure about MySQL; it may have trouble when joins are involved. Don’t expect good performance from HaskellDB if you’re using MySQL.<a href="#fn10" class="footnote-ref" id="fnref10" role="doc-noteref"><sup>10</sup></a></p>
-<p>For example, PostgreSQL sees such use of sub-query as equivalent to direct join:</p>
+<p>For normal query optimizers, e.g. PostgreSQL, the subquery is lifted
+as to be equivalent to there being one query. I am not sure about MySQL;
+it may have trouble when joins are involved. Don’t expect good
+performance from HaskellDB if you’re using MySQL.<a href="#fn10"
+class="footnote-ref" id="fnref10"
+role="doc-noteref"><sup>10</sup></a></p>
+<p>For example, PostgreSQL sees such use of sub-query as equivalent to
+direct join:</p>
 <pre><code>=&gt; explain SELECT id2 as id,
            title2 as title
     FROM (SELECT id as id2,
@@ -313,23 +376,54 @@ FROM (SELECT id as id2,
 (4 rows)
 
 =&gt;</code></pre>
-<p>I’m not joining on any indexes so it’s a sequence scan. For people not used to PostgreSQL output, this basically means it will do a cartesian product in both versions.</p>
+<p>I’m not joining on any indexes so it’s a sequence scan. For people
+not used to PostgreSQL output, this basically means it will do a
+cartesian product in both versions.</p>
 <h2 id="maintenance">Maintenance</h2>
-<p>The great part about HaskellDB is that it is in first-class Haskell land. Fields and tables have a statically enforced membership and field-type schema.</p>
-<p>The obvious use case is that it avoids making mistakes in naming and ending up with the wrong field type, or using a field that doesn’t exist in a given table.</p>
-<p>The fact that all fields are defined up front with the right type means that one really has to think about how meaningful a type is and how one will use it. For example:</p>
+<p>The great part about HaskellDB is that it is in first-class Haskell
+land. Fields and tables have a statically enforced membership and
+field-type schema.</p>
+<p>The obvious use case is that it avoids making mistakes in naming and
+ending up with the wrong field type, or using a field that doesn’t exist
+in a given table.</p>
+<p>The fact that all fields are defined up front with the right type
+means that one really has to think about how meaningful a type is and
+how one will use it. For example:</p>
 <pre><code>field &quot;Abstract&quot; &quot;abstract&quot; &quot;abstract&quot; [t|Maybe String|]</code></pre>
-<p>This is how to encode a database text field that is nullable. When one is encoding their database schema into the Haskell type system, one finds that it really needs to be thought of properly of what types are there in the database, particularly nullability.</p>
-<p>In my day to day work, I have to work with database schemas that aren’t mine, I have to interface with them. Due to my use of HaskellDB, I have a lot of correctness questions about these schemas I’m working with to the authors, if they are available for consultation.</p>
-<p>Often it comes up, that I ask “why is this field nullable?” and the question often comes back, “I don’t know.” As the PostgreSQL documentation says, in most database designs the majority of columns should be marked not null.<a href="#fn11" class="footnote-ref" id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
-<p>Note that in Haskell nullability is not implicit. No values can be null. But you can have choice between a value or not a value, as in <code>Maybe</code>:</p>
+<p>This is how to encode a database text field that is nullable. When
+one is encoding their database schema into the Haskell type system, one
+finds that it really needs to be thought of properly of what types are
+there in the database, particularly nullability.</p>
+<p>In my day to day work, I have to work with database schemas that
+aren’t mine, I have to interface with them. Due to my use of HaskellDB,
+I have a lot of correctness questions about these schemas I’m working
+with to the authors, if they are available for consultation.</p>
+<p>Often it comes up, that I ask “why is this field nullable?” and the
+question often comes back, “I don’t know.” As the PostgreSQL
+documentation says, in most database designs the majority of columns
+should be marked not null.<a href="#fn11" class="footnote-ref"
+id="fnref11" role="doc-noteref"><sup>11</sup></a></p>
+<p>Note that in Haskell nullability is not implicit. No values can be
+null. But you can have choice between a value or not a value, as in
+<code>Maybe</code>:</p>
 <pre><code>data Maybe a = Just a | Nothing</code></pre>
-<p>And so if we use the abstract field, as mentioned, and use it as a string, it’s not a string, it’s a <code>Maybe String</code>, so we get a compile error such as:</p>
+<p>And so if we use the abstract field, as mentioned, and use it as a
+string, it’s not a string, it’s a <code>Maybe String</code>, so we get a
+compile error such as:</p>
 <pre><code>Mismatch: Demo.hs:23:32: “Maybe String” ≠ “String”</code></pre>
-<p>Another nice property is that fields named in your codebase, and their names in the database, are entirely separate and configurable. Just because Joe Master Designer chose certain names in his schema, that doesn’t mean that you have to conform to those names. Maybe they call it <code>thetitle</code>, and you just want <code>title</code>:</p>
+<p>Another nice property is that fields named in your codebase, and
+their names in the database, are entirely separate and configurable.
+Just because Joe Master Designer chose certain names in his schema, that
+doesn’t mean that you have to conform to those names. Maybe they call it
+<code>thetitle</code>, and you just want <code>title</code>:</p>
 <pre><code>field &quot;Title&quot; &quot;title&quot; &quot;thetitle&quot; [t|String|]</code></pre>
-<p>Another fact is changes to the schema underneath: if someone (you or someone else) changes the type or availability of a field or table in the schema, all you need do is make the necessary change in the field module or table module, and the compiler will tell you immediately which modules need updating with the new invariants.</p>
-<p>Suppose we change the type of the field title to <code>Int</code> (for example), when we recompile our examples above, we get:</p>
+<p>Another fact is changes to the schema underneath: if someone (you or
+someone else) changes the type or availability of a field or table in
+the schema, all you need do is make the necessary change in the field
+module or table module, and the compiler will tell you immediately which
+modules need updating with the new invariants.</p>
+<p>Suppose we change the type of the field title to <code>Int</code>
+(for example), when we recompile our examples above, we get:</p>
 <pre><code>Mismatch: Demo.hs:23:32: “Int” ≠ “String”
 Mismatch: Demo.hs:25:0: “String” ≠ “Int”</code></pre>
 <p>So the following two functions are now inconsistent:</p>
@@ -342,15 +436,26 @@ simpleRestriction = do
   content &lt;- table T.content
   restrict $ content!F.title .==. val &quot;Coco Jambo&quot;
   return content</code></pre>
-<p>In a codebase of 10K+ lines, this starts to become very compelling.</p>
+<p>In a codebase of 10K+ lines, this starts to become very
+compelling.</p>
 <p>I believe LINQ in C# et al provide similar static assurances.</p>
 <h2 id="extension">Extension</h2>
-<h3 id="pagination-and-composing-queries">Pagination and composing queries</h3>
-<p>Because the query DSL is a monad (as plenty of Haskell DSLs are), it is really nicely composable. This means it’s trivial to split up queries into discrete parts that have meaningful and generic purposes.</p>
-<p>For example, to implement pagination, which is essentially the simple problem of an offset and a count. I implemented this in <code>HaskellDB.Database.Pagination</code>.<a href="#fn12" class="footnote-ref" id="fnref12" role="doc-noteref"><sup>12</sup></a></p>
-<p>Thus the following implementation is possible. Suppose we write some functions to search the articles by title in the database, but paginated. Two things we need for this are:</p>
+<h3 id="pagination-and-composing-queries">Pagination and composing
+queries</h3>
+<p>Because the query DSL is a monad (as plenty of Haskell DSLs are), it
+is really nicely composable. This means it’s trivial to split up queries
+into discrete parts that have meaningful and generic purposes.</p>
+<p>For example, to implement pagination, which is essentially the simple
+problem of an offset and a count. I implemented this in
+<code>HaskellDB.Database.Pagination</code>.<a href="#fn12"
+class="footnote-ref" id="fnref12"
+role="doc-noteref"><sup>12</sup></a></p>
+<p>Thus the following implementation is possible. Suppose we write some
+functions to search the articles by title in the database, but
+paginated. Two things we need for this are:</p>
 <ul>
-<li>The count of total articles filtered by the search query, <code>q</code>.</li>
+<li>The count of total articles filtered by the search query,
+<code>q</code>.</li>
 <li>The paginated articles filtered by the search query.</li>
 </ul>
 <p>First we define a query that does the search and restriction:</p>
@@ -360,62 +465,81 @@ simpleRestriction = do
   return article</code></pre>
 <p>In the fields module we need another field:</p>
 <pre><code>field &quot;Count&quot; &quot;count&quot; &quot;count&quot; [t|Int|]</code></pre>
-<p>Then we write the function that uses this query, and projects the count:</p>
+<p>Then we write the function that uses this query, and projects the
+count:</p>
 <pre><code>getArticlesCount conn q = fmap (sum . map (!F.count)) $ query conn $ do
   article &lt;- getContent q
   project $ F.count &lt;&lt; count (article!F.id)</code></pre>
-<p>Then we can write a function to get the articles and then paginate.</p>
+<p>Then we can write a function to get the articles and then
+paginate.</p>
 <pre><code>getArticles conn pn q = fmap (map (!F.title)) $ query conn $ do
   article &lt;- getContent q
   paginate pn
   return article</code></pre>
 <p>Very, very easy to compose.</p>
 <h3 id="functions-and-operators">Functions and operators</h3>
-<p>Sometimes you want to define more SQL functions and operators, which is <a href="http://hpaste.org/53608">a use case I had for PostgreSQL</a> as <code>Database.HaskellDB.PostgreSQL</code>.</p>
-<p>The function to use for extending with new functions is <code>func</code>.</p>
+<p>Sometimes you want to define more SQL functions and operators, which
+is <a href="http://hpaste.org/53608">a use case I had for PostgreSQL</a>
+as <code>Database.HaskellDB.PostgreSQL</code>.</p>
+<p>The function to use for extending with new functions is
+<code>func</code>.</p>
 <pre><code>λ&gt; :i func
 func :: (Args a) =&gt; String -&gt; a
         -- Defined in Database.HaskellDB.Query</code></pre>
-<p><code>Args</code> is implemented as a way to have arbitrary number of serializable parameters, in the same way <code>Text.Printf.printf</code> works.</p>
-<p>For example, <a href="http://www.postgresql.org/docs/8.1/static/functions-datetime.html">date_part</a> in PostgreSQL:</p>
+<p><code>Args</code> is implemented as a way to have arbitrary number of
+serializable parameters, in the same way <code>Text.Printf.printf</code>
+works.</p>
+<p>For example, <a
+href="http://www.postgresql.org/docs/8.1/static/functions-datetime.html">date_part</a>
+in PostgreSQL:</p>
 <pre><code>-- | Get part of a date.
 date_part :: Expr String -&gt; Expr CalendarTime -&gt; Expr Integer
 date_part = func &quot;date_part&quot;</code></pre>
-<p>Or maybe we want to use full text search support from PostgreSQL. Let’s add a field to represent the <code>ts_vector</code>, and define a table with the searchable stuff:</p>
+<p>Or maybe we want to use full text search support from PostgreSQL.
+Let’s add a field to represent the <code>ts_vector</code>, and define a
+table with the searchable stuff:</p>
 <pre><code>-- | Search fields.
 field &quot;Textsearchable&quot; &quot;textsearchable&quot; &quot;textsearchable_index_col&quot;
       [t|TSVector|]
 
 -- | Content table with searchable full text field.
 table &quot;contentSearchable&quot; &quot;content&quot;
-  ['id
-  ,'title
-  ,'textsearchable
+  [&#39;id
+  ,&#39;title
+  ,&#39;textsearchable
   ]</code></pre>
-<p>Now we can redefine <code>getContent</code> which matches on the <code>ts_vector</code>:</p>
+<p>Now we can redefine <code>getContent</code> which matches on the
+<code>ts_vector</code>:</p>
 <pre><code>getContentFullText q = do
   article &lt;- table T.contentSearchable
   restrict $ article!F.textsearchable .@@. (to_tsquery (val q))
   order [descExpr $ ts_rank_cd (article!F.textsearchable)
                                (to_tsquery (val q))]
   return article</code></pre>
-<p>This can be achieved by a phantom type (i.e. an uninhabitable type at the value-level):</p>
+<p>This can be achieved by a phantom type (i.e. an uninhabitable type at
+the value-level):</p>
 <pre><code>-- | A text-search vector.
 data TSVector
 
 -- | Convert a string to a textsearch vector.
 to_tsvector :: Expr String -&gt; Expr TSVector
 to_tsvector = func &quot;to_tsvector&quot;</code></pre>
-<p>And the function can be used, at the SQL-level, because the vector is constructed at the SQL-level, not the Haskell level. That’s quite nice.</p>
-<p>Likewise, <code>descExpr</code> was written by me from the Database.HaskellDB.Extra module:</p>
+<p>And the function can be used, at the SQL-level, because the vector is
+constructed at the SQL-level, not the Haskell level. That’s quite
+nice.</p>
+<p>Likewise, <code>descExpr</code> was written by me from the
+Database.HaskellDB.Extra module:</p>
 <pre><code>-- | Order the query by an arbitrary expression.
 descExpr :: Expr a -&gt; OrderExpr
 descExpr e = OrderExpr OpDesc expr where
   Expr expr = e</code></pre>
-<p>One just needs access to the internal tree and a new combinator can be constructed.</p>
+<p>One just needs access to the internal tree and a new combinator can
+be constructed.</p>
 <h2 id="enums">Enums</h2>
-<p>It’s also possible to use enum types with HaskellDB that map from DB-level enums and Haskell enums.</p>
-<p>Suppose we define an Enums module, with an enum type <code>ArticleType</code>:</p>
+<p>It’s also possible to use enum types with HaskellDB that map from
+DB-level enums and Haskell enums.</p>
+<p>Suppose we define an Enums module, with an enum type
+<code>ArticleType</code>:</p>
 <pre><code>module Caturday.Types.Enums where
 
 import Data.Enum.Print
@@ -427,14 +551,22 @@ data ArticleType
   = ResearchArticle
   | Editorial
   deriving (Show,Enum,Read,Eq)</code></pre>
-<p>In order to get values of this type from the database with HaskellDB, we need to implement the <code>GetValue</code> and the <code>ShowConstant</code> classes:</p>
+<p>In order to get values of this type from the database with HaskellDB,
+we need to implement the <code>GetValue</code> and the
+<code>ShowConstant</code> classes:</p>
 <pre><code>instance GetValue ArticleType where
   getValue = getValueWith readEnum &quot;ArticleType&quot;
 
 instance ShowConstant ArticleType where
   showConstant = StringLit . showEnum</code></pre>
-<p>This uses two <em>other</em> modules (I know, I’m referencing a lot of modules I’ve written, sorry), <a href="http://hpaste.org/53612">Data.Enum.Print</a>, a simple enum serialization module, and <a href="http://hpaste.org/53614">Database.HaskellDB.Get</a>, which provides the <code>getValueWith</code> function.</p>
-<p>Now we can define the fields that use this type in our Fields module:</p>
+<p>This uses two <em>other</em> modules (I know, I’m referencing a lot
+of modules I’ve written, sorry), <a
+href="http://hpaste.org/53612">Data.Enum.Print</a>, a simple enum
+serialization module, and <a
+href="http://hpaste.org/53614">Database.HaskellDB.Get</a>, which
+provides the <code>getValueWith</code> function.</p>
+<p>Now we can define the fields that use this type in our Fields
+module:</p>
 <pre><code>import qualified Caturday.Types.Enums as Types (ArticleType)
 
 -- | Enum types.
@@ -442,9 +574,9 @@ field &quot;ArticleType&quot; &quot;articleType&quot; &quot;type&quot; [t|Types.
 <p>and redefine the content table’s schema:</p>
 <pre><code>-- | Content table.
 table &quot;content&quot; content&quot;
-  ['id
-  ,'title
-  ,'articleType
+  [&#39;id
+  ,&#39;title
+  ,&#39;articleType
   ]</code></pre>
 <p>So now, our Demo module doesn’t compile, so we update:</p>
 <pre><code>import Caturday.Types.Enums
@@ -455,7 +587,8 @@ simpleInsert conn = do
          ( F.id          &lt;&lt; val 123
          # F.title       &lt;&lt; val &quot;What is Love?&quot;
          # F.articleType &lt;&lt; val Editorial)</code></pre>
-<p>And we can also use the enum for restriction as well as retrieval:</p>
+<p>And we can also use the enum for restriction as well as
+retrieval:</p>
 <pre><code>restrictOnArticleType conn = query conn $ do
   content &lt;- table T.content
   restrict $ content!F.articleType .==. val Editorial
@@ -466,29 +599,40 @@ simpleInsert conn = do
 ,(&quot;title&quot;,&quot;\&quot;Welcome message from the Editor-in-Chief\&quot;&quot;)
 ,(&quot;type&quot;,&quot;Editorial&quot;)]]</code></pre>
 <h2 id="stability">Stability</h2>
-<p>The problem with HaskellDB is that the implementation can be unstable. I found that I had to patch the PostgreSQL library to handle simple stupid things like fields named “user” or “order”, by making sure to quote all fields.</p>
-<p>I also had to open up some of the internal parts of the API so that I could extend it further, such as for the operator <code>(.@@.)</code> defined above. I’ll push these fixes and extensions to fork repos at some point.</p>
+<p>The problem with HaskellDB is that the implementation can be
+unstable. I found that I had to patch the PostgreSQL library to handle
+simple stupid things like fields named “user” or “order”, by making sure
+to quote all fields.</p>
+<p>I also had to open up some of the internal parts of the API so that I
+could extend it further, such as for the operator <code>(.@@.)</code>
+defined above. I’ll push these fixes and extensions to fork repos at
+some point.</p>
 <h2 id="reading-error-messages">Reading error messages</h2>
-<p>HaskellDB gets a lot of stick for hard to read error messages. This is true when you get things badly wrong.</p>
+<p>HaskellDB gets a lot of stick for hard to read error messages. This
+is true when you get things badly wrong.</p>
 <p>In the general case the errors are quite straight forward.</p>
-<p>For example, if I try to use a field which doesn’t exist in the table, like this:</p>
+<p>For example, if I try to use a field which doesn’t exist in the
+table, like this:</p>
 <pre><code>simpleRestriction = do
   content &lt;- table T.content
   restrict $ content!F.count .==. val 1
   return content</code></pre>
 <p>Then the compile error looks like this:</p>
 <pre><code>Error: Demo.hs:39:13: No instance for (HasField F.Count RecNil)
-      arising from a use of `!' at Demo.hs:39:13-27
+      arising from a use of `!&#39; at Demo.hs:39:13-27
     Possible fix:
       add an instance declaration for (HasField F.Count RecNil)
-    In the first argument of `(.==.)', namely `content ! F.count'
-    In the second argument of `($)', namely
-        `content ! F.count .==. val 1'
-    In a stmt of a 'do' expression:
+    In the first argument of `(.==.)&#39;, namely `content ! F.count&#39;
+    In the second argument of `($)&#39;, namely
+        `content ! F.count .==. val 1&#39;
+    In a stmt of a &#39;do&#39; expression:
           restrict $ content ! F.count .==. val 1</code></pre>
-<p>Which is a very useful error message. <code>content</code> does not has field <code>count</code>.</p>
-<p>For getting the wrong type, it merely shows “couldn’t match type A against type B,” straight-forward.</p>
-<p>The cases where compile errors blow up are, for example, if I wrote this:</p>
+<p>Which is a very useful error message. <code>content</code> does not
+has field <code>count</code>.</p>
+<p>For getting the wrong type, it merely shows “couldn’t match type A
+against type B,” straight-forward.</p>
+<p>The cases where compile errors blow up are, for example, if I wrote
+this:</p>
 <pre><code>simpleRestriction = do
   content &lt;- table T.content
   restrict $ content!content .==. val &quot;Coco Jambo&quot;
@@ -506,33 +650,83 @@ Error: Demo.hs:39:13:
         (RecCons F.Id (Expr Int)
                 (RecCons F.Title (Expr String) RecNil)))
       (Expr [Char]))
-      arising from a use of `!'
+      arising from a use of `!&#39;
                    at Demo.hs:39:13-27
     Possible fix:
       add an instance declaration for […]
-    In the first argument of `(.==.)', namely `content ! content'
-    In the second argument of `($)', namely
-        `content ! content .==. val &quot;Coco Jambo&quot;'
-    In a stmt of a 'do' expression:
+    In the first argument of `(.==.)&#39;, namely `content ! content&#39;
+    In the second argument of `($)&#39;, namely
+        `content ! content .==. val &quot;Coco Jambo&quot;&#39;
+    In a stmt of a &#39;do&#39; expression:
           restrict $ content ! content .==. val &quot;Coco Jambo&quot;</code></pre>
-<p>The error actually makes sense if you understand the API well enough, but otherwise it can be very confusing and worrying. Don’t worry about it, you didn’t break something complicated, you just made a typo somewhere. It shows the offending expression; you realised you tried to use a table as a field, and you correct.</p>
+<p>The error actually makes sense if you understand the API well enough,
+but otherwise it can be very confusing and worrying. Don’t worry about
+it, you didn’t break something complicated, you just made a typo
+somewhere. It shows the offending expression; you realised you tried to
+use a table as a field, and you correct.</p>
 <h2 id="files">Files</h2>
-<p>The complete files for this demo including patched libraries are <a href="https://github.com/chrisdone/haskelldb-demo">here in Github flavour.</a></p>
-<section class="footnotes" role="doc-endnotes">
+<p>The complete files for this demo including patched libraries are <a
+href="https://github.com/chrisdone/haskelldb-demo">here in Github
+flavour.</a></p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>Afterwards it would seem like a good idea to get a proper comprehensive tutorial on the HaskellWiki, or much better yet, embed a tutorial in the Haddock documentation for HaskellDB. At the moment the haddock docs are literally just an API listing, with no elaborative explanation or examples. Writing in Haddock mark-up is quite a painful, boring experience. Regardless, I believe the haddock docs of a project should (most of the time) be sufficient to explain its use, linking to external papers and blog posts and whatnot is annoyingly terse and quickly becomes out of date.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Embedded domain-specific language. A common notion in Haskell and Lisp languages, though implemented differently in each.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>See <a href="http://hackage.haskell.org/package/haskelldb">package description for HaskellDB</a>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4" role="doc-endnote"><p>See the <a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.136.3828&amp;rep=rep1&amp;type=pdf">“HaskellDB Improved” paper.</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5" role="doc-endnote"><p>This is the convention I have chosen to use. It makes good sense and can be very helpful for all fields used in the project to be defined on a per-project basis, rather than per-entity, and of the same type.<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6" role="doc-endnote"><p>A macro that you can get from <a href="http://hpaste.org/53595">Database.HaskellDB.TH</a>, which I have yet to put into a library or get added to HaskellDB mainline. I don’t care to debate API decisions with the HaskellDB maintainers right now.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn7" role="doc-endnote"><p>A macro that you can get from <a href="http://hpaste.org/53595">Database.HaskellDB.TH</a>, which I have yet to put into a library or get added to HaskellDB mainline. I don’t care to debate API decisions with the HaskellDB maintainers right now.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn8" role="doc-endnote"><p>When table names conflict with field names—and eventually it happens—this is useful to have. Alternatively <code>as F</code> also makes sense, to be consistent.<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn9" role="doc-endnote"><p>I have defined a few extra functions for HaskellDB in <a href="http://hpaste.org/53599">Database.HaskellDB.Extra</a>.<a href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn10" role="doc-endnote"><p><a href="http://pseudofish.com/blog/2008/05/18/haskelldb-performance/">Geoff Wilson on HaskellDB performance.</a><a href="#fnref10" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn11" role="doc-endnote"><p><a href="http://www.postgresql.org/docs/8.3/static/ddl-constraints.html">PostgreSQL manual on constraints.</a><a href="#fnref11" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn12" role="doc-endnote"><p><a href="http://hpaste.org/53619">Another simple module</a> and <a href="http://hpaste.org/53607">another</a> that would be cool to put in a package, but for now remains in my utility box.<a href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Afterwards it would seem like a good idea to get a
+proper comprehensive tutorial on the HaskellWiki, or much better yet,
+embed a tutorial in the Haddock documentation for HaskellDB. At the
+moment the haddock docs are literally just an API listing, with no
+elaborative explanation or examples. Writing in Haddock mark-up is quite
+a painful, boring experience. Regardless, I believe the haddock docs of
+a project should (most of the time) be sufficient to explain its use,
+linking to external papers and blog posts and whatnot is annoyingly
+terse and quickly becomes out of date.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Embedded domain-specific language. A common notion in
+Haskell and Lisp languages, though implemented differently in each.<a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>See <a
+href="http://hackage.haskell.org/package/haskelldb">package description
+for HaskellDB</a>.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>See the <a
+href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.136.3828&amp;rep=rep1&amp;type=pdf">“HaskellDB
+Improved” paper.</a><a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>This is the convention I have chosen to use. It makes
+good sense and can be very helpful for all fields used in the project to
+be defined on a per-project basis, rather than per-entity, and of the
+same type.<a href="#fnref5" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>A macro that you can get from <a
+href="http://hpaste.org/53595">Database.HaskellDB.TH</a>, which I have
+yet to put into a library or get added to HaskellDB mainline. I don’t
+care to debate API decisions with the HaskellDB maintainers right now.<a
+href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>A macro that you can get from <a
+href="http://hpaste.org/53595">Database.HaskellDB.TH</a>, which I have
+yet to put into a library or get added to HaskellDB mainline. I don’t
+care to debate API decisions with the HaskellDB maintainers right now.<a
+href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>When table names conflict with field names—and
+eventually it happens—this is useful to have. Alternatively
+<code>as F</code> also makes sense, to be consistent.<a href="#fnref8"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn9"><p>I have defined a few extra functions for HaskellDB in <a
+href="http://hpaste.org/53599">Database.HaskellDB.Extra</a>.<a
+href="#fnref9" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn10"><p><a
+href="http://pseudofish.com/blog/2008/05/18/haskelldb-performance/">Geoff
+Wilson on HaskellDB performance.</a><a href="#fnref10"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn11"><p><a
+href="http://www.postgresql.org/docs/8.3/static/ddl-constraints.html">PostgreSQL
+manual on constraints.</a><a href="#fnref11" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn12"><p><a href="http://hpaste.org/53619">Another simple
+module</a> and <a href="http://hpaste.org/53607">another</a> that would
+be cool to put in a package, but for now remains in my utility box.<a
+href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -540,8 +734,8 @@ Error: Demo.hs:39:13:
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2011-11-06 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2011-11-06 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

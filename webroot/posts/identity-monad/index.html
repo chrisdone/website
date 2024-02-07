@@ -87,39 +87,72 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>The Identity monad trick</h1>
 
-<p><em><strong>Update:</strong> Got the link! <a href="http://blog.sigfpe.com/2007/04/trivial-monad.html">The Trivial Monad</a>. Thanks, John. Naturally, all interesting Haskell things eventually lead back to Dan Piponi.</em></p>
-<p>I heard about this from John Wiegley a while ago, but every time I recall it, I can’t remember how it goes, so I thought I’d write it down for myself. I think there’s a paper about it, but I can’t find it. Hopefully I’m recalling it correctly.</p>
-<p>The Identity monad trick: Let’s say I want to expose an API that lets you work with a data structure. I want you to be able to keep hold of that data structure and pass it back into my library, and I’ll give it back to you later and we can go back and forth.</p>
-<p><strong>But</strong> I don’t want you to actually <em>give you</em> the data structure freely so you can go and give it to your friends. So instead I force you into the Identity monad, via a newtype wrapper that only <em>I</em> can unpack.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">newtype</span> <span class="dt">Secret</span> a <span class="ot">=</span> <span class="dt">Secret</span> {<span class="ot"> unSecret ::</span> <span class="dt">Identity</span> a }</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>  <span class="kw">deriving</span> (<span class="dt">Monad</span>,<span class="dt">Functor</span>,<span class="dt">Applicative</span>)</span></code></pre></div>
+<h1>The Identity monad trick</h1>
+
+<p><em><strong>Update:</strong> Got the link! <a
+href="http://blog.sigfpe.com/2007/04/trivial-monad.html">The Trivial
+Monad</a>. Thanks, John. Naturally, all interesting Haskell things
+eventually lead back to Dan Piponi.</em></p>
+<p>I heard about this from John Wiegley a while ago, but every time I
+recall it, I can’t remember how it goes, so I thought I’d write it down
+for myself. I think there’s a paper about it, but I can’t find it.
+Hopefully I’m recalling it correctly.</p>
+<p>The Identity monad trick: Let’s say I want to expose an API that lets
+you work with a data structure. I want you to be able to keep hold of
+that data structure and pass it back into my library, and I’ll give it
+back to you later and we can go back and forth.</p>
+<p><strong>But</strong> I don’t want you to actually <em>give you</em>
+the data structure freely so you can go and give it to your friends. So
+instead I force you into the Identity monad, via a newtype wrapper that
+only <em>I</em> can unpack.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Secret</span> a <span class="ot">=</span> <span class="dt">Secret</span> {<span class="ot"> unSecret ::</span> <span class="dt">Identity</span> a }</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Monad</span>,<span class="dt">Functor</span>,<span class="dt">Applicative</span>)</span></code></pre></div>
 <p>And I have some function exposing it like:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="ot">getSecret ::</span> <span class="dt">Foo</span> <span class="ot">-&gt;</span> <span class="dt">Secret</span> <span class="dt">Text</span></span></code></pre></div>
-<p>Here, use that. What can you do with it? You can’t extract the value out, you can only compose it with more functor or monad stuff:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="fu">fmap</span> (<span class="fu">map</span> T.toUpper) (getSecret foo)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">getSecret ::</span> <span class="dt">Foo</span> <span class="ot">-&gt;</span> <span class="dt">Secret</span> <span class="dt">Text</span></span></code></pre></div>
+<p>Here, use that. What can you do with it? You can’t extract the value
+out, you can only compose it with more functor or monad stuff:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">fmap</span> (<span class="fu">map</span> T.toUpper) (getSecret foo)</span></code></pre></div>
 <p>Or:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">do</span> text <span class="ot">&lt;-</span> getSecret foo</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>   <span class="kw">if</span> <span class="fu">all</span> T.isUpper text</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>      <span class="kw">then</span> <span class="fu">return</span> (T.reverse text)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>      <span class="kw">else</span> <span class="fu">return</span> text</span></code></pre></div>
-<p>Note that the whole type of this expression is <code>Secret Text</code>. You still don’t have the secret, you’ve got a computation over it.</p>
-<p>You’ve used the value, but it never escaped<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> the actual Identity monad. It’s like I’m giving you the value, but I’m also not giving you the value.</p>
-<section class="footnotes" role="doc-endnotes">
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">do</span> text <span class="ot">&lt;-</span> getSecret foo</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>   <span class="kw">if</span> <span class="fu">all</span> T.isUpper text</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      <span class="kw">then</span> <span class="fu">return</span> (T.reverse text)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      <span class="kw">else</span> <span class="fu">return</span> text</span></code></pre></div>
+<p>Note that the whole type of this expression is
+<code>Secret Text</code>. You still don’t have the secret, you’ve got a
+computation over it.</p>
+<p>You’ve used the value, but it never escaped<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> the
+actual Identity monad. It’s like I’m giving you the value, but I’m also
+not giving you the value.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>As always, there’s a difference between “secure against your own stupidity” and “secure against attackers.” For the former, this is satisfied.</p>
-<p>For the latter, bottom complicates it, so you should force it in the IO monad and catch any exceptions e.g.</p>
+<li id="fn1"><p>As always, there’s a difference between “secure against
+your own stupidity” and “secure against attackers.” For the former, this
+is satisfied.</p>
+<p>For the latter, bottom complicates it, so you should force it in the
+IO monad and catch any exceptions e.g.</p>
 <p><code>extract :: Secret a -&gt; IO (Maybe a)</code></p>
 <p>This prevents people from using</p>
 <p><code>(v &gt;&gt;= \a -&gt; error ("The value is " ++ show a))</code></p>
 <p>To try to get around it.</p>
-<p><code>unsafePerformIO</code> and other non-standard Haskell can get around it, but if you’re defending against developers, you probably have control over the environment, so you can just white-list the imports and extensions and there’s nothing they can do. This is what tryhaskell (via mueval) does.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<p><code>unsafePerformIO</code> and other non-standard Haskell can get
+around it, but if you’re defending against developers, you probably have
+control over the environment, so you can just white-list the imports and
+extensions and there’s nothing they can do. This is what tryhaskell (via
+mueval) does.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -127,8 +160,8 @@
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2014-04-29 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2014-04-29 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

@@ -3,7 +3,8 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>shell-conduit: Write shell scripts in Haskell with Conduit</title>
+    <title>shell-conduit: Write shell scripts in Haskell with
+Conduit</title>
     <style>
       body {
       max-width: 40em;
@@ -87,212 +88,331 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>shell-conduit: Write shell scripts in Haskell with Conduit</h1>
 
-<p>As part of my series of write-about-personal-projects, my latest obsession is writing shell scripts with Michael Snoyman’s <a href="http://hackage.haskell.org/package/conduit">Conduit</a>.</p>
-<p>Here is my package, <a href="http://github.com/chrisdone/shell-conduit/">shell-conduit</a>. It’s still in the experimental phase, but I don’t forsee any changes now for a while.</p>
+<h1>shell-conduit: Write shell scripts in Haskell with Conduit</h1>
+
+<p>As part of my series of write-about-personal-projects, my latest
+obsession is writing shell scripts with Michael Snoyman’s <a
+href="http://hackage.haskell.org/package/conduit">Conduit</a>.</p>
+<p>Here is my package, <a
+href="http://github.com/chrisdone/shell-conduit/">shell-conduit</a>.
+It’s still in the experimental phase, but I don’t forsee any changes now
+for a while.</p>
 <h2 id="bash-is-evil">Bash is evil</h2>
-<p>I hate writing scripts in Bash. Until now, it was the easiest way to just write unix scripts. Its syntax is insane, incredibly error prone, its defaults are awful, and it’s not a real big person programming language.</p>
-<h2 id="perlpythonruby-are-also-evil">Perl/Python/Ruby are also evil</h2>
-<p>If you’re going to go as far as using a real programming language, why bother with these dynamically typed messes? Go straight for Haskell.</p>
+<p>I hate writing scripts in Bash. Until now, it was the easiest way to
+just write unix scripts. Its syntax is insane, incredibly error prone,
+its defaults are awful, and it’s not a real big person programming
+language.</p>
+<h2 id="perlpythonruby-are-also-evil">Perl/Python/Ruby are also
+evil</h2>
+<p>If you’re going to go as far as using a real programming language,
+why bother with these dynamically typed messes? Go straight for
+Haskell.</p>
 <h2 id="like-a-glove">Like a glove</h2>
-<p><img src="http://24.media.tumblr.com/tumblr_m3037pY5x71qbkdr4o1_500.gif" /></p>
-<p>I had an inkling a while back that conduits mirror the behaviour of bash pipes very well. I knew there was something to the idea, but didn’t act on it fully for a while. Last week I experimented somewhat and realised that the following Haskell code</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>source <span class="op">$=</span> conduit <span class="op">$$</span> sink</span></code></pre></div>
+<p><img
+src="http://24.media.tumblr.com/tumblr_m3037pY5x71qbkdr4o1_500.gif" /></p>
+<p>I had an inkling a while back that conduits mirror the behaviour of
+bash pipes very well. I knew there was something to the idea, but didn’t
+act on it fully for a while. Last week I experimented somewhat and
+realised that the following Haskell code</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>source <span class="op">$=</span> conduit <span class="op">$$</span> sink</span></code></pre></div>
 <p>does indeed accurately mirror</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="bu">source</span> <span class="kw">|</span> <span class="ex">conduit</span> <span class="op">&gt;</span> sink</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> <span class="kw">|</span> <span class="ex">conduit</span> <span class="op">&gt;</span> sink</span></code></pre></div>
 <p>And that also the following</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>(<span class="kw">do</span> source</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>    source <span class="op">$=</span> conduit)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="op">$$$$</span> sink</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">do</span> source</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    source <span class="op">$=</span> conduit)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="op">$$$$</span> sink</span></code></pre></div>
 <p>is analogous to</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="bu">source</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="bu">source</span> <span class="kw">|</span> <span class="ex">conduit</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> <span class="kw">|</span> <span class="ex">conduit</span></span></code></pre></div>
 <p>We’ll see examples of why this works later.</p>
-<h2 id="i-must-haskell-all-the-things">I must Haskell all the things</h2>
-<p>Another trick I realised is to write some template Haskell code which will calculate all executables in your PATH at compilation time and generate a top-level name that is a Haskell function to launch that process. So instead of writing</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>run <span class="st">&quot;ls&quot;</span></span></code></pre></div>
+<h2 id="i-must-haskell-all-the-things">I must Haskell all the
+things</h2>
+<p>Another trick I realised is to write some template Haskell code which
+will calculate all executables in your PATH at compilation time and
+generate a top-level name that is a Haskell function to launch that
+process. So instead of writing</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>run <span class="st">&quot;ls&quot;</span></span></code></pre></div>
 <p>you could instead just write</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>ls</span></code></pre></div>
-<p>There are a few thousand executables, so it takes about 10 seconds to compile such a module of names. But that’s all.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>ls</span></code></pre></div>
+<p>There are a few thousand executables, so it takes about 10 seconds to
+compile such a module of names. But that’s all.</p>
 <p>Again, we’ll see how awesome this looks in a minute.</p>
-<h2 id="modeling-stdin-stderr-and-stdout">Modeling stdin, stderr and stdout</h2>
-<p>My choice of modeling the typical shell scripting pipe handles is by having a type called <code>Chunk</code>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">type</span> <span class="dt">Chunk</span> <span class="ot">=</span> <span class="dt">Either</span> <span class="dt">ByteString</span> <span class="dt">ByteString</span></span></code></pre></div>
-<p>All <code>Left</code> values are from <code>stderr</code>. All <code>Right</code> values are either being pulled from <code>stdin</code> or being sent to <code>stdout</code>. In a conduit the difference between <code>stdin</code> and <code>stdout</code> is more conceptual than real.</p>
-<p>When piping two commands, the idea is that any <code>Left</code> values are just re-yielded along, they are not consumed and passed into the process.</p>
+<h2 id="modeling-stdin-stderr-and-stdout">Modeling stdin, stderr and
+stdout</h2>
+<p>My choice of modeling the typical shell scripting pipe handles is by
+having a type called <code>Chunk</code>:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Chunk</span> <span class="ot">=</span> <span class="dt">Either</span> <span class="dt">ByteString</span> <span class="dt">ByteString</span></span></code></pre></div>
+<p>All <code>Left</code> values are from <code>stderr</code>. All
+<code>Right</code> values are either being pulled from
+<code>stdin</code> or being sent to <code>stdout</code>. In a conduit
+the difference between <code>stdin</code> and <code>stdout</code> is
+more conceptual than real.</p>
+<p>When piping two commands, the idea is that any <code>Left</code>
+values are just re-yielded along, they are not consumed and passed into
+the process.</p>
 <h2 id="a-process-conduit-on-chunks">A process conduit on chunks</h2>
-<p>Putting the previous model into practice, we come up with a type for launching a process like this:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="ot">conduitProcess ::</span> (<span class="dt">MonadResource</span> m)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a>               <span class="ot">=&gt;</span> <span class="dt">CreateProcess</span> <span class="ot">-&gt;</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span></code></pre></div>
-<p>Meaning the process will be launched, and the conduit will accept any upstream <code>stdin</code> (<code>Right</code> values), and send downstream anything that comes from the actual process (both <code>Left</code> and <code>Right</code> values).</p>
+<p>Putting the previous model into practice, we come up with a type for
+launching a process like this:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ot">conduitProcess ::</span> (<span class="dt">MonadResource</span> m)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>               <span class="ot">=&gt;</span> <span class="dt">CreateProcess</span> <span class="ot">-&gt;</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span></code></pre></div>
+<p>Meaning the process will be launched, and the conduit will accept any
+upstream <code>stdin</code> (<code>Right</code> values), and send
+downstream anything that comes from the actual process (both
+<code>Left</code> and <code>Right</code> values).</p>
 <h2 id="process-conduits-api">Process conduits API</h2>
 <p>I defined two handy functions for running process conduits:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="ot">shell ::</span> (<span class="dt">MonadResource</span> m)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>      <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="ot">proc ::</span> (<span class="dt">MonadResource</span> m)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>     <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span></code></pre></div>
-<p>One to launch via a shell, one to launch via program name and arguments. These functions can be used in your shell scripts. Though, we’ll see in a minute why you should rarely need either.</p>
-<h2 id="executing-a-shell-scripting-conduit">Executing a shell scripting conduit</h2>
-<p>First we want something to consume any remainder chunks after a script has finished. That’s <code>writeChunks</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="ot">writeChunks ::</span> (<span class="dt">MonadIO</span> m)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>            <span class="ot">=&gt;</span> <span class="dt">Consumer</span> <span class="dt">Chunk</span> m ()</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a>writeChunks <span class="ot">=</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a>  awaitForever</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a>    (\c <span class="ot">-&gt;</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a>       <span class="kw">case</span> c <span class="kw">of</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a>         <span class="dt">Left</span> e <span class="ot">-&gt;</span> liftIO (S.hPut stderr e)</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a>         <span class="dt">Right</span> o <span class="ot">-&gt;</span> liftIO (S.hPut stdout o))</span></code></pre></div>
-<p>This simply consumes anything left in the pipeline and outputs to the correct file handles, either <code>stderr</code> or <code>stdout</code>.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">shell ::</span> (<span class="dt">MonadResource</span> m)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>      <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ot">proc ::</span> (<span class="dt">MonadResource</span> m)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>     <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> [<span class="dt">String</span>] <span class="ot">-&gt;</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span></code></pre></div>
+<p>One to launch via a shell, one to launch via program name and
+arguments. These functions can be used in your shell scripts. Though,
+we’ll see in a minute why you should rarely need either.</p>
+<h2 id="executing-a-shell-scripting-conduit">Executing a shell scripting
+conduit</h2>
+<p>First we want something to consume any remainder chunks after a
+script has finished. That’s <code>writeChunks</code>:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ot">writeChunks ::</span> (<span class="dt">MonadIO</span> m)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>            <span class="ot">=&gt;</span> <span class="dt">Consumer</span> <span class="dt">Chunk</span> m ()</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>writeChunks <span class="ot">=</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  awaitForever</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    (\c <span class="ot">-&gt;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>       <span class="kw">case</span> c <span class="kw">of</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>         <span class="dt">Left</span> e <span class="ot">-&gt;</span> liftIO (S.hPut stderr e)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>         <span class="dt">Right</span> o <span class="ot">-&gt;</span> liftIO (S.hPut stdout o))</span></code></pre></div>
+<p>This simply consumes anything left in the pipeline and outputs to the
+correct file handles, either <code>stderr</code> or
+<code>stdout</code>.</p>
 <p>Now we can write a simple <code>run</code> function:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a><span class="ot">run ::</span> (<span class="dt">MonadIO</span> m,<span class="dt">MonadBaseControl</span> <span class="dt">IO</span> m)</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>    <span class="ot">=&gt;</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> (<span class="dt">ShellT</span> m) <span class="dt">Chunk</span> <span class="ot">-&gt;</span> m ()</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>run p <span class="ot">=</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a>  runResourceT</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true"></a>    (runShellT (sourceList [] <span class="op">$=</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true"></a>                p <span class="op">$$</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true"></a>                writeChunks))</span></code></pre></div>
-<p>First it yields an empty upstream of chunks. That’s the source. Then our script <code>p</code> is run as the conduit in between, finally we write out any chunks that remain.</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ot">run ::</span> (<span class="dt">MonadIO</span> m,<span class="dt">MonadBaseControl</span> <span class="dt">IO</span> m)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=&gt;</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> (<span class="dt">ShellT</span> m) <span class="dt">Chunk</span> <span class="ot">-&gt;</span> m ()</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>run p <span class="ot">=</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  runResourceT</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    (runShellT (sourceList [] <span class="op">$=</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                p <span class="op">$$</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                writeChunks))</span></code></pre></div>
+<p>First it yields an empty upstream of chunks. That’s the source. Then
+our script <code>p</code> is run as the conduit in between, finally we
+write out any chunks that remain.</p>
 <p>Let’s try that out:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (shell <span class="st">&quot;echo hello!&quot;</span>)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>hello<span class="op">!</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (proc <span class="st">&quot;date&quot;</span> [<span class="st">&quot;+%Y&quot;</span>])</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a><span class="dv">2014</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (shell <span class="st">&quot;echo oops &gt; /dev/stderr&quot;</span>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>oops</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (shell <span class="st">&quot;echo hello!&quot;</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>hello<span class="op">!</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (proc <span class="st">&quot;date&quot;</span> [<span class="st">&quot;+%Y&quot;</span>])</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="dv">2014</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (shell <span class="st">&quot;echo oops &gt; /dev/stderr&quot;</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>oops</span></code></pre></div>
 <p>Looks good. Standard output was written properly, as was stderr.</p>
-<h2 id="returning-to-our-mass-name-generation">Returning to our mass name generation</h2>
-<p>Let’s take our earlier work of generating names with template-haskell. With that in place, we have a process conduit for every executable in <code>PATH</code>. Add to that variadic argument handling for each one, we get a list of names like this:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="ot">rmdir ::</span> <span class="dt">ProcessType</span> r <span class="ot">=&gt;</span> r</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a><span class="ot">ls ::</span> <span class="dt">ProcessType</span> r <span class="ot">=&gt;</span> r</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a><span class="ot">egrep ::</span> <span class="dt">ProcessType</span> r <span class="ot">=&gt;</span> r</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a><span class="ot">dmesg ::</span> <span class="dt">ProcessType</span> r <span class="ot">=&gt;</span> r</span></code></pre></div>
+<h2 id="returning-to-our-mass-name-generation">Returning to our mass
+name generation</h2>
+<p>Let’s take our earlier work of generating names with
+template-haskell. With that in place, we have a process conduit for
+every executable in <code>PATH</code>. Add to that variadic argument
+handling for each one, we get a list of names like this:</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">rmdir ::</span> <span class="dt">ProcessType</span> r <span class="ot">=&gt;</span> r</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ot">ls ::</span> <span class="dt">ProcessType</span> r <span class="ot">=&gt;</span> r</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ot">egrep ::</span> <span class="dt">ProcessType</span> r <span class="ot">=&gt;</span> r</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ot">dmesg ::</span> <span class="dt">ProcessType</span> r <span class="ot">=&gt;</span> r</span></code></pre></div>
 <p>The real types when instantiated will look like:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a>rmdir <span class="st">&quot;foo&quot;</span><span class="ot"> ::</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="ot">ls ::</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a>ls <span class="st">&quot;.&quot;</span><span class="ot"> ::</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rmdir <span class="st">&quot;foo&quot;</span><span class="ot"> ::</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ot">ls ::</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>ls <span class="st">&quot;.&quot;</span><span class="ot"> ::</span> <span class="dt">Conduit</span> <span class="dt">Chunk</span> m <span class="dt">Chunk</span></span></code></pre></div>
 <h2 id="putting-it-all-together">Putting it all together</h2>
 <p>We can now provide any number of arguments:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> run ls</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>dist</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a><span class="dt">LICENSE</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true"></a>README.md</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true"></a>Setup.hs</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true"></a>shell<span class="op">-</span>conduit<span class="op">.</span>cabal</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true"></a>src</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true"></a><span class="dt">TAGS</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true"></a>TODO.org</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (ls <span class="st">&quot;/&quot;</span>)</span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true"></a>bin</span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true"></a>boot</span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true"></a>cdrom</span>
-<span id="cb15-14"><a href="#cb15-14" aria-hidden="true"></a>…</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run ls</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dist</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="dt">LICENSE</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>README.md</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>Setup.hs</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>shell<span class="op">-</span>conduit<span class="op">.</span>cabal</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>src</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="dt">TAGS</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>TODO.org</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (ls <span class="st">&quot;/&quot;</span>)</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>bin</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>boot</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>cdrom</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>…</span></code></pre></div>
 <p>We can pipe things together:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> ls <span class="st">&quot;-1&quot;</span> <span class="op">$=</span> head' <span class="st">&quot;-2&quot;</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true"></a>dist</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true"></a><span class="dt">LICENSE</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (ls <span class="op">$=</span> grep <span class="st">&quot;Key&quot;</span> <span class="op">$=</span> shell <span class="st">&quot;cat&quot;</span> <span class="op">$=</span> CL.map (second (S8.map <span class="fu">toUpper</span>)))</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true"></a><span class="dt">KEYBOARD.HI</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true"></a><span class="dt">KEYBOARD.HS</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true"></a><span class="dt">KEYBOARD.O</span></span></code></pre></div>
-<p>Results are outputted to stdout unless piped into other processes:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> shell <span class="st">&quot;echo sup&quot;</span>; shell <span class="st">&quot;echo hi&quot;</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a>sup</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a>hi</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> shell <span class="st">&quot;echo sup&quot;</span>; sed <span class="st">&quot;s/u/a/&quot;</span>; shell <span class="st">&quot;echo hi&quot;</span>)</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a>sup</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a>hi</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> shell <span class="st">&quot;echo sup&quot;</span> <span class="op">$=</span> sed <span class="st">&quot;s/u/a/&quot;</span>; shell <span class="st">&quot;echo hi&quot;</span>)</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true"></a>sap</span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true"></a>hi</span></code></pre></div>
-<p>Live streaming between pipes like in normal shell scripting is possible:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> tail' <span class="st">&quot;/tmp/example.txt&quot;</span> <span class="st">&quot;-f&quot;</span> <span class="op">$=</span> grep <span class="st">&quot;--line-buffered&quot;</span> <span class="st">&quot;Hello&quot;</span>)</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="dt">Hello</span>, world<span class="op">!</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a><span class="dt">Oh</span>, hello<span class="op">!</span></span></code></pre></div>
-<p>(Remember that <code>grep</code> needs <code>--line-buffered</code> if it is to output things line-by-line).</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> ls <span class="st">&quot;-1&quot;</span> <span class="op">$=</span> head&#39; <span class="st">&quot;-2&quot;</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>dist</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="dt">LICENSE</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (ls <span class="op">$=</span> grep <span class="st">&quot;Key&quot;</span> <span class="op">$=</span> shell <span class="st">&quot;cat&quot;</span> <span class="op">$=</span> CL.map (second (S8.map <span class="fu">toUpper</span>)))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="dt">KEYBOARD.HI</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="dt">KEYBOARD.HS</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="dt">KEYBOARD.O</span></span></code></pre></div>
+<p>Results are outputted to stdout unless piped into other
+processes:</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> shell <span class="st">&quot;echo sup&quot;</span>; shell <span class="st">&quot;echo hi&quot;</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>sup</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>hi</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> shell <span class="st">&quot;echo sup&quot;</span>; sed <span class="st">&quot;s/u/a/&quot;</span>; shell <span class="st">&quot;echo hi&quot;</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>sup</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>hi</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> shell <span class="st">&quot;echo sup&quot;</span> <span class="op">$=</span> sed <span class="st">&quot;s/u/a/&quot;</span>; shell <span class="st">&quot;echo hi&quot;</span>)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>sap</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>hi</span></code></pre></div>
+<p>Live streaming between pipes like in normal shell scripting is
+possible:</p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> tail&#39; <span class="st">&quot;/tmp/example.txt&quot;</span> <span class="st">&quot;-f&quot;</span> <span class="op">$=</span> grep <span class="st">&quot;--line-buffered&quot;</span> <span class="st">&quot;Hello&quot;</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Hello</span>, world<span class="op">!</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Oh</span>, hello<span class="op">!</span></span></code></pre></div>
+<p>(Remember that <code>grep</code> needs <code>--line-buffered</code>
+if it is to output things line-by-line).</p>
 <h2 id="error-handling">Error handling</h2>
-<p>By default, if a process errors out, the whole script ends. This is contrary to Bash, which keeps going regardless of failure. This is bad.</p>
+<p>By default, if a process errors out, the whole script ends. This is
+contrary to Bash, which keeps going regardless of failure. This is
+bad.</p>
 <p>In Bash, to revert this default, you run:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="kw">set</span> <span class="ex">-e</span></span></code></pre></div>
-<p>And the way to ignore erroneous commands on case-by-case basis is to use <code>|| true</code>:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>killall nonexistant <span class="op">||</span> true</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a>echo <span class="dt">OK</span>, done<span class="op">.</span></span></code></pre></div>
-<p>Which means “do foo, or otherwise ignore it, continue the script”.</p>
-<p>We can express the same thing using the Alternative instance for the <code>ShellT</code> type:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> killall <span class="st">&quot;nonexistant&quot;</span> <span class="st">&quot;-q&quot;</span>; echo <span class="st">&quot;OK, done.&quot;</span>)</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a><span class="op">***</span> <span class="dt">Exception</span><span class="op">:</span> <span class="dt">ShellExitFailure</span> <span class="dv">1</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> killall <span class="st">&quot;nonexistant&quot;</span> <span class="st">&quot;-q&quot;</span> <span class="op">&lt;|&gt;</span> <span class="fu">return</span> (); echo <span class="st">&quot;OK, done.&quot;</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a><span class="dt">OK</span>, done<span class="op">.</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-e</span></span></code></pre></div>
+<p>And the way to ignore erroneous commands on case-by-case basis is to
+use <code>|| true</code>:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>killall nonexistant <span class="op">||</span> true</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>echo <span class="dt">OK</span>, done<span class="op">.</span></span></code></pre></div>
+<p>Which means “do foo, or otherwise ignore it, continue the
+script”.</p>
+<p>We can express the same thing using the Alternative instance for the
+<code>ShellT</code> type:</p>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> killall <span class="st">&quot;nonexistant&quot;</span> <span class="st">&quot;-q&quot;</span>; echo <span class="st">&quot;OK, done.&quot;</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="op">***</span> <span class="dt">Exception</span><span class="op">:</span> <span class="dt">ShellExitFailure</span> <span class="dv">1</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> run (<span class="kw">do</span> killall <span class="st">&quot;nonexistant&quot;</span> <span class="st">&quot;-q&quot;</span> <span class="op">&lt;|&gt;</span> <span class="fu">return</span> (); echo <span class="st">&quot;OK, done.&quot;</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="dt">OK</span>, done<span class="op">.</span></span></code></pre></div>
 <h2 id="string-types">String types</h2>
-<p>If using <code>OverloadedStrings</code> so that you can use <code>Text</code> for arguments, then also enable <code>ExtendedDefaultRules</code>, otherwise you’ll get ambiguous type errors.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE ExtendedDefaultRules #-}</span></span></code></pre></div>
-<p>But this isn’t necessary if you don’t need to use <code>Text</code> yet. Strings literals will be interpreted as <code>String</code>. Though you can pass a value of type <code>Text</code> or any instance of <code>CmdArg</code> without needing conversions.</p>
+<p>If using <code>OverloadedStrings</code> so that you can use
+<code>Text</code> for arguments, then also enable
+<code>ExtendedDefaultRules</code>, otherwise you’ll get ambiguous type
+errors.</p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE ExtendedDefaultRules #-}</span></span></code></pre></div>
+<p>But this isn’t necessary if you don’t need to use <code>Text</code>
+yet. Strings literals will be interpreted as <code>String</code>. Though
+you can pass a value of type <code>Text</code> or any instance of
+<code>CmdArg</code> without needing conversions.</p>
 <h2 id="examples-of-script-files">Examples of script files</h2>
-<p>Quick script to reset my keyboard (Linux tends to forget these things when I unplug my keyboard):</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Data.Conduit.Shell</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a>main <span class="ot">=</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a>  run (<span class="kw">do</span> xmodmap <span class="st">&quot;.xmodmap&quot;</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a>          xset <span class="st">&quot;r&quot;</span> <span class="st">&quot;rate&quot;</span> <span class="st">&quot;150&quot;</span> <span class="st">&quot;50&quot;</span>)</span></code></pre></div>
+<p>Quick script to reset my keyboard (Linux tends to forget these things
+when I unplug my keyboard):</p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Conduit.Shell</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  run (<span class="kw">do</span> xmodmap <span class="st">&quot;.xmodmap&quot;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>          xset <span class="st">&quot;r&quot;</span> <span class="st">&quot;rate&quot;</span> <span class="st">&quot;150&quot;</span> <span class="st">&quot;50&quot;</span>)</span></code></pre></div>
 <p>Cloning and initializing a repo (ported from a bash script):</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Control.Monad.IO.Class</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Data.Conduit.Shell</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">System.Directory</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a>main <span class="ot">=</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true"></a>  run (<span class="kw">do</span> exists <span class="ot">&lt;-</span> liftIO (doesDirectoryExist <span class="st">&quot;fpco&quot;</span>)</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true"></a>          <span class="kw">if</span> exists</span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true"></a>             <span class="kw">then</span> rm <span class="st">&quot;fpco/.hsenvs&quot;</span> <span class="st">&quot;-rf&quot;</span></span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true"></a>             <span class="kw">else</span> git <span class="st">&quot;clone&quot;</span> <span class="st">&quot;git@github.com:fpco/fpco.git&quot;</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true"></a>          liftIO (setCurrentDirectory <span class="st">&quot;fpco&quot;</span>)</span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true"></a>          shell <span class="st">&quot;./dev-scripts/update-repo.sh&quot;</span></span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true"></a>          shell <span class="st">&quot;./dev-scripts/build-all.sh&quot;</span></span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true"></a>          alertDone)</span></code></pre></div>
-<p>Script to restart a web process (ported from an old bash script I had):</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Control.Applicative</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Control.Monad.Fix</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Data.Conduit.Shell</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a>main <span class="ot">=</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true"></a>  run (<span class="kw">do</span> ls</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true"></a>          echo <span class="st">&quot;Restarting server ... ?&quot;</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true"></a>          killall name <span class="st">&quot;-q&quot;</span> <span class="op">&lt;|&gt;</span> <span class="fu">return</span> ()</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true"></a>          fix (\loop <span class="ot">-&gt;</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true"></a>                 <span class="kw">do</span> echo <span class="st">&quot;Waiting for it to terminate ...&quot;</span></span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true"></a>                    sleep <span class="st">&quot;1&quot;</span></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true"></a>                    (ps <span class="st">&quot;-C&quot;</span> name <span class="op">$=</span> discardChunks <span class="op">&gt;&gt;</span> loop) <span class="op">&lt;|&gt;</span> <span class="fu">return</span> ())</span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true"></a>          shell <span class="st">&quot;dist/build/ircbrowse/ircbrowse ircbrowse.conf&quot;</span>)</span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true"></a>  <span class="kw">where</span> name <span class="ot">=</span> <span class="st">&quot;ircbrowse&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad.IO.Class</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Conduit.Shell</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">System.Directory</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  run (<span class="kw">do</span> exists <span class="ot">&lt;-</span> liftIO (doesDirectoryExist <span class="st">&quot;fpco&quot;</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>          <span class="kw">if</span> exists</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>             <span class="kw">then</span> rm <span class="st">&quot;fpco/.hsenvs&quot;</span> <span class="st">&quot;-rf&quot;</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>             <span class="kw">else</span> git <span class="st">&quot;clone&quot;</span> <span class="st">&quot;git@github.com:fpco/fpco.git&quot;</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>          liftIO (setCurrentDirectory <span class="st">&quot;fpco&quot;</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>          shell <span class="st">&quot;./dev-scripts/update-repo.sh&quot;</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>          shell <span class="st">&quot;./dev-scripts/build-all.sh&quot;</span></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>          alertDone)</span></code></pre></div>
+<p>Script to restart a web process (ported from an old bash script I
+had):</p>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Applicative</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad.Fix</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Conduit.Shell</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  run (<span class="kw">do</span> ls</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>          echo <span class="st">&quot;Restarting server ... ?&quot;</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>          killall name <span class="st">&quot;-q&quot;</span> <span class="op">&lt;|&gt;</span> <span class="fu">return</span> ()</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>          fix (\loop <span class="ot">-&gt;</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>                 <span class="kw">do</span> echo <span class="st">&quot;Waiting for it to terminate ...&quot;</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>                    sleep <span class="st">&quot;1&quot;</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>                    (ps <span class="st">&quot;-C&quot;</span> name <span class="op">$=</span> discardChunks <span class="op">&gt;&gt;</span> loop) <span class="op">&lt;|&gt;</span> <span class="fu">return</span> ())</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>          shell <span class="st">&quot;dist/build/ircbrowse/ircbrowse ircbrowse.conf&quot;</span>)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span> name <span class="ot">=</span> <span class="st">&quot;ircbrowse&quot;</span></span></code></pre></div>
 <h2 id="youve-seen-shelly-right">You’ve seen Shelly, right?</h2>
 <p>Right. Shelly’s fine. It just lacks the two killer things for me:</p>
 <ul>
-<li>All names are bound, so I can just use them as normal functions.</li>
-<li>shell-conduit also, due to its mass name binding, prioritizes commands. For example, Shelly has <a href="http://hackage.haskell.org/package/shelly-1.5.5/docs/Shelly.html#g:9">a group of functions for manipulating the file system</a>. In shell-conduit, you just use your normal commands: <code>rm "x"</code> and <code>mv   "x" "y"</code>.</li>
-<li>Not based on conduit. Conduit is a whole suite of streaming utilities perfect for scripting.</li>
-<li>Piped is not the default, either. There’re a bunch of choices: Shelly, Shelly.Lifted, Shelly.Pipe. Choice is good, but for a scripting language I personally prefer one goto way to do something.</li>
+<li>All names are bound, so I can just use them as normal
+functions.</li>
+<li>shell-conduit also, due to its mass name binding, prioritizes
+commands. For example, Shelly has <a
+href="http://hackage.haskell.org/package/shelly-1.5.5/docs/Shelly.html#g:9">a
+group of functions for manipulating the file system</a>. In
+shell-conduit, you just use your normal commands: <code>rm "x"</code>
+and <code>mv   "x" "y"</code>.</li>
+<li>Not based on conduit. Conduit is a whole suite of streaming
+utilities perfect for scripting.</li>
+<li>Piped is not the default, either. There’re a bunch of choices:
+Shelly, Shelly.Lifted, Shelly.Pipe. Choice is good, but for a scripting
+language I personally prefer one goto way to do something.</li>
 </ul>
 <p>Also, Shelly cannot do live streams like Conduit can.</p>
-<h2 id="conduits-as-good-scripting-libraries">Conduits as good scripting libraries</h2>
-<p>You might want to import the regular Conduit modules qualified, too:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Conduit.List</span> <span class="kw">as</span> <span class="dt">CL</span></span></code></pre></div>
-<p>Which contains handy functions for working on streams in a list-like way. See the rest of the handy modules for Conduit in <a href="http://hackage.haskell.org/package/conduit-extra">conduit-extra</a>.</p>
-<p>Also of interest is <a href="http://hackage.haskell.org/package/csv-conduit">csv-conduit</a>, <a href="http://hackage.haskell.org/package/html-conduit">html-conduit</a>, and <a href="http://hackage.haskell.org/package/http-conduit">http-conduit</a>.</p>
-<p>Finally, see the Conduit category on Hackage for other useful libraries: <a href="http://hackage.haskell.org/packages/#cat:Conduit" class="uri">http://hackage.haskell.org/packages/#cat:Conduit</a></p>
-<p>All of these general purpose Conduits can be used in shell scripting.</p>
+<h2 id="conduits-as-good-scripting-libraries">Conduits as good scripting
+libraries</h2>
+<p>You might want to import the regular Conduit modules qualified,
+too:</p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Conduit.List</span> <span class="kw">as</span> <span class="dt">CL</span></span></code></pre></div>
+<p>Which contains handy functions for working on streams in a list-like
+way. See the rest of the handy modules for Conduit in <a
+href="http://hackage.haskell.org/package/conduit-extra">conduit-extra</a>.</p>
+<p>Also of interest is <a
+href="http://hackage.haskell.org/package/csv-conduit">csv-conduit</a>,
+<a
+href="http://hackage.haskell.org/package/html-conduit">html-conduit</a>,
+and <a
+href="http://hackage.haskell.org/package/http-conduit">http-conduit</a>.</p>
+<p>Finally, see the Conduit category on Hackage for other useful
+libraries: <a href="http://hackage.haskell.org/packages/#cat:Conduit"
+class="uri">http://hackage.haskell.org/packages/#cat:Conduit</a></p>
+<p>All of these general purpose Conduits can be used in shell
+scripting.</p>
 <h2 id="using-it-for-real-scripts">Using it for real scripts</h2>
-<p>So far I have ported a few small scripts to shell-conduit from Bash and have been happy every time. I suck at Bash. I’m pretty good at Haskell.</p>
-<p>The next test is applying this to my Hell shell and seeing if I can use it as a commandline shell, too.</p>
-<p>My friend complained that having to quote all arguments is a pain. I don’t really agree that this is bad. In Bash it’s often unclear how arguments are going to be interpreted. I’m happy just writing something predictable than something super convenient but possibly nonsense.</p>
+<p>So far I have ported a few small scripts to shell-conduit from Bash
+and have been happy every time. I suck at Bash. I’m pretty good at
+Haskell.</p>
+<p>The next test is applying this to my Hell shell and seeing if I can
+use it as a commandline shell, too.</p>
+<p>My friend complained that having to quote all arguments is a pain. I
+don’t really agree that this is bad. In Bash it’s often unclear how
+arguments are going to be interpreted. I’m happy just writing something
+predictable than something super convenient but possibly nonsense.</p>
 <h2 id="summary">Summary</h2>
-<p>I set out a week ago to just stop writing Bash scripts. I’ve written a bunch of scripts in Haskell, but I would still write Bash scripts too. Some things were just too boring to write. I wanted to commit to Haskell for scripting. Today, I’m fairly confident I have a solution that is going to be satisfactory for a long while.</p>
+<p>I set out a week ago to just stop writing Bash scripts. I’ve written
+a bunch of scripts in Haskell, but I would still write Bash scripts too.
+Some things were just too boring to write. I wanted to commit to Haskell
+for scripting. Today, I’m fairly confident I have a solution that is
+going to be satisfactory for a long while.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2014-09-21 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2014-09-21 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

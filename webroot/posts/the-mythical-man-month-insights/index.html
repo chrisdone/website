@@ -3,7 +3,8 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Some insights from The Mythical Man Month starting from Chapter 11</title>
+    <title>Some insights from The Mythical Man Month starting from
+Chapter 11</title>
     <style>
       body {
       max-width: 40em;
@@ -87,138 +88,279 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Some insights from The Mythical Man Month starting from Chapter 11</h1>
 
-<p>I recently read <a href="http://en.wikipedia.org/wiki/The_Mythical_Man-Month">The Mythical Man Month</a>, a classic book about software development.</p>
+<h1>Some insights from The Mythical Man Month starting from Chapter
+11</h1>
+
+<p>I recently read <a
+href="http://en.wikipedia.org/wiki/The_Mythical_Man-Month">The Mythical
+Man Month</a>, a classic book about software development.</p>
 <p>I thought this quote was tres amusant:</p>
 <blockquote>
-<p>“The Bible of Software Engineering”, because, “everybody quotes it, some people read it, and a few people go by it.”</p>
+<p>“The Bible of Software Engineering”, because, “everybody quotes it,
+some people read it, and a few people go by it.”</p>
 </blockquote>
-<p>In my reading of the book, around chapter 11, “Plan to Throw One Away”, I got the idea to annotate and underline sentences and paragraphs that rang true with my experience or that I thought were insights that I and everyone should take into account.</p>
-<p>Now that I’ve finished it, I thought I’d jot those points, that I felt the need to underscore, here. Flicking back through the earlier chapters there are lots of other points I ought to underscore, but that’s for another time.</p>
-<p>I often see or participate in debates about software development that are better summed up by many clear insights from <em>MMM</em>, so it’s good for me to jot them down; having a common vocabulary and literature avoids a bunch of redundant discussion. For example, I saw some rather odd posts to Reddit’s programming section with laboured gardening and writing analogies.</p>
-<p>I’m not sure what the legality of typing up so much of a book is. There is a lot more context to each of the points below, so you really need <a href="http://www.amazon.com/gp/reader/0201835959">the book</a> anyway to fully grok everything covered. Many points in the book may or may not have been underscored depending on the availability of a pen at the time, and I miss out the first ten chapters. Others downright do not make sense without the context which I don’t feel comfortable in further quoting verbatim.</p>
-<p>At any rate, most of the quotes below have been quoted verbatim elsewhere.</p>
+<p>In my reading of the book, around chapter 11, “Plan to Throw One
+Away”, I got the idea to annotate and underline sentences and paragraphs
+that rang true with my experience or that I thought were insights that I
+and everyone should take into account.</p>
+<p>Now that I’ve finished it, I thought I’d jot those points, that I
+felt the need to underscore, here. Flicking back through the earlier
+chapters there are lots of other points I ought to underscore, but
+that’s for another time.</p>
+<p>I often see or participate in debates about software development that
+are better summed up by many clear insights from <em>MMM</em>, so it’s
+good for me to jot them down; having a common vocabulary and literature
+avoids a bunch of redundant discussion. For example, I saw some rather
+odd posts to Reddit’s programming section with laboured gardening and
+writing analogies.</p>
+<p>I’m not sure what the legality of typing up so much of a book is.
+There is a lot more context to each of the points below, so you really
+need <a href="http://www.amazon.com/gp/reader/0201835959">the book</a>
+anyway to fully grok everything covered. Many points in the book may or
+may not have been underscored depending on the availability of a pen at
+the time, and I miss out the first ten chapters. Others downright do not
+make sense without the context which I don’t feel comfortable in further
+quoting verbatim.</p>
+<p>At any rate, most of the quotes below have been quoted verbatim
+elsewhere.</p>
 <h2 id="plan-to-throw-one-away">Plan to Throw One Away</h2>
 <h3 id="pilot-plants-and-scaling-up">Pilot Plants and Scaling Up</h3>
 <ul>
-<li>“Programming system builders have also been exposed to this lesson, but it seems to have not yet been learned. Project after project designs a set of algorithms and then plunges into construction of customer-deliverable software on a schedule that demands delivery of the first thing built.”</li>
-<li>“In most projects, the first system built is barely usable. It may be too slow, too big, awkward to use, or all three.”</li>
-<li>“The discard and redesign may be done in one lump, or it may be done piece-by-piece. But all large-system experience shows that it will be done.”</li>
-<li>“The management question, therefore, is not <em>whether</em> to build a pilot system and throw it away. You <em>will</em> do that. The only question is whether to plan in advance to build a throwaway, or to promise to deliver the throwaway to customers.”</li>
+<li>“Programming system builders have also been exposed to this lesson,
+but it seems to have not yet been learned. Project after project designs
+a set of algorithms and then plunges into construction of
+customer-deliverable software on a schedule that demands delivery of the
+first thing built.”</li>
+<li>“In most projects, the first system built is barely usable. It may
+be too slow, too big, awkward to use, or all three.”</li>
+<li>“The discard and redesign may be done in one lump, or it may be done
+piece-by-piece. But all large-system experience shows that it will be
+done.”</li>
+<li>“The management question, therefore, is not <em>whether</em> to
+build a pilot system and throw it away. You <em>will</em> do that. The
+only question is whether to plan in advance to build a throwaway, or to
+promise to deliver the throwaway to customers.”</li>
 <li>“Hence <em>plan to throw one away; you will, anyhow.</em>”</li>
 </ul>
-<h3 id="the-only-constancy-is-change-itself">The Only Constancy is Change Itself</h3>
+<h3 id="the-only-constancy-is-change-itself">The Only Constancy is
+Change Itself</h3>
 <ul>
-<li>“But the very existence of a tangible object serves to contain and quantize user demand for changes.”</li>
-<li>“Clearly a threshold has to be established, and it must get higher and higher as development proceeds, or no product ever appears.”</li>
-<li>“The throw-one-away concept is itself just an acceptance of the fact that as one learns, he changes the design.”</li>
+<li>“But the very existence of a tangible object serves to contain and
+quantize user demand for changes.”</li>
+<li>“Clearly a threshold has to be established, and it must get higher
+and higher as development proceeds, or no product ever appears.”</li>
+<li>“The throw-one-away concept is itself just an acceptance of the fact
+that as one learns, he changes the design.”</li>
 </ul>
 <h3 id="plan-the-system-for-change">Plan the System for Change</h3>
 <ul>
-<li>“Most important is the use of a high-level language and self-documenting techniques so as to reduce errors induced by changes. Using compile-time operations to incorporate standard declarations helps powerfully in making changes.”</li>
-<li>“Every product should have numbered versions, and each version must have its own schedule and a freeze date, after which changes go into the next version.”</li>
+<li>“Most important is the use of a high-level language and
+self-documenting techniques so as to reduce errors induced by changes.
+Using compile-time operations to incorporate standard declarations helps
+powerfully in making changes.”</li>
+<li>“Every product should have numbered versions, and each version must
+have its own schedule and a freeze date, after which changes go into the
+next version.”</li>
 </ul>
-<h3 id="plan-the-organization-for-change">Plan the Organization for Change</h3>
+<h3 id="plan-the-organization-for-change">Plan the Organization for
+Change</h3>
 <ul>
-<li>“[…] the reluctance to document designs is not due merely to laziness or time pressure. Instead it comes from the designer’s reluctance to commit himself to the defense of decisions which he knows to be tentative.”</li>
-<li>“[M]anagers themselves often think of senior people as ‘too valuable’ to use for actual programming.”</li>
+<li>“[…] the reluctance to document designs is not due merely to
+laziness or time pressure. Instead it comes from the designer’s
+reluctance to commit himself to the defense of decisions which he knows
+to be tentative.”</li>
+<li>“[M]anagers themselves often think of senior people as ‘too
+valuable’ to use for actual programming.”</li>
 </ul>
-<h3 id="two-steps-forward-and-one-step-back">Two Steps Forward and One Step Back</h3>
+<h3 id="two-steps-forward-and-one-step-back">Two Steps Forward and One
+Step Back</h3>
 <ul>
-<li>“The fundamental problem with program maintenance is that fixing a defect has a substantial (20-50 percent) chance of introducing another. So the whole process is two steps forward and one step back.”</li>
-<li>“If fact it often has system-wide ramifications, usually nonobvious. […] the far-reaching effects of the repair will be overlooked.”</li>
-<li>“Clearly, methods of designing programs so as to eliminate or at least illuminate side effects can have an immense payoff in maintenance costs. So can methods of implementing designs with fewer people, fewer interfaces, and hence fewer bugs.”</li>
+<li>“The fundamental problem with program maintenance is that fixing a
+defect has a substantial (20-50 percent) chance of introducing another.
+So the whole process is two steps forward and one step back.”</li>
+<li>“If fact it often has system-wide ramifications, usually nonobvious.
+[…] the far-reaching effects of the repair will be overlooked.”</li>
+<li>“Clearly, methods of designing programs so as to eliminate or at
+least illuminate side effects can have an immense payoff in maintenance
+costs. So can methods of implementing designs with fewer people, fewer
+interfaces, and hence fewer bugs.”</li>
 </ul>
-<h3 id="one-step-forward-and-one-step-back">One Step Forward and One Step Back</h3>
+<h3 id="one-step-forward-and-one-step-back">One Step Forward and One
+Step Back</h3>
 <ul>
-<li>“Soon or later the fixing ceases to gain any ground. Each forward step is matched by a backward one. Although in principle usable forever, the system has worn out as a base for progress.”</li>
+<li>“Soon or later the fixing ceases to gain any ground. Each forward
+step is matched by a backward one. Although in principle usable forever,
+the system has worn out as a base for progress.”</li>
 <li>“A brand-new, from-the-ground-up redesign is necessary.”</li>
-<li>“Systems program building is an entropy-decreasing process, hence inherently metastable. Program maintenance is an entropy-increasing process, and even its most skillful execution only delays the subsidence of the system into unfixable obsolescence.”</li>
+<li>“Systems program building is an entropy-decreasing process, hence
+inherently metastable. Program maintenance is an entropy-increasing
+process, and even its most skillful execution only delays the subsidence
+of the system into unfixable obsolescence.”</li>
 </ul>
 <h2 id="sharp-tools">Sharp Tools</h2>
 <ul>
 <li>“A good workman is known by his tools.” (proverb)</li>
 </ul>
-<h3 id="high-level-language-and-interactive-programming">High-level Language and Interactive Programming</h3>
+<h3 id="high-level-language-and-interactive-programming">High-level
+Language and Interactive Programming</h3>
 <ul>
-<li>“I cannot easily conceive of a programming system I would build in assembly language.”</li>
+<li>“I cannot easily conceive of a programming system I would build in
+assembly language.”</li>
 </ul>
 <h2 id="the-other-face">The other face</h2>
 <h3 id="self-documenting-programs">Self-Documenting Programs</h3>
 <ul>
-<li>(An almost meta-quote here considering the context of this post) “Refer to standard literature to document basic algorithms wherever possible. This saves space, usually points to a much fuller treatment than one would provide, and allows the knowledgeable reader to skip it with confidence that he understands you.”</li>
+<li>(An almost meta-quote here considering the context of this post)
+“Refer to standard literature to document basic algorithms wherever
+possible. This saves space, usually points to a much fuller treatment
+than one would provide, and allows the knowledgeable reader to skip it
+with confidence that he understands you.”</li>
 </ul>
 <h2 id="no-silver-bullet">No Silver Bullet</h2>
-<h3 id="does-it-have-to-be-hardessential-difficulties">Does It Have to Be Hard?—Essential difficulties</h3>
+<h3 id="does-it-have-to-be-hardessential-difficulties">Does It Have to
+Be Hard?—Essential difficulties</h3>
 <ul>
-<li>“First, we must observe that the anomaly is not that software progress is so slow, but that computer hardware progress is so fast.”</li>
-<li>“No other technology since civilization began has seen six orders of magnitude price-performance gain in 30 years.”</li>
-<li>“Second, to see what rate of progress we can expect in software technology, let us examine its difficulties. Following Aristotle, I divide them into <em>essense</em>—the difficulties inherent in the nature of the software—and <em>accidents</em>—those difficulties that today attend its production but that are not inherent.”</li>
-<li>“I believe the hard part of building software to be the specification, design and testing of this conceptual construct, not the labour of representing it and testing the fidelity of the representation. […] If this is true, building software will always be hard. There is inherently no silver bullet.”</li>
+<li>“First, we must observe that the anomaly is not that software
+progress is so slow, but that computer hardware progress is so
+fast.”</li>
+<li>“No other technology since civilization began has seen six orders of
+magnitude price-performance gain in 30 years.”</li>
+<li>“Second, to see what rate of progress we can expect in software
+technology, let us examine its difficulties. Following Aristotle, I
+divide them into <em>essense</em>—the difficulties inherent in the
+nature of the software—and <em>accidents</em>—those difficulties that
+today attend its production but that are not inherent.”</li>
+<li>“I believe the hard part of building software to be the
+specification, design and testing of this conceptual construct, not the
+labour of representing it and testing the fidelity of the
+representation. […] If this is true, building software will always be
+hard. There is inherently no silver bullet.”</li>
 </ul>
 <h3 id="complexity">Complexity</h3>
 <ul>
-<li>“Software entities are more complex for their size than perhaps any other human construct, because no two parts are alike (at least above the statement level). If they are, we make the two similar parts into one, a subroutine, open or closed. In this respect software systems differ profoundly from computers, buildings, automobiles, where repeated elements abound.”</li>
-<li>“Digital computers are themselves more complex than most things people build; they have very large numbers of states. This makes conceiving, describing, and testing them hard. Software systems have orders of magnitude more states than computers do.”</li>
+<li>“Software entities are more complex for their size than perhaps any
+other human construct, because no two parts are alike (at least above
+the statement level). If they are, we make the two similar parts into
+one, a subroutine, open or closed. In this respect software systems
+differ profoundly from computers, buildings, automobiles, where repeated
+elements abound.”</li>
+<li>“Digital computers are themselves more complex than most things
+people build; they have very large numbers of states. This makes
+conceiving, describing, and testing them hard. Software systems have
+orders of magnitude more states than computers do.”</li>
 </ul>
 <p>Below; functional programming springs to mind:</p>
 <ul>
-<li>“From the complexity comes the difficulty of enumerating, much less understanding, all the possible states of the program, and from that comes the unreliability.”</li>
-<li>“From complexity of structure comes the difficulty of extending programs to new functions without creating side effects. From complexity of structure comes the unvisualized states that constitute security trapdoors.”</li>
-<li>“The physicist labors on, however, in a firm faith that there are unifying principles to be found […] because God is not capricious or arbitrary. No such faith comforts the software engineer.”</li>
-<li>“[…] not because of necessity but only because they were designed by different people, rather than God.”</li>
-<li>“Partly this is because the software in a system embodies its function, and the function is the part that most feels the pressures of change. Partly it is because software can be changed more easily—it is pure thought-stuff, infinitely malleable.”</li>
-<li>“All successful software gets changed. Two processes are at work. As a software product is found to be useful, people try it in new cases at the edge of, or beyond, the original domain. The pressures for extended function come chiefly from users who like the basic function and invent new uses for it.”</li>
-<li>“As soon as we attempt to diagram software, we find it to constitute not one, but several, general directed graphs, superimposed on one another.”</li>
+<li>“From the complexity comes the difficulty of enumerating, much less
+understanding, all the possible states of the program, and from that
+comes the unreliability.”</li>
+<li>“From complexity of structure comes the difficulty of extending
+programs to new functions without creating side effects. From complexity
+of structure comes the unvisualized states that constitute security
+trapdoors.”</li>
+<li>“The physicist labors on, however, in a firm faith that there are
+unifying principles to be found […] because God is not capricious or
+arbitrary. No such faith comforts the software engineer.”</li>
+<li>“[…] not because of necessity but only because they were designed by
+different people, rather than God.”</li>
+<li>“Partly this is because the software in a system embodies its
+function, and the function is the part that most feels the pressures of
+change. Partly it is because software can be changed more easily—it is
+pure thought-stuff, infinitely malleable.”</li>
+<li>“All successful software gets changed. Two processes are at work. As
+a software product is found to be useful, people try it in new cases at
+the edge of, or beyond, the original domain. The pressures for extended
+function come chiefly from users who like the basic function and invent
+new uses for it.”</li>
+<li>“As soon as we attempt to diagram software, we find it to constitute
+not one, but several, general directed graphs, superimposed on one
+another.”</li>
 </ul>
-<p>I think the below is a very interesting point; having a visual mind does not seem to help you in programming.</p>
+<p>I think the below is a very interesting point; having a visual mind
+does not seem to help you in programming.</p>
 <ul>
-<li>“In spite of progress in restricting and simplifying the structures of software, they remain inherently unvisualizable, thus depriving the mind of some of its most powerful conceptual tools.”</li>
+<li>“In spite of progress in restricting and simplifying the structures
+of software, they remain inherently unvisualizable, thus depriving the
+mind of some of its most powerful conceptual tools.”</li>
 </ul>
-<p>Which follows nicely into the next point I underscored a page later:</p>
+<p>Which follows nicely into the next point I underscored a page
+later:</p>
 <h3 id="graphical-programming">Graphical programming</h3>
 <ul>
-<li>“Nothing even convincing, much less exciting, has yet emerged from such efforts. I am persuaded that nothing will.”</li>
+<li>“Nothing even convincing, much less exciting, has yet emerged from
+such efforts. I am persuaded that nothing will.”</li>
 </ul>
 <h3 id="program-verification">Program verification</h3>
 <ul>
-<li>“Program verification does not mean error-proof programs. There is no magic here, either. Mathematical proofs also can be faulty. So whereas verification might reduce the program-testing load, it cannot eliminate it.”</li>
-<li>“More seriously, even perfect program verification can only establish that a program meets its specification. The hardest part of the software task is arriving at a complete and consistent specification, and much of the essence of building a program is in fact the debugging of the specification.”</li>
+<li>“Program verification does not mean error-proof programs. There is
+no magic here, either. Mathematical proofs also can be faulty. So
+whereas verification might reduce the program-testing load, it cannot
+eliminate it.”</li>
+<li>“More seriously, even perfect program verification can only
+establish that a program meets its specification. The hardest part of
+the software task is arriving at a complete and consistent
+specification, and much of the essence of building a program is in fact
+the debugging of the specification.”</li>
 </ul>
 <h3 id="environments-and-tools">Environments and tools</h3>
-<p>One point that reminded me of <a href="http://erlang.org/pipermail/erlang-questions/2011-May/058769.html">a recent post by Joe Armstrong to the Erlang mailing list</a>:</p>
+<p>One point that reminded me of <a
+href="http://erlang.org/pipermail/erlang-questions/2011-May/058769.html">a
+recent post by Joe Armstrong to the Erlang mailing list</a>:</p>
 <ul>
-<li>“Perhaps the biggest gain yet to be realized in the programming environment is the use of integrated database systems to keep track of the myriads of details that must be recalled accurately by the individual programmer and kept current in a group of collaborators on a single system.”</li>
+<li>“Perhaps the biggest gain yet to be realized in the programming
+environment is the use of integrated database systems to keep track of
+the myriads of details that must be recalled accurately by the
+individual programmer and kept current in a group of collaborators on a
+single system.”</li>
 </ul>
 <p>(And I don’t think ‘intellisense’ really covers it.)</p>
-<h3 id="promising-attacks-on-the-conceptual-essense">Promising Attacks on the Conceptual Essense</h3>
-<p>I found this to be a very interesting perspective considering the era in which it was written:</p>
+<h3 id="promising-attacks-on-the-conceptual-essense">Promising Attacks
+on the Conceptual Essense</h3>
+<p>I found this to be a very interesting perspective considering the era
+in which it was written:</p>
 <ul>
-<li>“There are dramatic exceptions to my argument that the generalization of the software packages has changed little over the years: electronic spreadsheets and simple database systems. These powerful tools, <strong>so obvious in retrospect and yet so late appearing</strong> [bold added for emphasis], lend themselves to myriad uses, some quite unorthodox.”</li>
+<li>“There are dramatic exceptions to my argument that the
+generalization of the software packages has changed little over the
+years: electronic spreadsheets and simple database systems. These
+powerful tools, <strong>so obvious in retrospect and yet so late
+appearing</strong> [bold added for emphasis], lend themselves to myriad
+uses, some quite unorthodox.”</li>
 </ul>
-<h3 id="incremental-development-grow-not-build-software">Incremental development — grow, not build, software</h3>
+<h3 id="incremental-development-grow-not-build-software">Incremental
+development — grow, not build, software</h3>
 <ul>
-<li>“Some years ago, Harlan Mills proposed that any software system should be grown by incremental development. That is, the system should first be made to run, even though it does nothing useful except call the proper set of dummy subprograms. Then, bit by bit it is fleshed out, with the subprograms in turn being developed into actions or calls to empty stubs in the level below.”</li>
-<li>“The morale effects are startling. Enthusiasm jumps when there is a running system, even a simple one.”</li>
-<li>“I find that teams can <em>grow</em> much more complex entities in four months than they can <em>build</em>.” (Yes, I see the gardener analogy here, but <em>please</em>.)</li>
+<li>“Some years ago, Harlan Mills proposed that any software system
+should be grown by incremental development. That is, the system should
+first be made to run, even though it does nothing useful except call the
+proper set of dummy subprograms. Then, bit by bit it is fleshed out,
+with the subprograms in turn being developed into actions or calls to
+empty stubs in the level below.”</li>
+<li>“The morale effects are startling. Enthusiasm jumps when there is a
+running system, even a simple one.”</li>
+<li>“I find that teams can <em>grow</em> much more complex entities in
+four months than they can <em>build</em>.” (Yes, I see the gardener
+analogy here, but <em>please</em>.)</li>
 </ul>
 <h3 id="great-designers">Great designers</h3>
 <ul>
-<li>“I think the most important single effort we can mount is to develop ways to grow great designers.”</li>
+<li>“I think the most important single effort we can mount is to develop
+ways to grow great designers.”</li>
 </ul>
-<p>There is a lot more crammed in this book, some several more chapters. But I’ll stop here.</p>
+<p>There is a lot more crammed in this book, some several more chapters.
+But I’ll stop here.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2011-06-26 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2011-06-26 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

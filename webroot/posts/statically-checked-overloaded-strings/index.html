@@ -87,95 +87,114 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Statically Checked Overloaded Strings</h1>
 
-<p>This page demonstrates a trick I came up with which is defining <code>IsString</code> for <code>Q (TExp a)</code>, where <code>a</code> is <code>lift</code>-able. It allows you to write <code>$$("...")</code> and have the string parsed at compile-time.</p>
-<p>This offers a light-weight way to enforce compile-time constraints. It’s basically <code>OverloadedStrings</code> with static checks.</p>
+<h1>Statically Checked Overloaded Strings</h1>
+
+<p>This page demonstrates a trick I came up with which is defining
+<code>IsString</code> for <code>Q (TExp a)</code>, where <code>a</code>
+is <code>lift</code>-able. It allows you to write <code>$$("...")</code>
+and have the string parsed at compile-time.</p>
+<p>This offers a light-weight way to enforce compile-time constraints.
+It’s basically <code>OverloadedStrings</code> with static checks.</p>
 <p>This trick works already in old GHC versions.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE TemplateHaskell, OverloadedStrings #-}</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Network.URI</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Path</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">PATHTH</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">SHA256TH</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">URITH</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a><span class="ot">uri ::</span> <span class="dt">URI</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>uri <span class="ot">=</span> <span class="op">$$</span>(<span class="st">&quot;https://releases.hashicorp.com/vault/1.2.2/vault_1.2.2_linux_amd64.zip&quot;</span>)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a><span class="ot">sha256 ::</span> <span class="dt">SHA256</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>sha256 <span class="ot">=</span> <span class="op">$$</span>(<span class="st">&quot;7725b35d9ca8be3668abe63481f0731ca4730509419b4eb29fa0b0baa4798458&quot;</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a><span class="ot">home ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a>home <span class="ot">=</span> <span class="op">$$</span>(<span class="st">&quot;/home/chris&quot;</span>)</span></code></pre></div>
-<p>Scroll down to see the modules <code>PATHTH</code>, <code>SHA256TH</code> and <code>URITH</code>.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE TemplateHaskell, OverloadedStrings #-}</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Network.URI</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Path</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">PATHTH</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">SHA256TH</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">URITH</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ot">uri ::</span> <span class="dt">URI</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>uri <span class="ot">=</span> <span class="op">$$</span>(<span class="st">&quot;https://releases.hashicorp.com/vault/1.2.2/vault_1.2.2_linux_amd64.zip&quot;</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="ot">sha256 ::</span> <span class="dt">SHA256</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>sha256 <span class="ot">=</span> <span class="op">$$</span>(<span class="st">&quot;7725b35d9ca8be3668abe63481f0731ca4730509419b4eb29fa0b0baa4798458&quot;</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ot">home ::</span> <span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>home <span class="ot">=</span> <span class="op">$$</span>(<span class="st">&quot;/home/chris&quot;</span>)</span></code></pre></div>
+<p>Scroll down to see the modules <code>PATHTH</code>,
+<code>SHA256TH</code> and <code>URITH</code>.</p>
 <h2 id="versus-quasiquotes">Versus QuasiQuotes</h2>
 <p>This is more light-weight and overloaded than, e.g.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>[quasiquote|...|]</span></code></pre></div>
-<p>which requires stating the name of the quoter you want (sometimes you’d rather not), requires the <code>QuasiQuotes</code> extension, and leaves syntax highlighters not sure how to highlight your content properly.</p>
-<h2 id="a-step-to-make-this-syntax-even-lighter">A step to make this syntax even lighter</h2>
-<p>It’d be nice to relax GHC’s parser a little to support <code>$$"..."</code> to mean the same thing. This wouldn’t conflict with any existing syntax that I am aware of, or of any existing plans or proposals.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>[quasiquote|...|]</span></code></pre></div>
+<p>which requires stating the name of the quoter you want (sometimes
+you’d rather not), requires the <code>QuasiQuotes</code> extension, and
+leaves syntax highlighters not sure how to highlight your content
+properly.</p>
+<h2 id="a-step-to-make-this-syntax-even-lighter">A step to make this
+syntax even lighter</h2>
+<p>It’d be nice to relax GHC’s parser a little to support
+<code>$$"..."</code> to mean the same thing. This wouldn’t conflict with
+any existing syntax that I am aware of, or of any existing plans or
+proposals.</p>
 <h2 id="pathth">PATHTH</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE FlexibleInstances #-}</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">PATHTH</span> <span class="kw">where</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Data.String</span> (<span class="dt">IsString</span>(..))</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Syntax</span> (<span class="dt">Q</span>, <span class="dt">TExp</span>(..), lift)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Path</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">Dir</span>))) <span class="kw">where</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>  fromString <span class="ot">=</span> <span class="fu">fmap</span> <span class="dt">TExp</span> <span class="op">.</span> mkRelDir</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>))) <span class="kw">where</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>  fromString <span class="ot">=</span> <span class="fu">fmap</span> <span class="dt">TExp</span> <span class="op">.</span> mkAbsDir</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>))) <span class="kw">where</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>  fromString <span class="ot">=</span> <span class="fu">fmap</span> <span class="dt">TExp</span> <span class="op">.</span> mkRelFile</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">File</span>))) <span class="kw">where</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a>  fromString <span class="ot">=</span> <span class="fu">fmap</span> <span class="dt">TExp</span> <span class="op">.</span> mkAbsFile</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE FlexibleInstances #-}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">PATHTH</span> <span class="kw">where</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.String</span> (<span class="dt">IsString</span>(..))</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Syntax</span> (<span class="dt">Q</span>, <span class="dt">TExp</span>(..), lift)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Path</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">Dir</span>))) <span class="kw">where</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  fromString <span class="ot">=</span> <span class="fu">fmap</span> <span class="dt">TExp</span> <span class="op">.</span> mkRelDir</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">Dir</span>))) <span class="kw">where</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  fromString <span class="ot">=</span> <span class="fu">fmap</span> <span class="dt">TExp</span> <span class="op">.</span> mkAbsDir</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Rel</span> <span class="dt">File</span>))) <span class="kw">where</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  fromString <span class="ot">=</span> <span class="fu">fmap</span> <span class="dt">TExp</span> <span class="op">.</span> mkRelFile</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> (<span class="dt">Path</span> <span class="dt">Abs</span> <span class="dt">File</span>))) <span class="kw">where</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  fromString <span class="ot">=</span> <span class="fu">fmap</span> <span class="dt">TExp</span> <span class="op">.</span> mkAbsFile</span></code></pre></div>
 <h2 id="sha256th">SHA256TH</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE DeriveLift, FlexibleInstances, TemplateHaskell #-}</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">SHA256TH</span> <span class="kw">where</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Data.ByteString</span> (<span class="dt">ByteString</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString</span> <span class="kw">as</span> <span class="dt">S</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Base16</span> <span class="kw">as</span> <span class="dt">Hex</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Data.String</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Instances.TH.Lift</span> ()</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Language.Haskell.TH.Syntax</span> (<span class="dt">Q</span>, <span class="dt">TExp</span>(..), <span class="dt">Lift</span>(..))</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="kw">newtype</span> <span class="dt">SHA256</span> <span class="ot">=</span> <span class="dt">SHA256</span> <span class="dt">ByteString</span> <span class="kw">deriving</span> (<span class="dt">Eq</span>, <span class="dt">Ord</span>, <span class="dt">Lift</span>)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">SHA256</span>)) <span class="kw">where</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a>  fromString i <span class="ot">=</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a>    <span class="kw">if</span> <span class="fu">length</span> i <span class="op">==</span> <span class="dv">64</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a>      <span class="kw">then</span> <span class="kw">case</span> Hex.decode (fromString i) <span class="kw">of</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a>             (result, wrong)</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a>               <span class="op">|</span> S.null wrong <span class="ot">-&gt;</span> <span class="fu">fmap</span> <span class="dt">TExp</span> (lift (<span class="dt">SHA256</span> result))</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a>             _ <span class="ot">-&gt;</span> <span class="fu">fail</span> <span class="st">&quot;Invalid SHA256 format.&quot;</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true"></a>      <span class="kw">else</span> <span class="fu">fail</span> <span class="st">&quot;Incorrect length for SHA256.&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DeriveLift, FlexibleInstances, TemplateHaskell #-}</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">SHA256TH</span> <span class="kw">where</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.ByteString</span> (<span class="dt">ByteString</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString</span> <span class="kw">as</span> <span class="dt">S</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Base16</span> <span class="kw">as</span> <span class="dt">Hex</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.String</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Instances.TH.Lift</span> ()</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Language.Haskell.TH.Syntax</span> (<span class="dt">Q</span>, <span class="dt">TExp</span>(..), <span class="dt">Lift</span>(..))</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">SHA256</span> <span class="ot">=</span> <span class="dt">SHA256</span> <span class="dt">ByteString</span> <span class="kw">deriving</span> (<span class="dt">Eq</span>, <span class="dt">Ord</span>, <span class="dt">Lift</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">SHA256</span>)) <span class="kw">where</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  fromString i <span class="ot">=</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">if</span> <span class="fu">length</span> i <span class="op">==</span> <span class="dv">64</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="kw">then</span> <span class="kw">case</span> Hex.decode (fromString i) <span class="kw">of</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>             (result, wrong)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>               <span class="op">|</span> S.null wrong <span class="ot">-&gt;</span> <span class="fu">fmap</span> <span class="dt">TExp</span> (lift (<span class="dt">SHA256</span> result))</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>             _ <span class="ot">-&gt;</span> <span class="fu">fail</span> <span class="st">&quot;Invalid SHA256 format.&quot;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>      <span class="kw">else</span> <span class="fu">fail</span> <span class="st">&quot;Incorrect length for SHA256.&quot;</span></span></code></pre></div>
 <h2 id="urith">URITH</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE NamedFieldPuns, FlexibleInstances, TemplateHaskell #-}</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">URITH</span> <span class="kw">where</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Data.String</span> (<span class="dt">IsString</span>(..))</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Syntax</span> (<span class="dt">Q</span>, <span class="dt">TExp</span>(..), lift)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Network.URI</span> (<span class="dt">URI</span>(..), parseURI, <span class="dt">URIAuth</span>(..))</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">URI</span>)) <span class="kw">where</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>  fromString i <span class="ot">=</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>    <span class="kw">case</span> parseURI i <span class="kw">of</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a>      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">fail</span> (<span class="st">&quot;Invalid URI: &quot;</span> <span class="op">++</span> <span class="fu">show</span> i)</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>      <span class="dt">Just</span> uri <span class="ot">-&gt;</span> liftURI uri</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a><span class="ot">liftURI ::</span> <span class="dt">URI</span> <span class="ot">-&gt;</span> <span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">URI</span>)</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a>liftURI <span class="dt">URI</span> {uriScheme, uriAuthority, uriPath, uriQuery, uriFragment} <span class="ot">=</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a>  <span class="fu">fmap</span> <span class="dt">TExp</span> [<span class="op">|</span><span class="dt">URI</span> {uriScheme, uriAuthority <span class="ot">=</span> <span class="op">$</span>(mauthority), uriPath, uriQuery, uriFragment}<span class="op">|</span>]</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a>  <span class="kw">where</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a>    mauthority <span class="ot">=</span> <span class="fu">maybe</span> [<span class="op">|</span><span class="dt">Nothing</span><span class="op">|</span>] liftAuthority uriAuthority</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a>    liftAuthority <span class="dt">URIAuth</span> {uriUserInfo, uriRegName, uriPort} <span class="ot">=</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a>      [<span class="op">|</span><span class="dt">Just</span> (<span class="dt">URIAuth</span> {uriUserInfo, uriRegName, uriPort})<span class="op">|</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE NamedFieldPuns, FlexibleInstances, TemplateHaskell #-}</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">URITH</span> <span class="kw">where</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.String</span> (<span class="dt">IsString</span>(..))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Language.Haskell.TH.Syntax</span> (<span class="dt">Q</span>, <span class="dt">TExp</span>(..), lift)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Network.URI</span> (<span class="dt">URI</span>(..), parseURI, <span class="dt">URIAuth</span>(..))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">IsString</span> (<span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">URI</span>)) <span class="kw">where</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  fromString i <span class="ot">=</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">case</span> parseURI i <span class="kw">of</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">fail</span> (<span class="st">&quot;Invalid URI: &quot;</span> <span class="op">++</span> <span class="fu">show</span> i)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Just</span> uri <span class="ot">-&gt;</span> liftURI uri</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="ot">liftURI ::</span> <span class="dt">URI</span> <span class="ot">-&gt;</span> <span class="dt">Q</span> (<span class="dt">TExp</span> <span class="dt">URI</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>liftURI <span class="dt">URI</span> {uriScheme, uriAuthority, uriPath, uriQuery, uriFragment} <span class="ot">=</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmap</span> <span class="dt">TExp</span> [<span class="op">|</span><span class="dt">URI</span> {uriScheme, uriAuthority <span class="ot">=</span> <span class="op">$</span>(mauthority), uriPath, uriQuery, uriFragment}<span class="op">|</span>]</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    mauthority <span class="ot">=</span> <span class="fu">maybe</span> [<span class="op">|</span><span class="dt">Nothing</span><span class="op">|</span>] liftAuthority uriAuthority</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    liftAuthority <span class="dt">URIAuth</span> {uriUserInfo, uriRegName, uriPort} <span class="ot">=</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>      [<span class="op">|</span><span class="dt">Just</span> (<span class="dt">URIAuth</span> {uriUserInfo, uriRegName, uriPort})<span class="op">|</span>]</span></code></pre></div>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2019-11-13 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2019-11-13 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

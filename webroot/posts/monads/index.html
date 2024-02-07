@@ -1,0 +1,215 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>A plain English description of monads without Haskell
+code</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>A plain English description of monads without Haskell code</h1>
+
+<blockquote>
+<p>“That’s actually the first time I read an explanation about monads
+that I understand.” – Commenter</p>
+</blockquote>
+<blockquote>
+<p>“I just read your explanation, and suddenly I think I understand
+monads.” – Reviewer</p>
+</blockquote>
+<p>Monads are notorious in the programming world for their use in the
+Haskell programming language and for being hard to grasp. There’s even a
+joke that writing a “monad tutorial” is a rite of passage for new
+Haskellers, and been described as pointless.<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>
+I’ve been using Haskell for over a decade and have refrained from
+writing yet another monad tutorial.</p>
+<p>A friend asked for an easy explanation of them that doesn’t involve
+Haskell code.<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a> That’s easier.</p>
+<p>You can re-use your intuition from existing common place chaining of
+things in other popular languages:</p>
+<ul>
+<li>Async chains (<a
+href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">JS</a>)</li>
+<li>Parser combinator chains (<a
+href="https://github.com/Geal/nom">Rust</a>, JS)</li>
+<li>Optional or erroneous value chains (TypeScript, <a
+href="https://doc.rust-lang.org/std/result/">Rust</a>)</li>
+<li>Continuation passing style (you can do this in Lisp and JS)</li>
+<li>Cartesian products/SQL (<a
+href="https://en.wikipedia.org/wiki/Language_Integrated_Query">C#’s
+LINQ</a>)</li>
+</ul>
+<p>One of the Haskell designers<a href="#fn3" class="footnote-ref"
+id="fnref3" role="doc-noteref"><sup>3</sup></a> in the 90s just came up
+with a <strong>class/interface that worked for all of these</strong>. As
+he was into category theory, he related it to the idea of a “monad”. The
+types also sort of match the theory if you squint hard enough.</p>
+<p>Then they came up with a syntax (actually, two<a href="#fn4"
+class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>)
+that was syntactic sugar for calling the class methods to make it feel
+more ergonomic.</p>
+<p>Parsers, CPS, async, optional chaining, all look more or less like
+this in most modern popular programming languages:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>getThing<span class="op">.</span><span class="fu">and_then</span>(x <span class="kw">=&gt;</span> <span class="fu">putThingElsewhere</span>(x<span class="op">+</span><span class="dv">4</span>))<span class="op">.</span><span class="fu">and_then</span>(<span class="op">..</span>)</span></code></pre></div>
+<p>For a parser you track the position in the string and plumb that
+through. For an “optional” it just short circuits if the left hand side
+of <code>and_then</code> is nil/null/undefined. For async it would do
+something async, like make a web request to get the thing, and then call
+the callback, etc.</p>
+<p><strong>Monad is the name of the class</strong> for “and_then”,<a
+href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a> defined in a sensible way, with some
+laws for how it should behave predictably, and then a bunch of library
+code works on anything that implements “and_then”.</p>
+<p>Apart from F# or Haskell (or descendants), no other language<a
+href="#fn6" class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a> embraces the abstraction with syntax
+so it’s hard to find a good explanation without them. It’s like
+explaining Lisp macros without using a Lisp, the explanation tends to be
+awkward and unconvincing.</p>
+<p>If you have mutation, you might not bother plumbing stuff for a
+parser, you might just update the position in place, and throw an
+exception on a parse error. If your language supports returning early
+from functions then you can just use that to short circuit (Rust does
+this). If your language puts in a special case for async with “await”
+syntax (JS, Rust, C#), you’ll just use that. Other ways of doing things
+just make the idea of a monad abstraction kind of unnecessary.</p>
+<p>Haskellers don’t like to throw exceptions, or use mutation, and
+functions can’t return early, etc. Suddenly Monad and syntactic sugar
+for it looks pretty attractive to them.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a
+href="https://byorgey.wordpress.com/2009/01/12/abstraction-intuition-and-the-monad-tutorial-fallacy/">Abstraction,
+intuition, and the “monad tutorial fallacy”</a><a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>I understand, almost any explanation of them uses
+Haskell types to aid their explanation. <a
+href="https://en.wikipedia.org/wiki/Monad_(functional_programming)">Wikipedia’s
+article is garbage.</a><a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p><a
+href="https://homepages.inf.ed.ac.uk/wadler/papers/marktoberdorf/baastad.pdf">Monads
+for functional programming</a><a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Either do-notation or list comprehensions (yes, like in
+Python), which can be generalised to monad comprehensions. You can look
+that up if interested.<a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>There happen to be a plethora of other things that
+implement the Monad class–some really weird stuff–but linking to them
+would just give you a big list of Haskell type signatures, which you
+need to know Haskell to understand. It’s not called “and_then”, either
+but that’s an implementation detail.<a href="#fnref5"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>Well, OCaml and other ML-descendents do dabble with this
+these days.<a href="#fnref6" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2022-01-31 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>

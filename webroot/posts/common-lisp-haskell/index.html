@@ -87,13 +87,19 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Common Lisp/Haskell syntactic comparison</h1>
 
-<p>This is a little reminder/documentation for myself to explain that, despite having nice regular s-expression syntax, Common Lisp actually has a lot of syntactic concepts. I add comparison to Haskell because Haskell is known (perhaps superfically) for having a lot of syntax compared to other languages.</p>
+<h1>Common Lisp/Haskell syntactic comparison</h1>
+
+<p>This is a little reminder/documentation for myself to explain that,
+despite having nice regular s-expression syntax, Common Lisp actually
+has a lot of syntactic concepts. I add comparison to Haskell because
+Haskell is known (perhaps superfically) for having a lot of syntax
+compared to other languages.</p>
 <pre><code>CL: ; comment here
 HS: -- comment here
 
@@ -103,11 +109,11 @@ HS: x = …
 CL: (COND (((= x 1) r1) ((= x 2) r2)) (t r3))
 HS: case x of 1 -&gt; r1; 2 -&gt; r2; _ -&gt; r3
 
-CL: 'quotation
-HS: 'value
-    ''type
+CL: &#39;quotation
+HS: &#39;value
+    &#39;&#39;type
 
-CL: '(quotation)
+CL: &#39;(quotation)
     `(quasiquotation)
 HS: [|quotation|]
 
@@ -131,17 +137,17 @@ CL: (multiple-value-bind (x y) some-values (print x))
 HS: (let (x,y) = someValues in print x)
 
 CL: (list 1 2 3)
-   '(1 2 3)
+   &#39;(1 2 3)
 HS: [1,2,3]
 
 CL: (cons 1 (cons 2 (cons 3 nil)))
-    (cons 1 (cons 2 (cons 3 '())))
+    (cons 1 (cons 2 (cons 3 &#39;())))
 HS: 1 : 2 : 3 : []
 
-CL: (funcall foo '(arg1 arg2))
+CL: (funcall foo &#39;(arg1 arg2))
 HS: foo arg1 arg2
 
-CL: #'function
+CL: #&#39;function
 HS: function
 
 CL: (let ((f 1)) …)
@@ -170,7 +176,7 @@ CL: (loop … ? ¿ ‽)
 
 CL: #\space
     #\
-HS: ' '
+HS: &#39; &#39;
 
 CL: (+) =&gt; 0
 HS: (+) =&gt; (+)
@@ -181,8 +187,8 @@ HS: (+ 1) =&gt; (+ 1)
 CL: (+ 1 2) =&gt; 3
 HS: (1 + 2) =&gt; 3
 
-CL: (sort (list '(9 A) '(3 B) '(4 C)) #'&lt; :key #'first)
-HS: sortBy (comparing fst) [(9,'A'),(3,'B'),(4,'C')]
+CL: (sort (list &#39;(9 A) &#39;(3 B) &#39;(4 C)) #&#39;&lt; :key #&#39;first)
+HS: sortBy (comparing fst) [(9,&#39;A&#39;),(3,&#39;B&#39;),(4,&#39;C&#39;)]
 
 CL:  #1=(programmable . #1#) programming language
 HS: fix (\x -&gt; &quot;programmable &quot; ++ x) ++ &quot; programming language&quot;
@@ -200,8 +206,8 @@ CL: nil</code></pre>
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2011-10-31 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2011-10-31 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

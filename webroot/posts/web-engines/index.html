@@ -87,66 +87,118 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Web engines in Haskell</h1>
+
+<h1>Web engines in Haskell</h1>
 
 <h2 id="vado">Vado</h2>
-<p><a href="https://github.com/chrisdone/vado">Vado</a> is a Haskell web browser I wrote in two evenings that is the culmination of:</p>
+<p><a href="https://github.com/chrisdone/vado">Vado</a> is a Haskell web
+browser I wrote in two evenings that is the culmination of:</p>
 <ul>
 <li>Wanting to demonstrate some good Haskell libraries.</li>
-<li>That a cross-platform sdl2 package in Haskell is quite usable and works on Linux, OS X and Windows.</li>
-<li>That a simple web browser like something from the 90s was pretty straight-forward to implement.</li>
+<li>That a cross-platform sdl2 package in Haskell is quite usable and
+works on Linux, OS X and Windows.</li>
+<li>That a simple web browser like something from the 90s was pretty
+straight-forward to implement.</li>
 </ul>
-<p>In that I think the project is a success. The code isn’t anything special, and it’s not beautiful, or efficient.</p>
+<p>In that I think the project is a success. The code isn’t anything
+special, and it’s not beautiful, or efficient.</p>
 <p>Quoting the page:</p>
 <blockquote>
-<p>This is a demonstration program that is able to load a web page up and render it like in the early 90’s. It supports laying out text, different font sizes for headings, inline and block elements, hyperlinks, bold and italics. It supports mouse-wheel scrolling, too.</p>
+<p>This is a demonstration program that is able to load a web page up
+and render it like in the early 90’s. It supports laying out text,
+different font sizes for headings, inline and block elements,
+hyperlinks, bold and italics. It supports mouse-wheel scrolling,
+too.</p>
 </blockquote>
 <blockquote>
-<p>I wrote this in a couple evenings, because it seemed straight-forward to do so given the libraries available today. That’s a good sign for Haskell. Also, there’s an inarticulate gut feeling I have that tells me maybe it’s worth celebrating these days in which the web is still viewable in its simplest, earliest form.</p>
+<p>I wrote this in a couple evenings, because it seemed straight-forward
+to do so given the libraries available today. That’s a good sign for
+Haskell. Also, there’s an inarticulate gut feeling I have that tells me
+maybe it’s worth celebrating these days in which the web is still
+viewable in its simplest, earliest form.</p>
 </blockquote>
 <h2 id="fudgets">Fudgets</h2>
-<p>Meanwhile, I found that in 1994 there was <a href="http://www.cse.chalmers.se/~hallgren/wwwbrowser.html">a Haskell web browser by the Fudgets folk.</a></p>
+<p>Meanwhile, I found that in 1994 there was <a
+href="http://www.cse.chalmers.se/~hallgren/wwwbrowser.html">a Haskell
+web browser by the Fudgets folk.</a></p>
 <p>Quoting from the page in case it goes offline one day:</p>
 <blockquote>
-<p>WWWBrowser is a prototype WWW Browser implemented in the functional programming language Haskell using the Fudget Library. WWWBrowser was mostly implemented in 1994, when NCSA Mosaic was the dominant web browser, and some updates have been made in 1997 and 1998.</p>
-<p>WWWBrowser is also described in the chapter WWWBrowser – a WWW client in the Fudgets Thesis.</p>
+<p>WWWBrowser is a prototype WWW Browser implemented in the functional
+programming language Haskell using the Fudget Library. WWWBrowser was
+mostly implemented in 1994, when NCSA Mosaic was the dominant web
+browser, and some updates have been made in 1997 and 1998.</p>
+<p>WWWBrowser is also described in the chapter WWWBrowser – a WWW client
+in the Fudgets Thesis.</p>
 <ul>
 <li>It supports forms.</li>
-<li>It supports inlined images, like [:-)]. The GIF, PNG, JPEG, PNM and XBM formats are recognized. PNM and GIF images are processed with Haskell code. For the other formats, conversions are done with external programs (from the PBMPLUS package). Dithering (or just color remapping) is done by the WWWBrowser itself. (Unfortunately this gets a bit slow for large images.) (See The Graphics File Format Page (2D specs) for info on these and other image file formats.)</li>
-<li>Inlined images are fetched in parallel. This means that pages containing many small inlined images, such as IconBAZAAR, load faster in WWWBrowser (in spite of the slow image processing) than in browsers, like NCSA Mosaic (the dominating browser at the time when WWWBrowser was developed), that fetch one image at a time.</li>
-<li>It understands most of the protocols used for information retrieval in WWW: http, ftp, nntp (news), gopher and telnet. It can also read files and directories in the local file system. When talking to nntp and ftp servers, it uses the same connection for several transfers rather than connecting/disconnecting for every document retrieved.</li>
+<li>It supports inlined images, like [:-)]. The GIF, PNG, JPEG, PNM and
+XBM formats are recognized. PNM and GIF images are processed with
+Haskell code. For the other formats, conversions are done with external
+programs (from the PBMPLUS package). Dithering (or just color remapping)
+is done by the WWWBrowser itself. (Unfortunately this gets a bit slow
+for large images.) (See The Graphics File Format Page (2D specs) for
+info on these and other image file formats.)</li>
+<li>Inlined images are fetched in parallel. This means that pages
+containing many small inlined images, such as IconBAZAAR, load faster in
+WWWBrowser (in spite of the slow image processing) than in browsers,
+like NCSA Mosaic (the dominating browser at the time when WWWBrowser was
+developed), that fetch one image at a time.</li>
+<li>It understands most of the protocols used for information retrieval
+in WWW: http, ftp, nntp (news), gopher and telnet. It can also read
+files and directories in the local file system. When talking to nntp and
+ftp servers, it uses the same connection for several transfers rather
+than connecting/disconnecting for every document retrieved.</li>
 <li>It can connect to the Internet directly or through a proxy.</li>
 </ul>
 </blockquote>
-<p>Hard to believe there was a pretty viable looking browser back then, and in Haskell! It’s very impressive! The Fudgets work really is still amazing and interesting to this day. I’ve started and will continue to read through their documentation and ideas.</p>
+<p>Hard to believe there was a pretty viable looking browser back then,
+and in Haskell! It’s very impressive! The Fudgets work really is still
+amazing and interesting to this day. I’ve started and will continue to
+read through their documentation and ideas.</p>
 <h2 id="reflecting-on-browsers">Reflecting on browsers</h2>
-<p>You might think (or not think) that a cross-platform browser in 600 lines is pretty good. But this exercise also helps illuminate to me the gulf that exists between what we had in the 90s, and what people expect today. Vado doesn’t do anything that you would expect from a modern web browser. Here are just some things that I can think of:</p>
+<p>You might think (or not think) that a cross-platform browser in 600
+lines is pretty good. But this exercise also helps illuminate to me the
+gulf that exists between what we had in the 90s, and what people expect
+today. Vado doesn’t do anything that you would expect from a modern web
+browser. Here are just some things that I can think of:</p>
 <ul>
 <li>Support cookies</li>
 <li>Loading images</li>
 <li>Caching of assets</li>
 <li>History forward/back navigation</li>
-<li>Handle the plethora of custom form inputs (dates, integers, sliders, dropdowns, multiselects, basic text, textarea, buttons, etc.)</li>
-<li>Parse and handle even old CSS 2, nevermind modern CSS 3 (and custom fonts)</li>
-<li>Parse and handle plain old JavaScript, not to mention more modern JS</li>
-<li>Provide the large surface area of API for JavaScript, including but not limited to
+<li>Handle the plethora of custom form inputs (dates, integers, sliders,
+dropdowns, multiselects, basic text, textarea, buttons, etc.)</li>
+<li>Parse and handle even old CSS 2, nevermind modern CSS 3 (and custom
+fonts)</li>
+<li>Parse and handle plain old JavaScript, not to mention more modern
+JS</li>
+<li>Provide the large surface area of API for JavaScript, including but
+not limited to
 <ul>
-<li>The basic DOM API with all its events (keyboards, timers, mouse, form inputs)</li>
+<li>The basic DOM API with all its events (keyboards, timers, mouse,
+form inputs)</li>
 <li>Drawing APIs (canvas)</li>
 <li>Network APIs (AJAX, websockets)</li>
 <li>Cookies and web storage</li>
 <li>Window APIs (navigation, refreshing, etc.), alerts, prompts</li>
 <li>Audio, video elements, web workers, …</li>
 </ul></li>
-<li>The whole UI around managing your history, addresses, bookmarks, cookies, etc. that they’re expected to have.</li>
+<li>The whole UI around managing your history, addresses, bookmarks,
+cookies, etc. that they’re expected to have.</li>
 </ul>
-<p>Also to do all of these things efficiently, securely, and in a way that matches (quirks and all) with the way other engines are expected to render. And then if you want anyone to continue using it, you have to keep on keeping up with the web, aside from the high maintenance costs of a basic web browser.</p>
+<p>Also to do all of these things efficiently, securely, and in a way
+that matches (quirks and all) with the way other engines are expected to
+render. And then if you want anyone to continue using it, you have to
+keep on keeping up with the web, aside from the high maintenance costs
+of a basic web browser.</p>
 <h2 id="approaching-a-mono-culture">Approaching a mono culture</h2>
-<p>At present we have an unfortunate state of affairs, we used to have these rendering engines:</p>
+<p>At present we have an unfortunate state of affairs, we used to have
+these rendering engines:</p>
 <ul>
 <li>Blink (Chromium)</li>
 <li>KHTML (Konqueror)</li>
@@ -163,15 +215,19 @@
 <li>WebKit (Safari) – controlled by Apple</li>
 <li>Gecko (Firefox) – controlled by Mozilla</li>
 </ul>
-<p>I hope this trend doesn’t continue. Google are already attempting to destroy email as we know it, using their power afforded by GMail. Mozilla are pretty bent on keeping the web diverse and competitive. I’m not sure whether Apple will follow Microsoft’s and Opera’s lead and move to Blink for Safari.</p>
+<p>I hope this trend doesn’t continue. Google are already attempting to
+destroy email as we know it, using their power afforded by GMail.
+Mozilla are pretty bent on keeping the web diverse and competitive. I’m
+not sure whether Apple will follow Microsoft’s and Opera’s lead and move
+to Blink for Safari.</p>
 <p>We’ll see.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2019-04-05 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2019-04-05 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

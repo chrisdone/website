@@ -87,116 +87,212 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Fast Haskell: Competing with C at parsing XML</h1>
 
-<p>In this post we’re going to look at parsing XML in Haskell, how it compares with an efficient C parser, and steps you can take in Haskell to build a fast library from the ground up. We’re going to get fairly detailed and get our hands dirty.</p>
+<h1>Fast Haskell: Competing with C at parsing XML</h1>
+
+<p>In this post we’re going to look at parsing XML in Haskell, how it
+compares with an efficient C parser, and steps you can take in Haskell
+to build a fast library from the ground up. We’re going to get fairly
+detailed and get our hands dirty.</p>
 <!-- establish context -->
 <h2 id="a-new-kid-on-the-block">A new kid on the block</h2>
-<p>A few weeks ago Neil Mitchell posted <a href="http://neilmitchell.blogspot.co.uk/2016/12/new-xml-parser-hexml.html">a blog post</a> about a new XML library that he’d written. The parser is written in C, and the API is written in Haskell which uses the C library. He writes that it’s very fast:</p>
+<p>A few weeks ago Neil Mitchell posted <a
+href="http://neilmitchell.blogspot.co.uk/2016/12/new-xml-parser-hexml.html">a
+blog post</a> about a new XML library that he’d written. The parser is
+written in C, and the API is written in Haskell which uses the C
+library. He writes that it’s very fast:</p>
 <blockquote>
-<p>Hexml has been designed for speed. In the very limited benchmarks I’ve done it is typically just over 2x faster at parsing than Pugixml, where Pugixml is the gold standard for fast XML DOM parsers. In my uses it has turned XML parsing from a bottleneck to an irrelevance, so it works for me.</p>
+<p>Hexml has been designed for speed. In the very limited benchmarks
+I’ve done it is typically just over 2x faster at parsing than Pugixml,
+where Pugixml is the gold standard for fast XML DOM parsers. In my uses
+it has turned XML parsing from a bottleneck to an irrelevance, so it
+works for me.</p>
 </blockquote>
-<p>In order to achieve that speed, he cheats by not performing operations he doesn’t care about:</p>
+<p>In order to achieve that speed, he cheats by not performing
+operations he doesn’t care about:</p>
 <blockquote>
-<p>To gain that speed, Hexml cheats. Primarily it doesn’t do entity expansion, so <code>&amp;amp;</code> remains as <code>&amp;amp;</code> in the output. It also doesn’t handle <code>CData</code> sections (but that’s because I’m lazy) and comment locations are not remembered. It also doesn’t deal with most of the XML standard, ignoring the <code>DOCTYPE</code> stuff. [..] I only work on UTF8, which for the bits of UTF8 I care about, is the same as ASCII - I don’t need to do any character decoding.</p>
+<p>To gain that speed, Hexml cheats. Primarily it doesn’t do entity
+expansion, so <code>&amp;amp;</code> remains as <code>&amp;amp;</code>
+in the output. It also doesn’t handle <code>CData</code> sections (but
+that’s because I’m lazy) and comment locations are not remembered. It
+also doesn’t deal with most of the XML standard, ignoring the
+<code>DOCTYPE</code> stuff. [..] I only work on UTF8, which for the bits
+of UTF8 I care about, is the same as ASCII - I don’t need to do any
+character decoding.</p>
 </blockquote>
-<p>Cheating is fine when you describe in detail how you cheat. That’s just changing the rules of the game!</p>
+<p>Cheating is fine when you describe in detail how you cheat. That’s
+just changing the rules of the game!</p>
 <!-- why this is of interest to me -->
 <h2 id="but-c-has-problems">But C has problems</h2>
-<p>This post caught my attention because it seemed to me a pity to use C. Whether you use Haskell, Python, or whatever, there are a few problems with dropping down to C from your high-level language:</p>
+<p>This post caught my attention because it seemed to me a pity to use
+C. Whether you use Haskell, Python, or whatever, there are a few
+problems with dropping down to C from your high-level language:</p>
 <ul>
-<li>The program is more likely to segfault. I’ll take an exception over a segfault any day!</li>
-<li>The program opens itself up to possible exploitation due to lack of memory safety.</li>
-<li>If people want to extend your software, they have to use C, and not your high-level language.</li>
+<li>The program is more likely to segfault. I’ll take an exception over
+a segfault any day!</li>
+<li>The program opens itself up to possible exploitation due to lack of
+memory safety.</li>
+<li>If people want to extend your software, they have to use C, and not
+your high-level language.</li>
 <li>Portability (i.e. Windows) is a pain in the arse with C.</li>
 </ul>
-<p>Sure enough, it wasn’t long before <a href="https://www.reddit.com/r/haskell/comments/5i2mg1/new_xml_parser_hexml/db5os2h/">Austin Seipp posted a rundown of bugs in the C code</a>:</p>
+<p>Sure enough, it wasn’t long before <a
+href="https://www.reddit.com/r/haskell/comments/5i2mg1/new_xml_parser_hexml/db5os2h/">Austin
+Seipp posted a rundown of bugs in the C code</a>:</p>
 <blockquote>
-<p>At the moment, sorry to say – I wouldn’t use this library to parse any arbitrary XML, since it could be considered hostile, and get me owned. Using American Fuzzy Lop, just after a few minutes, I’ve already found around ~30 unique crashes.</p>
+<p>At the moment, sorry to say – I wouldn’t use this library to parse
+any arbitrary XML, since it could be considered hostile, and get me
+owned. Using American Fuzzy Lop, just after a few minutes, I’ve already
+found around ~30 unique crashes.</p>
 </blockquote>
-<p>But C is really fast right? Like 100s of times faster than Haskell! It’s worth the risk.</p>
+<p>But C is really fast right? Like 100s of times faster than Haskell!
+It’s worth the risk.</p>
 <h2 id="but-but-c-is-fast">But-but C is fast!</h2>
-<p>Let’s benchmark it. We’re going to parse a 4KB, a 31KB and a 211KB XML file.</p>
-<p>Using the <a href="http://www.serpentine.com/criterion/">Criterion benchmarking package</a>, we can compare Hexml against the pretty old Haskell <code>xml</code> package…</p>
+<p>Let’s benchmark it. We’re going to parse a 4KB, a 31KB and a 211KB
+XML file.</p>
+<p>Using the <a href="http://www.serpentine.com/criterion/">Criterion
+benchmarking package</a>, we can compare Hexml against the pretty old
+Haskell <code>xml</code> package…</p>
 <p><img src="http://i.imgur.com/jhDkKEn.png" /></p>
 <pre><code>File   hexml    xml
 4KB    6.26 μs  1.94 ms (1940 μs)
 31KB   9.41 μs  13.6 ms (13600 μs)
 211KB  260  μs  25.9 ms (25900 μs)</code></pre>
-<p>Ouch! Those numbers don’t look good. The xml package is 100-300x times slower.</p>
-<p>Okay, I’m being unfair. The xml package isn’t known for speed. Its package description is simply <code>A simple XML library.</code> Let’s compare with the hexpat package. That one has this in its description:</p>
+<p>Ouch! Those numbers don’t look good. The xml package is 100-300x
+times slower.</p>
+<p>Okay, I’m being unfair. The xml package isn’t known for speed. Its
+package description is simply <code>A simple XML library.</code> Let’s
+compare with the hexpat package. That one has this in its
+description:</p>
 <blockquote>
-<p>The design goals are speed, speed, speed, interface simplicity and modularity.</p>
+<p>The design goals are speed, speed, speed, interface simplicity and
+modularity.</p>
 </blockquote>
-<p>So that’s probably more representing the best in Haskell XML parsers. It’s also based on the C expat library, which is supposed to be fast.</p>
+<p>So that’s probably more representing the best in Haskell XML parsers.
+It’s also based on the C expat library, which is supposed to be
+fast.</p>
 <p><img src="http://i.imgur.com/PznIjRs.png" /></p>
 <pre><code>File   hexml     hexpat
 4KB    6.395 μs  320.3 μs
 31KB   9.474 μs  378.3 μs
 211KB  256.2 μs  25.68 ms</code></pre>
-<p>That’s a bit better. We’re now between 40-100x slower than Hexml. I’d prefer 10x slower, but it’s a more reasonable outcome. The hexpat package handles: keeping location information, reasonable parse errors, the complete XML standard. Hexml doesn’t do any of that.</p>
-<p>Let’s set us a challenge. Can we match or beat the Hexml package in plain old Haskell? This is an itch that got under my skin. I emailed Neil and he was fine with it:</p>
+<p>That’s a bit better. We’re now between 40-100x slower than Hexml. I’d
+prefer 10x slower, but it’s a more reasonable outcome. The hexpat
+package handles: keeping location information, reasonable parse errors,
+the complete XML standard. Hexml doesn’t do any of that.</p>
+<p>Let’s set us a challenge. Can we match or beat the Hexml package in
+plain old Haskell? This is an itch that got under my skin. I emailed
+Neil and he was fine with it:</p>
 <blockquote>
-<p>I don’t think it’s unfair or attacky to use Hexml as the baseline - I’d welcome it!</p>
+<p>I don’t think it’s unfair or attacky to use Hexml as the baseline -
+I’d welcome it!</p>
 </blockquote>
-<p>I’ll walk you through my approach. I called my library <a href="https://github.com/chrisdone/xeno">Xeno</a> (for obvious reasons).</p>
-<h2 id="start-with-the-simplest-thing-possible">Start with the simplest thing possible</h2>
-<p>…and make sure it’s fast. Here’s the first thing I wrote, to see how fast it was to walk across a file compared with Hexml.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Xeno</span> (parse) <span class="kw">where</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Data.ByteString</span> (<span class="dt">ByteString</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString</span> <span class="kw">as</span> <span class="dt">S</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">import</span>           <span class="dt">Data.Word</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="co">-- | Parse an XML document.</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="ot">parse ::</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> ()</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>parse str <span class="ot">=</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>  parseTags <span class="dv">0</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>  <span class="kw">where</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>    parseTags <span class="fu">index</span> <span class="ot">=</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>      <span class="kw">case</span> elemIndexFrom <span class="dv">60</span> str <span class="fu">index</span> <span class="kw">of</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a>          ()</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a>        <span class="dt">Just</span> fromLt <span class="ot">-&gt;</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a>          <span class="kw">case</span> elemIndexFrom <span class="dv">62</span> str fromLt <span class="kw">of</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a>            <span class="dt">Nothing</span> <span class="ot">-&gt;</span> ()</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true"></a>            <span class="dt">Just</span> fromGt <span class="ot">-&gt;</span> <span class="kw">do</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true"></a>              parseTags (fromGt <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true"></a></span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true"></a><span class="co">-- | Get index of an element starting from offset.</span></span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true"></a><span class="ot">elemIndexFrom ::</span> <span class="dt">Word8</span> <span class="ot">-&gt;</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Int</span></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true"></a>elemIndexFrom c str offset <span class="ot">=</span> <span class="fu">fmap</span> (<span class="op">+</span> offset) (S.elemIndex c (S.drop offset str))</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true"></a><span class="ot">{-# INLINE elemIndexFrom #-}</span></span></code></pre></div>
-<p>The numbers 60 and 62 are <code>&lt;</code> and <code>&gt;</code>. In XML the only characters that matter are <code>&lt;</code> and <code>&gt;</code> (if you don’t care about entities). <code>&lt;</code> and <code>&gt;</code> can’t appear inside speech marks (attributes). They are the only important things to search for. Results:</p>
+<p>I’ll walk you through my approach. I called my library <a
+href="https://github.com/chrisdone/xeno">Xeno</a> (for obvious
+reasons).</p>
+<h2 id="start-with-the-simplest-thing-possible">Start with the simplest
+thing possible</h2>
+<p>…and make sure it’s fast. Here’s the first thing I wrote, to see how
+fast it was to walk across a file compared with Hexml.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Xeno</span> (parse) <span class="kw">where</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.ByteString</span> (<span class="dt">ByteString</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString</span> <span class="kw">as</span> <span class="dt">S</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.Word</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Parse an XML document.</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ot">parse ::</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> ()</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>parse str <span class="ot">=</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  parseTags <span class="dv">0</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    parseTags <span class="fu">index</span> <span class="ot">=</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>      <span class="kw">case</span> elemIndexFrom <span class="dv">60</span> str <span class="fu">index</span> <span class="kw">of</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>          ()</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Just</span> fromLt <span class="ot">-&gt;</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>          <span class="kw">case</span> elemIndexFrom <span class="dv">62</span> str fromLt <span class="kw">of</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>            <span class="dt">Nothing</span> <span class="ot">-&gt;</span> ()</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>            <span class="dt">Just</span> fromGt <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>              parseTags (fromGt <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Get index of an element starting from offset.</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="ot">elemIndexFrom ::</span> <span class="dt">Word8</span> <span class="ot">-&gt;</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Int</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> <span class="dt">Int</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>elemIndexFrom c str offset <span class="ot">=</span> <span class="fu">fmap</span> (<span class="op">+</span> offset) (S.elemIndex c (S.drop offset str))</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# INLINE elemIndexFrom #-}</span></span></code></pre></div>
+<p>The numbers 60 and 62 are <code>&lt;</code> and <code>&gt;</code>. In
+XML the only characters that matter are <code>&lt;</code> and
+<code>&gt;</code> (if you don’t care about entities). <code>&lt;</code>
+and <code>&gt;</code> can’t appear inside speech marks (attributes).
+They are the only important things to search for. Results:</p>
 <pre><code>File   hexml     xeno
 4KB    6.395 μs  2.630 μs
 42KB   37.55 μs  7.814 μs</code></pre>
-<p>So the baseline performance of walking across the file in jumps is quite fast! Why is it fast? Let’s look at that for a minute:</p>
+<p>So the baseline performance of walking across the file in jumps is
+quite fast! Why is it fast? Let’s look at that for a minute:</p>
 <ul>
-<li>The <code>ByteString</code> data type is a safe wrapper around a vector of bytes. It’s underneath equivalent to <code>char*</code> in C.</li>
-<li>With that in mind, <a href="http://hackage.haskell.org/package/bytestring-0.10.8.1/docs/Data-ByteString.html#v:elemIndex">the <code>S.elemIndex</code> function</a> is implemented using the standard C function <code>memchr(3)</code>. As we all know, <code>memchr</code> jumps across your file in large word boundaries or even using SIMD operations, meaning it’s bloody fast. But the <code>elemIndex</code> function itself is safe.</li>
+<li>The <code>ByteString</code> data type is a safe wrapper around a
+vector of bytes. It’s underneath equivalent to <code>char*</code> in
+C.</li>
+<li>With that in mind, <a
+href="http://hackage.haskell.org/package/bytestring-0.10.8.1/docs/Data-ByteString.html#v:elemIndex">the
+<code>S.elemIndex</code> function</a> is implemented using the standard
+C function <code>memchr(3)</code>. As we all know, <code>memchr</code>
+jumps across your file in large word boundaries or even using SIMD
+operations, meaning it’s bloody fast. But the <code>elemIndex</code>
+function itself is safe.</li>
 </ul>
-<p>So we’re effectively doing a <code>for(..) { s=memchr(s,..) }</code> loop over the file.</p>
-<h2 id="keep-an-eye-on-the-allocations">Keep an eye on the allocations</h2>
-<p>Using the <a href="https://github.com/fpco/weigh#readme">weigh package</a> for memory allocation tracking, we can also look at allocations of our code right now:</p>
+<p>So we’re effectively doing a <code>for(..) { s=memchr(s,..) }</code>
+loop over the file.</p>
+<h2 id="keep-an-eye-on-the-allocations">Keep an eye on the
+allocations</h2>
+<p>Using the <a href="https://github.com/fpco/weigh#readme">weigh
+package</a> for memory allocation tracking, we can also look at
+allocations of our code right now:</p>
 <pre><code>Case         Bytes  GCs  Check
 4kb parse    1,168    0  OK
 42kb parse   1,560    0  OK
 52kb parse   1,168    0  OK
 182kb parse  1,168    0  OK</code></pre>
-<p>We see that it’s constant. Okay, it varies by a few bytes, but it doesn’t increase linearly or anything. That’s good! One thing that stood out to me, is that didn’t we pay for allocation of the <code>Maybe</code> values. For a 1000x <code>&lt;</code> and <code>&gt;</code> characters, we should have 1000 allocations of <code>Just</code>/<code>Nothing</code>. Let’s go down that rabbit hole for a second.</p>
+<p>We see that it’s constant. Okay, it varies by a few bytes, but it
+doesn’t increase linearly or anything. That’s good! One thing that stood
+out to me, is that didn’t we pay for allocation of the
+<code>Maybe</code> values. For a 1000x <code>&lt;</code> and
+<code>&gt;</code> characters, we should have 1000 allocations of
+<code>Just</code>/<code>Nothing</code>. Let’s go down that rabbit hole
+for a second.</p>
 <h2 id="looking-at-the-core">Looking at the Core</h2>
 <p>Well, if you compile the source like this</p>
 <pre><code>stack ghc -- -O2 -ddump-simpl Xeno.hs</code></pre>
-<p>You’ll see a dump of the real <a href="http://stackoverflow.com/questions/6121146/reading-ghc-core">Core</a> code that is generated after the Haskell code is desugared, and before it’s compiled to machine code. At this stage you can already see optimizations based on inlining, common-sub-expression elimination, deforestation, and other things.</p>
-<p>The output is rather large. Core is verbose, and fast code tends to be longer. <a href="https://gist.github.com/chrisdone/7aea4748c6fd0f1854d341b5676a4a97">Here is the output</a>, but you don’t have to understand it. Just note that there’s no mention of Maybe, Just or Nothing in there. It skips that altogether. See <a href="https://gist.github.com/chrisdone/7aea4748c6fd0f1854d341b5676a4a97#file-1core-hs-L38-L48">here specifically</a>. There is a call to <code>memchr</code>, then there is an <code>eqAddr</code> comparison with <code>NULL</code>, to see whether the <code>memchr</code> is done or not. But we’re <a href="https://gist.github.com/chrisdone/7aea4748c6fd0f1854d341b5676a4a97#file-1core-hs-L146">still doing safety checks</a> so that the resulting code is safe.</p>
+<p>You’ll see a dump of the real <a
+href="http://stackoverflow.com/questions/6121146/reading-ghc-core">Core</a>
+code that is generated after the Haskell code is desugared, and before
+it’s compiled to machine code. At this stage you can already see
+optimizations based on inlining, common-sub-expression elimination,
+deforestation, and other things.</p>
+<p>The output is rather large. Core is verbose, and fast code tends to
+be longer. <a
+href="https://gist.github.com/chrisdone/7aea4748c6fd0f1854d341b5676a4a97">Here
+is the output</a>, but you don’t have to understand it. Just note that
+there’s no mention of Maybe, Just or Nothing in there. It skips that
+altogether. See <a
+href="https://gist.github.com/chrisdone/7aea4748c6fd0f1854d341b5676a4a97#file-1core-hs-L38-L48">here
+specifically</a>. There is a call to <code>memchr</code>, then there is
+an <code>eqAddr</code> comparison with <code>NULL</code>, to see whether
+the <code>memchr</code> is done or not. But we’re <a
+href="https://gist.github.com/chrisdone/7aea4748c6fd0f1854d341b5676a4a97#file-1core-hs-L146">still
+doing safety checks</a> so that the resulting code is safe.</p>
 <h2 id="inlining-counts">Inlining counts</h2>
-<p>The curious reader might have noticed that <code>INLINE</code> line in my first code sample.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="ot">{-# INLINE elemIndexFrom #-}</span></span></code></pre></div>
-<p>Without the INLINE, the whole function is twice as slow and has linear allocation.</p>
+<p>The curious reader might have noticed that <code>INLINE</code> line
+in my first code sample.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# INLINE elemIndexFrom #-}</span></span></code></pre></div>
+<p>Without the INLINE, the whole function is twice as slow and has
+linear allocation.</p>
 <pre><code>Case        Bytes  GCs  Check
 4kb parse   1,472    0  OK
 42kb parse  1,160    0  OK
@@ -220,59 +316,66 @@ benchmarking 211KB/xeno
 time                 265.9 μs   (262.4 μs .. 271.4 μs)
 benchmarking 31KB/xeno
 time                 3.212 μs   (3.209 μs .. 3.218 μs)</code></pre>
-<p>Always pay attention to things like this. You don’t want to put INLINE on everything. Sometimes it adds slowdown, most times it makes no difference. So check with your benchmark suite.</p>
+<p>Always pay attention to things like this. You don’t want to put
+INLINE on everything. Sometimes it adds slowdown, most times it makes no
+difference. So check with your benchmark suite.</p>
 <h2 id="loop-unrolling-manually">Loop unrolling manually</h2>
-<p>Some things need to be done manually. I added comment parsing to our little function:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a><span class="op">+</span>        <span class="dt">Just</span> fromLt <span class="ot">-&gt;</span> checkOpenComment (fromLt <span class="op">+</span> <span class="dv">1</span>)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a><span class="op">+</span>    checkOpenComment <span class="fu">index</span> <span class="ot">=</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true"></a><span class="op">+</span>      <span class="kw">if</span> S.isPrefixOf <span class="st">&quot;!--&quot;</span> (S.drop <span class="fu">index</span> str)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true"></a><span class="op">+</span>         <span class="kw">then</span> findCommentEnd (<span class="fu">index</span> <span class="op">+</span> <span class="dv">3</span>)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true"></a><span class="op">+</span>         <span class="kw">else</span> findLt <span class="fu">index</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true"></a><span class="op">+</span>    findCommentEnd <span class="fu">index</span> <span class="ot">=</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true"></a><span class="op">+</span>      <span class="kw">case</span> elemIndexFrom commentChar str <span class="fu">index</span> <span class="kw">of</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true"></a><span class="op">+</span>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> () <span class="co">-- error!</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true"></a><span class="op">+</span>        <span class="dt">Just</span> fromDash <span class="ot">-&gt;</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true"></a><span class="op">+</span>          <span class="kw">if</span> S.isPrefixOf <span class="st">&quot;-&gt;&quot;</span> (S.drop (fromDash <span class="op">+</span> <span class="dv">1</span>) str)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true"></a><span class="op">+</span>             <span class="kw">then</span> findGt (fromDash <span class="op">+</span> <span class="dv">2</span>)</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true"></a><span class="op">+</span>             <span class="kw">else</span> findCommentEnd (fromDash <span class="op">+</span> <span class="dv">1</span>)</span></code></pre></div>
+<p>Some things need to be done manually. I added comment parsing to our
+little function:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>        <span class="dt">Just</span> fromLt <span class="ot">-&gt;</span> checkOpenComment (fromLt <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>    checkOpenComment <span class="fu">index</span> <span class="ot">=</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>      <span class="kw">if</span> S.isPrefixOf <span class="st">&quot;!--&quot;</span> (S.drop <span class="fu">index</span> str)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>         <span class="kw">then</span> findCommentEnd (<span class="fu">index</span> <span class="op">+</span> <span class="dv">3</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>         <span class="kw">else</span> findLt <span class="fu">index</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>    findCommentEnd <span class="fu">index</span> <span class="ot">=</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>      <span class="kw">case</span> elemIndexFrom commentChar str <span class="fu">index</span> <span class="kw">of</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> () <span class="co">-- error!</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>        <span class="dt">Just</span> fromDash <span class="ot">-&gt;</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>          <span class="kw">if</span> S.isPrefixOf <span class="st">&quot;-&gt;&quot;</span> (S.drop (fromDash <span class="op">+</span> <span class="dv">1</span>) str)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>             <span class="kw">then</span> findGt (fromDash <span class="op">+</span> <span class="dv">2</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>             <span class="kw">else</span> findCommentEnd (fromDash <span class="op">+</span> <span class="dv">1</span>)</span></code></pre></div>
 <p>And it became 2x slower:</p>
 <pre><code>benchmarking 4KB/xeno
 time                 2.512 μs   (2.477 μs .. 2.545 μs)</code></pre>
 <p>to</p>
 <pre><code>benchmarking 4KB/xeno
 time                 4.296 μs   (4.240 μs .. 4.348 μs)</code></pre>
-<p>So I changed the <code>S.isPrefixOf</code> to be unrolled to <code>S.index</code> calls, like this:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="op">-</span>      <span class="kw">if</span> S.isPrefixOf <span class="st">&quot;!--&quot;</span> (S.drop <span class="fu">index</span> str)</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a><span class="op">-</span>         <span class="kw">then</span> findCommentEnd (<span class="fu">index</span> <span class="op">+</span> <span class="dv">3</span>)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a><span class="op">-</span>         <span class="kw">else</span> findLt <span class="fu">index</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a><span class="op">+</span>      <span class="kw">if</span> S.index this <span class="dv">0</span> <span class="op">==</span> bangChar <span class="op">&amp;&amp;</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a><span class="op">+</span>         S.index this <span class="dv">1</span> <span class="op">==</span> commentChar <span class="op">&amp;&amp;</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a><span class="op">+</span>         S.index this <span class="dv">2</span> <span class="op">==</span> commentChar</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a><span class="op">+</span>        <span class="kw">then</span> findCommentEnd (<span class="fu">index</span> <span class="op">+</span> <span class="dv">3</span>)</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a><span class="op">+</span>        <span class="kw">else</span> findLt <span class="fu">index</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a><span class="op">+</span>      <span class="kw">where</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true"></a><span class="op">+</span>        this <span class="ot">=</span> S.drop <span class="fu">index</span> str</span></code></pre></div>
+<p>So I changed the <code>S.isPrefixOf</code> to be unrolled to
+<code>S.index</code> calls, like this:</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="op">-</span>      <span class="kw">if</span> S.isPrefixOf <span class="st">&quot;!--&quot;</span> (S.drop <span class="fu">index</span> str)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="op">-</span>         <span class="kw">then</span> findCommentEnd (<span class="fu">index</span> <span class="op">+</span> <span class="dv">3</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="op">-</span>         <span class="kw">else</span> findLt <span class="fu">index</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>      <span class="kw">if</span> S.index this <span class="dv">0</span> <span class="op">==</span> bangChar <span class="op">&amp;&amp;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>         S.index this <span class="dv">1</span> <span class="op">==</span> commentChar <span class="op">&amp;&amp;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>         S.index this <span class="dv">2</span> <span class="op">==</span> commentChar</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>        <span class="kw">then</span> findCommentEnd (<span class="fu">index</span> <span class="op">+</span> <span class="dv">3</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>        <span class="kw">else</span> findLt <span class="fu">index</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>      <span class="kw">where</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>        this <span class="ot">=</span> S.drop <span class="fu">index</span> str</span></code></pre></div>
 <p>And it dropped back down to our base speed again.</p>
 <h2 id="finding-tag-names">Finding tag names</h2>
 <p>I implemented finding tag names like this:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="op">+</span>    findTagName index0 <span class="ot">=</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="op">+</span>      <span class="kw">case</span> S.findIndex (<span class="fu">not</span> <span class="op">.</span> isTagName) (S.drop <span class="fu">index</span> str) <span class="kw">of</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a><span class="op">+</span>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Couldn't find end of tag name.&quot;</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a><span class="op">+</span>        <span class="dt">Just</span> ((<span class="op">+</span> <span class="fu">index</span>) <span class="ot">-&gt;</span> spaceOrCloseTag) <span class="ot">-&gt;</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a><span class="op">+</span>          <span class="kw">if</span> S.head this <span class="op">==</span> closeTagChar</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a><span class="op">+</span>            <span class="kw">then</span> findGt spaceOrCloseTag</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a><span class="op">+</span>            <span class="kw">else</span> <span class="kw">if</span> S.head this <span class="op">==</span> spaceChar</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a><span class="op">+</span>                   <span class="kw">then</span> findLt spaceOrCloseTag</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a><span class="op">+</span>                   <span class="kw">else</span> <span class="fu">error</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true"></a><span class="op">+</span>                          (<span class="st">&quot;Expecting space or closing '&gt;' after tag name, but got: &quot;</span> <span class="op">++</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true"></a><span class="op">+</span>                           <span class="fu">show</span> this)</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true"></a><span class="op">+</span>          <span class="kw">where</span> this <span class="ot">=</span> S.drop spaceOrCloseTag str</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true"></a><span class="op">+</span>      <span class="kw">where</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true"></a><span class="op">+</span>        <span class="fu">index</span> <span class="ot">=</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true"></a><span class="op">+</span>          <span class="kw">if</span> S.head (S.drop index0 str) <span class="op">==</span> questionChar <span class="op">||</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true"></a><span class="op">+</span>             S.head (S.drop index0 str) <span class="op">==</span> slashChar</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true"></a><span class="op">+</span>            <span class="kw">then</span> index0 <span class="op">+</span> <span class="dv">1</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true"></a><span class="op">+</span>            <span class="kw">else</span> index0</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>    findTagName index0 <span class="ot">=</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>      <span class="kw">case</span> S.findIndex (<span class="fu">not</span> <span class="op">.</span> isTagName) (S.drop <span class="fu">index</span> str) <span class="kw">of</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Couldn&#39;t find end of tag name.&quot;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>        <span class="dt">Just</span> ((<span class="op">+</span> <span class="fu">index</span>) <span class="ot">-&gt;</span> spaceOrCloseTag) <span class="ot">-&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>          <span class="kw">if</span> S.head this <span class="op">==</span> closeTagChar</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>            <span class="kw">then</span> findGt spaceOrCloseTag</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>            <span class="kw">else</span> <span class="kw">if</span> S.head this <span class="op">==</span> spaceChar</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>                   <span class="kw">then</span> findLt spaceOrCloseTag</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>                   <span class="kw">else</span> <span class="fu">error</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>                          (<span class="st">&quot;Expecting space or closing &#39;&gt;&#39; after tag name, but got: &quot;</span> <span class="op">++</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>                           <span class="fu">show</span> this)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>          <span class="kw">where</span> this <span class="ot">=</span> S.drop spaceOrCloseTag str</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>      <span class="kw">where</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>        <span class="fu">index</span> <span class="ot">=</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>          <span class="kw">if</span> S.head (S.drop index0 str) <span class="op">==</span> questionChar <span class="op">||</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>             S.head (S.drop index0 str) <span class="op">==</span> slashChar</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>            <span class="kw">then</span> index0 <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>            <span class="kw">else</span> index0</span></code></pre></div>
 <p>And immediately noticed a big slow down. From</p>
 <pre><code>Case        Bytes  GCs  Check
 4kb parse   1,160    0  OK
@@ -295,13 +398,15 @@ benchmarking 4KB/hexml
 time                 6.225 μs   (6.178 μs .. 6.269 μs)
 benchmarking 4KB/xeno
 time                 10.34 μs   (10.06 μs .. 10.59 μs)</code></pre>
-<p>The first thing that should jump out at you is the allocations. What’s going on there? I looked in the profiler output, by running <code>stack bench --profile</code> to see a profile output.</p>
-<pre><code>	Wed Jan 11 17:41 2017 Time and Allocation Profiling Report  (Final)
+<p>The first thing that should jump out at you is the allocations.
+What’s going on there? I looked in the profiler output, by running
+<code>stack bench --profile</code> to see a profile output.</p>
+<pre><code>    Wed Jan 11 17:41 2017 Time and Allocation Profiling Report  (Final)
 
-	   xeno-speed-bench +RTS -N -p -RTS 4KB/xeno
+       xeno-speed-bench +RTS -N -p -RTS 4KB/xeno
 
-	total time  =        8.09 secs   (8085 ticks @ 1000 us, 1 processor)
-	total alloc = 6,075,628,752 bytes  (excludes profiling overheads)
+    total time  =        8.09 secs   (8085 ticks @ 1000 us, 1 processor)
+    total alloc = 6,075,628,752 bytes  (excludes profiling overheads)
 
 COST CENTRE            MODULE                             %time %alloc
 
@@ -320,22 +425,31 @@ innerProduct.\         Statistics.Matrix.Algorithms         1.0    1.6
 qr.\.\                 Statistics.Matrix.Algorithms         0.8    1.2
 basicUnsafeSlice       Data.Vector.Primitive.Mutable        0.5    1.1
 transpose              Statistics.Matrix                    0.5    1.3</code></pre>
-<p>Right at the top, we have <code>findTagName</code>, doing all the allocations. So I looked at the code, and found that the only possible thing that could be allocating, is <code>S.drop</code>. This function skips n elements at the start of a <code>ByteString</code>. It turns out that <code>S.head (S.drop index0 str)</code> was allocating an intermediate string, just to get the first character of that string. It wasn’t <em>copying</em> the whole string, but it was making a new pointer to it.</p>
-<p>So I realised that I could just replace <code>S.head (S.drop n s)</code> with <code>S.index s n</code>:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a><span class="op">-</span>          <span class="kw">if</span> S.head this <span class="op">==</span> closeTagChar</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="op">+</span>          <span class="kw">if</span> S.index str spaceOrCloseTag <span class="op">==</span> closeTagChar</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true"></a>             <span class="kw">then</span> findLT spaceOrCloseTag</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true"></a><span class="op">-</span>            <span class="kw">else</span> <span class="kw">if</span> S.head this <span class="op">==</span> spaceChar</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true"></a><span class="op">+</span>            <span class="kw">else</span> <span class="kw">if</span> S.index str spaceOrCloseTag <span class="op">==</span> spaceChar</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true"></a>                    <span class="kw">then</span> findGT spaceOrCloseTag</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true"></a>                    <span class="kw">else</span> <span class="fu">error</span> <span class="st">&quot;Expecting space or closing '&gt;' after tag name.&quot;</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true"></a><span class="op">-</span>          <span class="kw">where</span> this <span class="ot">=</span> S.drop spaceOrCloseTag str</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true"></a>       <span class="kw">where</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true"></a>         <span class="fu">index</span> <span class="ot">=</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true"></a><span class="op">-</span>          <span class="kw">if</span> S.head (S.drop index0 str) <span class="op">==</span> questionChar <span class="op">||</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true"></a><span class="op">-</span>             S.head (S.drop index0 str) <span class="op">==</span> slashChar</span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true"></a><span class="op">+</span>          <span class="kw">if</span> S.index str index0 <span class="op">==</span> questionChar <span class="op">||</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true"></a><span class="op">+</span>             S.index str index0 <span class="op">==</span> slashChar</span></code></pre></div>
+<p>Right at the top, we have <code>findTagName</code>, doing all the
+allocations. So I looked at the code, and found that the only possible
+thing that could be allocating, is <code>S.drop</code>. This function
+skips n elements at the start of a <code>ByteString</code>. It turns out
+that <code>S.head (S.drop index0 str)</code> was allocating an
+intermediate string, just to get the first character of that string. It
+wasn’t <em>copying</em> the whole string, but it was making a new
+pointer to it.</p>
+<p>So I realised that I could just replace
+<code>S.head (S.drop n s)</code> with <code>S.index s n</code>:</p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="op">-</span>          <span class="kw">if</span> S.head this <span class="op">==</span> closeTagChar</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>          <span class="kw">if</span> S.index str spaceOrCloseTag <span class="op">==</span> closeTagChar</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>             <span class="kw">then</span> findLT spaceOrCloseTag</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="op">-</span>            <span class="kw">else</span> <span class="kw">if</span> S.head this <span class="op">==</span> spaceChar</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>            <span class="kw">else</span> <span class="kw">if</span> S.index str spaceOrCloseTag <span class="op">==</span> spaceChar</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">then</span> findGT spaceOrCloseTag</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">else</span> <span class="fu">error</span> <span class="st">&quot;Expecting space or closing &#39;&gt;&#39; after tag name.&quot;</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="op">-</span>          <span class="kw">where</span> this <span class="ot">=</span> S.drop spaceOrCloseTag str</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>       <span class="kw">where</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>         <span class="fu">index</span> <span class="ot">=</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="op">-</span>          <span class="kw">if</span> S.head (S.drop index0 str) <span class="op">==</span> questionChar <span class="op">||</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="op">-</span>             S.head (S.drop index0 str) <span class="op">==</span> slashChar</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>          <span class="kw">if</span> S.index str index0 <span class="op">==</span> questionChar <span class="op">||</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="op">+</span>             S.index str index0 <span class="op">==</span> slashChar</span></code></pre></div>
 <p>And sure enough, the allocations disappeared:</p>
 <pre><code>Case        Bytes  GCs  Check
 4kb parse   1,160    0  OK
@@ -347,32 +461,38 @@ benchmarking 4KB/hexml
 time                 6.190 μs   (6.159 μs .. 6.230 μs)
 benchmarking 4KB/xeno
 time                 4.215 μs   (4.175 μs .. 4.247 μs)</code></pre>
-<p>Down to 4.215 μs. That’s not as fast as our pre-name-parsing 2.691 μs. But we had to pay <em>something</em> for the extra operations per tag. We’re just not allocating anymore, which is great.</p>
+<p>Down to 4.215 μs. That’s not as fast as our pre-name-parsing 2.691
+μs. But we had to pay <em>something</em> for the extra operations per
+tag. We’re just not allocating anymore, which is great.</p>
 <h2 id="sax-for-free">SAX for free</h2>
-<p>Eventually I ended up with a function called <code>process</code> that parses XML and triggers events in a SAX style:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>process</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a><span class="ot">  ::</span> <span class="dt">Monad</span> m</span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true"></a>  <span class="ot">=&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ Open tag.</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true"></a>  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ()) <span class="co">-- ^ Tag attribute.</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true"></a>  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ End open tag.</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true"></a>  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ Text.</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true"></a>  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ Close tag.</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true"></a>  <span class="ot">-&gt;</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ()</span></code></pre></div>
-<p>Thanks again to GHC’s optimizations, calling this function purely and doing nothing is exactly equal to the function before SAX-ization:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="co">-- | Parse the XML but return no result, process no events.</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a><span class="ot">validate ::</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a>validate s <span class="ot">=</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a>  <span class="kw">case</span> spork</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true"></a>         (runIdentity</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true"></a>            (process</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true"></a>               (\_ <span class="ot">-&gt;</span> <span class="fu">pure</span> ())</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true"></a>               (\_ _ <span class="ot">-&gt;</span> <span class="fu">pure</span> ())</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true"></a>               (\_ <span class="ot">-&gt;</span> <span class="fu">pure</span> ())</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true"></a>               (\_ <span class="ot">-&gt;</span> <span class="fu">pure</span> ())</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true"></a>               (\_ <span class="ot">-&gt;</span> <span class="fu">pure</span> ())</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true"></a>               s)) <span class="kw">of</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true"></a>    <span class="dt">Left</span> (<span class="ot">_ ::</span> <span class="dt">XenoException</span>) <span class="ot">-&gt;</span> <span class="dt">False</span></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true"></a>    <span class="dt">Right</span> _ <span class="ot">-&gt;</span> <span class="dt">True</span></span></code></pre></div>
+<p>Eventually I ended up with a function called <code>process</code>
+that parses XML and triggers events in a SAX style:</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>process</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="ot">  ::</span> <span class="dt">Monad</span> m</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="ot">=&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ Open tag.</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ()) <span class="co">-- ^ Tag attribute.</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ End open tag.</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ Text.</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="ot">-&gt;</span> (<span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ())               <span class="co">-- ^ Close tag.</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="ot">-&gt;</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> m ()</span></code></pre></div>
+<p>Thanks again to GHC’s optimizations, calling this function purely and
+doing nothing is exactly equal to the function before SAX-ization:</p>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Parse the XML but return no result, process no events.</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="ot">validate ::</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>validate s <span class="ot">=</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> spork</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>         (runIdentity</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>            (process</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>               (\_ <span class="ot">-&gt;</span> <span class="fu">pure</span> ())</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>               (\_ _ <span class="ot">-&gt;</span> <span class="fu">pure</span> ())</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>               (\_ <span class="ot">-&gt;</span> <span class="fu">pure</span> ())</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>               (\_ <span class="ot">-&gt;</span> <span class="fu">pure</span> ())</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>               (\_ <span class="ot">-&gt;</span> <span class="fu">pure</span> ())</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>               s)) <span class="kw">of</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Left</span> (<span class="ot">_ ::</span> <span class="dt">XenoException</span>) <span class="ot">-&gt;</span> <span class="dt">False</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Right</span> _ <span class="ot">-&gt;</span> <span class="dt">True</span></span></code></pre></div>
 <pre><code>Case        Bytes  GCs  Check
 4kb parse   1,472    0  OK
 42kb parse  1,160    0  OK
@@ -380,19 +500,32 @@ time                 4.215 μs   (4.175 μs .. 4.247 μs)</code></pre>
 
 benchmarking 4KB/xeno
 time                 4.320 μs   (4.282 μs .. 4.361 μs)</code></pre>
-<p>This function performs at the same speed as <code>process</code> before it accepted any callback arguments. This means that the only overhead to SAX’ing will be the activities that the callback functions themselves do.</p>
-<h2 id="specialization-is-for-insects-and-as-it-happens-optimized-programs">Specialization is for insects (and, as it happens, optimized programs)</h2>
-<p>One point of interest is that adding a <code>SPECIALIZE</code> pragma for the <code>process</code> function increases speed by roughly 1 μs. Specialization means that for a given function which is generic (type-class polymorphic), which means it will accept a dictionary argument at runtime for the particular instance, instead we will generate a separate piece of code that is specialized on that exact instance. Below is the <code>Identity</code> monad’s (i.e. just pure, does nothing) specialized type for <code>process</code>.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="ot">{-# SPECIALISE</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a><span class="ot">    process</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a><span class="ot">      :: (ByteString -&gt; Identity ())</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a><span class="ot">      -&gt; (ByteString -&gt; ByteString -&gt; Identity ())</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true"></a><span class="ot">      -&gt; (ByteString -&gt; Identity ())</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true"></a><span class="ot">      -&gt; (ByteString -&gt; Identity ())</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true"></a><span class="ot">      -&gt; (ByteString -&gt; Identity ())</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true"></a><span class="ot">      -&gt; ByteString</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true"></a><span class="ot">      -&gt; Identity ()</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true"></a><span class="ot"> #-}</span></span></code></pre></div>
+<p>This function performs at the same speed as <code>process</code>
+before it accepted any callback arguments. This means that the only
+overhead to SAX’ing will be the activities that the callback functions
+themselves do.</p>
+<h2
+id="specialization-is-for-insects-and-as-it-happens-optimized-programs">Specialization
+is for insects (and, as it happens, optimized programs)</h2>
+<p>One point of interest is that adding a <code>SPECIALIZE</code> pragma
+for the <code>process</code> function increases speed by roughly 1 μs.
+Specialization means that for a given function which is generic
+(type-class polymorphic), which means it will accept a dictionary
+argument at runtime for the particular instance, instead we will
+generate a separate piece of code that is specialized on that exact
+instance. Below is the <code>Identity</code> monad’s (i.e. just pure,
+does nothing) specialized type for <code>process</code>.</p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# SPECIALISE</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ot">    process</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="ot">      :: (ByteString -&gt; Identity ())</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="ot">      -&gt; (ByteString -&gt; ByteString -&gt; Identity ())</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="ot">      -&gt; (ByteString -&gt; Identity ())</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="ot">      -&gt; (ByteString -&gt; Identity ())</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="ot">      -&gt; (ByteString -&gt; Identity ())</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="ot">      -&gt; ByteString</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="ot">      -&gt; Identity ()</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="ot"> #-}</span></span></code></pre></div>
 <p>Before</p>
 <pre><code>benchmarking 4KB/xeno-sax
 time                 5.877 μs   (5.837 μs .. 5.926 μs)
@@ -403,24 +536,39 @@ time                 285.8 μs   (284.7 μs .. 287.4 μs)</code></pre>
 time                 5.046 μs   (5.036 μs .. 5.056 μs)
 benchmarking 211KB/xeno-sax
 time                 240.6 μs   (240.0 μs .. 241.5 μs)</code></pre>
-<p>In the 4KB case it’s only 800 ns, but as we say in Britain, take care of the pennies and the pounds will look after themselves. The 240-&gt;285 difference isn’t big in practical terms, but when we’re playing the speed game, we pay attention to things like that.</p>
+<p>In the 4KB case it’s only 800 ns, but as we say in Britain, take care
+of the pennies and the pounds will look after themselves. The
+240-&gt;285 difference isn’t big in practical terms, but when we’re
+playing the speed game, we pay attention to things like that.</p>
 <h2 id="where-we-stand-xeno-vs-hexml">Where we stand: Xeno vs Hexml</h2>
-<p>Currently the SAX interface in Zeno outperforms Hexml in space and time. Hurrah! We’re as fast as C!</p>
+<p>Currently the SAX interface in Zeno outperforms Hexml in space and
+time. Hurrah! We’re as fast as C!</p>
 <pre><code>File   hexml-dom  xeno-sax
 4KB    6.134 μs   5.147 μs
 31KB   9.299 μs   2.879 μs
 211KB  257.3 μs   241.0 μs</code></pre>
-<p>It’s also worth noting that Haskell does this all safely. All the functions I’m using are standard ByteString functions which do bounds checking and throw an exception if so. We don’t accidentally access memory that we shouldn’t, and we don’t segfault. The server keeps running.</p>
-<p>If you’re interested, if we switch to unsafe functions (<code>unsafeTake</code>, <code>unsafeIndex</code> from the <code>Data.ByteString.Unsafe</code> module), we get a notable speed increase:</p>
+<p>It’s also worth noting that Haskell does this all safely. All the
+functions I’m using are standard ByteString functions which do bounds
+checking and throw an exception if so. We don’t accidentally access
+memory that we shouldn’t, and we don’t segfault. The server keeps
+running.</p>
+<p>If you’re interested, if we switch to unsafe functions
+(<code>unsafeTake</code>, <code>unsafeIndex</code> from the
+<code>Data.ByteString.Unsafe</code> module), we get a notable speed
+increase:</p>
 <pre><code>File   hexml-dom  xeno-sax
 4KB    6.134 μs   4.344 μs
 31KB   9.299 μs   2.570 μs
 211KB  257.3 μs   206.9 μs</code></pre>
-<p>We don’t need to show off, though. We’ve already made our point. We’re Haskellers, we like safety. I’ll keep my safe functions.</p>
+<p>We don’t need to show off, though. We’ve already made our point.
+We’re Haskellers, we like safety. I’ll keep my safe functions.</p>
 <h2 id="but-hexml-does-more">But Hexml does more!</h2>
-<p>I’d be remiss if I didn’t address the fact that Hexml does more useful things than we’ve done here. Hexml allocates a DOM for random access. Oh no! Allocation: Haskell’s worse enemy!</p>
+<p>I’d be remiss if I didn’t address the fact that Hexml does more
+useful things than we’ve done here. Hexml allocates a DOM for random
+access. Oh no! Allocation: Haskell’s worse enemy!</p>
 <p><img src="http://www.reactiongifs.com/r/rna.gif" /></p>
-<p>We’ve seen that Haskell allocates a lot normally. Actually, have we looked at that properly?</p>
+<p>We’ve seen that Haskell allocates a lot normally. Actually, have we
+looked at that properly?</p>
 <pre><code>Case                   Bytes  GCs  Check
 4kb/hexpat-sax       444,176    0  OK
 31kb/hexpat-sax      492,576    0  OK
@@ -429,73 +577,115 @@ time                 240.6 μs   (240.0 μs .. 241.5 μs)</code></pre>
 31kb/hexpat-dom      575,232    0  OK
 211kb/hexpat-dom  23,182,560   44  OK</code></pre>
 <p>Alright.</p>
-<h2 id="implementing-a-dom-parser-for-xeno">Implementing a DOM parser for Xeno</h2>
-<p>All isn’t lost. Hexml isn’t a dumb parser that’s fast because it’s in C, it’s also a decent algorithm. Rather than allocating a tree, it allocates a big flat vector of nodes and attributes, which contain offsets into the original string. We can do that in Haskell too!</p>
-<p>Here’s my design of a data structure contained in a vector. We want to store just integers in the vector. Integers that point to offsets in the original string. Here’s what I came up with.</p>
+<h2 id="implementing-a-dom-parser-for-xeno">Implementing a DOM parser
+for Xeno</h2>
+<p>All isn’t lost. Hexml isn’t a dumb parser that’s fast because it’s in
+C, it’s also a decent algorithm. Rather than allocating a tree, it
+allocates a big flat vector of nodes and attributes, which contain
+offsets into the original string. We can do that in Haskell too!</p>
+<p>Here’s my design of a data structure contained in a vector. We want
+to store just integers in the vector. Integers that point to offsets in
+the original string. Here’s what I came up with.</p>
 <p>We have three kinds of payloads. Elements, text and attributes:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="dv">1</span>.  <span class="dv">00</span> <span class="co"># Type tag: element</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a><span class="dv">2</span>.  <span class="dv">00</span> <span class="co"># Parent index (within this array)</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a><span class="dv">3</span>.  <span class="bn">01</span> <span class="co"># Start of the tag name in the original string</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a><span class="dv">4</span>.  <span class="bn">01</span> <span class="co"># Length of the tag name</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a><span class="dv">5</span>.  <span class="bn">05</span> <span class="co"># End index of the tag (within this array)</span></span></code></pre></div>
-<div class="sourceCode" id="cb30"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a><span class="dv">1</span>.  <span class="bn">02</span> <span class="co"># Type tag: attribute</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a><span class="dv">2</span>.  <span class="bn">01</span> <span class="co"># Start of the key</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a><span class="dv">3</span>.  <span class="bn">05</span> <span class="co"># Length of the key</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a><span class="dv">4</span>.  <span class="bn">06</span> <span class="co"># Start of the value</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a><span class="dv">5</span>.  <span class="bn">03</span> <span class="co"># Length of the value</span></span></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a><span class="dv">1</span>.  <span class="bn">01</span> <span class="co"># Type tag: text</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a><span class="dv">2</span>.  <span class="bn">01</span> <span class="co"># Start of the text</span></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true"></a><span class="dv">3</span>.  <span class="dv">10</span> <span class="co"># Length of the text</span></span></code></pre></div>
-<p>That’s all the detail I’m going to go into. You can read <a href="https://github.com/chrisdone/xeno">the code</a> if you want to know more. It’s not a highly optimized format. Once we have such a vector, it’s possible to define a DOM API on top of it which can let you navigate the tree as usual, which we’ll see later.</p>
-<p>We’re going to use our SAX parser–the <code>process</code> function, and we’re going to implement a function that writes to a big array. This is a very imperative algorithm. Haskellers don’t like imperative algorithms much, but Haskell’s fine with them.</p>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="kw">.</span>  <span class="dv">00</span> <span class="co"># Type tag: element</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="kw">.</span>  <span class="dv">00</span> <span class="co"># Parent index (within this array)</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span><span class="kw">.</span>  <span class="bn">01</span> <span class="co"># Start of the tag name in the original string</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span><span class="kw">.</span>  <span class="bn">01</span> <span class="co"># Length of the tag name</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span><span class="kw">.</span>  <span class="bn">05</span> <span class="co"># End index of the tag (within this array)</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="kw">.</span>  <span class="bn">02</span> <span class="co"># Type tag: attribute</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="kw">.</span>  <span class="bn">01</span> <span class="co"># Start of the key</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span><span class="kw">.</span>  <span class="bn">05</span> <span class="co"># Length of the key</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="dv">4</span><span class="kw">.</span>  <span class="bn">06</span> <span class="co"># Start of the value</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="dv">5</span><span class="kw">.</span>  <span class="bn">03</span> <span class="co"># Length of the value</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="kw">.</span>  <span class="bn">01</span> <span class="co"># Type tag: text</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="kw">.</span>  <span class="bn">01</span> <span class="co"># Start of the text</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="dv">3</span><span class="kw">.</span>  <span class="dv">10</span> <span class="co"># Length of the text</span></span></code></pre></div>
+<p>That’s all the detail I’m going to go into. You can read <a
+href="https://github.com/chrisdone/xeno">the code</a> if you want to
+know more. It’s not a highly optimized format. Once we have such a
+vector, it’s possible to define a DOM API on top of it which can let you
+navigate the tree as usual, which we’ll see later.</p>
+<p>We’re going to use our SAX parser–the <code>process</code> function,
+and we’re going to implement a function that writes to a big array. This
+is a very imperative algorithm. Haskellers don’t like imperative
+algorithms much, but Haskell’s fine with them.</p>
 <p>The function ends up looking something like this:</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a>runST</span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a>  (<span class="kw">do</span> nil <span class="ot">&lt;-</span> UMV.new <span class="dv">1000</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a>      vecRef <span class="ot">&lt;-</span> newSTRef nil</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true"></a>      sizeRef <span class="ot">&lt;-</span> <span class="fu">fmap</span> asURef (newRef <span class="dv">0</span>)</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true"></a>      parentRef <span class="ot">&lt;-</span> <span class="fu">fmap</span> asURef (newRef <span class="dv">0</span>)</span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true"></a>      process</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true"></a>        (\(<span class="dt">PS</span> _ name_start name_len) <span class="ot">-&gt;</span></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true"></a>            <span class="op">&lt;</span>write the open tag elements<span class="op">&gt;</span>)</span>
-<span id="cb32-9"><a href="#cb32-9" aria-hidden="true"></a>        (\(<span class="dt">PS</span> _ key_start key_len) (<span class="dt">PS</span> _ value_start value_len) <span class="ot">-&gt;</span></span>
-<span id="cb32-10"><a href="#cb32-10" aria-hidden="true"></a>            <span class="op">&lt;</span>write an attribute into the vector<span class="op">&gt;</span>)</span>
-<span id="cb32-11"><a href="#cb32-11" aria-hidden="true"></a>        (\_ <span class="ot">-&gt;</span> <span class="op">&lt;</span>ignore<span class="op">&gt;</span>)</span>
-<span id="cb32-12"><a href="#cb32-12" aria-hidden="true"></a>        (\(<span class="dt">PS</span> _ text_start text_len) <span class="ot">-&gt;</span></span>
-<span id="cb32-13"><a href="#cb32-13" aria-hidden="true"></a>            <span class="op">&lt;</span>write a text entry into the vector<span class="op">&gt;</span>)</span>
-<span id="cb32-14"><a href="#cb32-14" aria-hidden="true"></a>        (\_ <span class="ot">-&gt;</span></span>
-<span id="cb32-15"><a href="#cb32-15" aria-hidden="true"></a>            <span class="op">&lt;</span>set the end position <span class="kw">of</span> the parent<span class="op">&gt;</span></span>
-<span id="cb32-16"><a href="#cb32-16" aria-hidden="true"></a>            <span class="op">&lt;</span>set the current element to the parent<span class="op">&gt;</span>)</span>
-<span id="cb32-17"><a href="#cb32-17" aria-hidden="true"></a>        str</span>
-<span id="cb32-18"><a href="#cb32-18" aria-hidden="true"></a>      wet <span class="ot">&lt;-</span> readSTRef vecRef</span>
-<span id="cb32-19"><a href="#cb32-19" aria-hidden="true"></a>      arr <span class="ot">&lt;-</span> UV.unsafeFreeze wet</span>
-<span id="cb32-20"><a href="#cb32-20" aria-hidden="true"></a>      size <span class="ot">&lt;-</span> readRef sizeRef</span>
-<span id="cb32-21"><a href="#cb32-21" aria-hidden="true"></a>      <span class="fu">return</span> (UV.unsafeSlice <span class="dv">0</span> size arr))</span></code></pre></div>
-<p>The function runs in the <code>ST</code> monad which lets us locally read and write to mutable variables and vectors, while staying pure on the outside.</p>
-<p>I allocate an array of 1000 64-bit Ints (on 64-bit arch), I keep a variable of the current size, and the current parent (if any). The current parent variable lets us, upon seeing a </close> tag, assign the position in the vector of where the parent is closed.</p>
-<p>Whenever we get an event and the array is too small, I grow the array by doubling its size. This strategy is copied from the Hexml package.</p>
-<p>Finally, when we’re done, we get the mutable vector, “freeze” it (this means making an immutable version of it), and then return that copy. We use <code>unsafeFreeze</code> to re-use the array without copying, which includes a promise that we don’t use the mutable vector afterwards, which we don’t.</p>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>runST</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">do</span> nil <span class="ot">&lt;-</span> UMV.new <span class="dv">1000</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>      vecRef <span class="ot">&lt;-</span> newSTRef nil</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>      sizeRef <span class="ot">&lt;-</span> <span class="fu">fmap</span> asURef (newRef <span class="dv">0</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>      parentRef <span class="ot">&lt;-</span> <span class="fu">fmap</span> asURef (newRef <span class="dv">0</span>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>      process</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>        (\(<span class="dt">PS</span> _ name_start name_len) <span class="ot">-&gt;</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>            <span class="op">&lt;</span>write the open tag elements<span class="op">&gt;</span>)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>        (\(<span class="dt">PS</span> _ key_start key_len) (<span class="dt">PS</span> _ value_start value_len) <span class="ot">-&gt;</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">&lt;</span>write an attribute into the vector<span class="op">&gt;</span>)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>        (\_ <span class="ot">-&gt;</span> <span class="op">&lt;</span>ignore<span class="op">&gt;</span>)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>        (\(<span class="dt">PS</span> _ text_start text_len) <span class="ot">-&gt;</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">&lt;</span>write a text entry into the vector<span class="op">&gt;</span>)</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>        (\_ <span class="ot">-&gt;</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>            <span class="op">&lt;</span>set the end position <span class="kw">of</span> the parent<span class="op">&gt;</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>            <span class="op">&lt;</span>set the current element to the parent<span class="op">&gt;</span>)</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>        str</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>      wet <span class="ot">&lt;-</span> readSTRef vecRef</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>      arr <span class="ot">&lt;-</span> UV.unsafeFreeze wet</span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>      size <span class="ot">&lt;-</span> readRef sizeRef</span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span> (UV.unsafeSlice <span class="dv">0</span> size arr))</span></code></pre></div>
+<p>The function runs in the <code>ST</code> monad which lets us locally
+read and write to mutable variables and vectors, while staying pure on
+the outside.</p>
+<p>I allocate an array of 1000 64-bit Ints (on 64-bit arch), I keep a
+variable of the current size, and the current parent (if any). The
+current parent variable lets us, upon seeing a </close> tag, assign the
+position in the vector of where the parent is closed.</p>
+<p>Whenever we get an event and the array is too small, I grow the array
+by doubling its size. This strategy is copied from the Hexml
+package.</p>
+<p>Finally, when we’re done, we get the mutable vector, “freeze” it
+(this means making an immutable version of it), and then return that
+copy. We use <code>unsafeFreeze</code> to re-use the array without
+copying, which includes a promise that we don’t use the mutable vector
+afterwards, which we don’t.</p>
 <h2 id="the-dom-speed">The DOM speed</h2>
 <p>Let’s take a look at the speeds:</p>
 <pre><code>File   hexml-dom  xeno-sax  xeno-dom
 4KB    6.123 μs   5.038 μs  10.35 μs
 31KB   9.417 μs   2.875 μs  5.714 μs
 211KB  256.3 μs   240.4 μs  514.2 μs</code></pre>
-<p>Not bad! The DOM parser is only &lt;2x slower than Hexml (except in the 31KB where it’s faster. <em>shrug</em>). Here is where I stopped optimizing and decided it was good enough. But we can review some of the decisions made along the way.</p>
-<p>In the code we’re using unboxed mutable references for the current size and parent, the mutable references are provided by the mutable-containers package. See these two lines here:</p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true"></a>      sizeRef <span class="ot">&lt;-</span> <span class="fu">fmap</span> asURef (newRef <span class="dv">0</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true"></a>      parentRef <span class="ot">&lt;-</span> <span class="fu">fmap</span> asURef (newRef <span class="dv">0</span>)</span></code></pre></div>
-<p>Originally, I had tried <code>STRef</code>’s, which are boxed. Boxed just means it’s a pointer to an integer instead of an actual integer. An unboxed Int is a proper machine register. Using an <code>STRef</code>, we get worse speeds:</p>
+<p>Not bad! The DOM parser is only &lt;2x slower than Hexml (except in
+the 31KB where it’s faster. <em>shrug</em>). Here is where I stopped
+optimizing and decided it was good enough. But we can review some of the
+decisions made along the way.</p>
+<p>In the code we’re using unboxed mutable references for the current
+size and parent, the mutable references are provided by the
+mutable-containers package. See these two lines here:</p>
+<div class="sourceCode" id="cb34"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>      sizeRef <span class="ot">&lt;-</span> <span class="fu">fmap</span> asURef (newRef <span class="dv">0</span>)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>      parentRef <span class="ot">&lt;-</span> <span class="fu">fmap</span> asURef (newRef <span class="dv">0</span>)</span></code></pre></div>
+<p>Originally, I had tried <code>STRef</code>’s, which are boxed. Boxed
+just means it’s a pointer to an integer instead of an actual integer. An
+unboxed Int is a proper machine register. Using an <code>STRef</code>,
+we get worse speeds:</p>
 <pre><code>File   xeno-dom
 4KB    12.18 μs
 31KB   6.412 μs
 211KB  631.1 μs</code></pre>
 <p>Which is a noticeable speed loss.</p>
-<p>Another thing to take into consideration is the array type. I’m using the unboxed mutable vectors from the <code>vector</code> package. When using atomic types like Int, it can be a leg-up to use unboxed vectors. If I use the regular boxed vectors from <code>Data.Vector</code>, the speed regresses to:</p>
+<p>Another thing to take into consideration is the array type. I’m using
+the unboxed mutable vectors from the <code>vector</code> package. When
+using atomic types like Int, it can be a leg-up to use unboxed vectors.
+If I use the regular boxed vectors from <code>Data.Vector</code>, the
+speed regresses to:</p>
 <pre><code>File   xeno-dom
 4KB    11.95 μs (from 10.35 μs)
 31KB   6.430 μs (from 5.714 μs)
 211KB  1.402 ms (from 514.2 μs)</code></pre>
-<p>Aside from taking a bit more time to do writes, it also allocates 1.5x more stuff:</p>
+<p>Aside from taking a bit more time to do writes, it also allocates
+1.5x more stuff:</p>
 <pre><code>Case                 Bytes  GCs  Check
 4kb/xeno/dom        11,240    0  OK
 31kb/xeno/dom       10,232    0  OK
@@ -506,30 +696,36 @@ time                 240.6 μs   (240.0 μs .. 241.5 μs)</code></pre>
 31kb/xeno/dom       14,968    0  OK
 211kb/xeno/dom   1,638,392    1  OK</code></pre>
 <p>See that GC there? We shouldn’t need it.</p>
-<p>Finally, one more remark for the DOM parser. If we forsake safety and use the <code>unsafeWrite</code> and <code>unsafeRead</code> methods from the vector package, we do see a small increase:</p>
+<p>Finally, one more remark for the DOM parser. If we forsake safety and
+use the <code>unsafeWrite</code> and <code>unsafeRead</code> methods
+from the vector package, we do see a small increase:</p>
 <pre><code>File   xeno-dom
 4KB    9.827 μs
 31KB   5.545 μs
 211KB  490.1 μs</code></pre>
-<p>But it’s nothing to write home about. I’ll prefer memory safety over a few microseconds this time.</p>
+<p>But it’s nothing to write home about. I’ll prefer memory safety over
+a few microseconds this time.</p>
 <h2 id="the-dom-api">The DOM API</h2>
-<p>I wrote some functions to access our vector and provide a DOM-like API:</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a><span class="op">&gt;</span> <span class="kw">let</span> <span class="dt">Right</span> node <span class="ot">=</span> parse <span class="st">&quot;&lt;foo k='123'&gt;&lt;p&gt;hi&lt;/p&gt;ok&lt;/foo&gt;&quot;</span></span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true"></a><span class="op">&gt;</span> node</span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true"></a>(<span class="dt">Node</span> <span class="st">&quot;foo&quot;</span> [(<span class="st">&quot;k&quot;</span>,<span class="st">&quot;123&quot;</span>)] [<span class="dt">Element</span> (<span class="dt">Node</span> <span class="st">&quot;p&quot;</span> [] [<span class="dt">Text</span> <span class="st">&quot;hi&quot;</span>]),<span class="dt">Text</span> <span class="st">&quot;ok&quot;</span>])</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true"></a><span class="op">&gt;</span> name node</span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true"></a><span class="st">&quot;foo&quot;</span></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true"></a><span class="op">&gt;</span> children node</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true"></a>[(<span class="dt">Node</span> <span class="st">&quot;p&quot;</span> [] [<span class="dt">Text</span> <span class="st">&quot;hi&quot;</span>])]</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true"></a><span class="op">&gt;</span> attributes node</span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true"></a>[(<span class="st">&quot;k&quot;</span>,<span class="st">&quot;123&quot;</span>)]</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true"></a><span class="op">&gt;</span> contents node</span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true"></a>[<span class="dt">Element</span> (<span class="dt">Node</span> <span class="st">&quot;p&quot;</span> [] [<span class="dt">Text</span> <span class="st">&quot;hi&quot;</span>]),<span class="dt">Text</span> <span class="st">&quot;ok&quot;</span>]</span></code></pre></div>
+<p>I wrote some functions to access our vector and provide a DOM-like
+API:</p>
+<div class="sourceCode" id="cb40"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> <span class="kw">let</span> <span class="dt">Right</span> node <span class="ot">=</span> parse <span class="st">&quot;&lt;foo k=&#39;123&#39;&gt;&lt;p&gt;hi&lt;/p&gt;ok&lt;/foo&gt;&quot;</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> node</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>(<span class="dt">Node</span> <span class="st">&quot;foo&quot;</span> [(<span class="st">&quot;k&quot;</span>,<span class="st">&quot;123&quot;</span>)] [<span class="dt">Element</span> (<span class="dt">Node</span> <span class="st">&quot;p&quot;</span> [] [<span class="dt">Text</span> <span class="st">&quot;hi&quot;</span>]),<span class="dt">Text</span> <span class="st">&quot;ok&quot;</span>])</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> name node</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;foo&quot;</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> children node</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>[(<span class="dt">Node</span> <span class="st">&quot;p&quot;</span> [] [<span class="dt">Text</span> <span class="st">&quot;hi&quot;</span>])]</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> attributes node</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>[(<span class="st">&quot;k&quot;</span>,<span class="st">&quot;123&quot;</span>)]</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> contents node</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>[<span class="dt">Element</span> (<span class="dt">Node</span> <span class="st">&quot;p&quot;</span> [] [<span class="dt">Text</span> <span class="st">&quot;hi&quot;</span>]),<span class="dt">Text</span> <span class="st">&quot;ok&quot;</span>]</span></code></pre></div>
 <p>So that works.</p>
 <h2 id="wrapping-up">Wrapping-up</h2>
 <p>The final results are in:</p>
 <p><img src="http://i.imgur.com/XgdZoQ9.png" /></p>
-<p>And just to check that a 1MB file doesn’t give wildly different results:</p>
+<p>And just to check that a 1MB file doesn’t give wildly different
+results:</p>
 <pre><code>benchmarking 1MB/hexml-dom
 time                 1.225 ms   (1.221 ms .. 1.229 ms)
                      1.000 R²   (1.000 R² .. 1.000 R²)
@@ -547,16 +743,25 @@ time                 2.768 ms   (2.756 ms .. 2.779 ms)
                      1.000 R²   (1.000 R² .. 1.000 R²)
 mean                 2.801 ms   (2.791 ms .. 2.816 ms)
 std dev              41.10 μs   (30.14 μs .. 62.60 μs)</code></pre>
-<p>Tada! We matched Hexml, in pure Haskell, using safe accessor functions. We provided a SAX API which is very fast, and a simple demonstration DOM parser with a familiar API which is also quite fast. We use reasonably little memory in doing so.</p>
-<p><strong>UPDATE</strong>: Some people asked for comparisons with libxml2 (assuming that it’s somehow faster). <a href="http://chrisdone.com/libxml2.html">Here is a Criterion report</a>.</p>
-<p>This package is an experiment for educational purposes, to show what Haskell can do and what it can’t, for a very specific domain problem. If you would like to use this package, consider adopting it and giving it a good home. I’m not looking for more packages to maintain.</p>
+<p>Tada! We matched Hexml, in pure Haskell, using safe accessor
+functions. We provided a SAX API which is very fast, and a simple
+demonstration DOM parser with a familiar API which is also quite fast.
+We use reasonably little memory in doing so.</p>
+<p><strong>UPDATE</strong>: Some people asked for comparisons with
+libxml2 (assuming that it’s somehow faster). <a
+href="http://chrisdone.com/libxml2.html">Here is a Criterion
+report</a>.</p>
+<p>This package is an experiment for educational purposes, to show what
+Haskell can do and what it can’t, for a very specific domain problem. If
+you would like to use this package, consider adopting it and giving it a
+good home. I’m not looking for more packages to maintain.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2017-01-11 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2017-01-11 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

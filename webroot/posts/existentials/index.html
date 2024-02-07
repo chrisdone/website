@@ -87,68 +87,110 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Existentials and the heterogenous list fallacy</h1>
 
-<p>An oft-stated argument against static typing is that heterogenous lists are unreasonably difficult to model. Why is static typing being so difficult? Why can’t it just be like dynamic typing? This is a specious argument.</p>
+<h1>Existentials and the heterogenous list fallacy</h1>
+
+<p>An oft-stated argument against static typing is that heterogenous
+lists are unreasonably difficult to model. Why is static typing being so
+difficult? Why can’t it just be like dynamic typing? This is a specious
+argument.</p>
 <p>For example, in one article I read, I saw:</p>
 <blockquote>
-<p>In fact you can program heterogeneous lists in dependently typed languages, but it’s unreasonably complicated. Python makes no complaints:</p>
+<p>In fact you can program heterogeneous lists in dependently typed
+languages, but it’s unreasonably complicated. Python makes no
+complaints:</p>
 <pre><code>&gt;&gt;&gt; g = lambda x: x**2
-&gt;&gt;&gt; [1, 'a', &quot;hello&quot;, g]
-[1, 'a', 'hello', &lt;function &lt;lambda&gt; at 0x103e4aed8&gt;]</code></pre>
+&gt;&gt;&gt; [1, &#39;a&#39;, &quot;hello&quot;, g]
+[1, &#39;a&#39;, &#39;hello&#39;, &lt;function &lt;lambda&gt; at 0x103e4aed8&gt;]</code></pre>
 <p>To me this is one methodological weakness of type theory […]</p>
 </blockquote>
-<p>(I’m not sure what “methodological weakness” is supposed to mean, but let’s ignore that.)</p>
+<p>(I’m not sure what “methodological weakness” is supposed to mean, but
+let’s ignore that.)</p>
 <p>There are two problems with this argument and demonstration:</p>
 <ol type="1">
-<li>It’s contrived. I’ve written about as much Emacs Lisp and JavaScript as I have written Haskell and C#, and I cannot with all intellectual honesty remember wanting a heterogenous list.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
-<li>It’s ill-defined. What is this data structure? What can I assume about the elements so that I can write operations generically? Which, I presume, is the only reason I would be using a list in the first place (otherwise a record would be the correct thing to use); to write algorithms that apply generally to any index.</li>
+<li>It’s contrived. I’ve written about as much Emacs Lisp and JavaScript
+as I have written Haskell and C#, and I cannot with all intellectual
+honesty remember wanting a heterogenous list.<a href="#fn1"
+class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></li>
+<li>It’s ill-defined. What is this data structure? What can I assume
+about the elements so that I can write operations generically? Which, I
+presume, is the only reason I would be using a list in the first place
+(otherwise a record would be the correct thing to use); to write
+algorithms that apply generally to any index.</li>
 </ol>
-<p>Even cutting the author some slack and assuming they might want to just temporarily put some things together as a tuple, static languages have tuples, which are heterogenous.</p>
+<p>Even cutting the author some slack and assuming they might want to
+just temporarily put some things together as a tuple, static languages
+have tuples, which are heterogenous.</p>
 <p>When you look at it beyond the superficial, it’s rather odd.</p>
-<p>Regardless, I am sporting. Some people will say, yes, okay, it’s contrived, and never really arises, but <em>if I really wanted this</em>, how could I do it in a statically typed language? So here is the above in Haskell.</p>
+<p>Regardless, I am sporting. Some people will say, yes, okay, it’s
+contrived, and never really arises, but <em>if I really wanted
+this</em>, how could I do it in a statically typed language? So here is
+the above in Haskell.</p>
 <p>Let’s look at the example:</p>
 <pre><code>&gt;&gt;&gt; g = lambda x: x**2
-&gt;&gt;&gt; [1, 'a', &quot;hello&quot;, g]
-[1, 'a', 'hello', &lt;function &lt;lambda&gt; at 0x103e4aed8&gt;]</code></pre>
-<p>So the list contains a bunch of disparate things and the implicit invariant here is that we can print each of them out. So we can model that with an existential data type <code>Py</code> (for “Python”) that holds some type <code>a</code> that is showable.</p>
+&gt;&gt;&gt; [1, &#39;a&#39;, &quot;hello&quot;, g]
+[1, &#39;a&#39;, &#39;hello&#39;, &lt;function &lt;lambda&gt; at 0x103e4aed8&gt;]</code></pre>
+<p>So the list contains a bunch of disparate things and the implicit
+invariant here is that we can print each of them out. So we can model
+that with an existential data type <code>Py</code> (for “Python”) that
+holds some type <code>a</code> that is showable.</p>
 <pre><code>data Py = forall a. Show a =&gt; Py a
 instance Show Py where show (Py s) = show s</code></pre>
-<p>(Oh, Haskell doesn’t define an instance for printing functions, so let’s use <code>instance Show (a -&gt; b) where show _ = "&lt;function&gt;"</code> to vaguely match Python.)</p>
-<p>I may not know, or care, <em>what</em> the type is, but I at least need to know <em>something about it</em>, in a duck-typing kind of way. If it walks like a duck, quacks like a duck, etc. then it’s a good enough duck for my purposes. In this case, <code>Py</code> says, is it at least showable?</p>
-<p>Now we can wrap up any type which is an instance of <code>Show</code> with that:</p>
-<pre><code>λ&gt; [Py 1,Py 'a',Py &quot;hello&quot;,Py (\x -&gt; x ** 2)]
-[1,'a',&quot;hello&quot;,&lt;function&gt;]</code></pre>
-<p>And we can apply the <code>show</code> method (from the <code>Show</code> class) to each element generically:</p>
-<pre><code>λ&gt; map (\(Py p) -&gt; show p) [Py 1,Py 'a',Py &quot;hello&quot;,Py (\x -&gt; x ** 2)]
-[&quot;1&quot;,&quot;'a'&quot;,&quot;\&quot;hello\&quot;&quot;,&quot;&lt;function&gt;&quot;]</code></pre>
+<p>(Oh, Haskell doesn’t define an instance for printing functions, so
+let’s use
+<code>instance Show (a -&gt; b) where show _ = "&lt;function&gt;"</code>
+to vaguely match Python.)</p>
+<p>I may not know, or care, <em>what</em> the type is, but I at least
+need to know <em>something about it</em>, in a duck-typing kind of way.
+If it walks like a duck, quacks like a duck, etc. then it’s a good
+enough duck for my purposes. In this case, <code>Py</code> says, is it
+at least showable?</p>
+<p>Now we can wrap up any type which is an instance of <code>Show</code>
+with that:</p>
+<pre><code>λ&gt; [Py 1,Py &#39;a&#39;,Py &quot;hello&quot;,Py (\x -&gt; x ** 2)]
+[1,&#39;a&#39;,&quot;hello&quot;,&lt;function&gt;]</code></pre>
+<p>And we can apply the <code>show</code> method (from the
+<code>Show</code> class) to each element generically:</p>
+<pre><code>λ&gt; map (\(Py p) -&gt; show p) [Py 1,Py &#39;a&#39;,Py &quot;hello&quot;,Py (\x -&gt; x ** 2)]
+[&quot;1&quot;,&quot;&#39;a&#39;&quot;,&quot;\&quot;hello\&quot;&quot;,&quot;&lt;function&gt;&quot;]</code></pre>
 <p>So that’s how to do it.</p>
-<p>Continuing the discussion, if I extend the type to support also <code>Num</code> (numbers),</p>
+<p>Continuing the discussion, if I extend the type to support also
+<code>Num</code> (numbers),</p>
 <pre><code>data Py = forall a. (Show a,Num a) =&gt; Py a</code></pre>
-<p>then I can use <code>*</code>, but only for actual numbers. If I try something else I get a type error:</p>
-<pre><code>λ&gt; map (\(Py p) -&gt; Py (p*2)) [Py 1,Py 'c']
+<p>then I can use <code>*</code>, but only for actual numbers. If I try
+something else I get a type error:</p>
+<pre><code>λ&gt; map (\(Py p) -&gt; Py (p*2)) [Py 1,Py &#39;c&#39;]
 &lt;interactive&gt;:634:33:
     No instance for (Num Char) arising from a use of ‘Py’
-    In the expression: Py 'c'
+    In the expression: Py &#39;c&#39;
 λ&gt; map (\(Py p) -&gt; Py (p*2)) [Py 1,Py 2.0]
 [2,4.0]</code></pre>
 <p>Doing the same in Python, we have more or less the same error:</p>
 <pre><code>&gt;&gt;&gt; def pow2(x): return x ** 2
 ...
-&gt;&gt;&gt; list(map(pow2,[1,5,'a']))
+&gt;&gt;&gt; list(map(pow2,[1,5,&#39;a&#39;]))
 Traceback (most recent call last):
   File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;
   File &quot;&lt;stdin&gt;&quot;, line 1, in pow2
-TypeError: unsupported operand type(s) for ** or pow(): 'str' and 'int'</code></pre>
-<p>The difference being the Haskell error was signaled statically at compile-time and the Python error was signalled dynamically at run-time.</p>
-<section class="footnotes" role="doc-endnotes">
+TypeError: unsupported operand type(s) for ** or pow(): &#39;str&#39; and &#39;int&#39;</code></pre>
+<p>The difference being the Haskell error was signaled statically at
+compile-time and the Python error was signalled dynamically at
+run-time.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>To demonstrate my good faith, I have constructed heterogenous lists in Emacs Lisp to model a record, but this is because Emacs Lisp lacks native records. JavaScript, on the other hand, has records.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>To demonstrate my good faith, I have constructed
+heterogenous lists in Emacs Lisp to model a record, but this is because
+Emacs Lisp lacks native records. JavaScript, on the other hand, has
+records.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -156,8 +198,8 @@ TypeError: unsupported operand type(s) for ** or pow(): 'str' and 'int'</code></
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2015-06-21 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2015-06-21 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

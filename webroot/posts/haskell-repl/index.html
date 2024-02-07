@@ -87,41 +87,104 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Use the REPL, Luke</h1>
 
-<p>There was an online discussion about iteration times in Haskell and whether and why they are slow. For me, it’s not slow. I do all my Haskell development using a REPL. Here are some tips I wrote up in that discussion.</p>
+<h1>Use the REPL, Luke</h1>
+
+<p>There was an online discussion about iteration times in Haskell and
+whether and why they are slow. For me, it’s not slow. I do all my
+Haskell development using a REPL. Here are some tips I wrote up in that
+discussion.</p>
 <h2 id="prepare-for-ghci-use">Prepare for GHCi use</h2>
-<p>The first thing you want to do before writing anything for your project is make sure you can load your code in the REPL; GHCi. Sometimes you have special configuration options or whatnot (<code>cabal repl</code> and <code>stack ghci</code> make this much easier than in the past). The sooner you start the better. It can be a PITA to load some projects that expect to just be a “start, run and die” process, they often launch threads without any clean-up procedure; in this way the REPL makes you think about cleaner architecture.</p>
+<p>The first thing you want to do before writing anything for your
+project is make sure you can load your code in the REPL; GHCi. Sometimes
+you have special configuration options or whatnot
+(<code>cabal repl</code> and <code>stack ghci</code> make this much
+easier than in the past). The sooner you start the better. It can be a
+PITA to load some projects that expect to just be a “start, run and die”
+process, they often launch threads without any clean-up procedure; in
+this way the REPL makes you think about cleaner architecture.</p>
 <h2 id="make-sure-it-scales">Make sure it scales</h2>
-<p>Learn <a href="http://chrisdone.com/posts/making-ghci-fast">how to make GHCi</a> fast for your project so that you don’t hit a wall as your project scales. Loading code with byte-code is much faster than object code, but loading with object code has a cache so that in a 100 module project if you only need to reload one, it’ll just load one. Make sure this is happening for you, when you need it. Dabble with the settings.</p>
-<h2 id="write-small-parametrized-functions">Write small, parametrized functions</h2>
-<p>Code that is good for unit tests is code that is good for the REPL. Write small functions that take state as arguments (<a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency injection</a>) rather than loading their own state, then they can be ran in the REPL and used in a test suite easily. Regard functions that you can’t just call directly with suspicion.</p>
-<h2 id="test-work-in-progress-implementations-in-the-repl">Test work-in-progress implementations in the REPL</h2>
-<p>While writing, test your function in the REPL with typical arguments it will expect, rather than implementing a function and then immediately using it in the place you want to ultimately use it. You can skip this for trivial “glue” functions, but it’s helpful for non-trivial functions.</p>
+<p>Learn <a href="http://chrisdone.com/posts/making-ghci-fast">how to
+make GHCi</a> fast for your project so that you don’t hit a wall as your
+project scales. Loading code with byte-code is much faster than object
+code, but loading with object code has a cache so that in a 100 module
+project if you only need to reload one, it’ll just load one. Make sure
+this is happening for you, when you need it. Dabble with the
+settings.</p>
+<h2 id="write-small-parametrized-functions">Write small, parametrized
+functions</h2>
+<p>Code that is good for unit tests is code that is good for the REPL.
+Write small functions that take state as arguments (<a
+href="https://en.wikipedia.org/wiki/Dependency_injection">dependency
+injection</a>) rather than loading their own state, then they can be ran
+in the REPL and used in a test suite easily. Regard functions that you
+can’t just call directly with suspicion.</p>
+<h2 id="test-work-in-progress-implementations-in-the-repl">Test
+work-in-progress implementations in the REPL</h2>
+<p>While writing, test your function in the REPL with typical arguments
+it will expect, rather than implementing a function and then immediately
+using it in the place you want to ultimately use it. You can skip this
+for trivial “glue” functions, but it’s helpful for non-trivial
+functions.</p>
 <h2 id="setupteardown-helpers">Setup/teardown helpers</h2>
-<p>Write helpful setup/teardown code for your tests and REPL code. For example, if you have a function that needs a database and application configuration to do anything, write a function that automatically and conveniently gets you a basic development config and database connection for running some action.</p>
+<p>Write helpful setup/teardown code for your tests and REPL code. For
+example, if you have a function that needs a database and application
+configuration to do anything, write a function that automatically and
+conveniently gets you a basic development config and database connection
+for running some action.</p>
 <h2 id="make-data-inspectable">Make data inspectable</h2>
-<p>Make sure to include <code>Show</code> instances for your data types, so that you can inspect them in the REPL. Treat <code>Show</code> as your development instance, it’s for you, don’t use it for “real” serialization or for “user-friendly” messages. Develop a distaste for data structures that are hard to inspect.</p>
-<h2 id="figure-out-the-fastest-iteration-for-you">Figure out the fastest iteration for you</h2>
-<p>Use techniques like <code>:reload</code> to help you out. For example, if I’m working on <a href="http://hackage.haskell.org/package/hindent">hindent</a>, then I will test a style with <code>HIndent.test chrisDone "x = 1"</code>, for example, in the REPL, and I’ll see the output pretty printed as Haskell in my Emacs REPL. But I work on module <code>HIndent.Style.ChrisDone</code>. So I first <code>:load HIndent</code> and then for future work I use <code>:reload</code> to reload my <code>.ChrisDone</code> changes and give me the <code>HIndent</code> environment again.</p>
+<p>Make sure to include <code>Show</code> instances for your data types,
+so that you can inspect them in the REPL. Treat <code>Show</code> as
+your development instance, it’s for you, don’t use it for “real”
+serialization or for “user-friendly” messages. Develop a distaste for
+data structures that are hard to inspect.</p>
+<h2 id="figure-out-the-fastest-iteration-for-you">Figure out the fastest
+iteration for you</h2>
+<p>Use techniques like <code>:reload</code> to help you out. For
+example, if I’m working on <a
+href="http://hackage.haskell.org/package/hindent">hindent</a>, then I
+will test a style with <code>HIndent.test chrisDone "x = 1"</code>, for
+example, in the REPL, and I’ll see the output pretty printed as Haskell
+in my Emacs REPL. But I work on module
+<code>HIndent.Style.ChrisDone</code>. So I first
+<code>:load HIndent</code> and then for future work I use
+<code>:reload</code> to reload my <code>.ChrisDone</code> changes and
+give me the <code>HIndent</code> environment again.</p>
 <h2 id="configuration">Configuration</h2>
-<p>Make sure you know about the <code>.ghci</code> file which you can put in your <code>~/</code> and also in the project directory where GHCi is run from. You can use <code>:set</code> to set regular GHC options including packages (<code>-package foo</code>) and extensions (<code>-XFoo</code>), and any special include directories (<code>-ifoo</code>).</p>
+<p>Make sure you know about the <code>.ghci</code> file which you can
+put in your <code>~/</code> and also in the project directory where GHCi
+is run from. You can use <code>:set</code> to set regular GHC options
+including packages (<code>-package foo</code>) and extensions
+(<code>-XFoo</code>), and any special include directories
+(<code>-ifoo</code>).</p>
 <h2 id="more-advanced-tricks">More advanced tricks</h2>
-<p>Consider tricks like <a href="http://chrisdone.com/posts/ghci-reload">live reloading</a>; if you can support it. I wrote an IRC server and I can run it in the REPL, reload the code, and update the handler function without losing any state. If you use foreign-store you can make things available, like the program’s state, in an IORef or MVar.</p>
-<p>This trick is a trick, so don’t use it in production. But it’s about as close as we can get to Lisp-style image development.</p>
+<p>Consider tricks like <a
+href="http://chrisdone.com/posts/ghci-reload">live reloading</a>; if you
+can support it. I wrote an IRC server and I can run it in the REPL,
+reload the code, and update the handler function without losing any
+state. If you use foreign-store you can make things available, like the
+program’s state, in an IORef or MVar.</p>
+<p>This trick is a trick, so don’t use it in production. But it’s about
+as close as we can get to Lisp-style image development.</p>
 <h2 id="in-summary">In summary</h2>
-<p>Haskell’s lucky to have a small REPL culture, but you have to work with a Lisp or Smalltalk to really know what’s possible when you fully “buy in”. Many Haskellers come from C++ and “stop program, edit file, re-run compiler, re-run whole program” cycles and don’t have much awareness or interest in it. If you are such a person, the above probably won’t come naturally, but try it out.</p>
+<p>Haskell’s lucky to have a small REPL culture, but you have to work
+with a Lisp or Smalltalk to really know what’s possible when you fully
+“buy in”. Many Haskellers come from C++ and “stop program, edit file,
+re-run compiler, re-run whole program” cycles and don’t have much
+awareness or interest in it. If you are such a person, the above
+probably won’t come naturally, but try it out.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2015-07-15 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2015-07-15 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

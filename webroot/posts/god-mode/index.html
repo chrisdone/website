@@ -87,16 +87,34 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>God-mode for Emacs</h1>
 
-<p>A month ago I blogged about ways to reduce strenuous key presses in my Emacs use. I <a href="../../posts/emacs-key-analysis">analyzed my runs of chords in Emacs</a>, then <a href="../../posts/speculations-on-exclusive-editing">speculated</a> on the merits of <a href="http://chrisdone.com/posts/modal-editors">exclusive vs mixed editing</a>. Since then I wrote an Emacs mode called <a href="https://github.com/chrisdone/god-mode/">god-mode</a>. It’s a mode that you toggle in and out of, and when you’re in it, all keys are implicitly prefixed with <code>C-</code> (among other helpful shortcuts). Over all, it’s been a resounding success. A couple other people, including the author of multiple mark mode, contributed some patches. I’ve been using it for a month and have been very satisfied.</p>
-<p>For those interested in the keymapping as of writing, you can <a href="#the-keymapping">skip to that section below.</a></p>
+<h1>God-mode for Emacs</h1>
+
+<p>A month ago I blogged about ways to reduce strenuous key presses in
+my Emacs use. I <a href="/posts/emacs-key-analysis">analyzed my runs of
+chords in Emacs</a>, then <a
+href="/posts/speculations-on-exclusive-editing">speculated</a> on the
+merits of <a href="http://chrisdone.com/posts/modal-editors">exclusive
+vs mixed editing</a>. Since then I wrote an Emacs mode called <a
+href="https://github.com/chrisdone/god-mode/">god-mode</a>. It’s a mode
+that you toggle in and out of, and when you’re in it, all keys are
+implicitly prefixed with <code>C-</code> (among other helpful
+shortcuts). Over all, it’s been a resounding success. A couple other
+people, including the author of multiple mark mode, contributed some
+patches. I’ve been using it for a month and have been very
+satisfied.</p>
+<p>For those interested in the keymapping as of writing, you can <a
+href="#the-keymapping">skip to that section below.</a></p>
 <h2 id="compared-with-vim">Compared with Vim</h2>
-<p>Coming back to the examples I came up with in <a href="../../posts/speculations-on-exclusive-editing">speculations on exclusive editing</a>, God-mode is on par with Vim. In fact, it’s the same or fewer key presses for each one:</p>
+<p>Coming back to the examples I came up with in <a
+href="/posts/speculations-on-exclusive-editing">speculations on
+exclusive editing</a>, God-mode is on par with Vim. In fact, it’s the
+same or fewer key presses for each one:</p>
 <pre><code>Vim:   bbDi (5)
 Emacs: gb.ki (5)
 
@@ -105,26 +123,58 @@ Emacs: g←.i (4)
 
 Vim:   ?r↲lDi (8)
 Emacs: rr↲ki (5)</code></pre>
-<p>That’s not bad. I grant that my Vim fu is weak, so probably there are shorter ways to write the Vim examples. But at any rate Emacs is doing well here.</p>
+<p>That’s not bad. I grant that my Vim fu is weak, so probably there are
+shorter ways to write the Vim examples. But at any rate Emacs is doing
+well here.</p>
 <h2 id="evaluation-after-one-month">Evaluation After One Month</h2>
-<p>I’ve been using this in my Emacs turned on by default for one month. I knew I was going to stick with it after a week or so of use, it was already ingrained into how I use Emacs. Now, when I access a remote Emacs on a server or whatnot, I find that I reach for the Caps Lock key (my toggler key) in order to do an involved editing operation, only to find that it’s not there! Oh, no! I’ll have to use Ctrl for all these dull commands…</p>
-<p>In typical usage, it’s a 50-50. When I’m writing code, I tend to work in normal Emacs mode. When I’m editing, I work almost exclusively in God-mode. Cutting (<code>w</code>), copying (<code>gw</code>), moving (<code>k</code>, <code>gk</code>, <code>Gk</code>, <code>y</code>), navigating (<code>ga</code>, <code>gf</code>, etc.), reindenting, slurping, buffer switching (<code>z</code>), running commands (<code>cc</code>, <code>ci</code>, <code>ct</code>, etc), moving around (<code>e</code>, <code>a</code>, <code>f</code>, <code>b</code>, etc.), searching (<code>s</code>, <code>r</code>), replacing (<code>t</code>), saving (<code>xs</code>). All those things I do from god mode.</p>
-<p>I’ve also noticed that the more tired I get with my hands towards the end of the day, the more I tend to stick in god-mode. That gives me extra mileage to finish those last things.</p>
-<h2 id="retaining-god-mode-exclusively">Retaining God Mode Exclusively</h2>
-<p>In fact in some modes it’s possible to remain entirely in God mode. In CSS mode, for example, I’m able to produce out the following:</p>
+<p>I’ve been using this in my Emacs turned on by default for one month.
+I knew I was going to stick with it after a week or so of use, it was
+already ingrained into how I use Emacs. Now, when I access a remote
+Emacs on a server or whatnot, I find that I reach for the Caps Lock key
+(my toggler key) in order to do an involved editing operation, only to
+find that it’s not there! Oh, no! I’ll have to use Ctrl for all these
+dull commands…</p>
+<p>In typical usage, it’s a 50-50. When I’m writing code, I tend to work
+in normal Emacs mode. When I’m editing, I work almost exclusively in
+God-mode. Cutting (<code>w</code>), copying (<code>gw</code>), moving
+(<code>k</code>, <code>gk</code>, <code>Gk</code>, <code>y</code>),
+navigating (<code>ga</code>, <code>gf</code>, etc.), reindenting,
+slurping, buffer switching (<code>z</code>), running commands
+(<code>cc</code>, <code>ci</code>, <code>ct</code>, etc), moving around
+(<code>e</code>, <code>a</code>, <code>f</code>, <code>b</code>, etc.),
+searching (<code>s</code>, <code>r</code>), replacing (<code>t</code>),
+saving (<code>xs</code>). All those things I do from god mode.</p>
+<p>I’ve also noticed that the more tired I get with my hands towards the
+end of the day, the more I tend to stick in god-mode. That gives me
+extra mileage to finish those last things.</p>
+<h2 id="retaining-god-mode-exclusively">Retaining God Mode
+Exclusively</h2>
+<p>In fact in some modes it’s possible to remain entirely in God mode.
+In CSS mode, for example, I’m able to produce out the following:</p>
 <pre><code>.foo {
    display: none;
 }</code></pre>
 <p>by typing</p>
 <pre><code>{ .foo ↲ : d ↲ ↲</code></pre>
-<p>What happens there is that <code>{</code> prompts me for a rule and inserts <code>{ }</code> and puts my cursor inside it. Then <code>:</code> prompts for a property name, which is completed with ido-mode. Then it prompts for a value. In the case of the <code>display</code> property, it knows there’s only a list of values available for it, and it prompts for a choice of <code>none</code>, <code>block</code>, etc. I hit <code>↲</code> to choose the default.</p>
-<p>If I want to edit a property/value pair, I hit <code>;</code> and it prompts me for the value with the input containing the existing value.</p>
-<p>The more one is able to stay in God mode, the more the speed and convenience benefits.</p>
+<p>What happens there is that <code>{</code> prompts me for a rule and
+inserts <code>{ }</code> and puts my cursor inside it. Then
+<code>:</code> prompts for a property name, which is completed with
+ido-mode. Then it prompts for a value. In the case of the
+<code>display</code> property, it knows there’s only a list of values
+available for it, and it prompts for a choice of <code>none</code>,
+<code>block</code>, etc. I hit <code>↲</code> to choose the default.</p>
+<p>If I want to edit a property/value pair, I hit <code>;</code> and it
+prompts me for the value with the input containing the existing
+value.</p>
+<p>The more one is able to stay in God mode, the more the speed and
+convenience benefits.</p>
 <h2 id="the-keymapping">The Keymapping</h2>
-<p>(This is described in the README, but including here for posterity.)</p>
+<p>(This is described in the README, but including here for
+posterity.)</p>
 <p>God-mode defines the following mapping:</p>
 <ul>
-<li><p>All commands are assumed to be <code>C-&lt;something&gt;</code> unless otherwise indicated. Examples:</p>
+<li><p>All commands are assumed to be <code>C-&lt;something&gt;</code>
+unless otherwise indicated. Examples:</p>
 <ul>
 <li><code>a</code> → <code>C-a</code></li>
 <li><code>s</code> → <code>C-s</code></li>
@@ -133,12 +183,16 @@ Emacs: rr↲ki (5)</code></pre>
 <li><code>x s</code> → <code>C-x s</code></li>
 </ul>
 <p>Note the use of space to produce <code>C-x s</code>.</p></li>
-<li><p><code>g</code> is a special key to indicate <code>M-&lt;something&gt;</code>. This means that there is no way to write <code>C-g</code> in this mode, you must therefore type <code>C-g</code> directly. Examples:</p>
+<li><p><code>g</code> is a special key to indicate
+<code>M-&lt;something&gt;</code>. This means that there is no way to
+write <code>C-g</code> in this mode, you must therefore type
+<code>C-g</code> directly. Examples:</p>
 <ul>
 <li><code>gf</code> → <code>M-f</code></li>
 <li><code>gx</code> → <code>M-x</code></li>
 </ul></li>
-<li><p><code>G</code> is a special key to indicate <code>C-M-&lt;something&gt;</code>. Example:</p>
+<li><p><code>G</code> is a special key to indicate
+<code>C-M-&lt;something&gt;</code>. Example:</p>
 <ul>
 <li><code>Gx</code> → <code>C-M-x</code></li>
 </ul></li>
@@ -154,15 +208,16 @@ Emacs: rr↲ki (5)</code></pre>
 <ul>
 <li><code>uco</code> → <code>C-u C-c C-o</code></li>
 </ul></li>
-<li><p>There is a key (default <code>i</code> - think <em>insert</em>) to disable God mode, similar to Vim’s i.</p></li>
+<li><p>There is a key (default <code>i</code> - think <em>insert</em>)
+to disable God mode, similar to Vim’s i.</p></li>
 </ul>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2013-09-21 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2013-09-21 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

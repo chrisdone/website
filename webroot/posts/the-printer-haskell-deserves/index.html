@@ -87,55 +87,99 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>The printer Haskell deserves</h1>
+
+<h1>The printer Haskell deserves</h1>
 
 <p>Friday night project ahoy!</p>
 <h2 id="problem">Problem</h2>
-<p>I was working with haskell-names the other day. Its data types are nice enough, but are rather unweildly to read in the REPL when debugging and inspecting. This got me thinking about inspection and printers for Haskell data structures again.</p>
+<p>I was working with haskell-names the other day. Its data types are
+nice enough, but are rather unweildly to read in the REPL when debugging
+and inspecting. This got me thinking about inspection and printers for
+Haskell data structures again.</p>
 <p>I’ve made several approaches for to haskell-mode in the past.</p>
 <ul>
-<li>One which requires parsing the output of Show with Haskell and then printing that to s-expressions for Emacs to consume. This is generally unreliable and hacky.</li>
-<li>Then I settled with making the REPL just syntax highlight the output. That generally works flawlessly and is an okay solution.</li>
-<li>Then I really wanted collapsing support again, so I implemented one based on Emacs’s awareness of expression boundaries (of ( ) and { } and " " etc.). Simple. Kind of reliable.</li>
+<li>One which requires parsing the output of Show with Haskell and then
+printing that to s-expressions for Emacs to consume. This is generally
+unreliable and hacky.</li>
+<li>Then I settled with making the REPL just syntax highlight the
+output. That generally works flawlessly and is an okay solution.</li>
+<li>Then I really wanted collapsing support again, so I implemented one
+based on Emacs’s awareness of expression boundaries (of ( ) and { } and
+” ” etc.). Simple. Kind of reliable.</li>
 </ul>
-<p>Today I implement yet another one, but this one I like best. I’ve always wanted to have a Haskell printer that can evaluate on demand, piece-wise, taking care not to evaluate the whole structure too eagerly. I should be able to type <code>[1..]</code> into my REPL and not be spammed by numbers, but rather to expand it at my leisure.</p>
+<p>Today I implement yet another one, but this one I like best. I’ve
+always wanted to have a Haskell printer that can evaluate on demand,
+piece-wise, taking care not to evaluate the whole structure too eagerly.
+I should be able to type <code>[1..]</code> into my REPL and not be
+spammed by numbers, but rather to expand it at my leisure.</p>
 <h2 id="implementation">Implementation</h2>
-<p>My plan was to use the <a href="http://chrisdone/posts/data-typeable">Data.Data API</a> to traverse data structures breadth-first, display to the user something like <code>Just …</code> and then allow the user to continue evaluating on request by clicking the <code>…</code> slot.</p>
-<p>I chatted with <a href="https://github.com/mgsloan">Michael Sloan</a> about it and we came up with a simple experimental design and thought it would be a nice idea. We hypothesized a nice class-based way to provide custom presenters for your types, so that e.g. a <code>Diagram</code> could be rendered as a bitmap inline with the rest of the data structure, but that needs more thinking about.</p>
-<p>I’ve implemented a basic version of it in the <a href="http://hackage.haskell.org/package/present-0.0.0">present</a> package (a la “presentations” in <a href="http://bauhh.dyndns.org:8000/clim-spec/23-1.html#_1125">CLIM</a>) and implemented a usable front-end for it in Emacs. There’s some information about the implementation <a href="https://github.com/chrisdone/present">in the README</a> which you can read on Github.</p>
+<p>My plan was to use the <a
+href="http://chrisdone/posts/data-typeable">Data.Data API</a> to
+traverse data structures breadth-first, display to the user something
+like <code>Just …</code> and then allow the user to continue evaluating
+on request by clicking the <code>…</code> slot.</p>
+<p>I chatted with <a href="https://github.com/mgsloan">Michael Sloan</a>
+about it and we came up with a simple experimental design and thought it
+would be a nice idea. We hypothesized a nice class-based way to provide
+custom presenters for your types, so that e.g. a <code>Diagram</code>
+could be rendered as a bitmap inline with the rest of the data
+structure, but that needs more thinking about.</p>
+<p>I’ve implemented a basic version of it in the <a
+href="http://hackage.haskell.org/package/present-0.0.0">present</a>
+package (a la “presentations” in <a
+href="http://bauhh.dyndns.org:8000/clim-spec/23-1.html#_1125">CLIM</a>)
+and implemented a usable front-end for it in Emacs. There’s some
+information about the implementation <a
+href="https://github.com/chrisdone/present">in the README</a> which you
+can read on Github.</p>
 <h2 id="result">Result</h2>
-<p>Yes! It works. <a href="http://youtu.be/4rcPfZveGZc">Here is a demonstration video.</a> Concept proven. This is definitely my favourite way so far. I will probably write a simple algorithm in Emacs to format things on separate lines, which would make it much easier to read, and I want to make strings expand to fill the screen width, but no further. But this is already an improvement.</p>
-<p>I’ll trial it for a while, if I end up using it more often than not, I’ll make the option to make :present implicit for all REPL evaluations.</p>
+<p>Yes! It works. <a href="http://youtu.be/4rcPfZveGZc">Here is a
+demonstration video.</a> Concept proven. This is definitely my favourite
+way so far. I will probably write a simple algorithm in Emacs to format
+things on separate lines, which would make it much easier to read, and I
+want to make strings expand to fill the screen width, but no further.
+But this is already an improvement.</p>
+<p>I’ll trial it for a while, if I end up using it more often than not,
+I’ll make the option to make :present implicit for all REPL
+evaluations.</p>
 <h2 id="example">Example</h2>
 <p>For kicks, here’s the output for</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a>loeb (<span class="fu">map</span> (\i l <span class="ot">-&gt;</span> <span class="dt">Node</span> i (<span class="fu">map</span> (<span class="fu">fmap</span> (<span class="op">+</span><span class="dv">1</span>)) l)) [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>])</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>loeb (<span class="fu">map</span> (\i l <span class="ot">-&gt;</span> <span class="dt">Node</span> i (<span class="fu">map</span> (<span class="fu">fmap</span> (<span class="op">+</span><span class="dv">1</span>)) l)) [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>])</span></code></pre></div>
 <p>Normally you would get:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a>[<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">1</span>, subForest <span class="ot">=</span> [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">2</span>, subForest <span class="ot">=</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a> [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">3</span>, subForest <span class="ot">=</span> [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">4</span>, subForest <span class="ot">=</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>  [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">5</span>, subForest <span class="ot">=</span> [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">6</span>, subForest <span class="ot">=</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>   [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">7</span>, subForest <span class="ot">=</span> [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">8</span>, subForest <span class="ot">=</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>[<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">1</span>, subForest <span class="ot">=</span> [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">2</span>, subForest <span class="ot">=</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">3</span>, subForest <span class="ot">=</span> [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">4</span>, subForest <span class="ot">=</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">5</span>, subForest <span class="ot">=</span> [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">6</span>, subForest <span class="ot">=</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>   [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">7</span>, subForest <span class="ot">=</span> [<span class="dt">Node</span> {rootLabel <span class="ot">=</span> <span class="dv">8</span>, subForest <span class="ot">=</span></span></code></pre></div>
 <p>Ad infinitum! With presentation, you get:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>λ<span class="op">&gt;</span> <span class="op">:</span>present loeb (<span class="fu">map</span> (\i l <span class="ot">-&gt;</span> <span class="dt">Node</span> i (<span class="fu">map</span> (<span class="fu">fmap</span> (<span class="op">+</span><span class="dv">1</span>)) l)) [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>])</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="dt">Tree</span> <span class="dt">Integer</span><span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>λ<span class="op">&gt;</span> <span class="op">:</span>present loeb (<span class="fu">map</span> (\i l <span class="ot">-&gt;</span> <span class="dt">Node</span> i (<span class="fu">map</span> (<span class="fu">fmap</span> (<span class="op">+</span><span class="dv">1</span>)) l)) [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>])</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Tree</span> <span class="dt">Integer</span><span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>]</span></code></pre></div>
 <p>If you click <code>Tree Integer</code> on the left, you get:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>(<span class="dt">Node</span> <span class="dv">1</span> [<span class="dt">Tree</span> <span class="dt">Integer</span>])<span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(<span class="dt">Node</span> <span class="dv">1</span> [<span class="dt">Tree</span> <span class="dt">Integer</span>])<span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>]</span></code></pre></div>
 <p>Click the new one on the left:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>(<span class="dt">Node</span> <span class="dv">1</span> (<span class="dt">Tree</span> <span class="dt">Integer</span><span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>]))<span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>]</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>(<span class="dt">Node</span> <span class="dv">1</span> (<span class="dt">Tree</span> <span class="dt">Integer</span><span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>]))<span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>]</span></code></pre></div>
 <p>Et cetera:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>(<span class="dt">Node</span> <span class="dv">1</span> ((<span class="dt">Node</span> <span class="dv">2</span> [<span class="dt">Tree</span> <span class="dt">Integer</span>])<span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>]))<span class="op">:</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>((<span class="dt">Node</span> <span class="dv">2</span> [<span class="dt">Tree</span> <span class="dt">Integer</span>])<span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>])</span></code></pre></div>
-<p>In other words, every <code>[Tree Integer]</code> is a placeholder that you can click to get more output.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>(<span class="dt">Node</span> <span class="dv">1</span> ((<span class="dt">Node</span> <span class="dv">2</span> [<span class="dt">Tree</span> <span class="dt">Integer</span>])<span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>]))<span class="op">:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>((<span class="dt">Node</span> <span class="dv">2</span> [<span class="dt">Tree</span> <span class="dt">Integer</span>])<span class="op">:</span>[<span class="dt">Tree</span> <span class="dt">Integer</span>])</span></code></pre></div>
+<p>In other words, every <code>[Tree Integer]</code> is a placeholder
+that you can click to get more output.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2014-04-26 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2014-04-26 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

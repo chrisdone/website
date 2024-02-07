@@ -87,47 +87,59 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Lazy list length</h1>
+
+<h1>Lazy list length</h1>
 
 <p>To get the length of a list like</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="fu">length</span> [<span class="dv">1</span><span class="op">..</span><span class="dv">10</span>] <span class="op">==</span> <span class="dv">10</span></span></code></pre></div>
-<p>You have to walk the whole list to check that it’s indeed of length <code>10</code>.</p>
-<p>Another way is to define a natural number in peano arithmetic style:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Nat</span> <span class="ot">=</span> <span class="dt">Zero</span> <span class="op">|</span> <span class="dt">Add1</span> <span class="dt">Nat</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>  deriivng (<span class="dt">Ord</span>, <span class="dt">Eq</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span> [<span class="dv">1</span><span class="op">..</span><span class="dv">10</span>] <span class="op">==</span> <span class="dv">10</span></span></code></pre></div>
+<p>You have to walk the whole list to check that it’s indeed of length
+<code>10</code>.</p>
+<p>Another way is to define a natural number in peano arithmetic
+style:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Nat</span> <span class="ot">=</span> <span class="dt">Zero</span> <span class="op">|</span> <span class="dt">Add1</span> <span class="dt">Nat</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  deriivng (<span class="dt">Ord</span>, <span class="dt">Eq</span>)</span></code></pre></div>
 <p>So</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="co">-- 0 = Zero</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="co">-- 1 = Add1 Zero</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="co">-- 2 = Add1 (Add1 Zero)</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="co">-- 3 = Add1 (Add1 (Add1 Zero))</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- 0 = Zero</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- 1 = Add1 Zero</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- 2 = Add1 (Add1 Zero)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- 3 = Add1 (Add1 (Add1 Zero))</span></span></code></pre></div>
 <p>We define a trivial instance of <code>Num</code> for it:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">instance</span> <span class="dt">Num</span> <span class="dt">Nat</span> <span class="kw">where</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>  <span class="dt">Zero</span> <span class="op">+</span> y <span class="ot">=</span> y</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>  <span class="dt">Add1</span> x <span class="op">+</span> y <span class="ot">=</span> x <span class="op">+</span> (<span class="dt">Add1</span> y)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>  <span class="fu">fromInteger</span> <span class="dv">0</span> <span class="ot">=</span> <span class="dt">Zero</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>  <span class="fu">fromInteger</span> n <span class="ot">=</span> <span class="dt">Add1</span> (<span class="fu">fromInteger</span> (n <span class="op">-</span> <span class="dv">1</span>))</span></code></pre></div>
-<p>Now we can use <code>genericLength</code> on a list like this. Equal-sized lists:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="op">&gt;</span> genericLength [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>] <span class="op">==</span> (genericLength [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>]<span class="ot"> ::</span> <span class="dt">Nat</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="dt">True</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Num</span> <span class="dt">Nat</span> <span class="kw">where</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Zero</span> <span class="op">+</span> y <span class="ot">=</span> y</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Add1</span> x <span class="op">+</span> y <span class="ot">=</span> x <span class="op">+</span> (<span class="dt">Add1</span> y)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fromInteger</span> <span class="dv">0</span> <span class="ot">=</span> <span class="dt">Zero</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fromInteger</span> n <span class="ot">=</span> <span class="dt">Add1</span> (<span class="fu">fromInteger</span> (n <span class="op">-</span> <span class="dv">1</span>))</span></code></pre></div>
+<p>Now we can use <code>genericLength</code> on a list like this.
+Equal-sized lists:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> genericLength [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>] <span class="op">==</span> (genericLength [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>]<span class="ot"> ::</span> <span class="dt">Nat</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">True</span></span></code></pre></div>
 <p>With infinite lists:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="op">&gt;</span> genericLength [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>] <span class="op">&lt;</span> (genericLength [<span class="dv">1</span><span class="op">..</span>]<span class="ot"> ::</span> <span class="dt">Nat</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="dt">True</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="op">&gt;</span> genericLength [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>] <span class="op">==</span> (genericLength [<span class="dv">1</span><span class="op">..</span>]<span class="ot"> ::</span> <span class="dt">Nat</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a><span class="dt">False</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a><span class="op">&gt;</span> genericLength [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>] <span class="op">&gt;</span> (genericLength [<span class="dv">1</span><span class="op">..</span>]<span class="ot"> ::</span> <span class="dt">Nat</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="dt">False</span></span></code></pre></div>
-<p>We didn’t have to walk the whole list to compare its length with a finite number. That’s pretty cool.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> genericLength [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>] <span class="op">&lt;</span> (genericLength [<span class="dv">1</span><span class="op">..</span>]<span class="ot"> ::</span> <span class="dt">Nat</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="dt">True</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> genericLength [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>] <span class="op">==</span> (genericLength [<span class="dv">1</span><span class="op">..</span>]<span class="ot"> ::</span> <span class="dt">Nat</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">False</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> genericLength [<span class="dv">1</span><span class="op">..</span><span class="dv">3</span>] <span class="op">&gt;</span> (genericLength [<span class="dv">1</span><span class="op">..</span>]<span class="ot"> ::</span> <span class="dt">Nat</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="dt">False</span></span></code></pre></div>
+<p>We didn’t have to walk the whole list to compare its length with a
+finite number. That’s pretty cool.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2018-08-23 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2018-08-23 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

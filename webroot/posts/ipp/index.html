@@ -1,0 +1,286 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Immutable Publishing Policy</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Immutable Publishing Policy</h1>
+
+<h2 id="summary">Summary</h2>
+<p>This is a policy for publishing Haskell packages. It was published in
+<strong>February of 2022</strong>. The aim of this policy is to remove
+all breaking changes to downstream users of packages, where feasible. It
+is most applicable to packages which have users, and/or have a more or
+less stable API. It prioritizes downstream users at the expense of
+author convenience.</p>
+<p>It has been implemented in the <a
+href="https://github.com/chrisdone/lucid">lucid</a> package.</p>
+<h3 id="terms">Terms</h3>
+<p>By “levels” in this description, we mean “module” is the first level,
+and “package” is the level above.</p>
+<h3 id="rules">Rules</h3>
+<ul>
+<li>If you <strong>require more</strong>, that’s a break.
+<ul>
+<li>E.g. adding an extra field to a record or requiring a class
+constraint, add an extra constructor which users can pattern match on,
+or another package dependency or newer major version of a package that
+wasn’t needed before.</li>
+</ul></li>
+<li>If you <strong>provide less</strong>, that’s a break.
+<ul>
+<li>E.g. if you remove an export or a field of a record, return less or
+different from a function, remove a module, or an instance of an exposed
+type.</li>
+</ul></li>
+<li>If you <strong>change something</strong>, that’s a break of the next
+level up.
+<ul>
+<li>E.g. if you change the type signature of an exposed function, or
+change a data type’s definition which is exposed.</li>
+</ul></li>
+<li>If you <strong>just add</strong> something, then just bump the minor
+version (which is the only thing that changes in this scheme) of the
+package; you can use the current date e.g. <code>0.0.20210101</code>.
+<ul>
+<li>E.g. a non-orphan instance of a type from your own package.</li>
+</ul></li>
+</ul>
+<p>Haskell-specific note:</p>
+<ul>
+<li>If you add an orphan instance in your library–which you
+<strong>should not do</strong>–that’s definitely a breaking change for
+the whole package, <strong>bump the package.</strong></li>
+<li>A user may have written an orphan instance for one of your types,
+but this is a departure from standard practice, and therefore isn’t
+protected from breaking change. You should feel free to <strong>add new
+instances</strong> for your own types.</li>
+<li><a href="https://pvp.haskell.org/#leaking-instances">Be careful
+about leaking instances</a>. If you bump your package when you bump your
+dependencies major versions, then you should be safe from this.</li>
+</ul>
+<h3 id="steps">Steps</h3>
+<p>This <strong>differs substantially to <a
+href="https://pvp.haskell.org/">the PVP</a>.</strong> ⚠️</p>
+<ul>
+<li>If you want to change a thing <code>foo</code>, just make a copy of
+it and call it <code>foo2</code>.</li>
+<li>If it’s impractical to add another version of a thing (because,
+e.g. you changed a class or a data type that’s used in many places),
+then copy the whole module <code>Foo</code> to <code>Foo2</code>.</li>
+<li>If it’s impractical to just copy a module, then it’s time to copy
+the package, <code>foo</code> to <code>foo2</code>.</li>
+<li>If you want to rename or remove something from a module, clone the
+module. If you want to remove or rename a module, clone the
+package.</li>
+</ul>
+<h3 id="rationale">Rationale</h3>
+<ul>
+<li>It’s more effort for an author to make breaking changes. The author
+pays a price, and has to think twice about whether it’s worth it.</li>
+<li>The user <strong>optionally</strong> pays a small price to upgrade
+to new functionality, rather than a <em>mandatory tax</em> for changes
+they don’t want, which is the PVP system.</li>
+<li>For more elaboration, watch Rich Hickey’s video <a
+href="https://www.youtube.com/watch?v=oyLBGkS5ICk">Spec-ulation</a>.</li>
+<li>Related mantra of the Linux kernel: <em><a
+href="https://unix.stackexchange.com/questions/235335/why-is-there-a-linux-kernel-policy-to-never-break-user-space">don’t
+break user-space</a></em></li>
+<li>I don’t agree at all with <a
+href="http://blog.ezyang.com/2016/12/thoughts-about-spec-ulation-rich-hickey/">this
+post</a> by ezyang</li>
+</ul>
+<h3 id="long-term-steps">Long-term steps</h3>
+<ul>
+<li>You can publish additions to your old versions of modules and
+packages.</li>
+<li>You can choose to stop maintaining them at some point. For example,
+a duplicate module hierarchy. You can just drop the old one and publish
+a new package.</li>
+<li>By the PVP, packages that use your package will force their users to
+use your newer API, which will make them unhappy. By following the IPP,
+you give your users the chance to import both library versions and maybe
+write some migrations between the two versions.</li>
+</ul>
+<h3 id="infrastructuretechnical-support">Infrastructure/technical
+support</h3>
+<ul>
+<li>Hackage supports deprecating a package in favour of something else.
+That’s your means to tell users of newer versions.</li>
+<li>GHC lets you mark declarations and modules as deprecated, which is
+issued as a warning.</li>
+<li>Users can use
+<code>module Lib (module Lib2) where import Lib2</code> to try newer
+versions of module hierarchies as “drop-ins”.</li>
+<li>For a package following the IPP, you can just depend on
+<code>package &gt;= 0.0.n</code> where <code>n</code> is the feature
+that you need. You never need an upper bound because there are no
+breaking changes.</li>
+<li>Both Hackage and Stackage will allow you to upload package1,
+package2, etc. and so your users can continue to use the package1 if
+they’re not interested in package2, and if they’re not forced by
+PVP-following maintainers of other packages that they’re using.</li>
+</ul>
+<h3 id="compatibility-with-the-pvp">Compatibility with the PVP</h3>
+<p>You can do both, the IPP is a subset of behavior within the PVP (but
+upper bounds aren’t required or needed by the IPP). In practice, people
+following just the PVP and not the IPP will be a pain for you as
+Haskellers change things and cause breakage all the time. But don’t
+bother people about it. Just do your best.</p>
+<h3 id="when-to-use-this-policy">When to use this policy</h3>
+<p>I propose that you should:</p>
+<ul>
+<li>Put new experimental packages on GitHub/GitLab/sourcehut, etc. and
+using Stack or Cabal you can specify dependencies on that package by a
+commit hash. At this stage, authors can change as much as they want and
+users can pin to commits.</li>
+<li>If your design becomes stable and you want to support the package,
+put it on Stackage or Hackage. Now apply IPP.</li>
+</ul>
+<p>For packages already published, you can apply IPP immediately.</p>
+<h3 id="faqs">FAQs</h3>
+<h4 id="do-you-just-want-unison">Do you just want Unison?</h4>
+<p>Sure, but that’s a whole new language. Haskell is our language of
+choice, so let’s do our best to make it nicer to use.</p>
+<h4
+id="its-not-worth-doing-because-we-should-have-machines-automate-dependencies-based-on-fine-grained-uses">It’s
+not worth doing because we should have machines automate dependencies
+based on fine grained uses</h4>
+<p>That’s true. Here in the real world, however, no such automation
+exists.</p>
+<h4
+id="security-fixes-can-be-breaking-changes-we-should-make-bad-code-go-away">Security
+fixes can be breaking changes, we should make bad code go away</h4>
+<p>You don’t know how and in what setting your users are using your
+libraries. It’s not your place to bully them into changing their
+programs because you know better.</p>
+<h4 id="shouldnt-old-code-be-garbage-collected">Shouldn’t old code be
+garbage collected?</h4>
+<p>Yes, I covered deprecation above. I also covered removing old code
+and the ending of maintenance above.</p>
+<h4
+id="what-if-i-add-a-constructor-to-a-type-id-have-to-duplicate-my-whole-api">What
+if <em>I</em> add a constructor to a type? <em>I’d</em> have to
+duplicate my whole API!</h4>
+<p>Yes. If <em>you</em> add a new constructor then <em>you’ll</em>
+indeed <strong>require more</strong> of the consumer of your package to
+form a complete pattern match. Duplicate the type. <em>You</em> changed
+a namespace.</p>
+<p>I’ll repeat myself: the IPP is about valuing the user’s time over the
+maintainer’s time. <em>It’s not all about you and your needs.</em> Think
+about others who have to consume your work.</p>
+<h4
+id="why-have-package-versions-when-you-are-going-to-duplicate-an-entire-module-or-package-when-you-make-a-breaking-change">Why
+have package versions when you are going to duplicate an entire module
+or package when you make a breaking change?</h4>
+<p>I already covered this above, but let’s rewrite in a different way:
+Package versions in Haskell are broken. They force all package
+maintainers to move in lock step. You can only practically use
+<strong>one</strong> version of a package in your installed package
+scope.</p>
+<p>If you want to keep using foo-1.2.3 and another package you’re using
+wants foo-2.0.0, you shouldn’t be forced to change all your code. You
+should be given the option to migrate between them.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2022-02-11 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>

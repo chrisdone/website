@@ -87,153 +87,184 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Ghosts of Departed Proofs Convenience</h1>
 
-<p>Following on from <a href="https://kataskeue.com/gdp.pdf"><em>Ghosts of Departed Proofs</em></a> with a <code>Named</code> type as defined in <a href="https://ocharles.org.uk/blog/posts/2019-08-09-who-authorized-these-ghosts.html">Olliver Charles’s post on the same topic</a>, we can add a usability improvement by defining a <code>SomeNamed</code> existential in order to wrap up the new type introduced for the <code>n</code> in <code>Name n a</code>, and then a pattern synonym to conveniently unwrap that constructor.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co">-- | Our main engine for naming a value, then we can prove properties</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="co">--   about a named value.</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="ot">{-# LANGUAGE ExistentialQuantification #-}</span> <span class="co">-- Used for SomeNamed.</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="ot">{-# LANGUAGE PatternSynonyms #-}</span> <span class="co">-- Used for the Name pattern.</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a><span class="ot">{-# LANGUAGE ViewPatterns #-}</span> <span class="co">-- Used for the Name pattern.</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="ot">{-# LANGUAGE RankNTypes #-}</span> <span class="co">-- Used for withName.</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Named</span> ( <span class="dt">Named</span>, <span class="kw">pattern</span> <span class="dt">Name</span>, forgetName</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>             , withName, someNamed, <span class="dt">SomeNamed</span>(<span class="op">..</span>) ) <span class="kw">where</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a><span class="co">-- | Give a generated type-level name to any value.</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a><span class="kw">newtype</span> <span class="dt">Named</span> n a <span class="ot">=</span> <span class="dt">Named_</span> {<span class="ot"> forgetName ::</span> a }</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a><span class="ot">withName ::</span> a <span class="ot">-&gt;</span> (<span class="kw">forall</span> name<span class="op">.</span> <span class="dt">Named</span> name a <span class="ot">-&gt;</span> r) <span class="ot">-&gt;</span> r</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a>withName x f <span class="ot">=</span> f (<span class="dt">Named_</span> x)</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true"></a><span class="co">-- | A convenient way to name something and access the name later.</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">SomeNamed</span> a <span class="ot">=</span> <span class="kw">forall</span> n<span class="op">.</span> <span class="dt">SomeNamed</span> (<span class="dt">Named</span> n a)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true"></a><span class="co">-- | Wrap a value up with a non-exposed name.</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true"></a><span class="ot">someNamed ::</span> a <span class="ot">-&gt;</span> <span class="dt">SomeNamed</span> a</span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true"></a>someNamed x <span class="ot">=</span> <span class="dt">SomeNamed</span> (<span class="dt">Named_</span> x)</span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true"></a></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true"></a><span class="co">-- | A convenient way to quickly name a value as a pattern.</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true"></a><span class="kw">pattern</span> <span class="dt">Name</span> t <span class="ot">&lt;-</span> (someNamed <span class="ot">-&gt;</span> <span class="dt">SomeNamed</span> t)</span></code></pre></div>
+<h1>Ghosts of Departed Proofs Convenience</h1>
+
+<p>Following on from <a href="https://kataskeue.com/gdp.pdf"><em>Ghosts
+of Departed Proofs</em></a> with a <code>Named</code> type as defined in
+<a
+href="https://ocharles.org.uk/blog/posts/2019-08-09-who-authorized-these-ghosts.html">Olliver
+Charles’s post on the same topic</a>, we can add a usability improvement
+by defining a <code>SomeNamed</code> existential in order to wrap up the
+new type introduced for the <code>n</code> in <code>Name n a</code>, and
+then a pattern synonym to conveniently unwrap that constructor.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Our main engine for naming a value, then we can prove properties</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">--   about a named value.</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE ExistentialQuantification #-}</span> <span class="co">-- Used for SomeNamed.</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE PatternSynonyms #-}</span> <span class="co">-- Used for the Name pattern.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE ViewPatterns #-}</span> <span class="co">-- Used for the Name pattern.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE RankNTypes #-}</span> <span class="co">-- Used for withName.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Named</span> ( <span class="dt">Named</span>, <span class="kw">pattern</span> <span class="dt">Name</span>, forgetName</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>             , withName, someNamed, <span class="dt">SomeNamed</span>(<span class="op">..</span>) ) <span class="kw">where</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Give a generated type-level name to any value.</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Named</span> n a <span class="ot">=</span> <span class="dt">Named_</span> {<span class="ot"> forgetName ::</span> a }</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ot">withName ::</span> a <span class="ot">-&gt;</span> (<span class="kw">forall</span> name<span class="op">.</span> <span class="dt">Named</span> name a <span class="ot">-&gt;</span> r) <span class="ot">-&gt;</span> r</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>withName x f <span class="ot">=</span> f (<span class="dt">Named_</span> x)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">-- | A convenient way to name something and access the name later.</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">SomeNamed</span> a <span class="ot">=</span> <span class="kw">forall</span> n<span class="op">.</span> <span class="dt">SomeNamed</span> (<span class="dt">Named</span> n a)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Wrap a value up with a non-exposed name.</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="ot">someNamed ::</span> a <span class="ot">-&gt;</span> <span class="dt">SomeNamed</span> a</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>someNamed x <span class="ot">=</span> <span class="dt">SomeNamed</span> (<span class="dt">Named_</span> x)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co">-- | A convenient way to quickly name a value as a pattern.</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="kw">pattern</span> <span class="dt">Name</span> t <span class="ot">&lt;-</span> (someNamed <span class="ot">-&gt;</span> <span class="dt">SomeNamed</span> t)</span></code></pre></div>
 <p>With this, we can write</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="kw">case</span> x <span class="kw">of</span> <span class="dt">Name</span> x' <span class="ot">-&gt;</span> <span class="op">...</span></span></code></pre></div>
-<p>And now we have a named version of <code>x</code>! This scales to any number of tuples or pattern matches. See below for a real example.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">case</span> x <span class="kw">of</span> <span class="dt">Name</span> x&#39; <span class="ot">-&gt;</span> <span class="op">...</span></span></code></pre></div>
+<p>And now we have a named version of <code>x</code>! This scales to any
+number of tuples or pattern matches. See below for a real example.</p>
 <h2 id="some-proof-generators">Some proof generators</h2>
-<p>For the sake of example in the next section, I introduce a couple trivial modules for checking non-zeroness of a number, and a function that makes use of such proof to perform division.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="co">-- | A trivial proof of nonzero for a given named thing.</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="co">--</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="co">-- Note that only this module can produce an IsNonzero value. Hence</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="co">-- you can only get a proof of nonzero via checkNonzero.</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Nonzero</span> ( <span class="dt">IsNonzero</span>, checkNonzero ) <span class="kw">where</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Named</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">IsNonzero</span> name <span class="ot">=</span> <span class="dt">IsNonzero</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a><span class="ot">checkNonzero ::</span> (<span class="dt">Num</span> i, <span class="dt">Eq</span> i) <span class="ot">=&gt;</span> <span class="dt">Named</span> name i <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">IsNonzero</span> name)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a>checkNonzero named</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a>  <span class="op">|</span> forgetName named <span class="op">/=</span> <span class="dv">0</span> <span class="ot">=</span> <span class="dt">Just</span> <span class="dt">IsNonzero</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">Nothing</span></span></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co">-- | A simple API that requires proof of nonzero.</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="co">--</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a><span class="co">-- An obvious example: division requires a nonzero denominator.</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Div</span> (divide) <span class="kw">where</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Named</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Nonzero</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a><span class="ot">divide ::</span> <span class="dt">Fractional</span> i <span class="ot">=&gt;</span> <span class="dt">IsNonzero</span> y <span class="ot">-&gt;</span> <span class="dt">Named</span> x i <span class="ot">-&gt;</span> <span class="dt">Named</span> y i <span class="ot">-&gt;</span> i</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a>divide _ x y <span class="ot">=</span> (forgetName x <span class="op">/</span> forgetName y)</span></code></pre></div>
+<p>For the sake of example in the next section, I introduce a couple
+trivial modules for checking non-zeroness of a number, and a function
+that makes use of such proof to perform division.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | A trivial proof of nonzero for a given named thing.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">--</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- Note that only this module can produce an IsNonzero value. Hence</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- you can only get a proof of nonzero via checkNonzero.</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Nonzero</span> ( <span class="dt">IsNonzero</span>, checkNonzero ) <span class="kw">where</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Named</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">IsNonzero</span> name <span class="ot">=</span> <span class="dt">IsNonzero</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="ot">checkNonzero ::</span> (<span class="dt">Num</span> i, <span class="dt">Eq</span> i) <span class="ot">=&gt;</span> <span class="dt">Named</span> name i <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">IsNonzero</span> name)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>checkNonzero named</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> forgetName named <span class="op">/=</span> <span class="dv">0</span> <span class="ot">=</span> <span class="dt">Just</span> <span class="dt">IsNonzero</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">Nothing</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | A simple API that requires proof of nonzero.</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">--</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- An obvious example: division requires a nonzero denominator.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Div</span> (divide) <span class="kw">where</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Named</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Nonzero</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="ot">divide ::</span> <span class="dt">Fractional</span> i <span class="ot">=&gt;</span> <span class="dt">IsNonzero</span> y <span class="ot">-&gt;</span> <span class="dt">Named</span> x i <span class="ot">-&gt;</span> <span class="dt">Named</span> y i <span class="ot">-&gt;</span> i</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>divide _ x y <span class="ot">=</span> (forgetName x <span class="op">/</span> forgetName y)</span></code></pre></div>
 <h2 id="example-use">Example use</h2>
-<p>Here’s a simple program that parses two numbers, checks that the latter is non-zero, and then does a division by that non-zero number. Trivial, but it helps demonstrate the syntax without untidiness.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Div</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Nonzero</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Text.Read</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Named</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>  numeratorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a>  denominatorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a>  <span class="kw">case</span> (,) <span class="op">&lt;$&gt;</span> readMaybe numeratorString</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a>           <span class="op">&lt;*&gt;</span> readMaybe<span class="ot"> denominatorString ::</span> <span class="dt">Maybe</span> (<span class="dt">Double</span>, <span class="dt">Double</span>) <span class="kw">of</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Both must be valid numbers.&quot;</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a>    <span class="dt">Just</span> (<span class="dt">Name</span> numeratorNum, <span class="dt">Name</span> denominatorNum) <span class="ot">-&gt;</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a>      <span class="kw">case</span> checkNonzero denominatorNum <span class="kw">of</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Denominator must be non-zero.&quot;</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a>        <span class="dt">Just</span> denominatorNonZero <span class="ot">-&gt;</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a>          <span class="kw">let</span> result <span class="ot">=</span> divide denominatorNonZero numeratorNum denominatorNum</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a>          <span class="kw">in</span> <span class="fu">putStrLn</span> (<span class="st">&quot;Result: &quot;</span> <span class="op">++</span> <span class="fu">show</span> result)</span></code></pre></div>
-<p>One nice addition is that we can <em>use monad syntax</em> to name them very conveniently!</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>main2 <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a>  numeratorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a>  denominatorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>  <span class="kw">let</span> maybeResult <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>        <span class="dt">Name</span> numeratorNum   <span class="ot">&lt;-</span> readMaybe numeratorString</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a>        <span class="dt">Name</span> denominatorNum <span class="ot">&lt;-</span> readMaybe denominatorString</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>        denominatorNonZero  <span class="ot">&lt;-</span> checkNonzero denominatorNum</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a>        <span class="fu">pure</span> (divide denominatorNonZero numeratorNum denominatorNum)</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a>  <span class="fu">maybe</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a>    (<span class="fu">error</span> <span class="st">&quot;Something wasn't right and we don't care why.&quot;</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a>    <span class="fu">print</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a>    maybeResult</span></code></pre></div>
-<p>With an <code>Either E</code> return type, we could return or throw an exception, if we wanted to.</p>
-<h2 id="proof-is-in-the-pudding-examples-that-do-not-compile">Proof is in the pudding: Examples that do not compile</h2>
-<p>Here are some example variations of <code>Main</code> which fail to compile, demonstrating that this technique is helping the program be more correct:</p>
-<p>This version of main fails to compile simply because I haven’t named the <code>numeratorInt</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Div</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Nonzero</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Text.Read</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Named</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>  numeratorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true"></a>  denominatorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true"></a>  <span class="kw">case</span> (,) <span class="op">&lt;$&gt;</span> readMaybe numeratorString</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true"></a>           <span class="op">&lt;*&gt;</span> readMaybe<span class="ot"> denominatorString ::</span> <span class="dt">Maybe</span> (<span class="dt">Double</span>, <span class="dt">Double</span>) <span class="kw">of</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true"></a>    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Both must be valid numbers.&quot;</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true"></a>    <span class="dt">Just</span> (numeratorInt, <span class="dt">Name</span> denominatorInt) <span class="ot">-&gt;</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true"></a>      <span class="kw">case</span> checkNonzero denominatorInt <span class="kw">of</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Denominator must be non-zero.&quot;</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true"></a>        <span class="dt">Just</span> denominatorNonZero <span class="ot">-&gt;</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true"></a>          <span class="kw">let</span> result <span class="ot">=</span> divide denominatorNonZero numeratorInt denominatorInt</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true"></a>          <span class="kw">in</span> <span class="fu">putStrLn</span> (<span class="st">&quot;Result: &quot;</span> <span class="op">++</span> <span class="fu">show</span> result)</span></code></pre></div>
+<p>Here’s a simple program that parses two numbers, checks that the
+latter is non-zero, and then does a division by that non-zero number.
+Trivial, but it helps demonstrate the syntax without untidiness.</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Div</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Nonzero</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Text.Read</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Named</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  numeratorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  denominatorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> (,) <span class="op">&lt;$&gt;</span> readMaybe numeratorString</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>           <span class="op">&lt;*&gt;</span> readMaybe<span class="ot"> denominatorString ::</span> <span class="dt">Maybe</span> (<span class="dt">Double</span>, <span class="dt">Double</span>) <span class="kw">of</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Both must be valid numbers.&quot;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Just</span> (<span class="dt">Name</span> numeratorNum, <span class="dt">Name</span> denominatorNum) <span class="ot">-&gt;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      <span class="kw">case</span> checkNonzero denominatorNum <span class="kw">of</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Denominator must be non-zero.&quot;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Just</span> denominatorNonZero <span class="ot">-&gt;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>          <span class="kw">let</span> result <span class="ot">=</span> divide denominatorNonZero numeratorNum denominatorNum</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>          <span class="kw">in</span> <span class="fu">putStrLn</span> (<span class="st">&quot;Result: &quot;</span> <span class="op">++</span> <span class="fu">show</span> result)</span></code></pre></div>
+<p>One nice addition is that we can <em>use monad syntax</em> to name
+them very conveniently!</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>main2 <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  numeratorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  denominatorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> maybeResult <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Name</span> numeratorNum   <span class="ot">&lt;-</span> readMaybe numeratorString</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Name</span> denominatorNum <span class="ot">&lt;-</span> readMaybe denominatorString</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        denominatorNonZero  <span class="ot">&lt;-</span> checkNonzero denominatorNum</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="fu">pure</span> (divide denominatorNonZero numeratorNum denominatorNum)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">maybe</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    (<span class="fu">error</span> <span class="st">&quot;Something wasn&#39;t right and we don&#39;t care why.&quot;</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    maybeResult</span></code></pre></div>
+<p>With an <code>Either E</code> return type, we could return or throw
+an exception, if we wanted to.</p>
+<h2 id="proof-is-in-the-pudding-examples-that-do-not-compile">Proof is
+in the pudding: Examples that do not compile</h2>
+<p>Here are some example variations of <code>Main</code> which fail to
+compile, demonstrating that this technique is helping the program be
+more correct:</p>
+<p>This version of main fails to compile simply because I haven’t named
+the <code>numeratorInt</code>.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Div</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Nonzero</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Text.Read</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Named</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  numeratorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  denominatorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> (,) <span class="op">&lt;$&gt;</span> readMaybe numeratorString</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>           <span class="op">&lt;*&gt;</span> readMaybe<span class="ot"> denominatorString ::</span> <span class="dt">Maybe</span> (<span class="dt">Double</span>, <span class="dt">Double</span>) <span class="kw">of</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Both must be valid numbers.&quot;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Just</span> (numeratorInt, <span class="dt">Name</span> denominatorInt) <span class="ot">-&gt;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      <span class="kw">case</span> checkNonzero denominatorInt <span class="kw">of</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Denominator must be non-zero.&quot;</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Just</span> denominatorNonZero <span class="ot">-&gt;</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>          <span class="kw">let</span> result <span class="ot">=</span> divide denominatorNonZero numeratorInt denominatorInt</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>          <span class="kw">in</span> <span class="fu">putStrLn</span> (<span class="st">&quot;Result: &quot;</span> <span class="op">++</span> <span class="fu">show</span> result)</span></code></pre></div>
 <p>Yields the error:</p>
-<pre><code>Couldn't match expected type ‘Named x0 Double’ with actual type ‘Double’</code></pre>
-<p>Here is a version where I got the arguments to divide the wrong way round:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Div</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Nonzero</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Text.Read</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Named</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a>  numeratorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a>  denominatorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a>  <span class="kw">case</span> (,) <span class="op">&lt;$&gt;</span> readMaybe numeratorString</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true"></a>           <span class="op">&lt;*&gt;</span> readMaybe<span class="ot"> denominatorString ::</span> <span class="dt">Maybe</span> (<span class="dt">Double</span>, <span class="dt">Double</span>) <span class="kw">of</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true"></a>    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Both must be valid numbers.&quot;</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true"></a>    <span class="dt">Just</span> (<span class="dt">Name</span> numeratorInt, <span class="dt">Name</span> denominatorInt) <span class="ot">-&gt;</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true"></a>      <span class="kw">case</span> checkNonzero denominatorInt <span class="kw">of</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Denominator must be non-zero.&quot;</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true"></a>        <span class="dt">Just</span> denominatorNonZero <span class="ot">-&gt;</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true"></a>          <span class="kw">let</span> result <span class="ot">=</span> divide denominatorNonZero  denominatorInt numeratorInt</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true"></a>          <span class="kw">in</span> <span class="fu">putStrLn</span> (<span class="st">&quot;Result: &quot;</span> <span class="op">++</span> <span class="fu">show</span> result)</span></code></pre></div>
+<pre><code>Couldn&#39;t match expected type ‘Named x0 Double’ with actual type ‘Double’</code></pre>
+<p>Here is a version where I got the arguments to divide the wrong way
+round:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Div</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Nonzero</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Text.Read</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Named</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  numeratorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  denominatorString <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">case</span> (,) <span class="op">&lt;$&gt;</span> readMaybe numeratorString</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>           <span class="op">&lt;*&gt;</span> readMaybe<span class="ot"> denominatorString ::</span> <span class="dt">Maybe</span> (<span class="dt">Double</span>, <span class="dt">Double</span>) <span class="kw">of</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Both must be valid numbers.&quot;</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Just</span> (<span class="dt">Name</span> numeratorInt, <span class="dt">Name</span> denominatorInt) <span class="ot">-&gt;</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>      <span class="kw">case</span> checkNonzero denominatorInt <span class="kw">of</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Nothing</span> <span class="ot">-&gt;</span> <span class="fu">error</span> <span class="st">&quot;Denominator must be non-zero.&quot;</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Just</span> denominatorNonZero <span class="ot">-&gt;</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>          <span class="kw">let</span> result <span class="ot">=</span> divide denominatorNonZero  denominatorInt numeratorInt</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>          <span class="kw">in</span> <span class="fu">putStrLn</span> (<span class="st">&quot;Result: &quot;</span> <span class="op">++</span> <span class="fu">show</span> result)</span></code></pre></div>
 <p>Yields the error:</p>
-<pre><code>• Couldn't match type ‘n’ with ‘n1’</code></pre>
-<p>The <code>denominatorNonZero</code> proof refers to <code>denominatorInt</code> by a generate name type (<code>n1</code>), and <code>numeratorInt</code>’s name (<code>n</code>) is different.</p>
+<pre><code>• Couldn&#39;t match type ‘n’ with ‘n1’</code></pre>
+<p>The <code>denominatorNonZero</code> proof refers to
+<code>denominatorInt</code> by a generate name type (<code>n1</code>),
+and <code>numeratorInt</code>’s name (<code>n</code>) is different.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2019-12-07 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2019-12-07 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

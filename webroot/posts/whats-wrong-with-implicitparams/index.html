@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>What's wrong with ImplicitParams</title>
+    <title>What’s wrong with ImplicitParams</title>
     <style>
       body {
       max-width: 40em;
@@ -87,57 +87,95 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>What's wrong with ImplicitParams</h1>
 
-<p>Implicit parameters, enabled by the <code>ImplicitParams</code> extension in GHC, often come up in Haskell discussions,<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> with the statement that they’re so convenient, yet nobody<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> seems to use them. Why is that?</p>
-<p>The problem is incoherence. Type class resolution works in a very binary way: either it finds one, singular instance with one behavior and we compile, or it finds none at all and we don’t compile. It’s never<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> the case that changing our code will <em>change</em> a resolved instance. I can change my import list, or update my type-signatures.</p>
-<p>Incoherence breaks this guarantee. Implicit parameters rely on incoherence to work, because they piggyback on the type-class machinery with magical instances that appear as needed.</p>
-<p>Let’s see an example of how this leads to surprising results. The two declarations below produce different results.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="op">&gt;</span> <span class="kw">let</span> <span class="op">?</span>myparam <span class="ot">=</span> <span class="dv">123</span> <span class="kw">in</span> terror</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a>(<span class="dv">123</span>,<span class="dv">123</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="op">&gt;</span> <span class="kw">let</span> <span class="op">?</span>myparam <span class="ot">=</span> <span class="dv">123</span> <span class="kw">in</span> horror</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>(<span class="dv">123</span>,<span class="dv">456</span>)</span></code></pre></div>
+<h1>What’s wrong with ImplicitParams</h1>
+
+<p>Implicit parameters, enabled by the <code>ImplicitParams</code>
+extension in GHC, often come up in Haskell discussions,<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>
+with the statement that they’re so convenient, yet nobody<a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>
+seems to use them. Why is that?</p>
+<p>The problem is incoherence. Type class resolution works in a very
+binary way: either it finds one, singular instance with one behavior and
+we compile, or it finds none at all and we don’t compile. It’s never<a
+href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a> the case that changing our code will
+<em>change</em> a resolved instance. I can change my import list, or
+update my type-signatures.</p>
+<p>Incoherence breaks this guarantee. Implicit parameters rely on
+incoherence to work, because they piggyback on the type-class machinery
+with magical instances that appear as needed.</p>
+<p>Let’s see an example of how this leads to surprising results. The two
+declarations below produce different results.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> <span class="kw">let</span> <span class="op">?</span>myparam <span class="ot">=</span> <span class="dv">123</span> <span class="kw">in</span> terror</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>(<span class="dv">123</span>,<span class="dv">123</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;</span> <span class="kw">let</span> <span class="op">?</span>myparam <span class="ot">=</span> <span class="dv">123</span> <span class="kw">in</span> horror</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>(<span class="dv">123</span>,<span class="dv">456</span>)</span></code></pre></div>
 <p>Check out the code and find the reason why.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE ImplicitParams #-}</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="ot">horror ::</span> (<span class="op">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a>horror <span class="ot">=</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a>  <span class="kw">let</span><span class="ot"> result ::</span> (<span class="op">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> <span class="dt">Int</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>      result <span class="ot">=</span> <span class="op">?</span>myparam</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>   <span class="kw">in</span> ( result</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>      , <span class="kw">let</span> <span class="op">?</span>myparam <span class="ot">=</span> <span class="dv">456</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>         <span class="kw">in</span> result)</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a><span class="ot">terror ::</span> (<span class="op">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>terror <span class="ot">=</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>  <span class="kw">let</span><span class="ot"> result ::</span> <span class="dt">Int</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>      result <span class="ot">=</span> <span class="op">?</span>myparam</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a>   <span class="kw">in</span> ( result</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a>      , <span class="kw">let</span> <span class="op">?</span>myparam <span class="ot">=</span> <span class="dv">456</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a>         <span class="kw">in</span> result)</span></code></pre></div>
-<p>You found it; it’s that we added a type signature to <code>result</code>. That changed the behavior! If you find this surprising, it’s because you’re used to coherence. In normal Haskell, an inferred type and an explicit type don’t produce different code.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE ImplicitParams #-}</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ot">horror ::</span> (<span class="op">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>horror <span class="ot">=</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span><span class="ot"> result ::</span> (<span class="op">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> <span class="dt">Int</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      result <span class="ot">=</span> <span class="op">?</span>myparam</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>   <span class="kw">in</span> ( result</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      , <span class="kw">let</span> <span class="op">?</span>myparam <span class="ot">=</span> <span class="dv">456</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>         <span class="kw">in</span> result)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="ot">terror ::</span> (<span class="op">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>terror <span class="ot">=</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span><span class="ot"> result ::</span> <span class="dt">Int</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      result <span class="ot">=</span> <span class="op">?</span>myparam</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>   <span class="kw">in</span> ( result</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>      , <span class="kw">let</span> <span class="op">?</span>myparam <span class="ot">=</span> <span class="dv">456</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>         <span class="kw">in</span> result)</span></code></pre></div>
+<p>You found it; it’s that we added a type signature to
+<code>result</code>. That changed the behavior! If you find this
+surprising, it’s because you’re used to coherence. In normal Haskell, an
+inferred type and an explicit type don’t produce different code.</p>
 <p>Here’s another, more insidious, way to evoke the problem:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE ImplicitParams, NoMonomorphismRestriction #-}</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="ot">terror ::</span> (<span class="op">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>terror <span class="ot">=</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>  <span class="kw">let</span> result <span class="ot">=</span> <span class="op">?</span>myparam</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>   <span class="kw">in</span> ( result</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>      , <span class="kw">let</span> <span class="op">?</span>myparam <span class="ot">=</span> <span class="dv">456</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>         <span class="kw">in</span> result)</span></code></pre></div>
-<p>Try removing <code>NoMonomorphismRestriction</code>. The output is different depending on whether this extension is on or not. <strong>Be afraid, be very afraid.</strong></p>
-<p>If this constraint was <code>Show</code>, I wouldn’t be able to reproduce this difference, because there’s only one <code>Show Int</code> instance.</p>
-<p>Implicit parameters break fundamental expectations about one of Haskell’s most basic features: its type inference. For me, this is reason enough to avoid it.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE ImplicitParams, NoMonomorphismRestriction #-}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ot">terror ::</span> (<span class="op">?</span><span class="ot">myparam ::</span> <span class="dt">Int</span>) <span class="ot">=&gt;</span> (<span class="dt">Int</span>, <span class="dt">Int</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>terror <span class="ot">=</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> result <span class="ot">=</span> <span class="op">?</span>myparam</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>   <span class="kw">in</span> ( result</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      , <span class="kw">let</span> <span class="op">?</span>myparam <span class="ot">=</span> <span class="dv">456</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>         <span class="kw">in</span> result)</span></code></pre></div>
+<p>Try removing <code>NoMonomorphismRestriction</code>. The output is
+different depending on whether this extension is on or not. <strong>Be
+afraid, be very afraid.</strong></p>
+<p>If this constraint was <code>Show</code>, I wouldn’t be able to
+reproduce this difference, because there’s only one
+<code>Show Int</code> instance.</p>
+<p>Implicit parameters break fundamental expectations about one of
+Haskell’s most basic features: its type inference. For me, this is
+reason enough to avoid it.</p>
 <hr />
-<p>Thanks Andrew Martin for insightful discussion on this topic a few years ago.</p>
-<section class="footnotes" role="doc-endnotes">
+<p>Thanks Andrew Martin for insightful discussion on this topic a few
+years ago.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>Such as this blog post <a href="https://hugopeters.me/posts/10/">Who still uses ReaderT</a> by Hugo Peters.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>People do use them, see e.g. <a href="https://old.reddit.com/r/haskell/comments/m8o88a/who_still_uses_readert/grkh17q/">Ed Kmett</a>, with caveats.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>Orphan instances change this guarantee, which is why they’re maligned.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Such as this blog post <a
+href="https://hugopeters.me/posts/10/">Who still uses ReaderT</a> by
+Hugo Peters.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>People do use them, see e.g. <a
+href="https://old.reddit.com/r/haskell/comments/m8o88a/who_still_uses_readert/grkh17q/">Ed
+Kmett</a>, with caveats.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Orphan instances change this guarantee, which is why
+they’re maligned.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -145,8 +183,8 @@
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2021-03-20 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2021-03-20 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

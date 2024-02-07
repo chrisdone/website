@@ -87,11 +87,13 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>A map generic upon the value thanks to typeable</h1>
+
+<h1>A map generic upon the value thanks to typeable</h1>
 
 <p>Not sure why I never tried this before.</p>
 <pre><code>{-# LANGUAGE ExistentialQuantification #-}
@@ -111,7 +113,7 @@ demo = do
   print (glookup &quot;bar&quot; map :: Maybe Char)
   print (glookup &quot;chris&quot; map :: Maybe Person)
 
-    where map = M.insert &quot;bar&quot; (Value 'a') $
+    where map = M.insert &quot;bar&quot; (Value &#39;a&#39;) $
                 M.insert &quot;foo&quot; (Value ())  $
                 M.insert &quot;chris&quot; (Value (Person 123 &quot;Chris Done&quot;))  $
                 M.empty
@@ -124,15 +126,15 @@ glookup key map =
 
 -- λ&gt; demo
 -- Just ()
--- Just 'a'
+-- Just &#39;a&#39;
 -- Just (Person 123 &quot;Chris Done&quot;)</code></pre>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2011-12-05 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2011-12-05 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

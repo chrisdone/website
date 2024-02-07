@@ -87,94 +87,108 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Defaulting fields in a record</h1>
 
-<p>Do you have 20+ fields of configuration for your kitchen sink API? This approach might be for you.</p>
-<p>An approach to specifying many (required) fields, where some are defaulted. What you get:</p>
+<h1>Defaulting fields in a record</h1>
+
+<p>Do you have 20+ fields of configuration for your kitchen sink API?
+This approach might be for you.</p>
+<p>An approach to specifying many (required) fields, where some are
+defaulted. What you get:</p>
 <ol type="1">
 <li>The ability to specify what the defaults are in a single place.</li>
-<li>That set of defaults is decoupled from the function that uses the record (separating concerns).</li>
-<li>The ability to choose different sets of defaults easily (e.g. “dev” mode vs “production” mode).</li>
-<li>Type-safety; you can’t specify defaults for required fields as an API provider.</li>
-<li>Overriding: you can provide values instead of using the default trivially.</li>
+<li>That set of defaults is decoupled from the function that uses the
+record (separating concerns).</li>
+<li>The ability to choose different sets of defaults easily (e.g. “dev”
+mode vs “production” mode).</li>
+<li>Type-safety; you can’t specify defaults for required fields as an
+API provider.</li>
+<li>Overriding: you can provide values instead of using the default
+trivially.</li>
 <li>Light-weight syntax.</li>
-<li>Failing to provide a required field as an API end-user results in a type error.</li>
+<li>Failing to provide a required field as an API end-user results in a
+type error.</li>
 </ol>
-<p>A field which has no sensible default value (such as one enabling a new feature like <code>TLSSettings</code>) can still be <code>Maybe a</code>.</p>
+<p>A field which has no sensible default value (such as one enabling a
+new feature like <code>TLSSettings</code>) can still be
+<code>Maybe a</code>.</p>
 <p>Your consumer of this API:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="co">-- | Usage of API.</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">DBAPI</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="co">-- Omitting either username or password triggers a type error.</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>main <span class="ot">=</span> connect connSpecDefaults {username <span class="ot">=</span> <span class="st">&quot;test&quot;</span>, password <span class="ot">=</span> <span class="st">&quot;mypw&quot;</span>}</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a><span class="co">-- To override defaults, just specify the field e.g. port:</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>main2 <span class="ot">=</span> connect connSpecDefaults {username <span class="ot">=</span> <span class="st">&quot;test&quot;</span>, password <span class="ot">=</span> <span class="st">&quot;mypw&quot;</span>, port <span class="ot">=</span> <span class="dv">1234</span>}</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a><span class="co">-- Thanks Aleksey Khudyakov (@pineapple_zombi) for pointing out that plain record</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a><span class="co">-- update has the same typing rules as RecordWildCards.</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true"></a><span class="co">--</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true"></a><span class="co">-- Old version was: ConnSpec{username=&quot;..&quot;,password=&quot;..&quot;,..} where</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true"></a><span class="co">-- ConnSpec{..} = connSpecDefaults</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Usage of API.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">DBAPI</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">-- Omitting either username or password triggers a type error.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> connect connSpecDefaults {username <span class="ot">=</span> <span class="st">&quot;test&quot;</span>, password <span class="ot">=</span> <span class="st">&quot;mypw&quot;</span>}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">-- To override defaults, just specify the field e.g. port:</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>main2 <span class="ot">=</span> connect connSpecDefaults {username <span class="ot">=</span> <span class="st">&quot;test&quot;</span>, password <span class="ot">=</span> <span class="st">&quot;mypw&quot;</span>, port <span class="ot">=</span> <span class="dv">1234</span>}</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">-- Thanks Aleksey Khudyakov (@pineapple_zombi) for pointing out that plain record</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">-- update has the same typing rules as RecordWildCards.</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">--</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">-- Old version was: ConnSpec{username=&quot;..&quot;,password=&quot;..&quot;,..} where</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">-- ConnSpec{..} = connSpecDefaults</span></span></code></pre></div>
 <p>Definition of an API, in this case the example is a database:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="co">-- | My database API.</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">DBAPI</span> <span class="kw">where</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Data.Defaults</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">ConnSpec</span> p <span class="ot">=</span> <span class="dt">ConnSpec</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>  {<span class="ot"> username ::</span> <span class="op">!</span>(<span class="dt">Required</span> p <span class="dt">String</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>  ,<span class="ot"> password ::</span> <span class="op">!</span>(<span class="dt">Required</span> p <span class="dt">String</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>  ,<span class="ot"> port ::</span> <span class="op">!</span><span class="dt">Int</span> <span class="co">-- Optional and therefore requires a default.</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>  ,<span class="ot"> host ::</span> <span class="op">!</span><span class="dt">String</span> <span class="co">-- Optional and therefore requires a default.</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a>  }</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a><span class="ot">connSpecDefaults ::</span> <span class="dt">ConnSpec</span> <span class="dt">Defaults</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true"></a>connSpecDefaults <span class="ot">=</span> <span class="dt">ConnSpec</span> {</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a>  <span class="co">-- Required fields are ()</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true"></a>  username <span class="ot">=</span> (), password <span class="ot">=</span> (),</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true"></a>  <span class="co">-- Defaulted fields need defaults specified</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true"></a>  port <span class="ot">=</span> <span class="dv">5432</span>, host <span class="ot">=</span> <span class="st">&quot;localhost&quot;</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true"></a>  }</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true"></a></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true"></a><span class="co">-- Example func.</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true"></a><span class="ot">connect ::</span> <span class="dt">ConnSpec</span> <span class="dt">Complete</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true"></a>connect _ <span class="ot">=</span> <span class="fu">pure</span> ()</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- | My database API.</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">DBAPI</span> <span class="kw">where</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Defaults</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">ConnSpec</span> p <span class="ot">=</span> <span class="dt">ConnSpec</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> username ::</span> <span class="op">!</span>(<span class="dt">Required</span> p <span class="dt">String</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> password ::</span> <span class="op">!</span>(<span class="dt">Required</span> p <span class="dt">String</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> port ::</span> <span class="op">!</span><span class="dt">Int</span> <span class="co">-- Optional and therefore requires a default.</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> host ::</span> <span class="op">!</span><span class="dt">String</span> <span class="co">-- Optional and therefore requires a default.</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="ot">connSpecDefaults ::</span> <span class="dt">ConnSpec</span> <span class="dt">Defaults</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>connSpecDefaults <span class="ot">=</span> <span class="dt">ConnSpec</span> {</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Required fields are ()</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  username <span class="ot">=</span> (), password <span class="ot">=</span> (),</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Defaulted fields need defaults specified</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  port <span class="ot">=</span> <span class="dv">5432</span>, host <span class="ot">=</span> <span class="st">&quot;localhost&quot;</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="co">-- Example func.</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="ot">connect ::</span> <span class="dt">ConnSpec</span> <span class="dt">Complete</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>connect _ <span class="ot">=</span> <span class="fu">pure</span> ()</span></code></pre></div>
 <p>Basic defaults module to support this approach:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE TypeFamilies #-}</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="ot">{-# LANGUAGE KindSignatures #-}</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="co">-- | Providing defaults for fields in a record.</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Data.Defaults</span> <span class="kw">where</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="co">-- | Purpose of a data type.</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Purpose</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>  <span class="ot">=</span> <span class="dt">Defaults</span> <span class="co">-- For specifying defaults.</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>  <span class="op">|</span> <span class="dt">Complete</span> <span class="co">-- For making a complete record.</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a><span class="co">-- | Required fields are not usable from a defaults spec.</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a><span class="kw">type</span> <span class="kw">family</span> <span class="dt">Required</span> (<span class="ot">p ::</span> <span class="dt">Purpose</span>) a <span class="kw">where</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a>  <span class="dt">Required</span> <span class="dt">'Defaults</span> a  <span class="ot">=</span> () <span class="co">-- When we're defining defaults, required fields are ().</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a>  <span class="dt">Required</span> <span class="dt">'Complete</span> a <span class="ot">=</span> a</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE TypeFamilies #-}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE KindSignatures #-}</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Providing defaults for fields in a record.</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Data.Defaults</span> <span class="kw">where</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Purpose of a data type.</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Purpose</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="ot">=</span> <span class="dt">Defaults</span> <span class="co">-- For specifying defaults.</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="dt">Complete</span> <span class="co">-- For making a complete record.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Required fields are not usable from a defaults spec.</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="kw">family</span> <span class="dt">Required</span> (<span class="ot">p ::</span> <span class="dt">Purpose</span>) a <span class="kw">where</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Required</span> <span class="dt">&#39;Defaults</span> a  <span class="ot">=</span> () <span class="co">-- When we&#39;re defining defaults, required fields are ().</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Required</span> <span class="dt">&#39;Complete</span> a <span class="ot">=</span> a</span></code></pre></div>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2019-12-07 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2019-12-07 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

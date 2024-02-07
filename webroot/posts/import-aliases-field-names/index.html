@@ -87,52 +87,64 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Use import aliases to easily access fields</h1>
 
-<p>This post demonstrates using imports as a quick and easy way to disambiguate record field names. You can still put all your types in one module.</p>
+<h1>Use import aliases to easily access fields</h1>
+
+<p>This post demonstrates using imports as a quick and easy way to
+disambiguate record field names. You can still put all your types in one
+module.</p>
 <p>No fancy type classes or machinery needed.</p>
-<p>Define all your types in one module, using <code>DuplicateRecordFields</code> to avoid GHC complaining about conflicting field names:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE DuplicateRecordFields  #-}</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Types</span> <span class="kw">where</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Prelude</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Person</span> <span class="ot">=</span> <span class="dt">Person</span> {<span class="ot"> name ::</span> <span class="dt">String</span>,<span class="ot"> age ::</span> <span class="dt">Int</span> } <span class="kw">deriving</span> <span class="dt">Show</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="kw">data</span> <span class="dt">Company</span> <span class="ot">=</span> <span class="dt">Company</span> {<span class="ot"> name ::</span> <span class="dt">String</span>,<span class="ot"> age ::</span> <span class="dt">Int</span> } <span class="kw">deriving</span> <span class="dt">Show</span></span></code></pre></div>
-<p>Now in another module, use import aliases to get at specific types (<code>Person</code> and <code>Company</code>):</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="ot">{-# LANGUAGE DuplicateRecordFields  #-}</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="kw">module</span> <span class="dt">Use</span> <span class="kw">where</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Prelude</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Types</span> <span class="kw">as</span> <span class="dt">Person</span> (<span class="dt">Person</span>(..))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Types</span> <span class="kw">as</span> <span class="dt">Company</span> (<span class="dt">Company</span>(..))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a><span class="kw">import</span> <span class="dt">Types</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>main <span class="ot">=</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>  <span class="kw">let</span> <span class="co">-- Freely use Person/Company constructors, and field names unqualified:</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a>      mary <span class="ot">=</span> <span class="dt">Person</span> {name <span class="ot">=</span> <span class="st">&quot;Mary&quot;</span>, age <span class="ot">=</span> <span class="dv">23</span>}</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>      james <span class="ot">=</span> <span class="dt">Person</span> {name <span class="ot">=</span> <span class="st">&quot;James&quot;</span>, age <span class="ot">=</span> <span class="dv">22</span>}</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a>      company <span class="ot">=</span> <span class="dt">Company</span> {name<span class="ot">=</span><span class="st">&quot;Fish Limited&quot;</span>,age<span class="ot">=</span><span class="dv">150</span>}</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a>   <span class="kw">in</span> <span class="kw">do</span> <span class="co">-- Pattern matching convenience:</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a>         <span class="kw">case</span> mary <span class="kw">of</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a>           <span class="dt">Person</span>{name} <span class="ot">-&gt;</span> <span class="fu">print</span> name</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true"></a>         <span class="kw">case</span> company <span class="kw">of</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a>           <span class="dt">Company</span>{name} <span class="ot">-&gt;</span> <span class="fu">print</span> name</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true"></a>         <span class="co">-- Easily transfer data between record types because the field names are the same.</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true"></a>         <span class="kw">let</span> transferred <span class="ot">=</span> <span class="dt">Company</span> {<span class="op">..</span>} <span class="kw">where</span> <span class="dt">Person</span> {<span class="op">..</span>} <span class="ot">=</span> mary</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true"></a>         <span class="co">-- Accessing:</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true"></a>         <span class="fu">print</span> (Person.name mary)</span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true"></a>         <span class="fu">print</span> (Person.name james)</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true"></a>         <span class="fu">print</span> (<span class="fu">map</span> Person.name [mary,james])</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true"></a>         <span class="fu">print</span> (Company.name company)</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true"></a>         <span class="fu">print</span> (Company.name transferred)</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true"></a>         <span class="co">-- Updating:</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true"></a>         <span class="fu">print</span> (mary { Person.name <span class="ot">=</span> <span class="st">&quot;Maria&quot;</span>})</span></code></pre></div>
+<p>Define all your types in one module, using
+<code>DuplicateRecordFields</code> to avoid GHC complaining about
+conflicting field names:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DuplicateRecordFields  #-}</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Types</span> <span class="kw">where</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Prelude</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Person</span> <span class="ot">=</span> <span class="dt">Person</span> {<span class="ot"> name ::</span> <span class="dt">String</span>,<span class="ot"> age ::</span> <span class="dt">Int</span> } <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Company</span> <span class="ot">=</span> <span class="dt">Company</span> {<span class="ot"> name ::</span> <span class="dt">String</span>,<span class="ot"> age ::</span> <span class="dt">Int</span> } <span class="kw">deriving</span> <span class="dt">Show</span></span></code></pre></div>
+<p>Now in another module, use import aliases to get at specific types
+(<code>Person</code> and <code>Company</code>):</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DuplicateRecordFields  #-}</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Use</span> <span class="kw">where</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Prelude</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Types</span> <span class="kw">as</span> <span class="dt">Person</span> (<span class="dt">Person</span>(..))</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Types</span> <span class="kw">as</span> <span class="dt">Company</span> (<span class="dt">Company</span>(..))</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Types</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> <span class="co">-- Freely use Person/Company constructors, and field names unqualified:</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>      mary <span class="ot">=</span> <span class="dt">Person</span> {name <span class="ot">=</span> <span class="st">&quot;Mary&quot;</span>, age <span class="ot">=</span> <span class="dv">23</span>}</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>      james <span class="ot">=</span> <span class="dt">Person</span> {name <span class="ot">=</span> <span class="st">&quot;James&quot;</span>, age <span class="ot">=</span> <span class="dv">22</span>}</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>      company <span class="ot">=</span> <span class="dt">Company</span> {name<span class="ot">=</span><span class="st">&quot;Fish Limited&quot;</span>,age<span class="ot">=</span><span class="dv">150</span>}</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>   <span class="kw">in</span> <span class="kw">do</span> <span class="co">-- Pattern matching convenience:</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>         <span class="kw">case</span> mary <span class="kw">of</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>           <span class="dt">Person</span>{name} <span class="ot">-&gt;</span> <span class="fu">print</span> name</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>         <span class="kw">case</span> company <span class="kw">of</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>           <span class="dt">Company</span>{name} <span class="ot">-&gt;</span> <span class="fu">print</span> name</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>         <span class="co">-- Easily transfer data between record types because the field names are the same.</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>         <span class="kw">let</span> transferred <span class="ot">=</span> <span class="dt">Company</span> {<span class="op">..</span>} <span class="kw">where</span> <span class="dt">Person</span> {<span class="op">..</span>} <span class="ot">=</span> mary</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>         <span class="co">-- Accessing:</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>         <span class="fu">print</span> (Person.name mary)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>         <span class="fu">print</span> (Person.name james)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>         <span class="fu">print</span> (<span class="fu">map</span> Person.name [mary,james])</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>         <span class="fu">print</span> (Company.name company)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>         <span class="fu">print</span> (Company.name transferred)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>         <span class="co">-- Updating:</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>         <span class="fu">print</span> (mary { Person.name <span class="ot">=</span> <span class="st">&quot;Maria&quot;</span>})</span></code></pre></div>
 <p>Daniel Díaz Carrete commented:</p>
 <blockquote>
-<p>While it doesn’t free you from having to prepend the qualified name when using the selectors, it feels conceptually “better” to define it once at the import list, instead of doing it at each field declaration.</p>
+<p>While it doesn’t free you from having to prepend the qualified name
+when using the selectors, it feels conceptually “better” to define it
+once at the import list, instead of doing it at each field
+declaration.</p>
 </blockquote>
 <p>Which I agree with!</p>
 
@@ -140,8 +152,8 @@
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2020-12-15 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2020-12-15 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>

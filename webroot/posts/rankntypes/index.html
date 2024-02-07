@@ -87,25 +87,37 @@
       margin-bottom: 0.1em;
       }
       }
+      .footnote-ref { text-decoration: none; }
     </style>
   </head>
   <body>
     <div class="page-wrap">
-      <h1>Rank-N types, a simple DB example</h1>
 
-<p>This is a very simple example of rank-N types to demonstrate to non-Haskellers/newbies.</p>
-<p>Following the resources theme, rank-N types as seen in <a href="http://www.haskell.org/haskellwiki/Monad/ST">the ST monad</a> are also a gem:</p>
+<h1>Rank-N types, a simple DB example</h1>
+
+<p>This is a very simple example of rank-N types to demonstrate to
+non-Haskellers/newbies.</p>
+<p>Following the resources theme, rank-N types as seen in <a
+href="http://www.haskell.org/haskellwiki/Monad/ST">the ST monad</a> are
+also a gem:</p>
 <pre><code>{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE RankNTypes #-}</code></pre>
-<p>Define a monad for interacting with the DB parametrized on a connection type variable, <code>c</code>, as well as the return type:</p>
+<p>Define a monad for interacting with the DB parametrized on a
+connection type variable, <code>c</code>, as well as the return
+type:</p>
 <pre><code>newtype DB c a = DB (IO a) deriving (Monad)</code></pre>
-<p>And a connection data type parametrized on the connection type variable:</p>
+<p>And a connection data type parametrized on the connection type
+variable:</p>
 <pre><code>newtype Connection c = Connection ()</code></pre>
-<p>Define the connection opening function such that the quantified type variable <code>c</code> cannot escape from the DB monad:</p>
+<p>Define the connection opening function such that the quantified type
+variable <code>c</code> cannot escape from the DB monad:</p>
 <pre><code>withConnection :: (forall c. DB c a) -&gt; IO a
 withConnection m = case m of DB io -&gt; io</code></pre>
-<p>Let’s say in a real implementation <code>withConnection</code> opens a database connection in a transaction and commits and closes when done, among other exception catching things.</p>
-<p>Define some functions for the DB monad (note they all reference the <code>c</code> type variable):</p>
+<p>Let’s say in a real implementation <code>withConnection</code> opens
+a database connection in a transaction and commits and closes when done,
+among other exception catching things.</p>
+<p>Define some functions for the DB monad (note they all reference the
+<code>c</code> type variable):</p>
 <pre><code>getConn :: DB c (Connection c)
 getConn = return (Connection ())
 
@@ -126,16 +138,22 @@ query _ _ = return [&quot;Hello!&quot;]</code></pre>
    return conn</code></pre>
 <p>You get a compile error:</p>
 <pre><code>Error:  Inferred type is less polymorphic than expected
-      Quantified type variable `c' escapes</code></pre>
-<p>This is pretty nice if your DB library implementation, e.g., is supposed to ensure operations on a connection run inside a transaction, or if your operations assume a connection exists. Otherwise you’re liable to having DB code run outside of a transaction, or code throwing exceptions because the connection was closed but we tried to use it anyway, or in severe cases, some C DB libraries will just segfault.</p>
-<p>We didn’t have to do anything complex or write any boilerplate or macros or whatnot, just use the type system. That’s what it’s for.</p>
+      Quantified type variable `c&#39; escapes</code></pre>
+<p>This is pretty nice if your DB library implementation, e.g., is
+supposed to ensure operations on a connection run inside a transaction,
+or if your operations assume a connection exists. Otherwise you’re
+liable to having DB code run outside of a transaction, or code throwing
+exceptions because the connection was closed but we tried to use it
+anyway, or in severe cases, some C DB libraries will just segfault.</p>
+<p>We didn’t have to do anything complex or write any boilerplate or
+macros or whatnot, just use the type system. That’s what it’s for.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2011-10-16 <a href="../../">Chris Done</a></td>
-      <td style="text-align:right"><a href="../../posts">Read more posts →</a></td>
+      <td>© 2011-10-16 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>
