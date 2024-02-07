@@ -17,11 +17,9 @@ main = do
 generate = do
   posts <- Directory.listDirectory "posts"
   Text.putStrLn (Text.concat ["There are ", Show.show (List.length posts), " posts."])
-  Async.pooledMapConcurrently_ (\post -> do
-    -- Text.putStrLn (Text.concat ["Parsing ", post, " ..."])
+  Async.pooledForConcurrently_ posts \post -> do
     contents <- Text.readFile (Text.concat ["posts/", post])
     Maybe.maybe (Text.putStrLn "Bad parse!") (Main.render post) (Main.parse contents)
-    ) posts
 
 -- Contents of an article looks like this:
 --
