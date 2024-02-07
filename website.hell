@@ -1,3 +1,8 @@
+-- Dependencies:
+--
+-- hell-2024-02-07
+-- pandoc-3.1.11.1
+
 -- Main entry point just generates the complete blog every time.
 --
 --
@@ -53,7 +58,6 @@ render = \post (date, title, content) -> do
         Text.concat ["webroot/posts/", Text.replace ".md" "" (Text.replace ".markdown" "" post)]
   let targetFile = Text.concat [targetDir, "/index.html"]
   Text.putStrLn (Text.concat ["Rendering ", date, " ", targetDir, " ", title, " ..."])
-  -- pandoc-3.1.11.1
   (out, err) <- Text.readProcess_ (Process.proc "pandoc" ["--standalone","--template","templates/post.html",Text.concat ["posts/", post]])
   Directory.createDirectoryIfMissing Bool.True targetDir
   Text.writeFile targetFile out
