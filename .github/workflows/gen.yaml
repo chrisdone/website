@@ -15,4 +15,4 @@ jobs:
       - name: hell website.hell
         run: |
           time hell website.hell
-          rsync -r webroot/* /var/www/html/
+          sudo rsync -r webroot/* /var/www/html/
