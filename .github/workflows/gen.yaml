@@ -12,15 +12,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Try to login to docker hub registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Run hakyll build
+      - name: hell website.hell
         run: |
-          cd hakyll
-          docker run -v`pwd`:`pwd` -w`pwd` --rm ghcr.io/chrisdone/website-hakyll2@sha256:ab4fff3cb18b46ed3fb47fad9de442d778043a7b62a50637a08eb489cb65be0c site build
-          cd _site
-          sudo cp -r * /var/www/html/
-          cd ../../webroot
+          time hell website.hell
+          cd webroot
+          sudo cp -r posts/ /var/www/html/
           sudo cp -r toys pdfs txt images /var/www/html/
-          sudo cp -r posts/z /var/www/html/posts/
