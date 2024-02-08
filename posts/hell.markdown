@@ -6,7 +6,7 @@ author: Chris Done
 tags: haskell
 ---
 
-Hell is a shell scripting
-language that is a tiny
-dialect of Haskell.
+[Hell](https://github.com/chrisdone/hell) is a shell scripting
+language that is a tiny dialect of Haskell.
 
+I'm using it to generate this blog, instead of Hakyll.
