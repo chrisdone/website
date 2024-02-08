@@ -20,11 +20,29 @@ main = do
 -- .md or .markdown files, the extension doesn't matter.
 --
 generate = do
+  posts <- Main.generatePosts
+  Main.generateArchive posts
+  Text.putStrLn ""
+
+-- Write out posts/$post/index.html per $post.
+--
+generatePosts = do
   posts <- Directory.listDirectory "posts"
-  Text.putStrLn (Text.concat ["There are ", Show.show (List.length posts), " posts."])
-  Async.pooledForConcurrently_ posts \post -> do
+  Text.putStrLn (Text.concat ["Generating ", Show.show (List.length posts), " posts ..."])
+  Async.pooledForConcurrently posts \post -> do
     contents <- Text.readFile (Text.concat ["posts/", post])
-    Maybe.maybe (Text.putStrLn "Bad parse!") (Main.render post) (Main.parse contents)
+    Maybe.maybe
+      (Error.error "Couldn't parse the article!")
+      (\triple -> do
+        Main.render post
+        Monad.return triple)
+      (Main.parse contents)
+
+-- Generate the /posts/ page.
+--
+generateArchive = \posts ->
+  Text.putStrLn (Text.concat ["Generating archive ..."])
+
 
 -- Contents of an article looks like this:
 --
@@ -53,11 +71,10 @@ parse = \article -> do
 -- A post consists of a date, title and markdown.
 --
 -- Rendering them is easy, just run pandoc and apply an HTML template.
-render = \post (date, title, content) -> do
+render = \post -> do
   let targetDir =
         Text.concat ["webroot/posts/", Text.replace ".md" "" (Text.replace ".markdown" "" post)]
   let targetFile = Text.concat [targetDir, "/index.html"]
-  Text.putStrLn (Text.concat ["Rendering ", date, " ", targetDir, " ", title, " ..."])
   (out, err) <- Text.readProcess_ (Process.proc "pandoc" ["--standalone","--template","templates/post.html",Text.concat ["posts/", post]])
   Directory.createDirectoryIfMissing Bool.True targetDir
   Text.writeFile targetFile out
