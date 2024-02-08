@@ -6,9 +6,7 @@
 -- Main entry point just generates the complete blog every time.
 --
 --
-main = do
-  Text.putStrLn "Generating ..."
-  Main.generate
+main = Main.generate
 
 -- The posts are listed under ./posts in this format:
 --
@@ -22,7 +20,6 @@ main = do
 generate = do
   posts <- Main.generatePosts
   Main.generateArchive posts
-  Text.putStrLn ""
 
 -- Write out posts/$post/index.html per $post.
 --
@@ -33,16 +30,42 @@ generatePosts = do
     contents <- Text.readFile (Text.concat ["posts/", post])
     Maybe.maybe
       (Error.error "Couldn't parse the article!")
-      (\triple -> do
+      (\(date, title) -> do
         Main.render post
-        Monad.return triple)
+        Monad.return (post, date, title))
       (Main.parse contents)
 
 -- Generate the /posts/ page.
 --
-generateArchive = \posts ->
-  Text.putStrLn (Text.concat ["Generating archive ..."])
-
+generateArchive = \posts -> do
+  Text.putStrLn "Generating archive ..."
+  let rows =
+        Text.concat
+          (List.map
+            (\(post, date, title) ->
+              Text.concat [
+                 "<tr><td><a href='",
+                 Main.filename post,
+                 "'>",
+                 Main.strip title,
+                 "</td><td>",
+                 date,
+                 "</td></tr>"
+               ])
+            (List.reverse (List.sortOn (\(post, date, title) -> date) posts)))
+  let table = Text.concat [
+        "---\n",
+        "title: Archive\n",
+        "---\n",
+        "<table id='archive' style='line-height:2em'>",
+        rows,
+        "</table>"
+        ]
+  (out, err) <-
+    Text.readProcess_
+      (Text.setStdin table (Process.proc "pandoc"
+         ["--standalone","--template","templates/posts.html"]))
+  Text.writeFile "webroot/posts/index.html" out
 
 -- Contents of an article looks like this:
 --
@@ -59,22 +82,31 @@ generateArchive = \posts ->
 --
 parse = \article -> do
   sansPrefix <- Text.stripPrefix "---" article
-  let (preamble, content) = Text.breakOn "---" sansPrefix
+  let (preamble, _content) = Text.breakOn "---" sansPrefix
   let lines = Text.splitOn "\n" preamble
   let pairs = List.map (\line -> do let (key, value) = Text.breakOn ":" line
                                     (key, Text.strip (Text.drop 1 value)))
                        lines
   date <- List.lookup "date" pairs
   title <- List.lookup "title" pairs
-  Monad.return (date, title, content)
+  Monad.return (date, title)
 
 -- A post consists of a date, title and markdown.
 --
 -- Rendering them is easy, just run pandoc and apply an HTML template.
 render = \post -> do
   let targetDir =
-        Text.concat ["webroot/posts/", Text.replace ".md" "" (Text.replace ".markdown" "" post)]
+        Text.concat ["webroot/posts/", Main.filename post]
   let targetFile = Text.concat [targetDir, "/index.html"]
   (out, err) <- Text.readProcess_ (Process.proc "pandoc" ["--standalone","--template","templates/post.html",Text.concat ["posts/", post]])
   Directory.createDirectoryIfMissing Bool.True targetDir
   Text.writeFile targetFile out
+
+-- Filename stripped of .md/.markdown.
+filename = \post -> Text.replace ".md" "" (Text.replace ".markdown" "" post)
+
+-- Strip out quotes from "foo".
+strip = \title ->
+  Maybe.maybe title Function.id do
+    title' <- Text.stripPrefix "\"" title
+    Text.stripSuffix "\"" title'
