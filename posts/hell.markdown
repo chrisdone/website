@@ -9,4 +9,4 @@ tags: haskell
 [Hell](https://github.com/chrisdone/hell) is a shell scripting
 language that is a tiny dialect of Haskell.
 
-I'm using it to generate this blog, instead of Hakyll.
+I'm using it to [generate this blog](https://github.com/chrisdone/hell/blob/main/examples/19-blog-generator.hell), instead of Hakyll.
