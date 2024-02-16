@@ -6,6 +6,186 @@
 <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
 <atom:link href="https://chrisdone.com/rss.xml" rel="self" type="application/rss+xml" />
 <lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>
+<item><title><![CDATA[Reports of RSS/Atom's death are greatly exaggerated]]></title><link>https://chrisdone.com/posts/death-of-rss-greatly-exaggerated</link><guid>https://chrisdone.com/posts/death-of-rss-greatly-exaggerated</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reports of RSS/Atom’s death are greatly exaggerated</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Reports of RSS/Atom’s death are greatly exaggerated</h1>
+
+<p>I’m not old, but I remember when people said “my web log.” That then
+became “blog.”<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
+<p>I subscribe via a feed reader<a href="#fn2" class="footnote-ref"
+id="fnref2" role="doc-noteref"><sup>2</sup></a> to a collection of
+individual blogs, and a few aggregators (but only the top posts of the
+week).</p>
+<p>This strikes a good balance of interesting reads (mostly technology
+and programming related), and keeping my finger on the pulse of what the
+tech world is excited about (big data, IoT, NoSQL, cloud, VR, crypto,
+AI, insert trend du jour here).</p>
+<p>It also means I only have about 30 or so new posts per day appearing
+in my feed, and they can be flicked through in a few minutes. I’ll
+bookmark ones that sound interesting to read for when I’m at home and
+sitting comfortably. “Screen time” and FOMO are not problems for me.<a
+href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a> I can also setup filters for
+bullshit content mill authors.<a href="#fn4" class="footnote-ref"
+id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<p>However, about once a fortnight–on my RSS feed–I regularly see a post
+debating why RSS has died, or why it’s making a comeback. There’s
+usually related discussion about adoption, the user experience, or
+corporate interests (Google Reader, or $popular_newspaper).<a
+href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a></p>
+<p>For people who digest things over a course of days or weeks, rather
+than doom scrolling and posting their knee-jerk reactions, the situation
+for a very broad set of people is that RSS/Atom is in the background
+doing what it’s supposed to. No VC-backed endless growth, or
+decline.</p>
+<p>Feeds continue to serve their modest purpose.</p>
+<p>For people lamenting the death of Google Reader, or that Mozilla
+dropped the built-in feed icon and reader from Firefox: don’t. Be
+thankful that the Great Eye of Business has lost interest in RSS and
+does not want to meddle in it anymore.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Which I thought was “so lame” at the time. But I’ve
+grown up since then. A little bit.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>I get my other news from more traditional sources in
+dead tree format. And I don’t use Facebook, Instagram, TikTok, Twitter,
+Threads, or other drugs. According to The Economist, people are no
+longer posting or getting their news from social networks anyway; it’s
+all happening in private chat groups.<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Partly thanks to Musk completely bungling Twitter, which
+was already on thin ice for me. I (along with many others) migrated to
+Mastodon, and then lost interest in any kind of “microblogging” at all.
+Other people have just deleted their accounts. Similar to Reddit,
+really. Tech communites have largely moved to Discourse.<a
+href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Such as Substack, Medium, etc. For future readers who
+might not know what these platforms were, they’re just another type of
+blogging service, but are extremely aggressive at bothering you to “sign
+up to my newsletter” (literally–not a joke), and the posts are almost
+all inflammatory, self-promotion, or attempts to direct you to a product
+or service.<a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>You’ll see a similar pattern of discussion about email,
+another distributed internet standard. Unfortunately Big Business is
+presently a spectre looming over email.<a href="#fnref5"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2024-02-16 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Fri, 16 Feb 2024 00:00:00 +0000
+</pubDate><dc:creator>Chris Done</dc:creator></item>
 <item><title><![CDATA[Hell: Shell scripting based on Haskell]]></title><link>https://chrisdone.com/posts/hell</link><guid>https://chrisdone.com/posts/hell</guid><description><![CDATA[<!doctype html>
 <html>
   <head>
