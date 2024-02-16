@@ -10,3 +10,5 @@ tags: haskell
 language that is a tiny dialect of Haskell.
 
 I'm using it to [generate this blog](https://github.com/chrisdone/hell/blob/main/examples/19-blog-generator.hell), instead of Hakyll.
+
+There's [a set of slides](/pdfs/tour-of-hell.pdf) I made for presenting Hell at work.
