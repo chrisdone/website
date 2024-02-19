@@ -11,7 +11,7 @@ language that is a tiny dialect of Haskell.
 
 Note: I'm using it to [generate this
 blog](https://github.com/chrisdone/hell/blob/main/examples/19-blog-generator.hell),
-instead of Hakyll.
+instead of Hakyll.[^1]
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
@@ -120,3 +120,5 @@ I made the following decisions when designing the language:
 * [Why Create a New Unix Shell?](http://www.oilshell.org/blog/2018/01/28.html)
 * On the architecture of Hell, see [Tour of
   Hell](/pdfs/tour-of-hell.pdf) - slides I made for presenting Hell at work.
+
+[^1]: Tired of issues like [this](https://discourse.haskell.org/t/hakyll-error-watching-and-building/8834).
