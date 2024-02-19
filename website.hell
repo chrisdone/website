@@ -26,15 +26,15 @@ generate = do
 --
 generatePosts = do
   posts <- Directory.listDirectory "posts"
-  Text.putStrLn (Text.concat ["Generating ", Show.show (List.length posts), " posts ..."])
+  Text.putStrLn $ Text.concat ["Generating ", Show.show (List.length posts), " posts ..."]
   Async.pooledForConcurrently posts \post -> do
-    contents <- Text.readFile (Text.concat ["posts/", post])
+    contents <- Text.readFile $ Text.concat ["posts/", post]
     Maybe.maybe
       (Error.error "Couldn't parse the article!")
       (\(date, title) -> do
         rendered <- Main.render post
         Monad.return (post, date, title, rendered))
-      (Main.parse contents)
+      $ Main.parse contents
 
 -- Generate the /posts/ page.
 --
@@ -42,7 +42,7 @@ generateArchive = \posts -> do
   Text.putStrLn "Generating archive ..."
   let rows =
         Text.concat
-          (List.map
+          $ List.map
             (\(post, date, title, content) ->
               Text.concat [
                  "<tr><td><a href='",
@@ -53,7 +53,9 @@ generateArchive = \posts -> do
                  date,
                  "</td></tr>"
                ])
-            (List.reverse (List.sortOn (\(post, date, title, content) -> date) posts)))
+            $ List.reverse
+            $ List.sortOn (\(post, date, title, content) -> date)
+            $ posts
   let table = Text.concat [
         "---\n",
         "title: Archive\n",
@@ -64,8 +66,8 @@ generateArchive = \posts -> do
         ]
   (out, err) <-
     Text.readProcess_
-      (Text.setStdin table (Process.proc "pandoc"
-         ["--standalone","--template","templates/posts.html"]))
+      $ Text.setStdin table
+      $ Process.proc "pandoc" ["--standalone","--template","templates/posts.html"]
   Text.writeFile "webroot/posts/index.html" out
 
 -- Contents of an article looks like this:
@@ -116,14 +118,14 @@ strip = \title ->
 -- Generate the /rss.xml page.
 --
 generateRSS = \posts0 -> do
-  let posts1 = List.reverse (List.sortOn (\(post, date, title, content) -> date) posts0)
+  let posts1 = List.reverse $ List.sortOn (\(post, date, title, content) -> date) posts0
   posts <- Monad.forM posts1 \(post, date, title, content) -> do
-    date' <- Text.readProcessStdout_ (Text.setStdin date (Process.proc "date" ["-R", "-f", "/dev/stdin"]))
+    date' <- Text.readProcessStdout_ $ Text.setStdin date $ Process.proc "date" ["-R", "-f", "/dev/stdin"]
     Monad.return (post, date', title, content)
   Text.putStrLn "Generating rss.xml ..."
   let items =
         Text.unlines
-          (List.map
+          $ List.map
             (\(post, date, title, content) ->
               Text.concat [
                  "<item>",
@@ -135,7 +137,7 @@ generateRSS = \posts0 -> do
                  "<dc:creator>Chris Done</dc:creator>",
                  "</item>"
                ])
-            posts)
+            posts
   let xml = Text.unlines [
         "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
         "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">",
