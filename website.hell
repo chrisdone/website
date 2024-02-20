@@ -121,7 +121,7 @@ strip = \title ->
 --
 generateRSS = \posts0 -> do
   let posts1 = List.reverse $ List.sortOn (\(post, date, title, content) -> date) posts0
-  posts <- Monad.forM posts1 \(post, date, title, content) -> do
+  posts <- Async.pooledForConcurrently posts1 \(post, date, title, content) -> do
     date' <- Text.readProcessStdout_ $ Text.setStdin date $ Process.proc "date" ["-R", "-f", "/dev/stdin"]
     Monad.return (post, date', title, content)
   Text.putStrLn "Generating rss.xml ..."
