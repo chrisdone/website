@@ -1,6 +1,8 @@
+#!/usr/bin/env hell
+
 -- Dependencies:
 --
--- hell-2024-02-07
+-- hell-2024-02-20
 -- pandoc-3.1.11.1
 
 -- Main entry point just generates the complete blog every time.
