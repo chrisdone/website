@@ -96,135 +96,67 @@
 <h1>Hell: Shell scripting Haskell dialect</h1>
 
 <p><a href="https://github.com/chrisdone/hell">Hell</a> is a shell
-scripting language that is a tiny dialect of Haskell.</p>
-<p>Note: I’m using it to <a
+scripting language that is a tiny dialect of Haskell that I wrote for my
+own shell scripting purposes. As of February, I’m Hell to <a
 href="https://github.com/chrisdone/hell/blob/main/examples/19-blog-generator.hell">generate
 this blog</a>, instead of Hakyll.<a href="#fn1" class="footnote-ref"
 id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
-<p><strong>Table of Contents</strong></p>
-<ul>
-<li><a href="#bash-downsides">Bash downsides</a></li>
-<li><a href="#bash-upsides">Bash upsides</a></li>
-<li><a href="#anatomy-of-a-shell-scripting-language">Anatomy of a shell
-scripting language</a></li>
-<li><a href="#shell-scripting-threshold">Shell scripting
-threshold</a></li>
-<li><a href="#why-a-haskell-dialect">Why a Haskell dialect?</a></li>
-<li><a href="#decisions">Decisions</a></li>
-<li><a href="#references">References</a></li>
-</ul>
-<!-- markdown-toc end -->
-<p>As of 2024, my New Year’s Resolution is to write more shell scripts
-in the name of automation. I’ve always avoided this because of the
-downsides of bash. And <a
+<p>My 2024 New Year’s Resolution is to write more shell scripts in the
+name of automation. I’ve always avoided this because of the downsides of
+bash. And <a
 href="%5BThe%20growth%20of%20command%20line%20options,%201979-Present%5D(https://danluu.com/cli-complexity/#maven)">other
 problems.</a></p>
-<h2 id="bash-downsides">Bash downsides</h2>
-<p>Bash, zsh, fish, etc. have problems:</p>
-<ul>
-<li>They’re incomprehensible gobbledegook.</li>
-<li>They use quotation (<code>x=$(ls -1) ..</code>) which makes it easy
-to make mistakes.</li>
-<li>They lean far too heavily on sub processes to do basic things.
-<ul>
-<li>Therefore things like equality, arithmeti, ordering, etc. are
-completely unprincipled.</li>
-</ul></li>
-</ul>
-<h2 id="bash-upsides">Bash upsides</h2>
-<p>But, bash is:</p>
-<ul>
-<li>Stable</li>
-<li>Simple</li>
-<li>Works the same on every machine.</li>
-</ul>
-<p>You can write a bash script and keep it running for years while never
-having to change any code. The code you wrote last year will be the same
-next year.</p>
-<h2 id="anatomy-of-a-shell-scripting-language">Anatomy of a shell
-scripting language</h2>
-<p>It’s helpful to define the anatomy of a shell scripting language to
-know what we need.</p>
-<ul>
-<li>It should be very basic.</li>
-<li>It should run immediately (no visible compilation steps)</li>
-<li>No module system</li>
-<li>No package system</li>
-<li>No abstraction capabilities (classes, data types, polymorphic
-funcions, etc.)</li>
-<li>Does not change in backwards-incompatible ways
-<ul>
-<li>See also: <a
-href="https://stevelosh.com/blog/2018/08/a-road-to-common-lisp/#s4-escaping-the-hamster-wheel-of-backwards-incompatibility">Escaping
-the Hamster Wheel of Backwards Incompatibility</a></li>
-</ul></li>
-</ul>
-<p>Why no module or package system? They make it harder for a system to
-be “done.” There always some other integration that you can do; some
-other feature. I’d prefer Hell to be <a
+<p>Bash, zsh, fish, etc. have problems: They’re incomprehensible
+gobbledegook. They use quotation (<code>x=$(ls -1) ..</code>) which
+makes it easy to make mistakes. They lean far too heavily on sub
+processes to do basic things. Therefore things like equality, arithmeti,
+ordering, etc. are completely unprincipled.</p>
+<p>But, bash does have some upsides: It’s stable, it’s simple, and it
+works the same on every machine. You can write a bash script and keep it
+running for years while never having to change any code. The code you
+wrote last year will be the same next year.</p>
+<p>So in the interest of defining a language that I <em>would</em> like
+to use, let’s discuss the anatomy of a shell scripting language: It
+should be very basic. It should run immediately (no visible compilation
+steps). It should have no module system. It should have no package
+system. It should have no abstraction capabilities (classes, data types,
+polymorphic funcions, etc.). And it does not change in
+backwards-incompatible ways.<a href="#fn2" class="footnote-ref"
+id="fnref2" role="doc-noteref"><sup>2</sup></a> Why no module or package
+system? They make it harder for a system to be “done.” There always some
+other integration that you can do; some other feature. I’d prefer Hell
+to be <a
 href="https://dubroy.com/blog/cold-blooded-software/">cold-blooded
 software</a>, there’s <a
 href="https://josem.co/the-beauty-of-finished-software/">beauty in
 finished software</a>.</p>
-<h2 id="shell-scripting-threshold">Shell scripting threshold</h2>
-<p>The Scripting Threshold is that,</p>
-<ul>
-<li>when you reach for a module system or a package system, or
-abstraction capabilities.</li>
-<li>when you want more than what’s in the standard library.</li>
-</ul>
-<p>… you probably want a general purpose programming language
+<p>Based on the above I can define a “Scripting Threshold” meaning, when
+you reach for a module system or a package system, or abstraction
+capabilities, or when you want more than what’s in the standard library,
+then you probably want a general purpose programming language
 instead.</p>
-<h2 id="why-a-haskell-dialect">Why a Haskell dialect?</h2>
-<p>The reasons for making a Haskell dialect (and not using some other
-alt. shell scripting language or <a
-href="https://arathunku.com/b/2024/shell-scripting-with-elixir/">using
-Elixir</a>) are:</p>
-<ul>
-<li>I know Haskell. It’s my go-to.</li>
-<li>It has a good story about equality, ordering, etc.</li>
-<li>It has a good runtime capable of trivially doing concurrency.</li>
-<li>Garbage collected, no funny business.</li>
-<li>Distinguishes bytes and text properly.</li>
-<li>Can be compiled to a static Linux x86 binary.</li>
-<li>Performs well.</li>
-<li>Types!</li>
-</ul>
-<h2 id="decisions">Decisions</h2>
-<p>I made the following decisions when designing the language:</p>
-<ul>
-<li>Use a faithful Haskell syntax parser.
-<ul>
-<li>It’s better that way; you get re-use.</li>
-</ul></li>
-<li>No imports/modules/packages.
-<ul>
-<li>That’s code reuse and leads to madness.</li>
-</ul></li>
-<li>No recursion (simpler to implement).</li>
-<li>Type-classes (Eq, Ord, Show, Monad).
-<ul>
-<li>Needed for e.g. List.lookup and familiar equality things.</li>
-</ul></li>
-<li>No polytypes.
-<ul>
-<li>That’s a kind of abstraction.</li>
-</ul></li>
-<li>Use all the same names for things (List.lookup, Monad.forM,
-Async.race, etc.)
-<ul>
-<li>Re-use intuitions.</li>
-</ul></li>
-</ul>
-<h2 id="further-reading">Further reading</h2>
-<ul>
-<li><a href="http://www.oilshell.org/blog/2018/01/28.html">Why Create a
-New Unix Shell?</a></li>
-<li>On the architecture of Hell, see <a
-href="/pdfs/tour-of-hell.pdf">Tour of Hell</a> - slides I made for
-presenting Hell at work.</li>
-</ul>
+<p>Taking this into consideration, I opted for making a Haskell
+dialect<a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a> because: I know Haskell. It’s my
+go-to. It has a good story about equality, ordering, etc., it has a good
+runtime capable of trivially doing concurrency, it’s garbage collected,
+no funny business, it distinguishes bytes and text properly, it can be
+compiled to a static Linux x86 binary, it performs well, and it has
+static types!</p>
+<p>I made the following decisions when designing the language: Use a
+faithful Haskell syntax parser. It’s better that way; you get re-use. It
+has no imports/modules/packages. It doesn’t support recursive
+definitions, but can use <code>fix</code> to do so. It suppors basic
+type-classes (Eq, Ord, Show, Monad), which are needed for
+e.g. List.lookup and familiar equality things. It does not support
+polytypes. That’s a kind of abstraction and not needed. It use all the
+same names for things (List.lookup, Monad.forM, Async.race, etc.) that
+are already used in Haskell, which lets me re-use intuitions.</p>
+<p>You can download statically-linked Linux binaries from <a
+href="https://github.com/chrisdone/hell/releases">the releases page.</a>
+To read about the implementation internals, see <a
+href="/pdfs/tour-of-hell.pdf">Tour of Hell</a> which is a set of slides
+I made for presenting Hell at work.</p>
 <section id="footnotes" class="footnotes footnotes-end-of-document"
 role="doc-endnotes">
 <hr />
@@ -232,6 +164,16 @@ role="doc-endnotes">
 <li id="fn1"><p>Tired of issues like <a
 href="https://discourse.haskell.org/t/hakyll-error-watching-and-building/8834">this</a>.<a
 href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>See also: <a
+href="https://stevelosh.com/blog/2018/08/a-road-to-common-lisp/#s4-escaping-the-hamster-wheel-of-backwards-incompatibility">Escaping
+the Hamster Wheel of Backwards Incompatibility</a><a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>And not using some other alt. shell scripting language
+or <a
+href="https://arathunku.com/b/2024/shell-scripting-with-elixir/">using
+Elixir</a>, or <a
+href="http://www.oilshell.org/blog/2018/01/28.html">Oil</a>.<a
+href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
