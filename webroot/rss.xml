@@ -298,7 +298,9 @@ problems.</a></p>
 gobbledegook. They use quotation (<code>x=$(ls -1) ..</code>) which
 makes it easy to make mistakes. They lean far too heavily on sub
 processes to do basic things. Therefore things like equality, arithmeti,
-ordering, etc. are completely unprincipled.</p>
+ordering, etc. are completely unprincipled. Absolutely full of
+pitfalls.<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a></p>
 <p>But, bash does have some upsides: It’s stable, it’s simple, and it
 works the same on every machine. You can write a bash script and keep it
 running for years while never having to change any code. The code you
@@ -309,8 +311,8 @@ should be very basic. It should run immediately (no visible compilation
 steps). It should have no module system. It should have no package
 system. It should have no abstraction capabilities (classes, data types,
 polymorphic funcions, etc.). And it does not change in
-backwards-incompatible ways.<a href="#fn2" class="footnote-ref"
-id="fnref2" role="doc-noteref"><sup>2</sup></a> Why no module or package
+backwards-incompatible ways.<a href="#fn3" class="footnote-ref"
+id="fnref3" role="doc-noteref"><sup>3</sup></a> Why no module or package
 system? They make it harder for a system to be “done.” There always some
 other integration that you can do; some other feature. I’d prefer Hell
 to be <a
@@ -324,8 +326,8 @@ capabilities, or when you want more than what’s in the standard library,
 then you probably want a general purpose programming language
 instead.</p>
 <p>Taking this into consideration, I opted for making a Haskell
-dialect<a href="#fn3" class="footnote-ref" id="fnref3"
-role="doc-noteref"><sup>3</sup></a> because: I know Haskell. It’s my
+dialect<a href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a> because: I know Haskell. It’s my
 go-to. It has a good story about equality, ordering, etc., it has a good
 runtime capable of trivially doing concurrency, it’s garbage collected,
 no funny business, it distinguishes bytes and text properly, it can be
@@ -352,16 +354,20 @@ role="doc-endnotes">
 <li id="fn1"><p>Tired of issues like <a
 href="https://discourse.haskell.org/t/hakyll-error-watching-and-building/8834">this</a>.<a
 href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>See also: <a
+<li id="fn2"><p>Just check out the huge list of <a
+href="https://github.com/koalaman/shellcheck">linting isuses in
+ShellCheck.</a><a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>See also: <a
 href="https://stevelosh.com/blog/2018/08/a-road-to-common-lisp/#s4-escaping-the-hamster-wheel-of-backwards-incompatibility">Escaping
-the Hamster Wheel of Backwards Incompatibility</a><a href="#fnref2"
+the Hamster Wheel of Backwards Incompatibility</a><a href="#fnref3"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>And not using some other alt. shell scripting language
+<li id="fn4"><p>And not using some other alt. shell scripting language
 or <a
 href="https://arathunku.com/b/2024/shell-scripting-with-elixir/">using
 Elixir</a>, or <a
 href="http://www.oilshell.org/blog/2018/01/28.html">Oil</a>.<a
-href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

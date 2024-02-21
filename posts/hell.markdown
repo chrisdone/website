@@ -22,7 +22,7 @@ Bash, zsh, fish, etc. have problems: They're incomprehensible
 gobbledegook. They use quotation (`x=$(ls -1) ..`) which makes it easy
 to make mistakes. They lean far too heavily on sub processes to do
 basic things.  Therefore things like equality, arithmeti, ordering,
-etc. are completely unprincipled.
+etc. are completely unprincipled. Absolutely full of pitfalls.[^4]
 
 But, bash does have some upsides: It's stable, it's simple, and it
 works the same on every machine. You can write a bash script and keep
@@ -81,3 +81,6 @@ presenting Hell at work.
 [^3]: And not using some other alt. shell scripting language or [using
     Elixir](https://arathunku.com/b/2024/shell-scripting-with-elixir/),
     or [Oil](http://www.oilshell.org/blog/2018/01/28.html).
+
+[^4]: Just check out the huge list of
+  [linting isuses in ShellCheck.](https://github.com/koalaman/shellcheck)
