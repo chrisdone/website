@@ -21,4 +21,4 @@ TypeScript’s type checker regularly falls over, its inference is brittle in wa
 
 All in all, my conclusion is that TypeScript + React is a bad investment. It will cost you in dev time, bugs, maintenance, performance. Generally, I think the SPA trend is broadly misapplied, I prefer something like Htmx these days, but if I’m playing the SPA game, there are far better tools out there.
 
-If you know Haskell then PureScript is better at TypeScript at everything, and isn’t a dead-end like Elm.
+If you know Haskell then PureScript is better than TypeScript at everything, and isn’t a dead-end like Elm.
