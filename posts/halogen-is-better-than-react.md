@@ -15,7 +15,13 @@ Halogen components also have a trivial, built-in way for information messages to
 
 Halogen has elegant ways to interact with foreign (non-frameworked) libraries. The built-in event streams lets you react to out of band changes (webhook, CodeMirror edits,…). The explicit life cycle and evaluation-vs-execution distinction makes the interplay predictable.
 
-In contrast, in React everything is hard and experienced users are regularly baffled. Re-rendering, caching, execution of effects, lifecycle, message bubbling and broadcasting, state, are all marvellously unhelpful by comparison.
+Halogen sits on an explicit effect monad,
+meaning you can write async imperative code
+with the same syntax synchronous imperative code and know
+the difference at the type level. It's harder for things to go wrong.
+
+In contrast, in React everything is hard and experienced users are regularly baffled. Re-rendering, caching, execution of effects, lifecycle, message bubbling and broadcasting, state, are all marvellously unhelpful by comparison. Asyncs make things even
+worse!
 
 TypeScript’s type checker regularly falls over, its inference is brittle in ways that interrupt work, type errors unhelpful, union types only make things harder. It doesn’t even have sum types. PureScript’s got all these basic things and were pretty well done from the start.
 
