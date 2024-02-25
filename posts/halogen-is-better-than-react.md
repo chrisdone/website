@@ -17,7 +17,7 @@ Halogen has elegant ways to interact with foreign (non-frameworked) libraries. T
 
 Halogen sits on an explicit effect monad,
 meaning you can write async imperative code
-with the same syntax synchronous imperative code and know
+with the same syntax as synchronous imperative code, and know
 the difference at the type level. It's harder for things to go wrong.
 
 In contrast, in React everything is hard and experienced users are regularly baffled. Re-rendering, caching, execution of effects, lifecycle, message bubbling and broadcasting, state, are all marvellously unhelpful by comparison. Asyncs make things even
