@@ -19,6 +19,6 @@ In contrast, in React everything is hard and experienced users are regularly baf
 
 TypeScript’s type checker regularly falls over, its inference is brittle in ways that interrupt work, type errors unhelpful, union types only make things harder. It doesn’t even have sum types. PureScript’s got all these basic things and were pretty well done from the start.
 
-All in all, my conclusion is that TypeScript + React is a bad investment. It will cost you in dev time, bugs, maintenance, performance. Generally, I think the SPA trend is broadly misapplied, I prefer something like Htmx these days, but if I’m playing the SPA game, there are far better tools out there.
+All in all, my conclusion is that TypeScript + React is a bad investment. It will cost you in dev time, bugs, maintenance, performance. Generally, I think the SPA trend is broadly misapplied, I prefer something like Htmx these days, but if I’m playing the SPA game (lower latency GUIs), there are far better tools out there.
 
-If you know Haskell then PureScript is better than TypeScript at everything, and isn’t a dead-end like Elm.
+If you know Haskell then PureScript is better than TypeScript at everything, and isn’t a dead-end like Elm. For full context on Haskell frontend, see my other post [Client-side web programming in Haskell: A retrospective](https://chrisdone.com/posts/clientside-programming-haskell/).
