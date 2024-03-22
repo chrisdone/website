@@ -6346,8 +6346,9 @@ Although we were doubtful that the Elm architecture scaled. Fay is
 officially out of the picture.</p>
 <p>In April 2015, we whipped up a similar package called <a
 href="https://github.com/fpco/ghcjs-react">ghcjs-react</a>, which
-implemented React without the Elm-style processing of events as a sum
-type. I wrote the experimental <a
+implemented React without the Om-style handling of state via a
+lens/cursor (Redux appeared around the same time, doing a similar
+thing). I wrote the experimental <a
 href="https://github.com/fpco/stackage-view#introduction">stackage-view</a>
 tool based on this library; which we thought would be a good litmus test
 both of GHCJS and our react bindings. It was awkward, but when it
@@ -6407,11 +6408,13 @@ href="https://reasonml.github.io/">ReasonML</a>, Elm, <a
 href="https://ocsigen.org/js_of_ocaml/3.1.0/manual/overview">OCaml</a>.</p>
 <p>2019: As of today, I am personally still using PureScript with
 Halogen.</p>
-<p><strong>2023 update:</strong> I have pushed for our team at
+<p><strong>2024 update:</strong> In 2023 have pushed for our team at
 Artificial Labs to start trying <a href="https://htmx.org/">Htmx</a>
-combined with Haskell. So far, the experience is good. Complexity is
-low, performance is adequate, code is maintainable, toolchain burden is
-nonexistent.</p>
+combined with Haskell. So far, the experience is good: we like writing
+Haskell. There are some downsides to Htmx, however: inheritence is a bad
+idea, request queues have bad defaults and are hard to manage, and htmx
+intuitions (such as related to request queues) don’t play well with
+morphdom.</p>
 <section id="footnotes" class="footnotes footnotes-end-of-document"
 role="doc-endnotes">
 <hr />

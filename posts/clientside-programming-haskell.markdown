@@ -131,8 +131,9 @@ scaled. Fay is officially out of the picture.
 
 In April 2015, we whipped up a similar package called
 [ghcjs-react](https://github.com/fpco/ghcjs-react), which implemented
-React without the Elm-style processing of events as a sum type. I
-wrote the experimental
+React without the Om-style handling of state via a lens/cursor (Redux
+appeared around the same time, doing a similar thing). I wrote the
+experimental
 [stackage-view](https://github.com/fpco/stackage-view#introduction)
 tool based on this library; which we thought would be a good litmus
 test both of GHCJS and our react bindings. It was awkward, but when it
@@ -199,11 +200,12 @@ choice. Other things considered: ClojureScript, TypeScript, Rust,
 
 2019: As of today, I am personally still using PureScript with Halogen.
 
-**2023 update:** I have pushed for our team at Artificial Labs 
-to start trying [Htmx](https://htmx.org/) 
-combined with Haskell. So far, the experience is good. Complexity 
-is low, performance is adequate, code is maintainable, toolchain 
-burden is nonexistent.
+**2024 update:** In 2023 have pushed for our team at Artificial Labs
+to start trying [Htmx](https://htmx.org/) combined with Haskell. So
+far, the experience is good: we like writing Haskell. There are some
+downsides to Htmx, however: inheritence is a bad idea, request queues
+have bad defaults and are hard to manage, and htmx intuitions (such as
+related to request queues) don't play well with morphdom.
 
 [^1]: In retrospect, if it was marketed in the same way Elm was, and
 less "academic", it may have taken off. But it could just be that it
