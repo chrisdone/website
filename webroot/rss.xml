@@ -6,6 +6,161 @@
 <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
 <atom:link href="https://chrisdone.com/rss.xml" rel="self" type="application/rss+xml" />
 <lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>
+<item><title><![CDATA[Halogen is better than React at everything]]></title><link>https://chrisdone.com/posts/halogen-is-better-than-react</link><guid>https://chrisdone.com/posts/halogen-is-better-than-react</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Halogen is better than React at everything</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Halogen is better than React at everything</h1>
+
+<p>I wrote these notes in 2022, but found that they still hold up in
+2024.</p>
+<p>Having used TypeScript + React with its hooks in a code base that
+fully embraces them for more than a year, I return to my original
+assessment that PureScript + Halogen is better at almost everything.</p>
+<p>PureScript has a sensible, type class based notion of equality, and
+JavaScript/TypeScript does not, and this comes up regularly, causing
+both logic bugs and cache invalidation issues.</p>
+<p>Halogen components have a clear explicit reason that a re-render
+occurs: calling the modify function in the command evaluator. Inputs
+(“props”) generate a command, which means one can trivially implement
+custom (i.e. efficient) re-rendering conditions.</p>
+<p>Halogen components also have a trivial, built-in way for information
+messages to travel both upwards and downwards, outside of the input
+mechanism (“props”), which is exceedingly useful. It’s all in the type
+signature, too.</p>
+<p>Halogen has elegant ways to interact with foreign (non-frameworked)
+libraries. The built-in event streams lets you react to out of band
+changes (webhook, CodeMirror edits,…). The explicit life cycle and
+evaluation-vs-execution distinction makes the interplay predictable.</p>
+<p>Halogen sits on an explicit effect monad, meaning you can write async
+imperative code with the same syntax as synchronous imperative code, and
+know the difference at the type level. It’s harder for things to go
+wrong.</p>
+<p>In contrast, in React everything is hard and experienced users are
+regularly baffled. Re-rendering, caching, execution of effects,
+lifecycle, message bubbling and broadcasting, state, are all
+marvellously unhelpful by comparison. Asyncs make things even worse!</p>
+<p>TypeScript’s type checker regularly falls over, its inference is
+brittle in ways that interrupt work, type errors unhelpful, union types
+only make things harder. It doesn’t even have sum types. PureScript’s
+got all these basic things and were pretty well done from the start.</p>
+<p>All in all, my conclusion is that TypeScript + React is a bad
+investment. It will cost you in dev time, bugs, maintenance,
+performance. Generally, I think the SPA trend is broadly misapplied, I
+prefer something like Htmx these days, but if I’m playing the SPA game
+(lower latency GUIs), there are far better tools out there.</p>
+<p>If you know Haskell then PureScript is better than TypeScript at
+everything, and isn’t a dead-end like Elm. For full context on Haskell
+frontend, see my other post <a
+href="https://chrisdone.com/posts/clientside-programming-haskell/">Client-side
+web programming in Haskell: A retrospective</a>.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2024-02-23 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Fri, 23 Feb 2024 00:00:00 +0000
+</pubDate><dc:creator>Chris Done</dc:creator></item>
 <item><title><![CDATA[Reports of RSS/Atom's death are greatly exaggerated]]></title><link>https://chrisdone.com/posts/death-of-rss-greatly-exaggerated</link><guid>https://chrisdone.com/posts/death-of-rss-greatly-exaggerated</guid><description><![CDATA[<!doctype html>
 <html>
   <head>
@@ -285,7 +440,7 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 
 <p><a href="https://github.com/chrisdone/hell">Hell</a> is a shell
 scripting language that is a tiny dialect of Haskell that I wrote for my
-own shell scripting purposes. As of February, I’m Hell to <a
+own shell scripting purposes. As of February, I’m using Hell to <a
 href="https://github.com/chrisdone/hell/blob/main/examples/19-blog-generator.hell">generate
 this blog</a>, instead of Hakyll.<a href="#fn1" class="footnote-ref"
 id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
