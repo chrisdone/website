@@ -179,7 +179,7 @@ getOrder = getFields $
   Order ← "id" · "name" · "items" · "order_total" · "delivery"
         · "total" · "created" · "card" · "billto" · "shipto"
         · "level" · "completed" · "code"
-``` haskell
+```
 
 Looks gorgeous, right? I figured I could do this for the ConfigFile stuff, but thought better of it because it needs to be slightly more flexible. The reason this abstraction works so well for HSQL is that all the fields are extracted in the same way.
 

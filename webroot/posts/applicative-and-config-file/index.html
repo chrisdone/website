@@ -237,13 +237,17 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a
 &lt;$&gt; and &lt;*&gt; except that they work with the Statement value
 so we don’t have to write it out. Here it is in use in a real
 project:</p>
-<p>``` haskell getOrderItem :: Statement -&gt; IO OrderItem getOrderItem
-= getFields $ OrderItem ← “id” · “name” · “added” · “price” · “quantity”
-· “size” · “size_metric”</p>
-<p>getOrder :: Statement -&gt; IO Order getOrder = getFields $ Order ←
-“id” · “name” · “items” · “order_total” · “delivery” · “total” ·
-“created” · “card” · “billto” · “shipto” · “level” · “completed” ·
-“code” ``` haskell</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">getOrderItem ::</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">OrderItem</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>getOrderItem <span class="ot">=</span> getFields <span class="op">$</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">OrderItem</span> ← <span class="st">&quot;id&quot;</span> · <span class="st">&quot;name&quot;</span> · <span class="st">&quot;added&quot;</span> · <span class="st">&quot;price&quot;</span> · <span class="st">&quot;quantity&quot;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>            · <span class="st">&quot;size&quot;</span> · <span class="st">&quot;size_metric&quot;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="ot">getOrder ::</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Order</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>getOrder <span class="ot">=</span> getFields <span class="op">$</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Order</span> ← <span class="st">&quot;id&quot;</span> · <span class="st">&quot;name&quot;</span> · <span class="st">&quot;items&quot;</span> · <span class="st">&quot;order_total&quot;</span> · <span class="st">&quot;delivery&quot;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        · <span class="st">&quot;total&quot;</span> · <span class="st">&quot;created&quot;</span> · <span class="st">&quot;card&quot;</span> · <span class="st">&quot;billto&quot;</span> · <span class="st">&quot;shipto&quot;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        · <span class="st">&quot;level&quot;</span> · <span class="st">&quot;completed&quot;</span> · <span class="st">&quot;code&quot;</span></span></code></pre></div>
 <p>Looks gorgeous, right? I figured I could do this for the ConfigFile
 stuff, but thought better of it because it needs to be slightly more
 flexible. The reason this abstraction works so well for HSQL is that all
