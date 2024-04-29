@@ -396,26 +396,6 @@ taking bananas from people.
 
 (Go to the xamselsku page)
 
-```
-19:32 < timonator> doi lojbot gletu pei
-19:32 < lojbot> gletu fa ko le danlu
-19:32 < timonator> oi
-19:33 <@Broca> doi lojbot do mutce tolclite
-19:33 < lojbot> lo penmi va'i cu mrobi'o
-```
-
-Rough translation:
-
-```
-19:32 < timonator> O, Lojbot, fucking; how do you feel about it?
-19:32 < lojbot> Go fuck an animal.
-19:32 < timonator> Hey! >:-(
-19:33 <@Broca> O, Lojbot, you are very rude.
-19:33 < lojbot> The encounterer, in other words, dies.
-```
-
-(Go to the xamselsku page)
-
 It's surprisingly coherent, sometimes.
 
 ## Source
