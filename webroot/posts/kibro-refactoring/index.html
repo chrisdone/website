@@ -1,0 +1,323 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kibro refactoring</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Kibro refactoring</h1>
+
+<p>I am refactoring Kibro, my web development “framework”. The release
+on Hackage does bare bones things, and Jinjing Wang, what a legend,
+created this Panda software out of it. In doing so he has helped me
+notice what Kibro needs. I myself have found things that Kibro does not
+support in my projects that I will be addressing. I am writing this post
+so that anyone who cares will know that this project is being worked on,
+and because for those actually using Kibro it will help to know the
+reasoning behind the changes. The code needed refactoring anyway, it had
+!OMGPROTOTYPE! written all over it.</p>
+<h2 id="problems-and-solutions">Problems and solutions</h2>
+<h3 id="lighttpd.conf-configuration">Lighttpd.conf configuration</h3>
+<p>Panda comes with a script to modify the lighttpd.conf which adds
+mime-types and things like that. It’s a problem that you have to do
+this.</p>
+<p>I have discovered that Lighttpd config files support an #include
+directive and it is therefore my solution that all settings that are not
+dependant on the path of the project<a href="#fn1" class="footnote-ref"
+id="fnref1" role="doc-noteref"><sup>1</sup></a> be moved to a
+custom.conf in the lighttpd directory.</p>
+<h3 id="database-not-used">Database not used</h3>
+<p>The Kibro library requires you to specify a database, but your web
+site might not always want a database (like Panda). I am removing the
+Sqlite interface from Kibro for now for this reason, and others<a
+href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>. You ought to feel free to use the
+MonadIO instance of the Kibro monad to open connections to whichever
+database library you like.</p>
+<h3 id="adding-persistent-state">Adding persistent state</h3>
+<p>Furthmore addressing the problem of the Kibro library, perhaps adding
+custom state may be useful. For example, your main web site code might
+be:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Kibro</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">MyWebSiteStuff</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  someResource <span class="ot">&lt;-</span> getMyResource</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  startKibro someResource pages</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ot">pages ::</span> [<span class="dt">PageAssign</span>]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>pages <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
+<p>This lets us connect to a database or generate some resources that
+are too expensive to create for every page load. Typically it can be a
+pure value or an MVar or TVar or whatnot.</p>
+<h3 id="kibro-command-line-program-is-rubbish">Kibro command line
+program is rubbish</h3>
+<p>It is generally rubbish (e.g. doesn’t even support a help function).
+I’ve changed this, and lots of other things. The code before was awful.
+It now uses a Command monad (of course). I guarentee it.</p>
+<h3 id="settings">Settings</h3>
+<p>There needs to be a way to configure Kibro for the project. Another
+thing I noticed was that Panda changed where to output the .fcgi file.
+This should be configurable. Thus, Kibro now reads settings from the
+.kibro file in the directory, the same as Cabal. Here is a real sample
+config<a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a> file:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">KibroProject</span> { projName <span class="ot">=</span> <span class="st">&quot;test&quot;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>             , projDirs <span class="ot">=</span> [(<span class="st">&quot;app&quot;</span>,<span class="st">&quot;app&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                          ,(<span class="st">&quot;lighttpd&quot;</span>,<span class="st">&quot;app/lighttpd&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                          ,(<span class="st">&quot;fastcgi&quot;</span>,<span class="st">&quot;app/fastcgi&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                          ,(<span class="st">&quot;public&quot;</span>,<span class="st">&quot;public&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                          ,(<span class="st">&quot;src&quot;</span>,<span class="st">&quot;src&quot;</span>)]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>             , projOutDir <span class="ot">=</span> <span class="st">&quot;public&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>             , projMainIs <span class="ot">=</span> <span class="st">&quot;src/Main.hs&quot;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>             }</span></code></pre></div>
+<p>The project name (projName) is important, that decides what .fcgi
+file name is outputted, what .sock file name is outputted, and etc.</p>
+<p>projDirs tells Kibro where everything is. It is a list of
+(place,relative path) tuples. app refers to where the Kibro stuff like
+Lighttpd and FastCGI should go, among other things that may be added in
+future. lighttpd refers to where lighttpd.conf is, and where
+lighttpd.pid and custom.conf should be written. fastcgi is where
+fastcgi.pid should be written, and $projName.sock will be put. public is
+the public httpd directory (aka www-root or static), and $projName.fcgi
+will be put here so that Lighttpd can access it. (You can make it not
+directly accessible from the outside, read below). And finally, src is
+where your web site’s source code is (i.e. where to cd to when
+performing the build).</p>
+<p>projOutDir tells Kibro where to output $projName.fcgi. projMainIs
+tells Kibro where the main web site file is.</p>
+<p>All these paths are accessed relative to the project directory.</p>
+<h3
+id="integrating-your-fastcgi-process-with-an-existing-web-site">Integrating
+your FastCGI process with an existing web site</h3>
+<p>This is one old Kibro does not address at all. It’s great to work in
+a confined directory on a special port like 3000, but at some point you
+need to deploy it on a real existing web server. Panda has this problem.
+It expects to be in the root directory. So that when I wanted to setup
+this blog as /blog, I had issues. All of the links on the blog software
+refer to a root directory (/), so I can’t simply change the Kibro page
+regexes. However, Panda’s issue is not solvable by Kibro, because it is
+just a problem of hard coding paths. Kibro’s issue is integrating
+nicely, which is really the question of how to deal with the Lighttpd
+configuration.</p>
+<p>My solution is that seeing as Kibro can output your .fcgi program
+anywhere, you can therefore put it in your web server’s root directory
+(actually, I don’t think you have to do this for Lighttpd to be able to
+access it<a href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a>). After reading about Lighttpd’s
+configuration syntax a little more, I discovered a very nice way to get
+your FastCGI application onto an existing server under a directory.</p>
+<p>The obvious way is to simply directly access foo.fcgi.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fastcgi<span class="op">.</span>server <span class="ot">=</span> (<span class="st">&quot;blog.fcgi&quot;</span> <span class="ot">=&gt;</span> ((<span class="st">&quot;socket&quot;</span> <span class="ot">=&gt;</span> <span class="st">&quot;/var/www/chrisdone/blog/app/fastcgi/blog.sock&quot;</span>))</span></code></pre></div>
+<p>But then how can you have multiple pages on your FastCGI application?
+You need the 404-handler.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>server<span class="op">.</span><span class="fu">error</span><span class="op">-</span>handler<span class="op">-</span><span class="dv">404</span> <span class="ot">=</span> <span class="st">&quot;/blog/public/blog.fcgi&quot;</span></span></code></pre></div>
+<p>But if we set a 404-handler to a particular FastCGI application, what
+about the others? What if I want this blog, and another FastCGI
+application which can handle any path under some directory? Then I can
+use the $HTTP[“url”] syntax:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fastcgi<span class="op">.</span>server <span class="ot">=</span> (<span class="st">&quot;blog.fcgi&quot;</span> <span class="ot">=&gt;</span> ((<span class="st">&quot;socket&quot;</span> <span class="ot">=&gt;</span> <span class="st">&quot;/var/www/chrisdone/blog/app/fastcgi/blog.sock&quot;</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                 ,<span class="st">&quot;test.fcgi&quot;</span> <span class="ot">=&gt;</span> ((<span class="st">&quot;socket&quot;</span> <span class="ot">=&gt;</span> <span class="st">&quot;/var/www/chrisdone/test.sock&quot;</span>)))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>server<span class="op">.</span><span class="fu">error</span><span class="op">-</span>handler<span class="op">-</span><span class="dv">404</span> <span class="ot">=</span> <span class="st">&quot;/blog/public/blog.fcgi&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="op">$</span><span class="dt">HTTP</span>[<span class="st">&quot;url&quot;</span>] <span class="op">=~</span> <span class="st">&quot;^/peanuts&quot;</span> {</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>   server<span class="op">.</span><span class="fu">error</span><span class="op">-</span>handler<span class="op">-</span><span class="dv">404</span> <span class="ot">=</span> <span class="st">&quot;/test.fcgi&quot;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>This means that any URL that starts with ^/peanuts will be handled by
+test.fcgi, as seen in the link just above! This will work with any
+regex. And, of course, if Panda wasn’t so greedy, it could be nudged
+into a path like ^/blog.</p>
+<p>For those curious my full lighttpd.conf entry for chrisdone.com
+is:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot; =&gt; &quot;</span><span class="op">/</span><span class="dv">1</span><span class="st">&quot;) # Page 1 of blog</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st">   server.error-handler-404 = &quot;</span><span class="op">/</span>blog<span class="op">/</span>public<span class="op">/</span>blog<span class="op">.</span>fcgi<span class="st">&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">   $HTTP[&quot;</span>url<span class="st">&quot;] =~ &quot;</span><span class="op">^/</span>peanuts<span class="st">&quot; {</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">      server.error-handler-404 = &quot;</span><span class="op">/</span>test<span class="op">.</span>fcgi<span class="st">&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">   }</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span></code></pre></div>
+<p>What about kibro start and kibro stop etc? Well, I am going to add a
+setting of whether or not to touch Lighttpd. This means that both of
+these commands will only deal with building, starting and stopping only
+the FastCGI process and you can work happily away on your
+application!</p>
+<p>##New Kibro</p>
+<p>It’s pretty much the same interface. All the commands are the same,
+and the directory structure is the same for the most part.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~$</span> kibro new fooble</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> directory structure <span class="op">...</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>app</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>app<span class="op">/</span>lighttpd</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>app<span class="op">/</span>fastcgi</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>public</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>src</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="dt">Finished</span> creating directory structure<span class="op">.</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> Main.hs <span class="op">...</span> done<span class="op">.</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> lighttpd<span class="op">.</span>conf <span class="op">...</span> done<span class="op">.</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> fooble<span class="op">.</span>kibro <span class="op">...</span> done<span class="op">.</span></span></code></pre></div>
+<p>Starting and stopping is exactly the same.</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~$</span> cd fooble<span class="op">/</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>fooble<span class="op">$</span> kibro start</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Reading</span> config file fooble<span class="op">.</span>kibro <span class="op">...</span> done<span class="op">.</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Not</span> yet built, building <span class="op">...</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Main</span>             ( <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>src<span class="op">/</span>Main.hs, <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>src<span class="op">/</span>Main.o )</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="dt">Linking</span> public<span class="op">/</span>fooble<span class="op">.</span>fcgi <span class="op">...</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="dt">Finished</span> building<span class="op">.</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="dt">Spawning</span> <span class="dt">FastCGI</span> daemon <span class="op">...</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi<span class="op">.</span>c<span class="op">.</span><span class="dv">197</span><span class="op">:</span> child spawned successfully<span class="op">:</span> <span class="dt">PID</span><span class="op">:</span> <span class="dv">26287</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="dt">Done</span><span class="op">.</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="dt">Spawning</span> <span class="dt">Lighttpd</span> daemon <span class="op">...</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="dt">Lighttpd</span> daemon started<span class="op">.</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>fooble<span class="op">$</span> kibro stop</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="dt">Reading</span> config file fooble<span class="op">.</span>kibro <span class="op">...</span> done<span class="op">.</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="dt">Stopping</span> <span class="dt">Lighttpd</span> <span class="op">...</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="dt">Stopping</span> <span class="dt">FastCGI</span> <span class="op">...</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>fooble<span class="op">$</span></span></code></pre></div>
+<p>Examples</p>
+<p>Once I have finished refactoring the library and the executable, I am
+going to make a couple examples.</p>
+<ul>
+<li>An interface to all the Lojban library goodies I’ve been working on.
+This will require a couple interesting kinds of state 1) Maintaining a
+database that takes a while to generate, 2) maintaining a pipe to a
+process.</li>
+<li>Maybe I can patch Panda to support a path other than /.</li>
+</ul>
+<p>I’ll blog about those later and provide all source code etc so that
+you can Try It At Home<a href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a> and comment on the blog about how it
+doesn’t work on your Macs. :-P</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>The paths that you provide in Lighttpd’s configuration
+need to be absolute paths or else it fails. For this reason I have made
+Kibro be the maintainer of those values.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>I had some locking problems with the HDBC Sqlite3
+library and generally I don’t feel very happy with it. I’ll probably try
+Postgres next.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Yeah, I know. It’s just the output of Show. Cheeky, huh?
+;D … I may write a different one later, if called for, but it’s not a
+priority.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>document-root combined with $HTTP[“url”]? I’ll have to
+test this.<a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>No Windows support. (Does it matter? Who runs web
+servers on Windows anyway?)<a href="#fnref5" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2008-10-12 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>

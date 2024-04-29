@@ -1,0 +1,220 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GHCi on Acid</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>GHCi on Acid</h1>
+
+<p>GHCi on Acid is an extension to GHCi (Interactive GHC) for adding
+useful lambdabot features. This post details how to use it.</p>
+<p>I use GHCi inside Emacs, so having GOA additionally.. increases my
+productivity.</p>
+<h2 id="what-does-it-do">What does it do?</h2>
+<p>Here are some examples of the commands that can be used.</p>
+<p>The :instances command shows all the instances of a class:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>instances <span class="dt">Monad</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a> ((<span class="ot">-&gt;</span>) r), <span class="dt">ArrowMonad</span> a, <span class="dt">Cont</span> r, <span class="dt">ContT</span> r m, <span class="dt">Either</span> e, <span class="dt">ErrorT</span> e m, <span class="dt">IO</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a> <span class="dt">Maybe</span>, <span class="dt">RWS</span> r w s, <span class="dt">RWST</span> r w s m, <span class="dt">Reader</span> r, <span class="dt">ReaderT</span> r m, <span class="dt">ST</span> s, <span class="dt">State</span> s,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a> <span class="dt">StateT</span> s m, <span class="dt">Writer</span> w, <span class="dt">WriterT</span> w m, []</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>instances <span class="dt">Arrow</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a> (<span class="ot">-&gt;</span>), <span class="dt">Kleisli</span> m</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>instances <span class="dt">Num</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a> <span class="dt">Double</span>, <span class="dt">Float</span>, <span class="dt">Int</span>, <span class="dt">Integer</span></span></code></pre></div>
+<p>Here we have the :hoogle command, for querying the Hoogle database.
+Great for looking for functions of a specific type:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>hoogle <span class="dt">Arrow</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> <span class="dt">Control.Arrow</span><span class="ot"> ::</span> <span class="kw">module</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Control.Arrow.Arrow</span><span class="ot"> ::</span> <span class="kw">class</span> <span class="dt">Arrow</span> a</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Control.Arrow.ArrowZero</span><span class="ot"> ::</span> <span class="kw">class</span> <span class="dt">Arrow</span> a <span class="ot">=&gt;</span> <span class="dt">ArrowZero</span> a</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>hoogle b <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a <span class="ot">-&gt;</span> b</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a> Prelude.maybe<span class="ot"> ::</span> b <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a <span class="ot">-&gt;</span> b</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>Data.Maybe.maybe<span class="ot"> ::</span> b <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a <span class="ot">-&gt;</span> b</span></code></pre></div>
+<p>The :source command gives a link to the source code of a module
+(sometimes you are curious):</p>
+<p>GOA&gt; :source Data.Maybe
+http://darcs.haskell.org/packages/base/Data/Maybe.hs Similarly, :docs
+gives a link to the documentation of a module.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>docs <span class="dt">Data.Maybe</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> http<span class="op">://</span>haskell<span class="op">.</span>org<span class="op">/</span>ghc<span class="op">/</span>docs<span class="op">/</span>latest<span class="op">/</span>html<span class="op">/</span>libraries<span class="op">/</span>base<span class="op">/</span><span class="dt">Data</span><span class="op">-</span><span class="dt">Maybe</span><span class="op">.</span>html</span></code></pre></div>
+<p>:index is a nice way to search modules.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span><span class="fu">index</span> <span class="dt">Monad</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="dt">Control.Monad</span>, <span class="dt">Prelude</span>, <span class="dt">Control.Monad.Reader</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a> <span class="dt">Control.Monad.Writer</span>, <span class="dt">Control.Monad.State</span>, <span class="dt">Control.Monad.RWS</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a> <span class="dt">Control.Monad.Identity</span>, <span class="dt">Control.Monad.Cont</span>, <span class="dt">Control.Monad.Error</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a> <span class="dt">Control.Monad.List</span></span></code></pre></div>
+<p>Then we have :pl, which shows the pointless (or: point-free) way of
+writing a function, which is very useful for learning and sometimes for
+fun:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>pl (\x <span class="ot">-&gt;</span> x <span class="op">*</span> x)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> join (<span class="op">*</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>pl (\x y <span class="ot">-&gt;</span> (x <span class="op">*</span> <span class="dv">5</span>) <span class="op">+</span> (y <span class="op">*</span> <span class="dv">5</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a> (<span class="op">.</span> (<span class="dv">5</span> <span class="op">*</span>)) <span class="op">.</span> (<span class="op">+</span>) <span class="op">.</span> (<span class="dv">5</span> <span class="op">*</span>)</span></code></pre></div>
+<p>And finally, the best of them all; :bs:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>bs</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> <span class="op">:</span>)</span></code></pre></div>
+<p>Botsnack.</p>
+<h2 id="how-to-install-it">How to install it</h2>
+<p>You need to download and install lamdabot. This is easier than it
+sounds.</p>
+<h3 id="install-happy">Install happy</h3>
+<p>First, we need “happy”, which is a parser:</p>
+<pre><code>sudo cabal install happy</code></pre>
+<p>Right, that’s installed to ~/.cabal/bin, so you need to make sure
+~/.cabal/bin is in your PATH. In Bash, you can do this by adding</p>
+<pre><code>export PATH=&quot;~/.cabal/bin:$PATH&quot;</code></pre>
+<p>to your .bashrc.</p>
+<h3 id="try-it-out">Try it out:</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~$</span> happy <span class="co">--version</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Happy</span> <span class="dt">Version</span> <span class="fl">1.17</span> <span class="dt">Copyright</span> (c) <span class="dv">1993</span><span class="op">-</span><span class="dv">1996</span> <span class="dt">Andy</span> <span class="dt">Gill</span>, <span class="dt">Simon</span> <span class="dt">Marlow</span> (c) <span class="dv">1997</span><span class="op">-</span><span class="dv">2005</span> <span class="dt">Simon</span> <span class="dt">Marlow</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Happy</span> is a <span class="dt">Yacc</span> for <span class="dt">Haskell</span>, <span class="fu">and</span> comes with <span class="dt">ABSOLUTELY</span> <span class="dt">NO</span> <span class="dt">WARRANTY</span><span class="op">.</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="dt">This</span> program is free software; you can redistribute it <span class="fu">and</span><span class="op">/</span><span class="fu">or</span> modify</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>it under the terms given <span class="kw">in</span> the file <span class="dt">&#39;LICENSE&#39;</span> distributed with</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>the <span class="dt">Happy</span> sources<span class="op">.</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="dt">If</span> yours isn’t found, you need to restart bash, <span class="fu">or</span> <span class="kw">type</span> export <span class="dt">PATH</span><span class="ot">=</span><span class="st">&quot;~/.cabal/bin:$PATH&quot;</span><span class="op">.</span></span></code></pre></div>
+<h3 id="grab-hoogle">Grab Hoogle</h3>
+<p>We need Hoogle for lambdabot’s Hoogle functionality.</p>
+<pre><code>sudo cabal install hoogle</code></pre>
+<h3 id="download-and-build-lambdabot">Download and build lambdabot</h3>
+<p>You need darcs. We’re using darcs. It should be on your package
+manager, otherwise install it from the web site. I don’t know why it’s
+not on Hackage.</p>
+<p>Now, we grab lambdabot from code.haskell.org:</p>
+<pre><code>darcs get http://code.haskell.org/lambdabot/
+
+cd lambdabot &amp;&amp; sudo ./build</code></pre>
+<p>./build downloads and installs everything we need, and builds
+lambdabot for us.</p>
+<p>Once that’s built, we can install GOA.</p>
+<h3 id="download-build-and-install-goa">Download, build and install
+GOA</h3>
+<p>Just install with your usual cabal install goa method. :)</p>
+<p>Finally, copy the dot-ghci from goa/ to your ~/.ghci file, and edit
+the lambdabot home directory to where your lambdabot directory is. Mine
+looks like this:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>m <span class="op">-</span> <span class="dt">Prelude</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>m <span class="op">+</span> <span class="dt">GOA</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>setLambdabotHome <span class="st">&quot;/var/www/chrisdone/lambdabot-personal&quot;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def bs        lambdabot <span class="st">&quot;botsnack&quot;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def pl        lambdabot <span class="st">&quot;pl&quot;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def <span class="fu">index</span>     lambdabot <span class="st">&quot;index&quot;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def docs      lambdabot <span class="st">&quot;docs&quot;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def instances lambdabot <span class="st">&quot;instances&quot;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def hoogle    lambdabot <span class="st">&quot;hoogle&quot;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def source    lambdabot <span class="st">&quot;fptools&quot;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def <span class="kw">where</span>     lambdabot <span class="st">&quot;where&quot;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def version   lambdabot <span class="st">&quot;version&quot;</span></span></code></pre></div>
+<p>Now when you run ghci, you will have GOA! Tip: if you accidentally
+unload the GOA module, use :m + GOA to load it.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2008-08-01 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>

@@ -23214,6 +23214,1183 @@ namelessness of writing <code>fieldOf 23</code>:</p>
 </html>
 ]]></description><pubDate>Mon, 22 Nov 2010 00:00:00 +0000
 </pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Applicative and ConfigFile, HSQL]]></title><link>https://chrisdone.com/posts/applicative-and-config-file</link><guid>https://chrisdone.com/posts/applicative-and-config-file</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Applicative and ConfigFile, HSQL</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Applicative and ConfigFile, HSQL</h1>
+
+<p>I’ve been noticing some totally sweet uses of Applicative cropping up
+in my day to day coding. I figured I’d show off some neat uses of it I
+had recently.</p>
+<h2 id="configfile">ConfigFile</h2>
+<p>Also worth mentioning is the ConfigFile library which is pretty
+sweet.</p>
+<p>The idea is to run in the ErrorT monad to pull specific configuration
+items from the file. Here an example taken from the documentation reads
+the configuration file into cp and uses the get function to extract
+values from sections.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.ConfigFile</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad.Error</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>          rv <span class="ot">&lt;-</span> runErrorT <span class="op">$</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>              <span class="kw">do</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>              cp <span class="ot">&lt;-</span> join <span class="op">$</span> liftIO <span class="op">$</span> readfile empty <span class="st">&quot;/etc/passwd&quot;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>              <span class="kw">let</span> x <span class="ot">=</span> cp</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>              liftIO <span class="op">$</span> <span class="fu">putStrLn</span> <span class="st">&quot;In the test&quot;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>              nb <span class="ot">&lt;-</span> get x <span class="st">&quot;DEFAULT&quot;</span> <span class="st">&quot;nobody&quot;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>              liftIO <span class="op">$</span> <span class="fu">putStrLn</span> nb</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>              foo <span class="ot">&lt;-</span> get x <span class="st">&quot;DEFAULT&quot;</span> <span class="st">&quot;foo&quot;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>              liftIO <span class="op">$</span> <span class="fu">putStrLn</span> foo</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>              <span class="fu">return</span> <span class="st">&quot;done&quot;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>          <span class="fu">print</span> rv</span></code></pre></div>
+<p>This is pretty flexible and allows us to make one awesome
+abstraction. Make an Applicative instance!</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Applicative</span> (<span class="dt">ErrorT</span> <span class="dt">C.CPError</span> m) <span class="kw">where</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pure</span> <span class="ot">=</span> <span class="fu">return</span>; (<span class="op">&lt;*&gt;</span>) <span class="ot">=</span> ap</span></code></pre></div>
+<p>And this lets me write the config parser in a really nice way:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">getConf ::</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> (<span class="dt">C.CPErrorData</span>,<span class="dt">String</span>) <span class="dt">Blog</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>getConf filePath <span class="ot">=</span> runErrorT <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  contents <span class="ot">&lt;-</span> liftIO <span class="op">$</span> <span class="fu">readFile</span> filePath</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  config <span class="ot">&lt;-</span> C.readstring C.emptyCP contents</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> get <span class="ot">=</span> C.get config <span class="st">&quot;BLOG&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Blog</span> <span class="op">&lt;$&gt;</span> get <span class="st">&quot;name&quot;</span> <span class="op">&lt;*&gt;</span> get <span class="st">&quot;root&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>       <span class="op">&lt;*&gt;</span> (<span class="fu">read</span> <span class="op">&lt;$&gt;</span> get <span class="st">&quot;css&quot;</span>) <span class="op">&lt;*&gt;</span> get <span class="st">&quot;entries&quot;</span> <span class="op">&lt;*&gt;</span> get <span class="st">&quot;html&quot;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>       <span class="op">&lt;*&gt;</span> get <span class="st">&quot;author&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>       <span class="op">&lt;*&gt;</span> <span class="fu">return</span> <span class="dt">False</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>       <span class="op">&lt;*&gt;</span> get <span class="st">&quot;date&quot;</span></span></code></pre></div>
+<p>Double checking the definition of Blog, we can see where everything
+fits:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Blog</span> <span class="ot">=</span> <span class="dt">Blog</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    {<span class="ot"> blogName     ::</span> <span class="dt">String</span> <span class="co">-- e.g. Chris Done&#39;s Blog</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogRoot     ::</span> <span class="dt">String</span> <span class="co">-- /blog</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogCSS      ::</span> [<span class="dt">String</span>] <span class="co">-- e.g. [&quot;style.css&quot;,&quot;highlight.css&quot;]</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogEntries  ::</span> <span class="dt">FilePath</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogHtml     ::</span> <span class="dt">FilePath</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogAuthor   ::</span> <span class="dt">String</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogForce    ::</span> <span class="dt">Bool</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogDate     ::</span> <span class="dt">String</span> <span class="co">-- date format e.g.</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                             <span class="co">-- &quot;%A %d %b, %Y&quot; makes &quot;Tuesday 10 Feb, 2009&quot;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    } <span class="kw">deriving</span> (<span class="dt">Read</span>,<span class="dt">Show</span>)</span></code></pre></div>
+<p>We see that I use return False for blogForce (an option to force
+refreshing of all pages regardless of modification date), and that is
+because I don’t want it to be specified in the configuration file.</p>
+<p>Of course, not only is this more pretty, we can also make values
+optional by making an Alternative instance. We see a real use of this in
+my Lojbot source:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Alternative</span> (<span class="dt">ErrorT</span> <span class="dt">C.CPError</span> m) <span class="kw">where</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    empty <span class="ot">=</span> mzero; (<span class="op">&lt;|&gt;</span>) <span class="ot">=</span> mplus</span></code></pre></div>
+<p>And now in the readConfig function, we see it’s slightly more complex
+than Blogination’s; I’m taking from multiple sections. Do you see the
+res function?</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">readConfig ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> (<span class="dt">C.CPErrorData</span>,<span class="dt">String</span>) <span class="dt">Config</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>readConfig filePath <span class="ot">=</span> runErrorT <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  config <span class="ot">&lt;-</span> join <span class="op">$</span> liftIO <span class="op">$</span> C.readfile C.emptyCP filePath</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> irc <span class="ot">=</span> C.get config <span class="st">&quot;IRCBOT&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      port <span class="ot">=</span> C.get config <span class="st">&quot;IRCBOT&quot;</span> <span class="st">&quot;port&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      misc <span class="ot">=</span> C.get config <span class="st">&quot;MISC&quot;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      res k f <span class="ot">=</span> misc k <span class="op">&lt;|&gt;</span> liftIO (getDataFileName f)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Config</span> <span class="op">&lt;$&gt;</span> irc <span class="st">&quot;nick&quot;</span> <span class="op">&lt;*&gt;</span>  irc <span class="st">&quot;nickservpass&quot;</span> <span class="op">&lt;*&gt;</span> irc <span class="st">&quot;server&quot;</span> <span class="op">&lt;*&gt;</span> port</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> (irc <span class="st">&quot;chans&quot;</span> <span class="op">&gt;&gt;=</span> tryGet <span class="st">&quot;invalid channel list&quot;</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> (irc <span class="st">&quot;log&quot;</span> <span class="op">&gt;&gt;=</span> tryGet <span class="st">&quot;invalid log specification&quot;</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> res <span class="st">&quot;jbov&quot;</span> <span class="st">&quot;jbovlaste.db&quot;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> res <span class="st">&quot;mlismu&quot;</span> <span class="st">&quot;fatci.txt&quot;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> (misc <span class="st">&quot;mode&quot;</span> <span class="op">&gt;&gt;=</span> tryGet <span class="st">&quot;invalid mode&quot;</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> (<span class="fu">read</span> <span class="op">&lt;$&gt;</span> irc <span class="st">&quot;interval&quot;</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      <span class="kw">where</span> tryGet msg <span class="ot">=</span> list (<span class="fu">fail</span> msg) (<span class="fu">return</span> <span class="op">.</span> <span class="fu">fst</span> <span class="op">.</span> <span class="fu">head</span>) <span class="op">.</span> <span class="fu">reads</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="ot">``` haskell</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="ot">The res function either pulls an optional setting from the MISC section, or alternatively uses the getDataFileName function to find out a filename held in our cabal package.</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="ot">```</span> haskell</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>      <span class="op">$</span><span class="dt">Haskell</span><span class="op">$</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>      res k f <span class="ot">=</span> misc k <span class="op">&lt;|&gt;</span> liftIO (getDataFileName f)</span></code></pre></div>
+<p>Isn’t that totally sweet?</p>
+<h2 id="hsql">HSQL</h2>
+<p>Of course, I’ve used this pattern elsewhere; in HSQL it works out
+nicely, too, and I have added some fancier bits to it:</p>
+<p>A straight-forward function to grab a field value from a Statement
+(which is like a row in HSQL).</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">field ::</span> (<span class="dt">SqlBind</span> a) <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> a</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>field <span class="ot">=</span> <span class="fu">flip</span> MySQL.getFieldValue</span></code></pre></div>
+<p>Another function to read a Haskell value from an SQL field:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ot">readfield ::</span> <span class="dt">Read</span> a <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> a</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>readfield f <span class="ot">=</span> <span class="fu">fmap</span> <span class="fu">read</span> <span class="op">.</span> <span class="fu">flip</span> MySQL.getFieldValue f</span></code></pre></div>
+<p>Here is the nice part.</p>
+<p>Originally, I would pull fields from a statement using the monadic
+field, e.g.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">getOrder ::</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Order</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>getOrder s <span class="ot">=</span> <span class="kw">do</span> <span class="fu">id</span> <span class="ot">&lt;-</span> field <span class="st">&quot;id&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                name <span class="ot">&lt;-</span> field <span class="st">&quot;name&quot;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- etc..</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">return</span> <span class="op">$</span> <span class="dt">Order</span> <span class="fu">id</span> name <span class="co">-- ...</span></span></code></pre></div>
+<p>But then I realised I could make this into a use of applicative. You
+see the pattern, right?</p>
+<p>Here I define an instance of Applicative for the ReaderT monad
+transformer, so that I can stick a Statement in it to be used later on
+when extracting fields.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">StatementM</span> <span class="ot">=</span> <span class="dt">ReaderT</span> <span class="dt">Statement</span> <span class="dt">IO</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Applicative</span> (<span class="dt">ReaderT</span> a m) <span class="kw">where</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    (<span class="op">&lt;*&gt;</span>) <span class="ot">=</span> ap; <span class="fu">pure</span> <span class="ot">=</span> <span class="fu">return</span></span></code></pre></div>
+<p>getFields is just an alias for runReaderT giving us the explicit
+StatementM type:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ot">getFields ::</span> <span class="dt">StatementM</span> a <span class="ot">-&gt;</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> a</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>getFields <span class="ot">=</span> runReaderT</span></code></pre></div>
+<p>Finally, rather than typing out field statement “blah” or readfield
+all the time, I realised I could abstract that by putting the Statement
+in the ReaderT and then define some operators which work with this
+statement under the hood (I ain’t apologising for use of unicode
+operators :-P):</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>a · b <span class="ot">=</span> a <span class="op">&lt;*&gt;</span> getField b; <span class="kw">infixl</span> <span class="dv">4</span> ·</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>a ·<span class="op">.</span> b <span class="ot">=</span> a <span class="op">&lt;*&gt;</span> (<span class="fu">read</span> <span class="op">&lt;$&gt;</span> getField b); <span class="kw">infixl</span> <span class="dv">4</span> ·<span class="op">.</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>a ← b <span class="ot">=</span> a <span class="op">&lt;$&gt;</span> getField b; <span class="kw">infixl</span> <span class="dv">4</span> ←</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>getField b <span class="ot">=</span> <span class="kw">do</span> s <span class="ot">&lt;-</span> ask; lift <span class="op">$</span> field b s</span></code></pre></div>
+<p>You can see that they are basically just performing the same as
+&lt;$&gt; and &lt;*&gt; except that they work with the Statement value
+so we don’t have to write it out. Here it is in use in a real
+project:</p>
+<p>``` haskell getOrderItem :: Statement -&gt; IO OrderItem getOrderItem
+= getFields $ OrderItem ← “id” · “name” · “added” · “price” · “quantity”
+· “size” · “size_metric”</p>
+<p>getOrder :: Statement -&gt; IO Order getOrder = getFields $ Order ←
+“id” · “name” · “items” · “order_total” · “delivery” · “total” ·
+“created” · “card” · “billto” · “shipto” · “level” · “completed” ·
+“code” ``` haskell</p>
+<p>Looks gorgeous, right? I figured I could do this for the ConfigFile
+stuff, but thought better of it because it needs to be slightly more
+flexible. The reason this abstraction works so well for HSQL is that all
+the fields are extracted in the same way.</p>
+<p>We can see tonnes of other uses for Control.Applicative elsewhere.
+Formlets, of course, are a prime example. It also works nicely in
+monadic parsers like Parsec. I expect tonnes of other uses of it
+cropping up in my daily coding.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2009-02-10 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Tue, 10 Feb 2009 00:00:00 +0000
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Lojbot]]></title><link>https://chrisdone.com/posts/lojbot</link><guid>https://chrisdone.com/posts/lojbot</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lojbot</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Lojbot</h1>
+
+<p>I don’t think I have blogged at all about lojbot. Lojbot, or
+{lojbot}<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a>, is an IRC bot<a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>
+which I have written, in Haskell, which runs on the Freenode IRC
+network, idles in #lojban and #lojbot. It has some neat commands which
+are useful to Lojbanists. I’m going to demonstrate some of its features
+briefly.</p>
+<p>I’ve recently done over lojbot’s command and tidied up the source.
+It’s much better now.</p>
+<p>I’ve marked this post as Lojban and Haskell, but it’s only vaguely
+related to Haskell in that I wrote the bot and all the Lojban library
+stuff in it. I won’t be discussing Haskell in this post.</p>
+<h2 id="help">Help</h2>
+<p>First of all you can invoke the help command to list all the other
+commands, and you can invoke help for each of those commands. Commands,
+in channels, are prefixed with things, e.g. in #lojbot, it is ?command.
+In private message, however, no prefix is needed.</p>
+<pre><code>&lt;chrisdone&gt; help
+&lt;lojbot&gt; commands: search (query, q), valsi (v), rafsi (r), gloss
+(g), definition (d), selma&#39;o (s), translate (t), selrafsi (sr), cll,
+lujvo (l), grammar (gr), correct (c), more (m), help (h, commands),
+info (about)</code></pre>
+<p>The words in brackets are short-hands/aliases. Easier to type when
+you’re rushing about trying to make a response to someone!</p>
+<h2 id="lookup">Lookup</h2>
+<p>Look up entries according to the word itself:</p>
+<pre><code>&lt;chrisdone&gt; h v
+&lt;lojbot&gt; valsi (v): lookup a gismu/cmavo/lujvo/fu&#39;ivla
+
+&lt;chrisdone&gt; v valsi
+&lt;lojbot&gt; gismu {valsi}, with rafsi {val, vla}, glossing to &quot;word&quot;: x1
+is a word meaning/causing x2 in language x3; (adjective: x1 is
+lexical/verbal).</code></pre>
+<p>Words don’t have spaces in, so we can reasonably assume when you
+enter more than one word, you want to see more than one result:</p>
+<pre><code>&lt;chrisdone&gt; v ganra garna grana
+&lt;lojbot&gt; gismu {ganra}, with rafsi {gan}, glossing to &quot;broad&quot;: x1 is
+broad/wide in dimension x2 [2nd most significant dimension] by
+standard x3.
+&lt;lojbot&gt; gismu {garna}, with rafsi {gar}, glossing to &quot;rail&quot;, &quot;bar&quot;,
+&quot;railing&quot;: x1 is a rail/railing/bar [tool] supporting/restraining x2,
+of material x3.
+&lt;lojbot&gt; gismu {grana}, with rafsi {ga&#39;a}, glossing to &quot;stick&quot;,
+&quot;pole&quot;, &quot;staff&quot;, &quot;cane&quot;, &quot;rod&quot;: x1 is a rod/pole/staff/stick/cane
+[shape/form] of material x2.</code></pre>
+<p>If we know the start of a gismu, or something like it, we can use a
+wild card to search for it. Here’s an example of words starting with
+{jd}, a cluster which many find difficult to pronounce:</p>
+<pre><code>&lt;chrisdone&gt; v jd*
+&lt;lojbot&gt; gismu {jdari}, with rafsi {jar}, glossing to &quot;firm&quot;: x1 is
+firm/hard/resistant/unyielding to force x2 under conditions x3. .. 11
+more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; gismu {jdice}, with rafsi {jdi}, glossing to &quot;decide&quot;: x1
+(person) decides/makes decision x2 (du&#39;u) about matter x3
+(event/state). .. 10 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; gismu {jdika}, glossing to &quot;decrease&quot;: x1 (experiencer)
+decreases/contracts/is reduced/diminished in property/quantity x2 by
+amount x3. .. 9 more results
+
+&lt;chrisdone&gt; v xa*m*
+&lt;lojbot&gt; cmavo cluster {xamoi}, of selma&#39;o MOI*, glossing to &quot;is
+sixth among&quot;: quantified selbri: convert 6 to ordinal selbri; x1 is
+sixth among x2 ordered by rule x3. .. 15 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; gismu {xajmi}, with rafsi {xam}, glossing to &quot;funny&quot;: x1 is
+funny/comical to x2 in property/aspect x3 (nu/ka); x3 is what is funny
+about x1 to x2. .. 14 more results</code></pre>
+<p>Next we have the ‘rafsi’ command. Search gismu/cmavo by their
+rafsi:</p>
+<pre><code>&lt;chrisdone&gt; h r
+&lt;lojbot&gt; rafsi (r): find gismu/cmavo with the given rafsi
+
+&lt;chrisdone&gt; r loj ban
+&lt;lojbot&gt; gismu {logji}, with rafsi {loj}, glossing to &quot;logic&quot;: x1
+[rules/methods] is a logic for deducing/concluding/inferring/reasoning
+to/about x2 (du&#39;u).
+&lt;lojbot&gt; gismu {bangu}, with rafsi {ban, bau}, glossing to
+&quot;language&quot;: x1 is a/the language/dialect used by x2 to
+express/communicate x3 (si&#39;o/du&#39;u, not quote).
+
+&lt;chrisdone&gt; r sel
+&lt;lojbot&gt; cmavo {se}, of selma&#39;o SE, with rafsi {sel}, glossing to
+&quot;2nd conversion&quot;: 2nd conversion; switch 1st/2nd places.</code></pre>
+<p>Similar to the valsi command, it can display more than one result at
+a time because it is clear that you want this. Wild cards also work with
+rafsi, but I have yet to see why this is useful. I will leave it in,
+though.</p>
+<p>Gloss are a very helpful way to search lojban vocabulary:</p>
+<pre><code>&lt;chrisdone&gt; h g
+&lt;lojbot&gt; gloss (g): find valsi with the given gloss
+
+&lt;chrisdone&gt; g cat
+&lt;lojbot&gt; gismu {mlatu}, with rafsi {lat}, glossing to &quot;cat&quot;: x1 is a
+cat/[puss/pussy/kitten] [feline animal] of species/breed x2;
+(adjective:) x1 is feline. .. 32 more results
+
+&lt;chrisdone&gt; g speaking
+&lt;lojbot&gt; cmavo {sa&#39;e}, of selma&#39;o UI3, glossing to &quot;precisely
+speaking&quot;: discursive: precisely speaking - loosely speaking. .. 2
+more results
+
+&lt;chrisdone&gt; g love
+&lt;lojbot&gt; cmavo {iu}, of selma&#39;o UI1, glossing to &quot;love&quot;: attitudinal:
+love - no love lost - hatred. .. 8 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {pampe&#39;o}, with rafsi {pam, pe&#39;o}, selrafsi {prami,
+pendo} (friend), glossing to &quot;boyfriend&quot;, &quot;lover&quot;, &quot;girlfriend&quot;:
+pr1=pe1 is a lover of pr2=pe2. .. 7 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {pamsrasu}, with rafsi {pam, srasu}, selrafsi {prami,
+srasu} (grass), glossing to &quot;lovegrass&quot;: x1 is lovegrass of
+species/variety x2. .. 6 more results</code></pre>
+<p>I have demonstrated the more command a few times. It simply displays
+the next result. It used to display three or four results at a time. But
+it’s usually the next result you want. And if you’re listing more than a
+few results, you should use a proper mass lookup tool. Also, lojbot
+waits a few seconds every three messages to stop it flooding the IRC
+server. Keep that in mind.</p>
+<p>Indeed, wildcards work with the gloss, too:</p>
+<pre><code>&lt;chrisdone&gt; g *plant*
+&lt;lojbot&gt; fu&#39;ivla {akmela}, glossing to &quot;toothache plant&quot;,
+&quot;paracress&quot;, &quot;spotflower&quot;: x1 is a toothache
+plant/spotflower/paracress of species/variety x2. .. 7 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {derba&#39;o}, with rafsi {der, ba&#39;o}, selrafsi {dertu,
+banro} (dirt, grow), glossing to &quot;to sprout [of plant]&quot;, &quot;sprouting
+object&quot;, &quot;sprout&quot;: b1 initially grows b2 beyond the soil; b1 sprouts
+b2 from the ground. .. 6 more results</code></pre>
+<p>The definition search is nice. It will try to give you the best
+matching result first. A good match is an exact word:</p>
+<pre><code>&lt;chrisdone&gt; h d
+&lt;lojbot&gt; definition (d): search for valsi(s) by definition
+
+&lt;chrisdone&gt; d dances
+&lt;lojbot&gt; gismu {dansu}, glossing to &quot;dance&quot;: x1 (individual, mass)
+dances to accompaniment/music/rhythm x2.</code></pre>
+<p>Above we see that we have matched a single word exactly. And now, we
+match a word inside the slashes:</p>
+<pre><code>&lt;chrisdone&gt; d music
+&lt;lojbot&gt; gismu {dansu}, glossing to &quot;dance&quot;: x1 (individual, mass)
+dances to accompaniment/music/rhythm x2. .. 6 more results</code></pre>
+<p>No problem.</p>
+<p>Indeed, this command will try the separate words, too, to see what
+comes up better, which is useful for when you want to search a few
+ideas:</p>
+<pre><code>&lt;chrisdone&gt; d teacher teaches
+&lt;lojbot&gt; gismu {ctuca}, with rafsi {ctu}, glossing to &quot;teach&quot;: x1
+teaches audience x2 ideas/methods/lore x3 (du&#39;u) about subject(s) x4
+by method x5 (event).</code></pre>
+<p>But what about incomplete words?</p>
+<p>Let’s say I want all results relevant to teaching, I can use a wild
+card:</p>
+<pre><code>&lt;chrisdone&gt; d *teach*
+&lt;lojbot&gt; gismu {ckule}, with rafsi {kul, cu&#39;e}, glossing to &quot;school&quot;:
+x1 is school/institute/academy at x2 teaching subject(s) x3 to
+audien./commun. x4 operated by x5. .. 3 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; gismu {ctuca}, with rafsi {ctu}, glossing to &quot;teach&quot;: x1
+teaches audience x2 ideas/methods/lore x3 (du&#39;u) about subject(s) x4
+by method x5 (event). .. 2 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {balcu&#39;e}, with rafsi {bal, cu&#39;e}, selrafsi {banli,
+ckule} (great, school), glossing to &quot;university&quot;, &quot;university site&quot;,
+&quot;course&quot;, &quot;student&quot;, &quot;regents&quot;: c1 is a university at c2 teaching
+subject(s) c3 to audience/community c4 operated by c5. .. 1 more
+result
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {ctununta&#39;a}, with rafsi {ctu, nun, ta&#39;a}, selrafsi
+{ctuca, nu, tavla} (teach, event abstract, talk), glossing to
+&quot;lecture&quot;, &quot;lecturer&quot;: n1=c5 is a lecture / an event of verbal
+teaching by t1=c1 to audience $t_2 = c_2$ about subject $t_3 = c_4$ in
+language t4 with facts taught c3.</code></pre>
+<p>A nice way to investigate cmavo of a particular selma’o, especially
+after just viewing a cmavo entry and wondering what else there is in
+that selma’o, is to use the s (for selma’o) command:</p>
+<pre><code>&lt;chrisdone&gt; h s
+&lt;lojbot&gt; selma&#39;o (s): list cmavo of a selma&#39;o
+
+&lt;chrisdone&gt; s UI5
+&lt;lojbot&gt; {be&#39;u}: lack, {dai}: empathy, {fu&#39;i}: easy, {ga&#39;i}: hauteur,
+{ju&#39;o}: certainty, {le&#39;o}: aggressive, {ri&#39;e}: release of emotion,
+{se&#39;a}: self-sufficiency, {se&#39;i}: self-oriented, {vu&#39;e}: virtue,
+{zo&#39;o}: humorously .. 11 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; cmavo {be&#39;u}, of selma&#39;o UI5, glossing to &quot;lack&quot;:
+attitudinal modifier: lack/need - presence/satisfaction -
+satiation. .. 10 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; cmavo {dai}, of selma&#39;o UI5, glossing to &quot;empathy&quot;:
+attitudinal modifier: marks empathetic use of preceding attitudinal;
+shows another&#39;s feelings. .. 9 more results</code></pre>
+<p>The translation command uses jbofihe:</p>
+<pre><code>&lt;chrisdone&gt; h t
+&lt;lojbot&gt; translate (t): translate some lojban with jbofihe -x
+
+&lt;chrisdone&gt; t coi ro do
+&lt;lojbot&gt; (^coi /greetings/ ro /every/ /(of)/ do /you/^)
+&lt;chrisdone&gt; t mi ui nelci la djan
+&lt;lojbot&gt; [([nelci1 (like-r(s)):] mi /I, me/ .ui /{happiness..}/)
+/[is, does]/ &lt;&lt;nelci /lik-ing/&gt;&gt; ([nelci2 (liked thing(s)):] la / /
+djan. /[NAME]/)]
+&lt;chrisdone&gt; t mi nelci la djan iu ru&#39;e
+&lt;lojbot&gt; [([nelci1 (like-r(s)):] mi /I, me/) /[is, does]/ &lt;&lt;nelci
+/lik-ing/&gt;&gt; ([nelci2 (liked thing(s)):] la / / djan. /[NAME]/ .iu ru&#39;e
+/{weak love..}/)]</code></pre>
+<p>Unfortunately it doesn’t yet give informative error messages:</p>
+<pre><code>&lt;chrisdone&gt; t do mo do mo
+&lt;lojbot&gt; parse error</code></pre>
+<p>But I will do that some time.</p>
+<p>The selrafsi command gives you the lujvo which the given selrafsi is
+in:</p>
+<pre><code>&lt;chrisdone&gt; h sr
+&lt;lojbot&gt; selrafsi (sr): find all lujvo with given selrafsi
+
+&lt;chrisdone&gt; sr gleki
+&lt;lojbot&gt; bebgei (giddy), gekpanpi (blissful), tcegei (overjoyed) .. 3
+more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {bebgei}, with rafsi {beb, gei}, selrafsi {bebna,
+gleki} (foolish, happy), glossing to &quot;giddy&quot;: g1 is giddy about
+g2. .. 2 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {gekpanpi}, with rafsi {gek, panpi}, selrafsi {gleki,
+panpi} (happy, peace), glossing to &quot;blissful&quot;: g1=p1 is blissful about
+g2=p2 (event/state). .. 1 more result
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {tcegei}, with rafsi {tce, gei}, selrafsi {mutce,
+gleki} (much, happy), glossing to &quot;overjoyed&quot;, &quot;delighted&quot;,
+&quot;ecstatic&quot;, &quot;delightful&quot;: g1 is delighted/ecstatic/overjoyed about g2
+(event/state).
+
+&lt;chrisdone&gt; sr gletu
+&lt;lojbot&gt; cpanygle (ride), datpavycinglepre (straight), glebre (heat),
+glefi&#39;a (pornography), glepe&#39;o (sexual partner), gleve&#39;u (prostitute),
+mitcinglepre (MOTSS), mitpavycinglepre (homo), nu&#39;ogle (virgin),
+pavycinglepre (non-bisexual), relcinglepre (bisexual) .. 11 more
+results</code></pre>
+<p>The cll command looks up, using Google, results from The Lojban
+Reference Grammar:</p>
+<pre><code>&lt;chrisdone&gt; h cll
+&lt;lojbot&gt; cll: lookup something in the lojban reference grammar
+
+&lt;chrisdone&gt; cll ko&#39;a
+&lt;lojbot&gt; http://jbotcan.org/cllc/c7/s5.html : Brevity Is The Soul Of
+Language: Pro-sumti And Pro-bridi - The ...There are ten cmavo in the
+ko&#39;a-series, and they may be assigned freely to any sumti
+whatsoever. The English word ``he&#39;&#39; can refer only to males, ... .. 9
+more results</code></pre>
+<p>valid simply tells us that some grammar is valid.</p>
+<pre><code>&lt;chrisdone&gt; h c
+&lt;lojbot&gt; correct (c): camxes test for validity
+
+&lt;lojbot&gt; valid: coi ro do
+&lt;chrisdone&gt; correct coi ro d
+&lt;lojbot&gt; not valid: coi ro d</code></pre>
+<p>And finally, lujvo makes a lujvo for you:</p>
+<pre><code>&lt;chrisdone&gt; h l
+&lt;lojbot&gt; lujvo (l): construct lujvos from selrafsis and rate them
+
+&lt;chrisdone&gt; lujvo xamgu dansu
+&lt;lojbot&gt; xagdansu (7937), xaurdansu (9006)</code></pre>
+<p>Ah, I forgot the search command. It is a combination of the other
+look up commands, showing results of the highest priority first. It
+goes:</p>
+<pre><code>valsi &gt; rafsi &gt; gloss &gt; definition</code></pre>
+<p>Thus, {bau} matches a rafsi, which means no valsi entries
+matched:</p>
+<pre><code>&lt;chrisdone&gt; q bau
+&lt;lojbot&gt; cmavo {bau}, of selma&#39;o BAI, glossing to &quot;in language&quot;:
+bangu modal, 1st place in language ... .. 1 more result
+{bridi} matches a valsi, and 62 more results, meaning other things like gloss and definition results matched against &quot;bridi&quot;, but they are less precise, and so are listed later:
+
+&lt;chrisdone&gt; q bridi
+&lt;lojbot&gt; gismu {bridi}, with rafsi {bri}, glossing to &quot;predicate&quot;: x1
+(text) is a predicate relationship with relation x2 among arguments
+(sequence/set) x3. .. 62 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {brirebla}, with rafsi {bri, rebla}, selrafsi {bridi,
+rebla} (predicate, tail), glossing to &quot;bridi-tail&quot;: x1 is a bridi-tail
+of predicate relationship x2 with relation x3 among arguments
+(sequence/set) x4 . .. 61 more results</code></pre>
+<p>Here we have a gloss match, meaning no valsi or rafsi entries
+matched.</p>
+<pre><code>&lt;chrisdone&gt; q precisely speaking
+&lt;lojbot&gt; cmavo {sa&#39;e}, of selma&#39;o UI3, glossing to &quot;precisely
+speaking&quot;: discursive: precisely speaking - loosely speaking. .. 4
+more results</code></pre>
+<p>And here a definition match, because “dances” doesn’t match any of
+the valsi, rafsi or gloss entries.</p>
+<pre><code>&lt;chrisdone&gt; q dances
+&lt;lojbot&gt; gismu {dansu}, glossing to &quot;dance&quot;: x1 (individual, mass)
+dances to accompaniment/music/rhythm x2.</code></pre>
+<p>I might recommend this to newbies, or people who prefer to stick to
+one mildly clever command than use different ones. But you get more
+power using the individual ones; so I’d only recommend this for
+valsi/rafsi/gloss lookup of singular words.</p>
+<h2 id="mlismu">Mlismu</h2>
+<p>Lojbot has a mlismu<a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a> feature, invoked by COI or DOI
+cmavo<a href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a>, which makes grammatically and
+ontologically valid utterances, which may or may not have relevance to
+what was said to lojbot. Mlismu generates these utterances using fatci
+(facts), which are very simple statements such as that “all humans are
+persons”.</p>
+<pre><code>&lt;chrisdone&gt; coi lojbot pei
+&lt;lojbot&gt; ckule lo va&#39;i te nicte .o&#39;e be le se murse be&#39;o fo mi le
+prenu</code></pre>
+<p>Some amusing instances of lojbot’s bantering:</p>
+<p>Discussing bananas and religion:</p>
+<pre><code>19:46 &lt; chrisdone&gt; ma grute doi lojbot
+19:46 &lt; lojbot&gt; re&#39;e lo se lebna be mi&#39;o bei ko be&#39;o .u&#39;a fo&#39;o cu grute
+19:46 &lt; chrisdone&gt; zo re&#39;e u&#39;i
+19:48 &lt; timonator&gt; lijda la lojbot lo nu se lebna fi lo badna</code></pre>
+<p>Roughly translated as:</p>
+<pre><code>19:46 &lt; chrisdone&gt; What is a fruit, O, Lojbot?
+19:46 &lt; lojbot&gt; [Religious feeling] YOU, be the one whose fruit we
+sieze! [Gain]
+19:46 &lt; chrisdone&gt; ‘Religious’, haha.
+19:48 &lt; timonator&gt; Lojbot believes in a religion with practices of
+taking bananas from people.</code></pre>
+<p>(Go to the xamselsku page)</p>
+<pre><code>19:32 &lt; timonator&gt; doi lojbot gletu pei
+19:32 &lt; lojbot&gt; gletu fa ko le danlu
+19:32 &lt; timonator&gt; oi
+19:33 &lt;@Broca&gt; doi lojbot do mutce tolclite
+19:33 &lt; lojbot&gt; lo penmi va&#39;i cu mrobi&#39;o</code></pre>
+<p>Rough translation:</p>
+<pre><code>19:32 &lt; timonator&gt; O, Lojbot, fucking; how do you feel about it?
+19:32 &lt; lojbot&gt; Go fuck an animal.
+19:32 &lt; timonator&gt; Hey! &gt;:-(
+19:33 &lt;@Broca&gt; O, Lojbot, you are very rude.
+19:33 &lt; lojbot&gt; The encounterer, in other words, dies.</code></pre>
+<p>(Go to the xamselsku page)</p>
+<p>It’s surprisingly coherent, sometimes.</p>
+<h2 id="source">Source</h2>
+<p>Lojbot is written in Haskell; you can view its complete source code
+or pull it with git:</p>
+<pre><code>git clone git://github.com/chrisdone/lojbot.git</code></pre>
+<p>Okay, so I said I wouldn’t discuss Haskell, but I wrote a neat wild
+card library which Lojbot uses for the above described wild card stuff.
+It’s pretty concise, I think. The pattern matching makes it easy to
+analyse the state of the function. I’m pretty sure it’s essentially a
+state machine. I’ve never written a wild card library. A regular
+expression library would be cool to write some time. I believe there are
+exceedingly fast algorithms for doing wild cards which I have not used
+in this simple code. Maybe I’ll upgrade it some time and blog about
+it.</p>
+<h2 id="bugs-feedback">Bugs / feedback</h2>
+<p>Please add any ideas/bugs/feedback you want to the lojbot lighthouse
+page. That way, I will actually get them done if they’re recorded
+somewhere.</p>
+<p>Please join the #lojbot channel to discuss and test the bot.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>We typically use { and } to quote Lojban text, in
+English.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>“An IRC bot is a set of scripts or an independent
+program that connects to Internet Relay Chat as a client, and so appears
+to other IRC users as another user. It differs from a regular client in
+that instead of providing interactive access to IRC for a human user, it
+performs automated functions.” — IRC bot at Wikipedia<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Mlismu is a program written by Adam Lopresto which
+“[Generates] semantically near-valid grammatical lojban nonsense.” —
+mlismu’s web page<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>That is, words which are vocatives, such as {doi djan},
+{ki’e djan}, {je’e djan}, etc. for “O, John”, “Thanks, John”, “Roger,
+John”, etc.<a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2008-12-18 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Thu, 18 Dec 2008 00:00:00 +0000
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Kibro on Shared Hosting]]></title><link>https://chrisdone.com/posts/kibro-shared-hosting</link><guid>https://chrisdone.com/posts/kibro-shared-hosting</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kibro on Shared Hosting</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Kibro on Shared Hosting</h1>
+
+<p>Right now I am doing work with PHP on a shared host with MySQL.
+Wasn’t my choice, of course. Maybe I can use Haskell and MySQL for this
+application and future ones. I’ve already tested compiling a Haskell web
+application on this specific hosting server, and it works fine.</p>
+<p>This host is pretty limited. I can only use provided configuration
+interfaces. I had to use PHP to launch the Haskell process. Provided I
+can keep a process open on the server (a cron job should do it), I can
+probably use PHP as a kind of proxy to the FastCGI process.</p>
+<p>The idea of using Haskell for my work sounds much more pleasant and
+exciting than PHP. I really wish this PHP version (5.2.6) had closures
+and namespaces. Yeah, it has those features now1 2, in newer versions
+that I can’t use, but only tacked on, when they should’ve been there
+from the start. Oh well.</p>
+<p>Will post more about my
+Haskell-on-horrid-but-necessary-shared-hosting adventures.</p>
+<h3 id="hsql-mysql">HSQL MySQL</h3>
+<p>On a fairly related note, MySQL with Database.HSQL.MySQL, is fairly
+easy. Here is a basic example, which I tried:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> liftIO <span class="op">$</span> handleSql (<span class="fu">return</span> <span class="op">.</span> <span class="dt">Left</span> <span class="op">.</span> <span class="fu">show</span>) <span class="op">$</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                      <span class="kw">do</span> conn <span class="ot">&lt;-</span> connect <span class="st">&quot;host&quot;</span> <span class="st">&quot;db&quot;</span> <span class="st">&quot;username&quot;</span> <span class="st">&quot;password&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                         statement <span class="ot">&lt;-</span> query conn <span class="st">&quot;SELECT * FROM blah&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                         rows <span class="ot">&lt;-</span> collectRows getId statement</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                         closeStatement statement</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                         disconnect conn</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">return</span> <span class="op">$</span> <span class="dt">Right</span> rows</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>output <span class="op">$</span> <span class="fu">show</span> out</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span><span class="ot"> getId ::</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">String</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>          getId <span class="ot">=</span> <span class="fu">flip</span> getFieldValue <span class="st">&quot;somefield&quot;</span></span></code></pre></div>
+<p>This will return either (1) all the fields ‘somefield’ from table
+‘blah’ or (2) an error message.</p>
+<p>Obviously one can stick this connection in a Reader monad. There’s
+not really much else to check out for HSQL. I suppose that’s the point.
+All the work should be done in the query, anyway. Check out the rest of
+the documentation for more information.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2008-12-11 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Thu, 11 Dec 2008 00:00:00 +0000
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Kibro: Haskell, Lighttpd and FastCGI]]></title><link>https://chrisdone.com/posts/kibro-lighttpd-fastcgi</link><guid>https://chrisdone.com/posts/kibro-lighttpd-fastcgi</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kibro: Haskell, Lighttpd and FastCGI</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Kibro: Haskell, Lighttpd and FastCGI</h1>
+
+<p>This is a follow-up from the previous post about Haskell, lighttpd
+and fastcgi. Hence forth I will call this kind of project an fcgi
+site.</p>
+<p>I have come up with a simple framework with consists of a library
+called “Kibro” and an executable called “kibro”. Both come in one
+package.</p>
+<p>I intended for it to make getting an fcgi site up and running very
+easily. I found myself previously copying over configuration files and
+also copying library functions. Now I have started work on putting that
+into one package, Kibro. The point of Kibro is that a web site is a
+directory containing configuration, source and static web files. It is
+contained and isolated.</p>
+<p>Here is an example of what works:</p>
+<p>I create the project:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~$</span> kibro new example</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> project example <span class="op">...</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> directory structure <span class="op">...</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>app<span class="op">/</span>lighttpd <span class="op">...</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>app<span class="op">/</span>fastcgi <span class="op">...</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>app<span class="op">/</span>memcached <span class="op">...</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>db <span class="op">...</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>public <span class="op">...</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>src <span class="op">...</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> example<span class="op">/</span>app<span class="op">/</span>lighttpd<span class="op">/</span>lighttpd<span class="op">.</span>conf <span class="op">...</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> example<span class="op">/</span>src<span class="op">/</span>Main.hs <span class="op">...</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> example<span class="op">/</span>example<span class="op">.</span>kibro <span class="op">...</span></span></code></pre></div>
+<p>Done. I go into the directory and start it.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~$</span> cd example<span class="op">/</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>example<span class="op">$</span> kibro start</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Not</span> built<span class="op">.</span> <span class="dt">Building</span> <span class="op">...</span></span></code></pre></div>
+<p>The project hasn’t been built yet, so it builds it.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ghc <span class="co">--make src/Main.hs -o public/example.fcgi -threaded ...</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Main</span>             ( src<span class="op">/</span>Main.hs, src<span class="op">/</span>Main.o )</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Linking</span> public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">...</span></span></code></pre></div>
+<p>Once built, Lighttpd is started under your username, with access to
+this directory, with document root “public” and configured to work with
+fastcgi.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">Starting</span> lighttpd <span class="op">...</span></span></code></pre></div>
+<p>Fastcgi follows, executing it in the background, as your username,
+saving the processID to a file so that we can stop it later.</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">Starting</span> fastcgi process <span class="op">...</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi <span class="op">-</span>f public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">-</span>s <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>example<span class="op">/</span>app<span class="op">/</span>fastcgi<span class="op">/</span>example<span class="op">.</span>sock <span class="op">-</span><span class="dt">P</span> app<span class="op">/</span>fastcgi<span class="op">/</span>fastcgi<span class="op">.</span>pid <span class="op">...</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi<span class="op">.</span>c<span class="op">.</span><span class="dv">197</span><span class="op">:</span> child spawned successfully<span class="op">:</span> <span class="dt">PID</span><span class="op">:</span> <span class="dv">25688</span></span></code></pre></div>
+<p>That’s it, I’m afraid! Now go to your browser and go to
+http://127.0.0.1:3000. Port 3000 is the default port, and I am going to
+add a kibro configure command with which one can set a different port
+(or you can just edit lighttpd manually).</p>
+<p>BTW, Main.hs looks like this at the start of a new project:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Kibro</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Kibro.DB.Sqlite3</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> kibro (db <span class="st">&quot;&quot;</span>) pages</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>pages <span class="ot">=</span> [(<span class="st">&quot;.&quot;</span>, example)]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>example <span class="ot">=</span> output <span class="st">&quot;Change me! :-)&quot;</span></span></code></pre></div>
+<p>This file is to be edited by you. The kibro function taking a
+function which returns an SQL Connection, and a list of pages, and it
+starts the fastcgi process. pages is an assoc list of regular
+expressions to match on URLs and page functions. example is a page
+function.</p>
+<p>Something else I’ve got is kibro refresh, which rebuilds your project
+and restarts the fastcgi process. No need to restart lighttpd.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>example<span class="op">$</span> kibro refresh</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Rebuilding</span> <span class="op">...</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Building</span> example <span class="op">...</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>ghc <span class="co">--make src/Main.hs -o public/example.fcgi -threaded ...</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Main</span>             ( src<span class="op">/</span>Main.hs, src<span class="op">/</span>Main.o )</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="dt">Linking</span> public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">...</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="dt">Restarting</span> fastcgi <span class="op">...</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="dt">Stopping</span> fastcgi <span class="op">...</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="dt">Starting</span> fastcgi process <span class="op">...</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi <span class="op">-</span>f public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">-</span>s <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>example<span class="op">/</span>app<span class="op">/</span>fastcgi<span class="op">/</span>example<span class="op">.</span>sock <span class="op">-</span><span class="dt">P</span> app<span class="op">/</span>fastcgi<span class="op">/</span>fastcgi<span class="op">.</span>pid <span class="op">...</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi<span class="op">.</span>c<span class="op">.</span><span class="dv">197</span><span class="op">:</span> child spawned successfully<span class="op">:</span> <span class="dt">PID</span><span class="op">:</span> <span class="dv">25737</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>example<span class="op">$</span></span></code></pre></div>
+<p>This will be very useful for updating your web pages’ code.</p>
+<p>Let me show an example with a bit of session state.</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Kibro</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Kibro.DB.Sqlite3</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Maybe</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> kibro (db <span class="st">&quot;&quot;</span>) pages</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>pages <span class="ot">=</span> [(<span class="st">&quot;^/$&quot;</span>,<span class="fu">index</span>),(<span class="st">&quot;/inc&quot;</span>, inc),(<span class="st">&quot;/adder&quot;</span>,adder)]</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">index</span> <span class="ot">=</span> outputHtml <span class="op">&lt;&lt;$</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  p <span class="op">&lt;&lt;</span> hotlink <span class="st">&quot;/inc&quot;</span> <span class="op">&lt;&lt;</span> <span class="st">&quot;incrementer&quot;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="op">+++</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  p <span class="op">&lt;&lt;</span> hotlink <span class="st">&quot;/adder&quot;</span> <span class="op">&lt;&lt;</span> <span class="st">&quot;adder&quot;</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>inc <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> readSessDef <span class="st">&quot;n&quot;</span> <span class="dv">0</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  writeSess <span class="st">&quot;n&quot;</span> (n<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  outputHtml <span class="op">$</span> p <span class="op">&lt;&lt;</span> (<span class="fu">show</span> n)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>adder <span class="ot">=</span> <span class="kw">do</span> n <span class="ot">&lt;-</span> readInputDef <span class="st">&quot;a&quot;</span> <span class="dv">0</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>           v <span class="ot">&lt;-</span> readSessDef <span class="st">&quot;a&quot;</span> <span class="dv">0</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>           writeSess <span class="st">&quot;a&quot;</span> <span class="op">$</span> v<span class="op">+</span>n</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>           outputHtml <span class="op">$</span> p <span class="op">&lt;&lt;</span> (<span class="fu">show</span> (v<span class="op">+</span>n)) <span class="op">+++</span> theform</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>      theform <span class="ot">=</span> form <span class="op">!</span> [method <span class="st">&quot;post&quot;</span>] <span class="op">&lt;&lt;$</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>                p <span class="op">&lt;&lt;</span> <span class="st">&quot;Enter a number to add:&quot;</span> <span class="op">+++</span> input <span class="op">!</span> [name <span class="st">&quot;a&quot;</span>]</span></code></pre></div>
+<p>That’s great. Now let’s refresh:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>example<span class="op">$</span> kibro refresh</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Rebuilding</span> <span class="op">...</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Building</span> example <span class="op">...</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>ghc <span class="co">--make src/Main.hs -o public/example.fcgi -threaded ...</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Main</span>             ( src<span class="op">/</span>Main.hs, src<span class="op">/</span>Main.o )</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="dt">Linking</span> public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">...</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="dt">Restarting</span> fastcgi <span class="op">...</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="dt">Stopping</span> fastcgi <span class="op">...</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="dt">Starting</span> fastcgi process <span class="op">...</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi <span class="op">-</span>f public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">-</span>s <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>example<span class="op">/</span>app<span class="op">/</span>fastcgi<span class="op">/</span>example<span class="op">.</span>sock <span class="op">-</span><span class="dt">P</span> app<span class="op">/</span>fastcgi<span class="op">/</span>fastcgi<span class="op">.</span>pid <span class="op">...</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi<span class="op">.</span>c<span class="op">.</span><span class="dv">197</span><span class="op">:</span> child spawned successfully<span class="op">:</span> <span class="dt">PID</span><span class="op">:</span> <span class="dv">30907</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>example<span class="op">$</span></span></code></pre></div>
+<p>You can probably guess what this does.</p>
+<p>I think this is a nice-ish way to write web pages. Another is using
+stringtemplate, which I will be incorporating in the future. Finally,
+there is XSLT; equally doable. I can’t really think of other ways in
+which to write web page content other than XSLT, templates and
+code-as-data higher order functions or macros. I’d be interested in
+hearing about other ways.</p>
+<p>At the moment, session state is stored in MVars as simple Map values,
+but it won’t take much changes to restructure the session code to use
+memcached. Why memcached? Because storing the session state in a
+separate process means fastcgi can restart, but your session state isn’t
+lost. Granted, alternatively one could simply write to a database and
+then session state would be safe! Well, it would be pointless. A session
+state should time out after a while of no activity. There is no point
+writing it to a file. I’d wage memcached is faster, but I haven’t tested
+it.</p>
+<p>So with this setup of external session state storage, it means
+updating web page code is easy, similar to the “dynamic”ness of
+interpreted web languages.</p>
+<p>I would like to add a selenium interface at somepoint, e.g. for the
+kibro refresh command.</p>
+<p>Anyway, I’m trailing off into details.</p>
+<p>Needs way more work before I’ll be showing off source code. It’s on
+Hackage, so you can look at it, or the darcs repo, but I wouldn’t bother
+trying it yet. I’m just giving a progress report. It’s therapeutic.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2008-11-14 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Fri, 14 Nov 2008 00:00:00 +0000
+</pubDate><dc:creator>Chris Done</dc:creator></item>
 <item><title><![CDATA[Haskell Formlets: Composable web form construction and validation]]></title><link>https://chrisdone.com/posts/haskell-formlets</link><guid>https://chrisdone.com/posts/haskell-formlets</guid><description><![CDATA[<!doctype html>
 <html>
   <head>
@@ -23915,6 +25092,710 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
   </body>
 </html>
 ]]></description><pubDate>Fri, 14 Nov 2008 00:00:00 +0000
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[New Kibro]]></title><link>https://chrisdone.com/posts/new-kibro</link><guid>https://chrisdone.com/posts/new-kibro</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>New Kibro</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>New Kibro</h1>
+
+<p>The latest Kibro release is 0.3. The version is 0.3, but it’s really
+still unstable/Alpha. If it works on your computer it’s generally a
+miracle. Anyway.</p>
+<h2 id="whats-new">What’s new</h2>
+<p>Quoting directly from the CHANGELOG in README:</p>
+<ul>
+<li><p>DONE: Add persistent state value to Kibro monad (with default as
+())</p></li>
+<li><p>DONE: Add perl-like regexps</p></li>
+<li><p>DONE: Option for whether or not to launch Lighttpd</p></li>
+<li><p>DONE: Strip Sqlite3</p></li>
+<li><p>DONE: custom.conf Lighttpd include</p></li>
+</ul>
+<p>I’m quite sure these satisfy all the solutions that were mentioned in
+my previous Kibro blog post.</p>
+<h2 id="how-to-get-it">How to get it</h2>
+<p>Make sure you have cabal-install.</p>
+<h3 id="install-from-hackage">Install from Hackage</h3>
+<pre><code>$ cabal install kibro</code></pre>
+<h3 id="install-from-git-repository">Install from git repository</h3>
+<pre><code>cd kibro &amp;&amp; cabal install</code></pre>
+<p>That’s it.</p>
+<h2 id="example">Example</h2>
+<p>I have started a bit of work on a Lojban interface. I made a little
+“screencast”-type video about using Kibro (but without a microphone, so
+you will have to read me typing little messages to you). Check out the
+example page.</p>
+<p>At some point Firefox started sending the PC speaker beep constantly
+and so I had to end the video. Still, it was a bit of fun and maybe it
+could be helpful.</p>
+<p>Get the source code:</p>
+<pre><code>$ git clone git://github.com/chrisdone/jboborei.git</code></pre>
+<h1 id="whats-next">What’s next</h1>
+<p>For me; sleep.</p>
+<p>For Kibro; I need to document it a little more, e.g. how to use it
+with an existing server etc.</p>
+<p>I was thinking that implementing hooks might be mildly cool. That is,
+if Kibro were to run specific shell scripts before and after events like
+restarting, rebuilding, etc.</p>
+<p>I also would like to add cabal support at some point. That way, you
+can write a web site that works as a package that is cabal-installable.
+Good for sharing with friends and such.</p>
+<p>If you have questions/comments/ideas, feel free to e-mail me at
+chrisdone@gmail.com or comment on this blog post.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2008-10-14 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Tue, 14 Oct 2008 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Kibro refactoring]]></title><link>https://chrisdone.com/posts/kibro-refactoring</link><guid>https://chrisdone.com/posts/kibro-refactoring</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kibro refactoring</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Kibro refactoring</h1>
+
+<p>I am refactoring Kibro, my web development “framework”. The release
+on Hackage does bare bones things, and Jinjing Wang, what a legend,
+created this Panda software out of it. In doing so he has helped me
+notice what Kibro needs. I myself have found things that Kibro does not
+support in my projects that I will be addressing. I am writing this post
+so that anyone who cares will know that this project is being worked on,
+and because for those actually using Kibro it will help to know the
+reasoning behind the changes. The code needed refactoring anyway, it had
+!OMGPROTOTYPE! written all over it.</p>
+<h2 id="problems-and-solutions">Problems and solutions</h2>
+<h3 id="lighttpd.conf-configuration">Lighttpd.conf configuration</h3>
+<p>Panda comes with a script to modify the lighttpd.conf which adds
+mime-types and things like that. It’s a problem that you have to do
+this.</p>
+<p>I have discovered that Lighttpd config files support an #include
+directive and it is therefore my solution that all settings that are not
+dependant on the path of the project<a href="#fn1" class="footnote-ref"
+id="fnref1" role="doc-noteref"><sup>1</sup></a> be moved to a
+custom.conf in the lighttpd directory.</p>
+<h3 id="database-not-used">Database not used</h3>
+<p>The Kibro library requires you to specify a database, but your web
+site might not always want a database (like Panda). I am removing the
+Sqlite interface from Kibro for now for this reason, and others<a
+href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a>. You ought to feel free to use the
+MonadIO instance of the Kibro monad to open connections to whichever
+database library you like.</p>
+<h3 id="adding-persistent-state">Adding persistent state</h3>
+<p>Furthmore addressing the problem of the Kibro library, perhaps adding
+custom state may be useful. For example, your main web site code might
+be:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Kibro</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">MyWebSiteStuff</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  someResource <span class="ot">&lt;-</span> getMyResource</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  startKibro someResource pages</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ot">pages ::</span> [<span class="dt">PageAssign</span>]</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>pages <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
+<p>This lets us connect to a database or generate some resources that
+are too expensive to create for every page load. Typically it can be a
+pure value or an MVar or TVar or whatnot.</p>
+<h3 id="kibro-command-line-program-is-rubbish">Kibro command line
+program is rubbish</h3>
+<p>It is generally rubbish (e.g. doesn’t even support a help function).
+I’ve changed this, and lots of other things. The code before was awful.
+It now uses a Command monad (of course). I guarentee it.</p>
+<h3 id="settings">Settings</h3>
+<p>There needs to be a way to configure Kibro for the project. Another
+thing I noticed was that Panda changed where to output the .fcgi file.
+This should be configurable. Thus, Kibro now reads settings from the
+.kibro file in the directory, the same as Cabal. Here is a real sample
+config<a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a> file:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">KibroProject</span> { projName <span class="ot">=</span> <span class="st">&quot;test&quot;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>             , projDirs <span class="ot">=</span> [(<span class="st">&quot;app&quot;</span>,<span class="st">&quot;app&quot;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                          ,(<span class="st">&quot;lighttpd&quot;</span>,<span class="st">&quot;app/lighttpd&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                          ,(<span class="st">&quot;fastcgi&quot;</span>,<span class="st">&quot;app/fastcgi&quot;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                          ,(<span class="st">&quot;public&quot;</span>,<span class="st">&quot;public&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                          ,(<span class="st">&quot;src&quot;</span>,<span class="st">&quot;src&quot;</span>)]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>             , projOutDir <span class="ot">=</span> <span class="st">&quot;public&quot;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>             , projMainIs <span class="ot">=</span> <span class="st">&quot;src/Main.hs&quot;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>             }</span></code></pre></div>
+<p>The project name (projName) is important, that decides what .fcgi
+file name is outputted, what .sock file name is outputted, and etc.</p>
+<p>projDirs tells Kibro where everything is. It is a list of
+(place,relative path) tuples. app refers to where the Kibro stuff like
+Lighttpd and FastCGI should go, among other things that may be added in
+future. lighttpd refers to where lighttpd.conf is, and where
+lighttpd.pid and custom.conf should be written. fastcgi is where
+fastcgi.pid should be written, and $projName.sock will be put. public is
+the public httpd directory (aka www-root or static), and $projName.fcgi
+will be put here so that Lighttpd can access it. (You can make it not
+directly accessible from the outside, read below). And finally, src is
+where your web site’s source code is (i.e. where to cd to when
+performing the build).</p>
+<p>projOutDir tells Kibro where to output $projName.fcgi. projMainIs
+tells Kibro where the main web site file is.</p>
+<p>All these paths are accessed relative to the project directory.</p>
+<h3
+id="integrating-your-fastcgi-process-with-an-existing-web-site">Integrating
+your FastCGI process with an existing web site</h3>
+<p>This is one old Kibro does not address at all. It’s great to work in
+a confined directory on a special port like 3000, but at some point you
+need to deploy it on a real existing web server. Panda has this problem.
+It expects to be in the root directory. So that when I wanted to setup
+this blog as /blog, I had issues. All of the links on the blog software
+refer to a root directory (/), so I can’t simply change the Kibro page
+regexes. However, Panda’s issue is not solvable by Kibro, because it is
+just a problem of hard coding paths. Kibro’s issue is integrating
+nicely, which is really the question of how to deal with the Lighttpd
+configuration.</p>
+<p>My solution is that seeing as Kibro can output your .fcgi program
+anywhere, you can therefore put it in your web server’s root directory
+(actually, I don’t think you have to do this for Lighttpd to be able to
+access it<a href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a>). After reading about Lighttpd’s
+configuration syntax a little more, I discovered a very nice way to get
+your FastCGI application onto an existing server under a directory.</p>
+<p>The obvious way is to simply directly access foo.fcgi.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>fastcgi<span class="op">.</span>server <span class="ot">=</span> (<span class="st">&quot;blog.fcgi&quot;</span> <span class="ot">=&gt;</span> ((<span class="st">&quot;socket&quot;</span> <span class="ot">=&gt;</span> <span class="st">&quot;/var/www/chrisdone/blog/app/fastcgi/blog.sock&quot;</span>))</span></code></pre></div>
+<p>But then how can you have multiple pages on your FastCGI application?
+You need the 404-handler.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>server<span class="op">.</span><span class="fu">error</span><span class="op">-</span>handler<span class="op">-</span><span class="dv">404</span> <span class="ot">=</span> <span class="st">&quot;/blog/public/blog.fcgi&quot;</span></span></code></pre></div>
+<p>But if we set a 404-handler to a particular FastCGI application, what
+about the others? What if I want this blog, and another FastCGI
+application which can handle any path under some directory? Then I can
+use the $HTTP[“url”] syntax:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>fastcgi<span class="op">.</span>server <span class="ot">=</span> (<span class="st">&quot;blog.fcgi&quot;</span> <span class="ot">=&gt;</span> ((<span class="st">&quot;socket&quot;</span> <span class="ot">=&gt;</span> <span class="st">&quot;/var/www/chrisdone/blog/app/fastcgi/blog.sock&quot;</span>))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                 ,<span class="st">&quot;test.fcgi&quot;</span> <span class="ot">=&gt;</span> ((<span class="st">&quot;socket&quot;</span> <span class="ot">=&gt;</span> <span class="st">&quot;/var/www/chrisdone/test.sock&quot;</span>)))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>server<span class="op">.</span><span class="fu">error</span><span class="op">-</span>handler<span class="op">-</span><span class="dv">404</span> <span class="ot">=</span> <span class="st">&quot;/blog/public/blog.fcgi&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="op">$</span><span class="dt">HTTP</span>[<span class="st">&quot;url&quot;</span>] <span class="op">=~</span> <span class="st">&quot;^/peanuts&quot;</span> {</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>   server<span class="op">.</span><span class="fu">error</span><span class="op">-</span>handler<span class="op">-</span><span class="dv">404</span> <span class="ot">=</span> <span class="st">&quot;/test.fcgi&quot;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>This means that any URL that starts with ^/peanuts will be handled by
+test.fcgi, as seen in the link just above! This will work with any
+regex. And, of course, if Panda wasn’t so greedy, it could be nudged
+into a path like ^/blog.</p>
+<p>For those curious my full lighttpd.conf entry for chrisdone.com
+is:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot; =&gt; &quot;</span><span class="op">/</span><span class="dv">1</span><span class="st">&quot;) # Page 1 of blog</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st">   server.error-handler-404 = &quot;</span><span class="op">/</span>blog<span class="op">/</span>public<span class="op">/</span>blog<span class="op">.</span>fcgi<span class="st">&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">   $HTTP[&quot;</span>url<span class="st">&quot;] =~ &quot;</span><span class="op">^/</span>peanuts<span class="st">&quot; {</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">      server.error-handler-404 = &quot;</span><span class="op">/</span>test<span class="op">.</span>fcgi<span class="st">&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">   }</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span></code></pre></div>
+<p>What about kibro start and kibro stop etc? Well, I am going to add a
+setting of whether or not to touch Lighttpd. This means that both of
+these commands will only deal with building, starting and stopping only
+the FastCGI process and you can work happily away on your
+application!</p>
+<p>##New Kibro</p>
+<p>It’s pretty much the same interface. All the commands are the same,
+and the directory structure is the same for the most part.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~$</span> kibro new fooble</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> directory structure <span class="op">...</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>app</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>app<span class="op">/</span>lighttpd</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>app<span class="op">/</span>fastcgi</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>public</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>src</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="dt">Finished</span> creating directory structure<span class="op">.</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> Main.hs <span class="op">...</span> done<span class="op">.</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> lighttpd<span class="op">.</span>conf <span class="op">...</span> done<span class="op">.</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> fooble<span class="op">.</span>kibro <span class="op">...</span> done<span class="op">.</span></span></code></pre></div>
+<p>Starting and stopping is exactly the same.</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~$</span> cd fooble<span class="op">/</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>fooble<span class="op">$</span> kibro start</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Reading</span> config file fooble<span class="op">.</span>kibro <span class="op">...</span> done<span class="op">.</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Not</span> yet built, building <span class="op">...</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Main</span>             ( <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>src<span class="op">/</span>Main.hs, <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>fooble<span class="op">/</span>src<span class="op">/</span>Main.o )</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="dt">Linking</span> public<span class="op">/</span>fooble<span class="op">.</span>fcgi <span class="op">...</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="dt">Finished</span> building<span class="op">.</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="dt">Spawning</span> <span class="dt">FastCGI</span> daemon <span class="op">...</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi<span class="op">.</span>c<span class="op">.</span><span class="dv">197</span><span class="op">:</span> child spawned successfully<span class="op">:</span> <span class="dt">PID</span><span class="op">:</span> <span class="dv">26287</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="dt">Done</span><span class="op">.</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="dt">Spawning</span> <span class="dt">Lighttpd</span> daemon <span class="op">...</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="dt">Lighttpd</span> daemon started<span class="op">.</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>fooble<span class="op">$</span> kibro stop</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="dt">Reading</span> config file fooble<span class="op">.</span>kibro <span class="op">...</span> done<span class="op">.</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="dt">Stopping</span> <span class="dt">Lighttpd</span> <span class="op">...</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="dt">Stopping</span> <span class="dt">FastCGI</span> <span class="op">...</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>fooble<span class="op">$</span></span></code></pre></div>
+<p>Examples</p>
+<p>Once I have finished refactoring the library and the executable, I am
+going to make a couple examples.</p>
+<ul>
+<li>An interface to all the Lojban library goodies I’ve been working on.
+This will require a couple interesting kinds of state 1) Maintaining a
+database that takes a while to generate, 2) maintaining a pipe to a
+process.</li>
+<li>Maybe I can patch Panda to support a path other than /.</li>
+</ul>
+<p>I’ll blog about those later and provide all source code etc so that
+you can Try It At Home<a href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a> and comment on the blog about how it
+doesn’t work on your Macs. :-P</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>The paths that you provide in Lighttpd’s configuration
+need to be absolute paths or else it fails. For this reason I have made
+Kibro be the maintainer of those values.<a href="#fnref1"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>I had some locking problems with the HDBC Sqlite3
+library and generally I don’t feel very happy with it. I’ll probably try
+Postgres next.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Yeah, I know. It’s just the output of Show. Cheeky, huh?
+;D … I may write a different one later, if called for, but it’s not a
+priority.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>document-root combined with $HTTP[“url”]? I’ll have to
+test this.<a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>No Windows support. (Does it matter? Who runs web
+servers on Windows anyway?)<a href="#fnref5" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2008-10-12 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Sun, 12 Oct 2008 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[GHCi on Acid]]></title><link>https://chrisdone.com/posts/ghci-on-acid</link><guid>https://chrisdone.com/posts/ghci-on-acid</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>GHCi on Acid</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>GHCi on Acid</h1>
+
+<p>GHCi on Acid is an extension to GHCi (Interactive GHC) for adding
+useful lambdabot features. This post details how to use it.</p>
+<p>I use GHCi inside Emacs, so having GOA additionally.. increases my
+productivity.</p>
+<h2 id="what-does-it-do">What does it do?</h2>
+<p>Here are some examples of the commands that can be used.</p>
+<p>The :instances command shows all the instances of a class:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>instances <span class="dt">Monad</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a> ((<span class="ot">-&gt;</span>) r), <span class="dt">ArrowMonad</span> a, <span class="dt">Cont</span> r, <span class="dt">ContT</span> r m, <span class="dt">Either</span> e, <span class="dt">ErrorT</span> e m, <span class="dt">IO</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a> <span class="dt">Maybe</span>, <span class="dt">RWS</span> r w s, <span class="dt">RWST</span> r w s m, <span class="dt">Reader</span> r, <span class="dt">ReaderT</span> r m, <span class="dt">ST</span> s, <span class="dt">State</span> s,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a> <span class="dt">StateT</span> s m, <span class="dt">Writer</span> w, <span class="dt">WriterT</span> w m, []</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>instances <span class="dt">Arrow</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a> (<span class="ot">-&gt;</span>), <span class="dt">Kleisli</span> m</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>instances <span class="dt">Num</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a> <span class="dt">Double</span>, <span class="dt">Float</span>, <span class="dt">Int</span>, <span class="dt">Integer</span></span></code></pre></div>
+<p>Here we have the :hoogle command, for querying the Hoogle database.
+Great for looking for functions of a specific type:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>hoogle <span class="dt">Arrow</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a> <span class="dt">Control.Arrow</span><span class="ot"> ::</span> <span class="kw">module</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Control.Arrow.Arrow</span><span class="ot"> ::</span> <span class="kw">class</span> <span class="dt">Arrow</span> a</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Control.Arrow.ArrowZero</span><span class="ot"> ::</span> <span class="kw">class</span> <span class="dt">Arrow</span> a <span class="ot">=&gt;</span> <span class="dt">ArrowZero</span> a</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>hoogle b <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a <span class="ot">-&gt;</span> b</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a> Prelude.maybe<span class="ot"> ::</span> b <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a <span class="ot">-&gt;</span> b</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>Data.Maybe.maybe<span class="ot"> ::</span> b <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> <span class="dt">Maybe</span> a <span class="ot">-&gt;</span> b</span></code></pre></div>
+<p>The :source command gives a link to the source code of a module
+(sometimes you are curious):</p>
+<p>GOA&gt; :source Data.Maybe
+http://darcs.haskell.org/packages/base/Data/Maybe.hs Similarly, :docs
+gives a link to the documentation of a module.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>docs <span class="dt">Data.Maybe</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> http<span class="op">://</span>haskell<span class="op">.</span>org<span class="op">/</span>ghc<span class="op">/</span>docs<span class="op">/</span>latest<span class="op">/</span>html<span class="op">/</span>libraries<span class="op">/</span>base<span class="op">/</span><span class="dt">Data</span><span class="op">-</span><span class="dt">Maybe</span><span class="op">.</span>html</span></code></pre></div>
+<p>:index is a nice way to search modules.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span><span class="fu">index</span> <span class="dt">Monad</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a> <span class="dt">Control.Monad</span>, <span class="dt">Prelude</span>, <span class="dt">Control.Monad.Reader</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a> <span class="dt">Control.Monad.Writer</span>, <span class="dt">Control.Monad.State</span>, <span class="dt">Control.Monad.RWS</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a> <span class="dt">Control.Monad.Identity</span>, <span class="dt">Control.Monad.Cont</span>, <span class="dt">Control.Monad.Error</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a> <span class="dt">Control.Monad.List</span></span></code></pre></div>
+<p>Then we have :pl, which shows the pointless (or: point-free) way of
+writing a function, which is very useful for learning and sometimes for
+fun:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>pl (\x <span class="ot">-&gt;</span> x <span class="op">*</span> x)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a> join (<span class="op">*</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>pl (\x y <span class="ot">-&gt;</span> (x <span class="op">*</span> <span class="dv">5</span>) <span class="op">+</span> (y <span class="op">*</span> <span class="dv">5</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a> (<span class="op">.</span> (<span class="dv">5</span> <span class="op">*</span>)) <span class="op">.</span> (<span class="op">+</span>) <span class="op">.</span> (<span class="dv">5</span> <span class="op">*</span>)</span></code></pre></div>
+<p>And finally, the best of them all; :bs:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">GOA</span><span class="op">&gt;</span> <span class="op">:</span>bs</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a> <span class="op">:</span>)</span></code></pre></div>
+<p>Botsnack.</p>
+<h2 id="how-to-install-it">How to install it</h2>
+<p>You need to download and install lamdabot. This is easier than it
+sounds.</p>
+<h3 id="install-happy">Install happy</h3>
+<p>First, we need “happy”, which is a parser:</p>
+<pre><code>sudo cabal install happy</code></pre>
+<p>Right, that’s installed to ~/.cabal/bin, so you need to make sure
+~/.cabal/bin is in your PATH. In Bash, you can do this by adding</p>
+<pre><code>export PATH=&quot;~/.cabal/bin:$PATH&quot;</code></pre>
+<p>to your .bashrc.</p>
+<h3 id="try-it-out">Try it out:</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~$</span> happy <span class="co">--version</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Happy</span> <span class="dt">Version</span> <span class="fl">1.17</span> <span class="dt">Copyright</span> (c) <span class="dv">1993</span><span class="op">-</span><span class="dv">1996</span> <span class="dt">Andy</span> <span class="dt">Gill</span>, <span class="dt">Simon</span> <span class="dt">Marlow</span> (c) <span class="dv">1997</span><span class="op">-</span><span class="dv">2005</span> <span class="dt">Simon</span> <span class="dt">Marlow</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Happy</span> is a <span class="dt">Yacc</span> for <span class="dt">Haskell</span>, <span class="fu">and</span> comes with <span class="dt">ABSOLUTELY</span> <span class="dt">NO</span> <span class="dt">WARRANTY</span><span class="op">.</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="dt">This</span> program is free software; you can redistribute it <span class="fu">and</span><span class="op">/</span><span class="fu">or</span> modify</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>it under the terms given <span class="kw">in</span> the file <span class="dt">&#39;LICENSE&#39;</span> distributed with</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>the <span class="dt">Happy</span> sources<span class="op">.</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="dt">If</span> yours isn’t found, you need to restart bash, <span class="fu">or</span> <span class="kw">type</span> export <span class="dt">PATH</span><span class="ot">=</span><span class="st">&quot;~/.cabal/bin:$PATH&quot;</span><span class="op">.</span></span></code></pre></div>
+<h3 id="grab-hoogle">Grab Hoogle</h3>
+<p>We need Hoogle for lambdabot’s Hoogle functionality.</p>
+<pre><code>sudo cabal install hoogle</code></pre>
+<h3 id="download-and-build-lambdabot">Download and build lambdabot</h3>
+<p>You need darcs. We’re using darcs. It should be on your package
+manager, otherwise install it from the web site. I don’t know why it’s
+not on Hackage.</p>
+<p>Now, we grab lambdabot from code.haskell.org:</p>
+<pre><code>darcs get http://code.haskell.org/lambdabot/
+
+cd lambdabot &amp;&amp; sudo ./build</code></pre>
+<p>./build downloads and installs everything we need, and builds
+lambdabot for us.</p>
+<p>Once that’s built, we can install GOA.</p>
+<h3 id="download-build-and-install-goa">Download, build and install
+GOA</h3>
+<p>Just install with your usual cabal install goa method. :)</p>
+<p>Finally, copy the dot-ghci from goa/ to your ~/.ghci file, and edit
+the lambdabot home directory to where your lambdabot directory is. Mine
+looks like this:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>m <span class="op">-</span> <span class="dt">Prelude</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>m <span class="op">+</span> <span class="dt">GOA</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>setLambdabotHome <span class="st">&quot;/var/www/chrisdone/lambdabot-personal&quot;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def bs        lambdabot <span class="st">&quot;botsnack&quot;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def pl        lambdabot <span class="st">&quot;pl&quot;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def <span class="fu">index</span>     lambdabot <span class="st">&quot;index&quot;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def docs      lambdabot <span class="st">&quot;docs&quot;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def instances lambdabot <span class="st">&quot;instances&quot;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def hoogle    lambdabot <span class="st">&quot;hoogle&quot;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def source    lambdabot <span class="st">&quot;fptools&quot;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def <span class="kw">where</span>     lambdabot <span class="st">&quot;where&quot;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="op">:</span>def version   lambdabot <span class="st">&quot;version&quot;</span></span></code></pre></div>
+<p>Now when you run ghci, you will have GOA! Tip: if you accidentally
+unload the GOA module, use :m + GOA to load it.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2008-08-01 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Fri, 01 Aug 2008 00:00:00 +0100
 </pubDate><dc:creator>Chris Done</dc:creator></item>
 
 </channel>

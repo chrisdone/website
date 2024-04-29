@@ -1,0 +1,265 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kibro: Haskell, Lighttpd and FastCGI</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Kibro: Haskell, Lighttpd and FastCGI</h1>
+
+<p>This is a follow-up from the previous post about Haskell, lighttpd
+and fastcgi. Hence forth I will call this kind of project an fcgi
+site.</p>
+<p>I have come up with a simple framework with consists of a library
+called “Kibro” and an executable called “kibro”. Both come in one
+package.</p>
+<p>I intended for it to make getting an fcgi site up and running very
+easily. I found myself previously copying over configuration files and
+also copying library functions. Now I have started work on putting that
+into one package, Kibro. The point of Kibro is that a web site is a
+directory containing configuration, source and static web files. It is
+contained and isolated.</p>
+<p>Here is an example of what works:</p>
+<p>I create the project:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~$</span> kibro new example</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> project example <span class="op">...</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> directory structure <span class="op">...</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>app<span class="op">/</span>lighttpd <span class="op">...</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>app<span class="op">/</span>fastcgi <span class="op">...</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>app<span class="op">/</span>memcached <span class="op">...</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>db <span class="op">...</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>public <span class="op">...</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="dt">Creating</span> example<span class="op">/</span>src <span class="op">...</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> example<span class="op">/</span>app<span class="op">/</span>lighttpd<span class="op">/</span>lighttpd<span class="op">.</span>conf <span class="op">...</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> example<span class="op">/</span>src<span class="op">/</span>Main.hs <span class="op">...</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="dt">Writing</span> example<span class="op">/</span>example<span class="op">.</span>kibro <span class="op">...</span></span></code></pre></div>
+<p>Done. I go into the directory and start it.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~$</span> cd example<span class="op">/</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>example<span class="op">$</span> kibro start</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Not</span> built<span class="op">.</span> <span class="dt">Building</span> <span class="op">...</span></span></code></pre></div>
+<p>The project hasn’t been built yet, so it builds it.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>ghc <span class="co">--make src/Main.hs -o public/example.fcgi -threaded ...</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Main</span>             ( src<span class="op">/</span>Main.hs, src<span class="op">/</span>Main.o )</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Linking</span> public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">...</span></span></code></pre></div>
+<p>Once built, Lighttpd is started under your username, with access to
+this directory, with document root “public” and configured to work with
+fastcgi.</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">Starting</span> lighttpd <span class="op">...</span></span></code></pre></div>
+<p>Fastcgi follows, executing it in the background, as your username,
+saving the processID to a file so that we can stop it later.</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">Starting</span> fastcgi process <span class="op">...</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi <span class="op">-</span>f public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">-</span>s <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>example<span class="op">/</span>app<span class="op">/</span>fastcgi<span class="op">/</span>example<span class="op">.</span>sock <span class="op">-</span><span class="dt">P</span> app<span class="op">/</span>fastcgi<span class="op">/</span>fastcgi<span class="op">.</span>pid <span class="op">...</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi<span class="op">.</span>c<span class="op">.</span><span class="dv">197</span><span class="op">:</span> child spawned successfully<span class="op">:</span> <span class="dt">PID</span><span class="op">:</span> <span class="dv">25688</span></span></code></pre></div>
+<p>That’s it, I’m afraid! Now go to your browser and go to
+http://127.0.0.1:3000. Port 3000 is the default port, and I am going to
+add a kibro configure command with which one can set a different port
+(or you can just edit lighttpd manually).</p>
+<p>BTW, Main.hs looks like this at the start of a new project:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Kibro</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Kibro.DB.Sqlite3</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> kibro (db <span class="st">&quot;&quot;</span>) pages</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>pages <span class="ot">=</span> [(<span class="st">&quot;.&quot;</span>, example)]</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>example <span class="ot">=</span> output <span class="st">&quot;Change me! :-)&quot;</span></span></code></pre></div>
+<p>This file is to be edited by you. The kibro function taking a
+function which returns an SQL Connection, and a list of pages, and it
+starts the fastcgi process. pages is an assoc list of regular
+expressions to match on URLs and page functions. example is a page
+function.</p>
+<p>Something else I’ve got is kibro refresh, which rebuilds your project
+and restarts the fastcgi process. No need to restart lighttpd.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>example<span class="op">$</span> kibro refresh</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Rebuilding</span> <span class="op">...</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Building</span> example <span class="op">...</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>ghc <span class="co">--make src/Main.hs -o public/example.fcgi -threaded ...</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Main</span>             ( src<span class="op">/</span>Main.hs, src<span class="op">/</span>Main.o )</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="dt">Linking</span> public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">...</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="dt">Restarting</span> fastcgi <span class="op">...</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="dt">Stopping</span> fastcgi <span class="op">...</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="dt">Starting</span> fastcgi process <span class="op">...</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi <span class="op">-</span>f public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">-</span>s <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>example<span class="op">/</span>app<span class="op">/</span>fastcgi<span class="op">/</span>example<span class="op">.</span>sock <span class="op">-</span><span class="dt">P</span> app<span class="op">/</span>fastcgi<span class="op">/</span>fastcgi<span class="op">.</span>pid <span class="op">...</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi<span class="op">.</span>c<span class="op">.</span><span class="dv">197</span><span class="op">:</span> child spawned successfully<span class="op">:</span> <span class="dt">PID</span><span class="op">:</span> <span class="dv">25737</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>example<span class="op">$</span></span></code></pre></div>
+<p>This will be very useful for updating your web pages’ code.</p>
+<p>Let me show an example with a bit of session state.</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Kibro</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Kibro.DB.Sqlite3</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Maybe</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> kibro (db <span class="st">&quot;&quot;</span>) pages</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>pages <span class="ot">=</span> [(<span class="st">&quot;^/$&quot;</span>,<span class="fu">index</span>),(<span class="st">&quot;/inc&quot;</span>, inc),(<span class="st">&quot;/adder&quot;</span>,adder)]</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">index</span> <span class="ot">=</span> outputHtml <span class="op">&lt;&lt;$</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  p <span class="op">&lt;&lt;</span> hotlink <span class="st">&quot;/inc&quot;</span> <span class="op">&lt;&lt;</span> <span class="st">&quot;incrementer&quot;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="op">+++</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  p <span class="op">&lt;&lt;</span> hotlink <span class="st">&quot;/adder&quot;</span> <span class="op">&lt;&lt;</span> <span class="st">&quot;adder&quot;</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>inc <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> readSessDef <span class="st">&quot;n&quot;</span> <span class="dv">0</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  writeSess <span class="st">&quot;n&quot;</span> (n<span class="op">+</span><span class="dv">1</span>)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  outputHtml <span class="op">$</span> p <span class="op">&lt;&lt;</span> (<span class="fu">show</span> n)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>adder <span class="ot">=</span> <span class="kw">do</span> n <span class="ot">&lt;-</span> readInputDef <span class="st">&quot;a&quot;</span> <span class="dv">0</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>           v <span class="ot">&lt;-</span> readSessDef <span class="st">&quot;a&quot;</span> <span class="dv">0</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>           writeSess <span class="st">&quot;a&quot;</span> <span class="op">$</span> v<span class="op">+</span>n</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>           outputHtml <span class="op">$</span> p <span class="op">&lt;&lt;</span> (<span class="fu">show</span> (v<span class="op">+</span>n)) <span class="op">+++</span> theform</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>      theform <span class="ot">=</span> form <span class="op">!</span> [method <span class="st">&quot;post&quot;</span>] <span class="op">&lt;&lt;$</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>                p <span class="op">&lt;&lt;</span> <span class="st">&quot;Enter a number to add:&quot;</span> <span class="op">+++</span> input <span class="op">!</span> [name <span class="st">&quot;a&quot;</span>]</span></code></pre></div>
+<p>That’s great. Now let’s refresh:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>example<span class="op">$</span> kibro refresh</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Rebuilding</span> <span class="op">...</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Building</span> example <span class="op">...</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>ghc <span class="co">--make src/Main.hs -o public/example.fcgi -threaded ...</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span> <span class="kw">of</span> <span class="dv">1</span>] <span class="dt">Compiling</span> <span class="dt">Main</span>             ( src<span class="op">/</span>Main.hs, src<span class="op">/</span>Main.o )</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="dt">Linking</span> public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">...</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="dt">Restarting</span> fastcgi <span class="op">...</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="dt">Stopping</span> fastcgi <span class="op">...</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="dt">Starting</span> fastcgi process <span class="op">...</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi <span class="op">-</span>f public<span class="op">/</span>example<span class="op">.</span>fcgi <span class="op">-</span>s <span class="op">/</span>home<span class="op">/</span>chris<span class="op">/</span>example<span class="op">/</span>app<span class="op">/</span>fastcgi<span class="op">/</span>example<span class="op">.</span>sock <span class="op">-</span><span class="dt">P</span> app<span class="op">/</span>fastcgi<span class="op">/</span>fastcgi<span class="op">.</span>pid <span class="op">...</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>spawn<span class="op">-</span>fcgi<span class="op">.</span>c<span class="op">.</span><span class="dv">197</span><span class="op">:</span> child spawned successfully<span class="op">:</span> <span class="dt">PID</span><span class="op">:</span> <span class="dv">30907</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>chris<span class="op">@</span>chrisdesktop<span class="op">:~/</span>example<span class="op">$</span></span></code></pre></div>
+<p>You can probably guess what this does.</p>
+<p>I think this is a nice-ish way to write web pages. Another is using
+stringtemplate, which I will be incorporating in the future. Finally,
+there is XSLT; equally doable. I can’t really think of other ways in
+which to write web page content other than XSLT, templates and
+code-as-data higher order functions or macros. I’d be interested in
+hearing about other ways.</p>
+<p>At the moment, session state is stored in MVars as simple Map values,
+but it won’t take much changes to restructure the session code to use
+memcached. Why memcached? Because storing the session state in a
+separate process means fastcgi can restart, but your session state isn’t
+lost. Granted, alternatively one could simply write to a database and
+then session state would be safe! Well, it would be pointless. A session
+state should time out after a while of no activity. There is no point
+writing it to a file. I’d wage memcached is faster, but I haven’t tested
+it.</p>
+<p>So with this setup of external session state storage, it means
+updating web page code is easy, similar to the “dynamic”ness of
+interpreted web languages.</p>
+<p>I would like to add a selenium interface at somepoint, e.g. for the
+kibro refresh command.</p>
+<p>Anyway, I’m trailing off into details.</p>
+<p>Needs way more work before I’ll be showing off source code. It’s on
+Hackage, so you can look at it, or the darcs repo, but I wouldn’t bother
+trying it yet. I’m just giving a progress report. It’s therapeutic.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2008-11-14 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>

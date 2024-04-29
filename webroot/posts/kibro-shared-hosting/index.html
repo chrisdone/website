@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kibro on Shared Hosting</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Kibro on Shared Hosting</h1>
+
+<p>Right now I am doing work with PHP on a shared host with MySQL.
+Wasn’t my choice, of course. Maybe I can use Haskell and MySQL for this
+application and future ones. I’ve already tested compiling a Haskell web
+application on this specific hosting server, and it works fine.</p>
+<p>This host is pretty limited. I can only use provided configuration
+interfaces. I had to use PHP to launch the Haskell process. Provided I
+can keep a process open on the server (a cron job should do it), I can
+probably use PHP as a kind of proxy to the FastCGI process.</p>
+<p>The idea of using Haskell for my work sounds much more pleasant and
+exciting than PHP. I really wish this PHP version (5.2.6) had closures
+and namespaces. Yeah, it has those features now1 2, in newer versions
+that I can’t use, but only tacked on, when they should’ve been there
+from the start. Oh well.</p>
+<p>Will post more about my
+Haskell-on-horrid-but-necessary-shared-hosting adventures.</p>
+<h3 id="hsql-mysql">HSQL MySQL</h3>
+<p>On a fairly related note, MySQL with Database.HSQL.MySQL, is fairly
+easy. Here is a basic example, which I tried:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> liftIO <span class="op">$</span> handleSql (<span class="fu">return</span> <span class="op">.</span> <span class="dt">Left</span> <span class="op">.</span> <span class="fu">show</span>) <span class="op">$</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                      <span class="kw">do</span> conn <span class="ot">&lt;-</span> connect <span class="st">&quot;host&quot;</span> <span class="st">&quot;db&quot;</span> <span class="st">&quot;username&quot;</span> <span class="st">&quot;password&quot;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                         statement <span class="ot">&lt;-</span> query conn <span class="st">&quot;SELECT * FROM blah&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                         rows <span class="ot">&lt;-</span> collectRows getId statement</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                         closeStatement statement</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                         disconnect conn</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                         <span class="fu">return</span> <span class="op">$</span> <span class="dt">Right</span> rows</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>output <span class="op">$</span> <span class="fu">show</span> out</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span><span class="ot"> getId ::</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">String</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>          getId <span class="ot">=</span> <span class="fu">flip</span> getFieldValue <span class="st">&quot;somefield&quot;</span></span></code></pre></div>
+<p>This will return either (1) all the fields ‘somefield’ from table
+‘blah’ or (2) an error message.</p>
+<p>Obviously one can stick this connection in a Reader monad. There’s
+not really much else to check out for HSQL. I suppose that’s the point.
+All the work should be done in the query, anyway. Check out the rest of
+the documentation for more information.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2008-12-11 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>

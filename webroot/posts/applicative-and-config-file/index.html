@@ -1,0 +1,268 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Applicative and ConfigFile, HSQL</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Applicative and ConfigFile, HSQL</h1>
+
+<p>I’ve been noticing some totally sweet uses of Applicative cropping up
+in my day to day coding. I figured I’d show off some neat uses of it I
+had recently.</p>
+<h2 id="configfile">ConfigFile</h2>
+<p>Also worth mentioning is the ConfigFile library which is pretty
+sweet.</p>
+<p>The idea is to run in the ErrorT monad to pull specific configuration
+items from the file. Here an example taken from the documentation reads
+the configuration file into cp and uses the get function to extract
+values from sections.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.ConfigFile</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad.Error</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>          rv <span class="ot">&lt;-</span> runErrorT <span class="op">$</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>              <span class="kw">do</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>              cp <span class="ot">&lt;-</span> join <span class="op">$</span> liftIO <span class="op">$</span> readfile empty <span class="st">&quot;/etc/passwd&quot;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>              <span class="kw">let</span> x <span class="ot">=</span> cp</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>              liftIO <span class="op">$</span> <span class="fu">putStrLn</span> <span class="st">&quot;In the test&quot;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>              nb <span class="ot">&lt;-</span> get x <span class="st">&quot;DEFAULT&quot;</span> <span class="st">&quot;nobody&quot;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>              liftIO <span class="op">$</span> <span class="fu">putStrLn</span> nb</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>              foo <span class="ot">&lt;-</span> get x <span class="st">&quot;DEFAULT&quot;</span> <span class="st">&quot;foo&quot;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>              liftIO <span class="op">$</span> <span class="fu">putStrLn</span> foo</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>              <span class="fu">return</span> <span class="st">&quot;done&quot;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>          <span class="fu">print</span> rv</span></code></pre></div>
+<p>This is pretty flexible and allows us to make one awesome
+abstraction. Make an Applicative instance!</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Applicative</span> (<span class="dt">ErrorT</span> <span class="dt">C.CPError</span> m) <span class="kw">where</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pure</span> <span class="ot">=</span> <span class="fu">return</span>; (<span class="op">&lt;*&gt;</span>) <span class="ot">=</span> ap</span></code></pre></div>
+<p>And this lets me write the config parser in a really nice way:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">getConf ::</span> <span class="dt">FilePath</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> (<span class="dt">C.CPErrorData</span>,<span class="dt">String</span>) <span class="dt">Blog</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>getConf filePath <span class="ot">=</span> runErrorT <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  contents <span class="ot">&lt;-</span> liftIO <span class="op">$</span> <span class="fu">readFile</span> filePath</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  config <span class="ot">&lt;-</span> C.readstring C.emptyCP contents</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> get <span class="ot">=</span> C.get config <span class="st">&quot;BLOG&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Blog</span> <span class="op">&lt;$&gt;</span> get <span class="st">&quot;name&quot;</span> <span class="op">&lt;*&gt;</span> get <span class="st">&quot;root&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>       <span class="op">&lt;*&gt;</span> (<span class="fu">read</span> <span class="op">&lt;$&gt;</span> get <span class="st">&quot;css&quot;</span>) <span class="op">&lt;*&gt;</span> get <span class="st">&quot;entries&quot;</span> <span class="op">&lt;*&gt;</span> get <span class="st">&quot;html&quot;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>       <span class="op">&lt;*&gt;</span> get <span class="st">&quot;author&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>       <span class="op">&lt;*&gt;</span> <span class="fu">return</span> <span class="dt">False</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>       <span class="op">&lt;*&gt;</span> get <span class="st">&quot;date&quot;</span></span></code></pre></div>
+<p>Double checking the definition of Blog, we can see where everything
+fits:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Blog</span> <span class="ot">=</span> <span class="dt">Blog</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    {<span class="ot"> blogName     ::</span> <span class="dt">String</span> <span class="co">-- e.g. Chris Done&#39;s Blog</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogRoot     ::</span> <span class="dt">String</span> <span class="co">-- /blog</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogCSS      ::</span> [<span class="dt">String</span>] <span class="co">-- e.g. [&quot;style.css&quot;,&quot;highlight.css&quot;]</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogEntries  ::</span> <span class="dt">FilePath</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogHtml     ::</span> <span class="dt">FilePath</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogAuthor   ::</span> <span class="dt">String</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogForce    ::</span> <span class="dt">Bool</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    ,<span class="ot"> blogDate     ::</span> <span class="dt">String</span> <span class="co">-- date format e.g.</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                             <span class="co">-- &quot;%A %d %b, %Y&quot; makes &quot;Tuesday 10 Feb, 2009&quot;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    } <span class="kw">deriving</span> (<span class="dt">Read</span>,<span class="dt">Show</span>)</span></code></pre></div>
+<p>We see that I use return False for blogForce (an option to force
+refreshing of all pages regardless of modification date), and that is
+because I don’t want it to be specified in the configuration file.</p>
+<p>Of course, not only is this more pretty, we can also make values
+optional by making an Alternative instance. We see a real use of this in
+my Lojbot source:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Alternative</span> (<span class="dt">ErrorT</span> <span class="dt">C.CPError</span> m) <span class="kw">where</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    empty <span class="ot">=</span> mzero; (<span class="op">&lt;|&gt;</span>) <span class="ot">=</span> mplus</span></code></pre></div>
+<p>And now in the readConfig function, we see it’s slightly more complex
+than Blogination’s; I’m taking from multiple sections. Do you see the
+res function?</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">readConfig ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> (<span class="dt">Either</span> (<span class="dt">C.CPErrorData</span>,<span class="dt">String</span>) <span class="dt">Config</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>readConfig filePath <span class="ot">=</span> runErrorT <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  config <span class="ot">&lt;-</span> join <span class="op">$</span> liftIO <span class="op">$</span> C.readfile C.emptyCP filePath</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> irc <span class="ot">=</span> C.get config <span class="st">&quot;IRCBOT&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>      port <span class="ot">=</span> C.get config <span class="st">&quot;IRCBOT&quot;</span> <span class="st">&quot;port&quot;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      misc <span class="ot">=</span> C.get config <span class="st">&quot;MISC&quot;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      res k f <span class="ot">=</span> misc k <span class="op">&lt;|&gt;</span> liftIO (getDataFileName f)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Config</span> <span class="op">&lt;$&gt;</span> irc <span class="st">&quot;nick&quot;</span> <span class="op">&lt;*&gt;</span>  irc <span class="st">&quot;nickservpass&quot;</span> <span class="op">&lt;*&gt;</span> irc <span class="st">&quot;server&quot;</span> <span class="op">&lt;*&gt;</span> port</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> (irc <span class="st">&quot;chans&quot;</span> <span class="op">&gt;&gt;=</span> tryGet <span class="st">&quot;invalid channel list&quot;</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> (irc <span class="st">&quot;log&quot;</span> <span class="op">&gt;&gt;=</span> tryGet <span class="st">&quot;invalid log specification&quot;</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> res <span class="st">&quot;jbov&quot;</span> <span class="st">&quot;jbovlaste.db&quot;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> res <span class="st">&quot;mlismu&quot;</span> <span class="st">&quot;fatci.txt&quot;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> (misc <span class="st">&quot;mode&quot;</span> <span class="op">&gt;&gt;=</span> tryGet <span class="st">&quot;invalid mode&quot;</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>         <span class="op">&lt;*&gt;</span> (<span class="fu">read</span> <span class="op">&lt;$&gt;</span> irc <span class="st">&quot;interval&quot;</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      <span class="kw">where</span> tryGet msg <span class="ot">=</span> list (<span class="fu">fail</span> msg) (<span class="fu">return</span> <span class="op">.</span> <span class="fu">fst</span> <span class="op">.</span> <span class="fu">head</span>) <span class="op">.</span> <span class="fu">reads</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="ot">``` haskell</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="ot">The res function either pulls an optional setting from the MISC section, or alternatively uses the getDataFileName function to find out a filename held in our cabal package.</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="ot">```</span> haskell</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>      <span class="op">$</span><span class="dt">Haskell</span><span class="op">$</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>      res k f <span class="ot">=</span> misc k <span class="op">&lt;|&gt;</span> liftIO (getDataFileName f)</span></code></pre></div>
+<p>Isn’t that totally sweet?</p>
+<h2 id="hsql">HSQL</h2>
+<p>Of course, I’ve used this pattern elsewhere; in HSQL it works out
+nicely, too, and I have added some fancier bits to it:</p>
+<p>A straight-forward function to grab a field value from a Statement
+(which is like a row in HSQL).</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">field ::</span> (<span class="dt">SqlBind</span> a) <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> a</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>field <span class="ot">=</span> <span class="fu">flip</span> MySQL.getFieldValue</span></code></pre></div>
+<p>Another function to read a Haskell value from an SQL field:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ot">readfield ::</span> <span class="dt">Read</span> a <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> a</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>readfield f <span class="ot">=</span> <span class="fu">fmap</span> <span class="fu">read</span> <span class="op">.</span> <span class="fu">flip</span> MySQL.getFieldValue f</span></code></pre></div>
+<p>Here is the nice part.</p>
+<p>Originally, I would pull fields from a statement using the monadic
+field, e.g.</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">getOrder ::</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Order</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>getOrder s <span class="ot">=</span> <span class="kw">do</span> <span class="fu">id</span> <span class="ot">&lt;-</span> field <span class="st">&quot;id&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                name <span class="ot">&lt;-</span> field <span class="st">&quot;name&quot;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- etc..</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">return</span> <span class="op">$</span> <span class="dt">Order</span> <span class="fu">id</span> name <span class="co">-- ...</span></span></code></pre></div>
+<p>But then I realised I could make this into a use of applicative. You
+see the pattern, right?</p>
+<p>Here I define an instance of Applicative for the ReaderT monad
+transformer, so that I can stick a Statement in it to be used later on
+when extracting fields.</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">StatementM</span> <span class="ot">=</span> <span class="dt">ReaderT</span> <span class="dt">Statement</span> <span class="dt">IO</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> <span class="dt">Applicative</span> (<span class="dt">ReaderT</span> a m) <span class="kw">where</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    (<span class="op">&lt;*&gt;</span>) <span class="ot">=</span> ap; <span class="fu">pure</span> <span class="ot">=</span> <span class="fu">return</span></span></code></pre></div>
+<p>getFields is just an alias for runReaderT giving us the explicit
+StatementM type:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ot">getFields ::</span> <span class="dt">StatementM</span> a <span class="ot">-&gt;</span> <span class="dt">Statement</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> a</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>getFields <span class="ot">=</span> runReaderT</span></code></pre></div>
+<p>Finally, rather than typing out field statement “blah” or readfield
+all the time, I realised I could abstract that by putting the Statement
+in the ReaderT and then define some operators which work with this
+statement under the hood (I ain’t apologising for use of unicode
+operators :-P):</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>a · b <span class="ot">=</span> a <span class="op">&lt;*&gt;</span> getField b; <span class="kw">infixl</span> <span class="dv">4</span> ·</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>a ·<span class="op">.</span> b <span class="ot">=</span> a <span class="op">&lt;*&gt;</span> (<span class="fu">read</span> <span class="op">&lt;$&gt;</span> getField b); <span class="kw">infixl</span> <span class="dv">4</span> ·<span class="op">.</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>a ← b <span class="ot">=</span> a <span class="op">&lt;$&gt;</span> getField b; <span class="kw">infixl</span> <span class="dv">4</span> ←</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>getField b <span class="ot">=</span> <span class="kw">do</span> s <span class="ot">&lt;-</span> ask; lift <span class="op">$</span> field b s</span></code></pre></div>
+<p>You can see that they are basically just performing the same as
+&lt;$&gt; and &lt;*&gt; except that they work with the Statement value
+so we don’t have to write it out. Here it is in use in a real
+project:</p>
+<p>``` haskell getOrderItem :: Statement -&gt; IO OrderItem getOrderItem
+= getFields $ OrderItem ← “id” · “name” · “added” · “price” · “quantity”
+· “size” · “size_metric”</p>
+<p>getOrder :: Statement -&gt; IO Order getOrder = getFields $ Order ←
+“id” · “name” · “items” · “order_total” · “delivery” · “total” ·
+“created” · “card” · “billto” · “shipto” · “level” · “completed” ·
+“code” ``` haskell</p>
+<p>Looks gorgeous, right? I figured I could do this for the ConfigFile
+stuff, but thought better of it because it needs to be slightly more
+flexible. The reason this abstraction works so well for HSQL is that all
+the fields are extracted in the same way.</p>
+<p>We can see tonnes of other uses for Control.Applicative elsewhere.
+Formlets, of course, are a prime example. It also works nicely in
+monadic parsers like Parsec. I expect tonnes of other uses of it
+cropping up in my daily coding.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2009-02-10 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>

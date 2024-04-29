@@ -1,0 +1,490 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lojbot</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Lojbot</h1>
+
+<p>I don’t think I have blogged at all about lojbot. Lojbot, or
+{lojbot}<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a>, is an IRC bot<a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>
+which I have written, in Haskell, which runs on the Freenode IRC
+network, idles in #lojban and #lojbot. It has some neat commands which
+are useful to Lojbanists. I’m going to demonstrate some of its features
+briefly.</p>
+<p>I’ve recently done over lojbot’s command and tidied up the source.
+It’s much better now.</p>
+<p>I’ve marked this post as Lojban and Haskell, but it’s only vaguely
+related to Haskell in that I wrote the bot and all the Lojban library
+stuff in it. I won’t be discussing Haskell in this post.</p>
+<h2 id="help">Help</h2>
+<p>First of all you can invoke the help command to list all the other
+commands, and you can invoke help for each of those commands. Commands,
+in channels, are prefixed with things, e.g. in #lojbot, it is ?command.
+In private message, however, no prefix is needed.</p>
+<pre><code>&lt;chrisdone&gt; help
+&lt;lojbot&gt; commands: search (query, q), valsi (v), rafsi (r), gloss
+(g), definition (d), selma&#39;o (s), translate (t), selrafsi (sr), cll,
+lujvo (l), grammar (gr), correct (c), more (m), help (h, commands),
+info (about)</code></pre>
+<p>The words in brackets are short-hands/aliases. Easier to type when
+you’re rushing about trying to make a response to someone!</p>
+<h2 id="lookup">Lookup</h2>
+<p>Look up entries according to the word itself:</p>
+<pre><code>&lt;chrisdone&gt; h v
+&lt;lojbot&gt; valsi (v): lookup a gismu/cmavo/lujvo/fu&#39;ivla
+
+&lt;chrisdone&gt; v valsi
+&lt;lojbot&gt; gismu {valsi}, with rafsi {val, vla}, glossing to &quot;word&quot;: x1
+is a word meaning/causing x2 in language x3; (adjective: x1 is
+lexical/verbal).</code></pre>
+<p>Words don’t have spaces in, so we can reasonably assume when you
+enter more than one word, you want to see more than one result:</p>
+<pre><code>&lt;chrisdone&gt; v ganra garna grana
+&lt;lojbot&gt; gismu {ganra}, with rafsi {gan}, glossing to &quot;broad&quot;: x1 is
+broad/wide in dimension x2 [2nd most significant dimension] by
+standard x3.
+&lt;lojbot&gt; gismu {garna}, with rafsi {gar}, glossing to &quot;rail&quot;, &quot;bar&quot;,
+&quot;railing&quot;: x1 is a rail/railing/bar [tool] supporting/restraining x2,
+of material x3.
+&lt;lojbot&gt; gismu {grana}, with rafsi {ga&#39;a}, glossing to &quot;stick&quot;,
+&quot;pole&quot;, &quot;staff&quot;, &quot;cane&quot;, &quot;rod&quot;: x1 is a rod/pole/staff/stick/cane
+[shape/form] of material x2.</code></pre>
+<p>If we know the start of a gismu, or something like it, we can use a
+wild card to search for it. Here’s an example of words starting with
+{jd}, a cluster which many find difficult to pronounce:</p>
+<pre><code>&lt;chrisdone&gt; v jd*
+&lt;lojbot&gt; gismu {jdari}, with rafsi {jar}, glossing to &quot;firm&quot;: x1 is
+firm/hard/resistant/unyielding to force x2 under conditions x3. .. 11
+more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; gismu {jdice}, with rafsi {jdi}, glossing to &quot;decide&quot;: x1
+(person) decides/makes decision x2 (du&#39;u) about matter x3
+(event/state). .. 10 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; gismu {jdika}, glossing to &quot;decrease&quot;: x1 (experiencer)
+decreases/contracts/is reduced/diminished in property/quantity x2 by
+amount x3. .. 9 more results
+
+&lt;chrisdone&gt; v xa*m*
+&lt;lojbot&gt; cmavo cluster {xamoi}, of selma&#39;o MOI*, glossing to &quot;is
+sixth among&quot;: quantified selbri: convert 6 to ordinal selbri; x1 is
+sixth among x2 ordered by rule x3. .. 15 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; gismu {xajmi}, with rafsi {xam}, glossing to &quot;funny&quot;: x1 is
+funny/comical to x2 in property/aspect x3 (nu/ka); x3 is what is funny
+about x1 to x2. .. 14 more results</code></pre>
+<p>Next we have the ‘rafsi’ command. Search gismu/cmavo by their
+rafsi:</p>
+<pre><code>&lt;chrisdone&gt; h r
+&lt;lojbot&gt; rafsi (r): find gismu/cmavo with the given rafsi
+
+&lt;chrisdone&gt; r loj ban
+&lt;lojbot&gt; gismu {logji}, with rafsi {loj}, glossing to &quot;logic&quot;: x1
+[rules/methods] is a logic for deducing/concluding/inferring/reasoning
+to/about x2 (du&#39;u).
+&lt;lojbot&gt; gismu {bangu}, with rafsi {ban, bau}, glossing to
+&quot;language&quot;: x1 is a/the language/dialect used by x2 to
+express/communicate x3 (si&#39;o/du&#39;u, not quote).
+
+&lt;chrisdone&gt; r sel
+&lt;lojbot&gt; cmavo {se}, of selma&#39;o SE, with rafsi {sel}, glossing to
+&quot;2nd conversion&quot;: 2nd conversion; switch 1st/2nd places.</code></pre>
+<p>Similar to the valsi command, it can display more than one result at
+a time because it is clear that you want this. Wild cards also work with
+rafsi, but I have yet to see why this is useful. I will leave it in,
+though.</p>
+<p>Gloss are a very helpful way to search lojban vocabulary:</p>
+<pre><code>&lt;chrisdone&gt; h g
+&lt;lojbot&gt; gloss (g): find valsi with the given gloss
+
+&lt;chrisdone&gt; g cat
+&lt;lojbot&gt; gismu {mlatu}, with rafsi {lat}, glossing to &quot;cat&quot;: x1 is a
+cat/[puss/pussy/kitten] [feline animal] of species/breed x2;
+(adjective:) x1 is feline. .. 32 more results
+
+&lt;chrisdone&gt; g speaking
+&lt;lojbot&gt; cmavo {sa&#39;e}, of selma&#39;o UI3, glossing to &quot;precisely
+speaking&quot;: discursive: precisely speaking - loosely speaking. .. 2
+more results
+
+&lt;chrisdone&gt; g love
+&lt;lojbot&gt; cmavo {iu}, of selma&#39;o UI1, glossing to &quot;love&quot;: attitudinal:
+love - no love lost - hatred. .. 8 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {pampe&#39;o}, with rafsi {pam, pe&#39;o}, selrafsi {prami,
+pendo} (friend), glossing to &quot;boyfriend&quot;, &quot;lover&quot;, &quot;girlfriend&quot;:
+pr1=pe1 is a lover of pr2=pe2. .. 7 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {pamsrasu}, with rafsi {pam, srasu}, selrafsi {prami,
+srasu} (grass), glossing to &quot;lovegrass&quot;: x1 is lovegrass of
+species/variety x2. .. 6 more results</code></pre>
+<p>I have demonstrated the more command a few times. It simply displays
+the next result. It used to display three or four results at a time. But
+it’s usually the next result you want. And if you’re listing more than a
+few results, you should use a proper mass lookup tool. Also, lojbot
+waits a few seconds every three messages to stop it flooding the IRC
+server. Keep that in mind.</p>
+<p>Indeed, wildcards work with the gloss, too:</p>
+<pre><code>&lt;chrisdone&gt; g *plant*
+&lt;lojbot&gt; fu&#39;ivla {akmela}, glossing to &quot;toothache plant&quot;,
+&quot;paracress&quot;, &quot;spotflower&quot;: x1 is a toothache
+plant/spotflower/paracress of species/variety x2. .. 7 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {derba&#39;o}, with rafsi {der, ba&#39;o}, selrafsi {dertu,
+banro} (dirt, grow), glossing to &quot;to sprout [of plant]&quot;, &quot;sprouting
+object&quot;, &quot;sprout&quot;: b1 initially grows b2 beyond the soil; b1 sprouts
+b2 from the ground. .. 6 more results</code></pre>
+<p>The definition search is nice. It will try to give you the best
+matching result first. A good match is an exact word:</p>
+<pre><code>&lt;chrisdone&gt; h d
+&lt;lojbot&gt; definition (d): search for valsi(s) by definition
+
+&lt;chrisdone&gt; d dances
+&lt;lojbot&gt; gismu {dansu}, glossing to &quot;dance&quot;: x1 (individual, mass)
+dances to accompaniment/music/rhythm x2.</code></pre>
+<p>Above we see that we have matched a single word exactly. And now, we
+match a word inside the slashes:</p>
+<pre><code>&lt;chrisdone&gt; d music
+&lt;lojbot&gt; gismu {dansu}, glossing to &quot;dance&quot;: x1 (individual, mass)
+dances to accompaniment/music/rhythm x2. .. 6 more results</code></pre>
+<p>No problem.</p>
+<p>Indeed, this command will try the separate words, too, to see what
+comes up better, which is useful for when you want to search a few
+ideas:</p>
+<pre><code>&lt;chrisdone&gt; d teacher teaches
+&lt;lojbot&gt; gismu {ctuca}, with rafsi {ctu}, glossing to &quot;teach&quot;: x1
+teaches audience x2 ideas/methods/lore x3 (du&#39;u) about subject(s) x4
+by method x5 (event).</code></pre>
+<p>But what about incomplete words?</p>
+<p>Let’s say I want all results relevant to teaching, I can use a wild
+card:</p>
+<pre><code>&lt;chrisdone&gt; d *teach*
+&lt;lojbot&gt; gismu {ckule}, with rafsi {kul, cu&#39;e}, glossing to &quot;school&quot;:
+x1 is school/institute/academy at x2 teaching subject(s) x3 to
+audien./commun. x4 operated by x5. .. 3 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; gismu {ctuca}, with rafsi {ctu}, glossing to &quot;teach&quot;: x1
+teaches audience x2 ideas/methods/lore x3 (du&#39;u) about subject(s) x4
+by method x5 (event). .. 2 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {balcu&#39;e}, with rafsi {bal, cu&#39;e}, selrafsi {banli,
+ckule} (great, school), glossing to &quot;university&quot;, &quot;university site&quot;,
+&quot;course&quot;, &quot;student&quot;, &quot;regents&quot;: c1 is a university at c2 teaching
+subject(s) c3 to audience/community c4 operated by c5. .. 1 more
+result
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {ctununta&#39;a}, with rafsi {ctu, nun, ta&#39;a}, selrafsi
+{ctuca, nu, tavla} (teach, event abstract, talk), glossing to
+&quot;lecture&quot;, &quot;lecturer&quot;: n1=c5 is a lecture / an event of verbal
+teaching by t1=c1 to audience $t_2 = c_2$ about subject $t_3 = c_4$ in
+language t4 with facts taught c3.</code></pre>
+<p>A nice way to investigate cmavo of a particular selma’o, especially
+after just viewing a cmavo entry and wondering what else there is in
+that selma’o, is to use the s (for selma’o) command:</p>
+<pre><code>&lt;chrisdone&gt; h s
+&lt;lojbot&gt; selma&#39;o (s): list cmavo of a selma&#39;o
+
+&lt;chrisdone&gt; s UI5
+&lt;lojbot&gt; {be&#39;u}: lack, {dai}: empathy, {fu&#39;i}: easy, {ga&#39;i}: hauteur,
+{ju&#39;o}: certainty, {le&#39;o}: aggressive, {ri&#39;e}: release of emotion,
+{se&#39;a}: self-sufficiency, {se&#39;i}: self-oriented, {vu&#39;e}: virtue,
+{zo&#39;o}: humorously .. 11 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; cmavo {be&#39;u}, of selma&#39;o UI5, glossing to &quot;lack&quot;:
+attitudinal modifier: lack/need - presence/satisfaction -
+satiation. .. 10 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; cmavo {dai}, of selma&#39;o UI5, glossing to &quot;empathy&quot;:
+attitudinal modifier: marks empathetic use of preceding attitudinal;
+shows another&#39;s feelings. .. 9 more results</code></pre>
+<p>The translation command uses jbofihe:</p>
+<pre><code>&lt;chrisdone&gt; h t
+&lt;lojbot&gt; translate (t): translate some lojban with jbofihe -x
+
+&lt;chrisdone&gt; t coi ro do
+&lt;lojbot&gt; (^coi /greetings/ ro /every/ /(of)/ do /you/^)
+&lt;chrisdone&gt; t mi ui nelci la djan
+&lt;lojbot&gt; [([nelci1 (like-r(s)):] mi /I, me/ .ui /{happiness..}/)
+/[is, does]/ &lt;&lt;nelci /lik-ing/&gt;&gt; ([nelci2 (liked thing(s)):] la / /
+djan. /[NAME]/)]
+&lt;chrisdone&gt; t mi nelci la djan iu ru&#39;e
+&lt;lojbot&gt; [([nelci1 (like-r(s)):] mi /I, me/) /[is, does]/ &lt;&lt;nelci
+/lik-ing/&gt;&gt; ([nelci2 (liked thing(s)):] la / / djan. /[NAME]/ .iu ru&#39;e
+/{weak love..}/)]</code></pre>
+<p>Unfortunately it doesn’t yet give informative error messages:</p>
+<pre><code>&lt;chrisdone&gt; t do mo do mo
+&lt;lojbot&gt; parse error</code></pre>
+<p>But I will do that some time.</p>
+<p>The selrafsi command gives you the lujvo which the given selrafsi is
+in:</p>
+<pre><code>&lt;chrisdone&gt; h sr
+&lt;lojbot&gt; selrafsi (sr): find all lujvo with given selrafsi
+
+&lt;chrisdone&gt; sr gleki
+&lt;lojbot&gt; bebgei (giddy), gekpanpi (blissful), tcegei (overjoyed) .. 3
+more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {bebgei}, with rafsi {beb, gei}, selrafsi {bebna,
+gleki} (foolish, happy), glossing to &quot;giddy&quot;: g1 is giddy about
+g2. .. 2 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {gekpanpi}, with rafsi {gek, panpi}, selrafsi {gleki,
+panpi} (happy, peace), glossing to &quot;blissful&quot;: g1=p1 is blissful about
+g2=p2 (event/state). .. 1 more result
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {tcegei}, with rafsi {tce, gei}, selrafsi {mutce,
+gleki} (much, happy), glossing to &quot;overjoyed&quot;, &quot;delighted&quot;,
+&quot;ecstatic&quot;, &quot;delightful&quot;: g1 is delighted/ecstatic/overjoyed about g2
+(event/state).
+
+&lt;chrisdone&gt; sr gletu
+&lt;lojbot&gt; cpanygle (ride), datpavycinglepre (straight), glebre (heat),
+glefi&#39;a (pornography), glepe&#39;o (sexual partner), gleve&#39;u (prostitute),
+mitcinglepre (MOTSS), mitpavycinglepre (homo), nu&#39;ogle (virgin),
+pavycinglepre (non-bisexual), relcinglepre (bisexual) .. 11 more
+results</code></pre>
+<p>The cll command looks up, using Google, results from The Lojban
+Reference Grammar:</p>
+<pre><code>&lt;chrisdone&gt; h cll
+&lt;lojbot&gt; cll: lookup something in the lojban reference grammar
+
+&lt;chrisdone&gt; cll ko&#39;a
+&lt;lojbot&gt; http://jbotcan.org/cllc/c7/s5.html : Brevity Is The Soul Of
+Language: Pro-sumti And Pro-bridi - The ...There are ten cmavo in the
+ko&#39;a-series, and they may be assigned freely to any sumti
+whatsoever. The English word ``he&#39;&#39; can refer only to males, ... .. 9
+more results</code></pre>
+<p>valid simply tells us that some grammar is valid.</p>
+<pre><code>&lt;chrisdone&gt; h c
+&lt;lojbot&gt; correct (c): camxes test for validity
+
+&lt;lojbot&gt; valid: coi ro do
+&lt;chrisdone&gt; correct coi ro d
+&lt;lojbot&gt; not valid: coi ro d</code></pre>
+<p>And finally, lujvo makes a lujvo for you:</p>
+<pre><code>&lt;chrisdone&gt; h l
+&lt;lojbot&gt; lujvo (l): construct lujvos from selrafsis and rate them
+
+&lt;chrisdone&gt; lujvo xamgu dansu
+&lt;lojbot&gt; xagdansu (7937), xaurdansu (9006)</code></pre>
+<p>Ah, I forgot the search command. It is a combination of the other
+look up commands, showing results of the highest priority first. It
+goes:</p>
+<pre><code>valsi &gt; rafsi &gt; gloss &gt; definition</code></pre>
+<p>Thus, {bau} matches a rafsi, which means no valsi entries
+matched:</p>
+<pre><code>&lt;chrisdone&gt; q bau
+&lt;lojbot&gt; cmavo {bau}, of selma&#39;o BAI, glossing to &quot;in language&quot;:
+bangu modal, 1st place in language ... .. 1 more result
+{bridi} matches a valsi, and 62 more results, meaning other things like gloss and definition results matched against &quot;bridi&quot;, but they are less precise, and so are listed later:
+
+&lt;chrisdone&gt; q bridi
+&lt;lojbot&gt; gismu {bridi}, with rafsi {bri}, glossing to &quot;predicate&quot;: x1
+(text) is a predicate relationship with relation x2 among arguments
+(sequence/set) x3. .. 62 more results
+&lt;chrisdone&gt; more
+&lt;lojbot&gt; lujvo {brirebla}, with rafsi {bri, rebla}, selrafsi {bridi,
+rebla} (predicate, tail), glossing to &quot;bridi-tail&quot;: x1 is a bridi-tail
+of predicate relationship x2 with relation x3 among arguments
+(sequence/set) x4 . .. 61 more results</code></pre>
+<p>Here we have a gloss match, meaning no valsi or rafsi entries
+matched.</p>
+<pre><code>&lt;chrisdone&gt; q precisely speaking
+&lt;lojbot&gt; cmavo {sa&#39;e}, of selma&#39;o UI3, glossing to &quot;precisely
+speaking&quot;: discursive: precisely speaking - loosely speaking. .. 4
+more results</code></pre>
+<p>And here a definition match, because “dances” doesn’t match any of
+the valsi, rafsi or gloss entries.</p>
+<pre><code>&lt;chrisdone&gt; q dances
+&lt;lojbot&gt; gismu {dansu}, glossing to &quot;dance&quot;: x1 (individual, mass)
+dances to accompaniment/music/rhythm x2.</code></pre>
+<p>I might recommend this to newbies, or people who prefer to stick to
+one mildly clever command than use different ones. But you get more
+power using the individual ones; so I’d only recommend this for
+valsi/rafsi/gloss lookup of singular words.</p>
+<h2 id="mlismu">Mlismu</h2>
+<p>Lojbot has a mlismu<a href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a> feature, invoked by COI or DOI
+cmavo<a href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a>, which makes grammatically and
+ontologically valid utterances, which may or may not have relevance to
+what was said to lojbot. Mlismu generates these utterances using fatci
+(facts), which are very simple statements such as that “all humans are
+persons”.</p>
+<pre><code>&lt;chrisdone&gt; coi lojbot pei
+&lt;lojbot&gt; ckule lo va&#39;i te nicte .o&#39;e be le se murse be&#39;o fo mi le
+prenu</code></pre>
+<p>Some amusing instances of lojbot’s bantering:</p>
+<p>Discussing bananas and religion:</p>
+<pre><code>19:46 &lt; chrisdone&gt; ma grute doi lojbot
+19:46 &lt; lojbot&gt; re&#39;e lo se lebna be mi&#39;o bei ko be&#39;o .u&#39;a fo&#39;o cu grute
+19:46 &lt; chrisdone&gt; zo re&#39;e u&#39;i
+19:48 &lt; timonator&gt; lijda la lojbot lo nu se lebna fi lo badna</code></pre>
+<p>Roughly translated as:</p>
+<pre><code>19:46 &lt; chrisdone&gt; What is a fruit, O, Lojbot?
+19:46 &lt; lojbot&gt; [Religious feeling] YOU, be the one whose fruit we
+sieze! [Gain]
+19:46 &lt; chrisdone&gt; ‘Religious’, haha.
+19:48 &lt; timonator&gt; Lojbot believes in a religion with practices of
+taking bananas from people.</code></pre>
+<p>(Go to the xamselsku page)</p>
+<pre><code>19:32 &lt; timonator&gt; doi lojbot gletu pei
+19:32 &lt; lojbot&gt; gletu fa ko le danlu
+19:32 &lt; timonator&gt; oi
+19:33 &lt;@Broca&gt; doi lojbot do mutce tolclite
+19:33 &lt; lojbot&gt; lo penmi va&#39;i cu mrobi&#39;o</code></pre>
+<p>Rough translation:</p>
+<pre><code>19:32 &lt; timonator&gt; O, Lojbot, fucking; how do you feel about it?
+19:32 &lt; lojbot&gt; Go fuck an animal.
+19:32 &lt; timonator&gt; Hey! &gt;:-(
+19:33 &lt;@Broca&gt; O, Lojbot, you are very rude.
+19:33 &lt; lojbot&gt; The encounterer, in other words, dies.</code></pre>
+<p>(Go to the xamselsku page)</p>
+<p>It’s surprisingly coherent, sometimes.</p>
+<h2 id="source">Source</h2>
+<p>Lojbot is written in Haskell; you can view its complete source code
+or pull it with git:</p>
+<pre><code>git clone git://github.com/chrisdone/lojbot.git</code></pre>
+<p>Okay, so I said I wouldn’t discuss Haskell, but I wrote a neat wild
+card library which Lojbot uses for the above described wild card stuff.
+It’s pretty concise, I think. The pattern matching makes it easy to
+analyse the state of the function. I’m pretty sure it’s essentially a
+state machine. I’ve never written a wild card library. A regular
+expression library would be cool to write some time. I believe there are
+exceedingly fast algorithms for doing wild cards which I have not used
+in this simple code. Maybe I’ll upgrade it some time and blog about
+it.</p>
+<h2 id="bugs-feedback">Bugs / feedback</h2>
+<p>Please add any ideas/bugs/feedback you want to the lojbot lighthouse
+page. That way, I will actually get them done if they’re recorded
+somewhere.</p>
+<p>Please join the #lojbot channel to discuss and test the bot.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>We typically use { and } to quote Lojban text, in
+English.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>“An IRC bot is a set of scripts or an independent
+program that connects to Internet Relay Chat as a client, and so appears
+to other IRC users as another user. It differs from a regular client in
+that instead of providing interactive access to IRC for a human user, it
+performs automated functions.” — IRC bot at Wikipedia<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Mlismu is a program written by Adam Lopresto which
+“[Generates] semantically near-valid grammatical lojban nonsense.” —
+mlismu’s web page<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>That is, words which are vocatives, such as {doi djan},
+{ki’e djan}, {je’e djan}, etc. for “O, John”, “Thanks, John”, “Roger,
+John”, etc.<a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2008-12-18 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
