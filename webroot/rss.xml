@@ -6,6 +6,141 @@
 <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
 <atom:link href="https://chrisdone.com/rss.xml" rel="self" type="application/rss+xml" />
 <lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>
+<item><title><![CDATA[Projects]]></title><link>https://chrisdone.com/posts/projects</link><guid>https://chrisdone.com/posts/projects</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Projects</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      margin-left: 1.5em;
+      line-height: 1.5em;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Projects</h1>
+
+<h1 id="introduction">Introduction</h1>
+<p>It might be a “getting old[-er]” thing, but I’ve recently started
+feeling like documenting the complete set of software projects I’ve
+worked on that I remember. Not as a CV (an advertisement of paid work),
+but a comprehensive list of <em>everything</em>.</p>
+<p>I’ll start with the old stuff and continuously make updates a little
+bit per day. After a few weeks I should be done.</p>
+<h1 id="section">2006</h1>
+<h2 id="slsksoulski">SLSK/Soulski</h2>
+<p>A project for the Soulseek music sharing network. Web site, which may
+not remain long-term: <a
+href="https://slsk.sourceforge.net/">slsk.sourceforge.net</a>.
+Amusingly, it still looks great. <a
+href="/images/blog/slsk-screenshot-2007.png">Here’s a screenshot.</a> <a
+href="/images/blog/slsk.jpeg">Another</a>. I started writing a C library
+for Soulseek: <a
+href="/archives/soulseek-library-0.01.zip">soulseek-library-0.01.zip</a>
+I started writing a GUI library in C for it: <a
+href="/archives/exgui-library-0.1.zip">exgui-library-0.1.zip</a> I
+started writing a CSS parser in C for it: <a
+href="/archives/css-library-prototype-0.01.zip">css-library-prototype-0.01.zip</a></p>
+<p>I originally had big ambitions for this, but later lost interest.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2024-05-12 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Sun, 12 May 2024 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
 <item><title><![CDATA[Halogen is better than React at everything]]></title><link>https://chrisdone.com/posts/halogen-is-better-than-react</link><guid>https://chrisdone.com/posts/halogen-is-better-than-react</guid><description><![CDATA[<!doctype html>
 <html>
   <head>
