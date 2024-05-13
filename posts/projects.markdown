@@ -142,8 +142,9 @@ Then I ported it, or tried to, [to Lisp](/archives/2006/wdn/wdn.lisp).
     in production and we were breaking its APIs too often, and I
     blocked Adam's `master` push access to the repo to give me some
     breathing room to slow things down, but this was obviously the
-    wrong move. That was my first experience managing a project, so I
-    cut my younger self some slack. However, he was very gracious
-    about it in the moment.
+    wrong move, and not how you should treat early collaborators. That
+    was my first experience managing a project, so I cut my younger
+    self some slack. However, he was very gracious about it in the
+    moment.
 
 [^2]: See a complete history [here.](https://chrisdone.com/posts/clientside-programming-haskell/)

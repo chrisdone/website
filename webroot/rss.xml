@@ -246,10 +246,10 @@ role="doc-endnotes">
 being used in production and we were breaking its APIs too often, and I
 blocked Adam’s <code>master</code> push access to the repo to give me
 some breathing room to slow things down, but this was obviously the
-wrong move. That was my first experience managing a project, so I cut my
-younger self some slack. However, he was very gracious about it in the
-moment.<a href="#fnref1" class="footnote-back"
-role="doc-backlink">↩︎</a></p></li>
+wrong move, and not how you should treat early collaborators. That was
+my first experience managing a project, so I cut my younger self some
+slack. However, he was very gracious about it in the moment.<a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>See a complete history <a
 href="https://chrisdone.com/posts/clientside-programming-haskell/">here.</a><a
 href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
