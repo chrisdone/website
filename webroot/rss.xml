@@ -125,6 +125,13 @@ href="/archives/exgui-library-0.1.zip">exgui-library-0.1.zip</a> I
 started writing a CSS parser in C for it: <a
 href="/archives/css-library-prototype-0.01.zip">css-library-prototype-0.01.zip</a></p>
 <p>I originally had big ambitions for this, but later lost interest.</p>
+<h2 id="wdn">WDN</h2>
+<p>I had a project called ‘windows desktop notes’ (WDN), that I
+originally wrote in C. It would overlay some plain text notes on your
+desktop and you could click it and get an edit box and then hit Enter to
+save again.</p>
+<p>Then I ported it, or tried to, to Lisp. <a
+href="https://sourceforge.net/p/slsk/code/HEAD/tree/wdn-lisp/wdn.lisp">Link</a>.</p>
 
 
 <footer>

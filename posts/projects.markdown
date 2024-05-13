@@ -25,3 +25,12 @@ I started writing a GUI library in C for it: [exgui-library-0.1.zip](/archives/e
 I started writing a CSS parser in C for it: [css-library-prototype-0.01.zip](/archives/css-library-prototype-0.01.zip)
 
 I originally had big ambitions for this, but later lost interest.
+
+## WDN
+
+I had a project called 'windows desktop notes' (WDN), that I
+originally wrote in C. It would overlay some plain text notes on your
+desktop and you could click it and get an edit box and then hit Enter
+to save again.
+
+Then I ported it, or tried to, to Lisp. [Link](https://sourceforge.net/p/slsk/code/HEAD/tree/wdn-lisp/wdn.lisp).
