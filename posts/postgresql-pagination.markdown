@@ -7,7 +7,7 @@ tags: postgresql
 ---
 
 **UPDATE: 2014-11-19:**  Some people asked me how much creating an
-  index on `event(channel,id)` helps. Answer: [not much](http://lpaste.net/114584).
+  index on `event(channel,id)` helps. Answer: not much.
 
 During the implementation of [IRCBrowse](http://ircbrowse.net/) I
 discovered that Postgres's built-in offset is not very fast.

@@ -6,7 +6,7 @@ author: Chris Done
 tags: haskell
 ---
 
-[Data.Typeable](hackage.haskell.org/package/base-4.6.0.1/docs/Data-Typeable.html)
+[Data.Typeable](https://hackage.haskell.org/package/base-4.6.0.1/docs/Data-Typeable.html)
 and
 [Data.Data](http://hackage.haskell.org/package/base-4.6.0.1/docs/Data-Data.html)
 are rather mysterious. Starting out as a Haskell newbie you see them

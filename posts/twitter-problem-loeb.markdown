@@ -19,7 +19,7 @@ tags: haskell, puzzles
 ## The Waterflow Problem
 
 I recently saw _[I Failed a Twitter
-Interview](http://qandwhat.apps.runkite.com/i-failed-a-twitter-interview/)_
+Interview](/pdfs/archives/2013-10-29-i-failed-a-twitter-interview.pdf)_
 which features the following cute problem. Consider the following picture:
 
 <div class="g">
@@ -71,7 +71,7 @@ I thought, this looks like a spreadsheet problem, and closed the page,
 to get on with my work. Last thing I need right now is nerd sniping.
 
 A week or so later I saw
-_[A functional solution to Twitter's waterflow problem](http://philipnilsson.github.io/Badness10k/articles/waterflow/)_
+_[A functional solution to Twitter's waterflow problem](/pdfs/archives/2024-03-29-functional-twitter.pdf)_
 which presented a rather concise and beautiful approach to solving the
 problem. I present it here, in the style that I prefer:
 
@@ -365,7 +365,7 @@ optimize it to be better.
 
 **Update 2022-01-27 sent by Mel:**
 
-> I have an addendum as to why the comonad solution is so slow. The wfix operator doesn't tie the knot, so it has to do asymptotically more work than you would expect recalculating results. The way to fix it is to use the kfix operator which has since been added to Control.Comonad instead. See also: [Kenneth Foner - Getting a Quick Fix on Comonads](https://www.youtube.com/watch?v=F7F-BzOB670)   
+> I have an addendum as to why the comonad solution is so slow. The wfix operator doesn't tie the knot, so it has to do asymptotically more work than you would expect recalculating results. The way to fix it is to use the kfix operator which has since been added to Control.Comonad instead. See also: [Kenneth Foner - Getting a Quick Fix on Comonads](https://www.youtube.com/watch?v=F7F-BzOB670)
 
 ## Update on lens
 
@@ -410,7 +410,7 @@ water = flip evalTardis (minBound, minBound) . foldM go 0
         rightmax <- getFuture
         modifyBackwards $ max height
         return $ total + min leftmax rightmax - height
-``` 
+```
 
 ## Fastest
 

@@ -796,8 +796,6 @@ functions. We provided a SAX API which is very fast, and a simple
 demonstration DOM parser with a familiar API which is also quite
 fast. We use reasonably little memory in doing so.
 
-**UPDATE**: Some people asked for comparisons with libxml2 (assuming that it's somehow faster). [Here is a Criterion report](http://chrisdone.com/libxml2.html).
-
 This package is an experiment for educational purposes, to show what
 Haskell can do and what it can't, for a very specific domain
 problem. If you would like to use this package, consider adopting it

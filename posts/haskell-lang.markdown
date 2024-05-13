@@ -211,8 +211,7 @@ navigation:
 
 ## Ahoy, ye olde mockup!
 
-I synthesized all this together into
-[a comp in Inkscape](http://chrisdone.com/comp.png).
+I synthesized all this together into a comp in Inkscape.
 
 I think it answers the following questions:
 
@@ -249,9 +248,8 @@ to HTML, at least for the pages that MediaWiki is kind enough to
 serve. Example:
 [Handling errors in Haskell](http://www.haskell.org/haskellwiki/Handling_errors_in_Haskell)
 
-Here is
-[the above wiki page](http://haskell-lang.org/wiki/Handling_errors_in_Haskell)
-with a cleaned up presentation.
+[Here is the above wiki page](/images/archives/2024-haskell-lang-wiki-example.png) with a cleaned up
+presentation.
 
 Note that MediaWiki is a bit stunted in the data it exposes for
 use. Some pages just aren't available, others produce invalid XML,

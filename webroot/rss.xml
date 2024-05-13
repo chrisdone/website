@@ -8423,10 +8423,6 @@ std dev              41.10 μs   (30.14 μs .. 62.60 μs)</code></pre>
 functions. We provided a SAX API which is very fast, and a simple
 demonstration DOM parser with a familiar API which is also quite fast.
 We use reasonably little memory in doing so.</p>
-<p><strong>UPDATE</strong>: Some people asked for comparisons with
-libxml2 (assuming that it’s somehow faster). <a
-href="http://chrisdone.com/libxml2.html">Here is a Criterion
-report</a>.</p>
 <p>This package is an experiment for educational purposes, to show what
 Haskell can do and what it can’t, for a very specific domain problem. If
 you would like to use this package, consider adopting it and giving it a
@@ -11774,8 +11770,8 @@ href="https://github.com/relrod/isysuclosed.com/blob/haskell/Main.hs#L34">isysuc
 <h1>Fast pagination on PostgreSQL</h1>
 
 <p><strong>UPDATE: 2014-11-19:</strong> Some people asked me how much
-creating an index on <code>event(channel,id)</code> helps. Answer: <a
-href="http://lpaste.net/114584">not much</a>.</p>
+creating an index on <code>event(channel,id)</code> helps. Answer: not
+much.</p>
 <p>During the implementation of <a
 href="http://ircbrowse.net/">IRCBrowse</a> I discovered that Postgres’s
 built-in offset is not very fast.</p>
@@ -13947,8 +13943,7 @@ They click ‘News’ and there can be an RSS feed available on that page.
 Haskell News is mostly suitable to this task.</li>
 </ul>
 <h2 id="ahoy-ye-olde-mockup">Ahoy, ye olde mockup!</h2>
-<p>I synthesized all this together into <a
-href="http://chrisdone.com/comp.png">a comp in Inkscape</a>.</p>
+<p>I synthesized all this together into a comp in Inkscape.</p>
 <p>I think it answers the following questions:</p>
 <ul>
 <li>Any particular brand/logo? [header]</li>
@@ -13985,9 +13980,8 @@ pages, it parses the Wiki syntax with pandoc and renders it to HTML, at
 least for the pages that MediaWiki is kind enough to serve. Example: <a
 href="http://www.haskell.org/haskellwiki/Handling_errors_in_Haskell">Handling
 errors in Haskell</a></p>
-<p>Here is <a
-href="http://haskell-lang.org/wiki/Handling_errors_in_Haskell">the above
-wiki page</a> with a cleaned up presentation.</p>
+<p><a href="/images/archives/2024-haskell-lang-wiki-example.png">Here is
+the above wiki page</a> with a cleaned up presentation.</p>
 <p>Note that MediaWiki is a bit stunted in the data it exposes for use.
 Some pages just aren’t available, others produce invalid XML, etc. This
 is why the wiki is not exposed in the navigation.</p>
@@ -14692,7 +14686,7 @@ that you can click to get more output.</p>
 <h1>Typeable and Data in Haskell</h1>
 
 <p><a
-href="hackage.haskell.org/package/base-4.6.0.1/docs/Data-Typeable.html">Data.Typeable</a>
+href="https://hackage.haskell.org/package/base-4.6.0.1/docs/Data-Typeable.html">Data.Typeable</a>
 and <a
 href="http://hackage.haskell.org/package/base-4.6.0.1/docs/Data-Data.html">Data.Data</a>
 are rather mysterious. Starting out as a Haskell newbie you see them
@@ -17432,7 +17426,7 @@ everything.</p>
 </style>
 <h2 id="the-waterflow-problem">The Waterflow Problem</h2>
 <p>I recently saw <em><a
-href="http://qandwhat.apps.runkite.com/i-failed-a-twitter-interview/">I
+href="/pdfs/archives/2013-10-29-i-failed-a-twitter-interview.pdf">I
 Failed a Twitter Interview</a></em> which features the following cute
 problem. Consider the following picture:</p>
 <div class="g">
@@ -17478,10 +17472,10 @@ puddle between column 1 and column 6 and the volume is 10.</p>
 page, to get on with my work. Last thing I need right now is nerd
 sniping.</p>
 <p>A week or so later I saw <em><a
-href="http://philipnilsson.github.io/Badness10k/articles/waterflow/">A
-functional solution to Twitter’s waterflow problem</a></em> which
-presented a rather concise and beautiful approach to solving the
-problem. I present it here, in the style that I prefer:</p>
+href="/pdfs/archives/2024-03-29-functional-twitter.pdf">A functional
+solution to Twitter’s waterflow problem</a></em> which presented a
+rather concise and beautiful approach to solving the problem. I present
+it here, in the style that I prefer:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">water ::</span> [<span class="dt">Int</span>] <span class="ot">-&gt;</span> <span class="dt">Int</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>water h <span class="ot">=</span></span>
