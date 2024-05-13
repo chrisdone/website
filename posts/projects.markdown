@@ -16,12 +16,25 @@ After a few weeks I should be done.
 **Table of Contents**
 
 - [Introduction](#introduction)
+- [2008](#2008)
+    - [Kibro](#kibro)
 - [2006](#2006)
     - [SLSK/Soulski](#slsksoulski)
     - [WDN](#wdn)
 
 <!-- markdown-toc end -->
 
+# 2008
+
+## Kibro
+
+In 2008 I was working for a small sum on a hair salon's new web site,
+in Haskell. And I made a very trivial web library called "Kibro" (from
+the Lojban "cyberspace"), which sat upon CGI and could be ran from
+PHP, which is how I was running it.
+
+* Source code archive: [kibro-0.5.0.tar.gz](/archives/2008/kibro-0.5.0.tar.gz)
+* Other links: [Kibro refactoring](https://chrisdone.com/posts/kibro-refactoring/)
 
 # 2006
 
