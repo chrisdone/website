@@ -16,6 +16,8 @@ After a few weeks I should be done.
 **Table of Contents**
 
 - [Introduction](#introduction)
+- [2010](#2010)
+    - [Lisk](#lisk)
 - [2008](#2008)
     - [Kibro](#kibro)
     - [lojbot](#lojbot)
@@ -24,6 +26,18 @@ After a few weeks I should be done.
     - [WDN](#wdn)
 
 <!-- markdown-toc end -->
+
+# 2010
+
+## Lisk
+
+I had enough hubris to think I would be able to write a Lisp syntax on
+top of Haskell, and called it [Lisk](/posts/lisk-lisp-haskell).
+
+I was happy with Haskell, but bummed out by its syntax compared to the
+beauty of Lisp. That hasn't changed today in 2024.
+
+* [Github archive](https://github.com/chrisdone-archive/lisk)
 
 # 2008
 
