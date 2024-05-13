@@ -18,6 +18,7 @@ After a few weeks I should be done.
 - [Introduction](#introduction)
 - [2008](#2008)
     - [Kibro](#kibro)
+    - [lojbot](#lojbot)
 - [2006](#2006)
     - [SLSK/Soulski](#slsksoulski)
     - [WDN](#wdn)
@@ -35,6 +36,13 @@ PHP, which is how I was running it.
 
 * Source code archive: [kibro-0.5.0.tar.gz](/archives/2008/kibro-0.5.0.tar.gz)
 * Other links: [Kibro refactoring](https://chrisdone.com/posts/kibro-refactoring/)
+
+## lojbot
+
+Around this time I was an enthusiastic Lojban hobbyist, so I wrote an IRC bot with various capabilitis.
+
+* [Github archive](https://github.com/chrisdone-archive/lojbot)
+* [Blog post](https://chrisdone.com/posts/lojbot/)
 
 # 2006
 
