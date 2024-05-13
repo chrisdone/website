@@ -106,6 +106,15 @@ bit per day. After a few weeks I should be done.</p>
 <p><strong>Table of Contents</strong></p>
 <ul>
 <li><a href="#introduction">Introduction</a></li>
+<li><a href="#2012">2012</a>
+<ul>
+<li><a href="#fay">Fay</a></li>
+</ul></li>
+<li><a href="#2011">2011</a>
+<ul>
+<li><a href="#hulk">Hulk</a></li>
+<li><a href="#ji">Ji</a></li>
+</ul></li>
 <li><a href="#2010">2010</a>
 <ul>
 <li><a href="#lisk">Lisk</a></li>
@@ -122,7 +131,50 @@ bit per day. After a few weeks I should be done.</p>
 </ul></li>
 </ul>
 <!-- markdown-toc end -->
-<h1 id="section">2010</h1>
+<h1 id="section">2012</h1>
+<h2 id="fay">Fay</h2>
+<p>I wrote a language called Fay, which was a Haskell without
+type-classes that compiled to JavaScript, and used GHC’s type system for
+the type-checking.</p>
+<p>It ended up being quite popular, it garnered its own <a
+href="https://github.com/faylang/">organization</a>, and I had a
+comaintainer called Adam Bergmark, who was very nice and smart.<a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a></p>
+<p>I was invited to and went to a conference in Lisbon to give a talk on
+it.</p>
+<p>FP Complete used it for their IDE which was a web based Haskell IDE,
+which is pretty much how I got the job at FP Complete in 2013. A couple
+years or so later, after the IDE project petered out, we stopped using
+it. There were better options by then (PureScript, etc.).<a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+<ul>
+<li><a href="/posts/fay">Blog post</a></li>
+</ul>
+<h1 id="section-1">2011</h1>
+<h2 id="hulk">Hulk</h2>
+<p>I wrote an IRC server for use at work for us to chat on. We used it
+for some years after we all left, until we eventually migrated to an app
+called Wire (also written in Haskell).</p>
+<p>This was my first proper experience using threading in Haskell and
+working on a sockets server in Haskell. I would note that architecting
+an IRC server in a nice way remains an unsolved problem in my head. In
+any language.</p>
+<ul>
+<li><a href="https://github.com/chrisdone-archive/hulk">Github
+archive</a></li>
+<li><a href="/posts/hulk-haskell-irc-server">Blog post</a></li>
+</ul>
+<h2 id="ji">Ji</h2>
+<p>I wrote a library called <a href="/posts/ji-haskell-web/">Ji</a>,
+which is a simple concept to write a web app in Haskell that sends
+commands to a browser of what DOM changes to make and what events to
+listen to.</p>
+<p>It was taken over by Heinrich Apfelmus and renamed to <a
+href="https://github.com/HeinrichApfelmus/threepenny-gui">threepenny-gui</a>,
+after which he added many FRP-based things and has likely rewritten all
+of it by this point.</p>
+<h1 id="section-2">2010</h1>
 <h2 id="lisk">Lisk</h2>
 <p>I had enough hubris to think I would be able to write a Lisp syntax
 on top of Haskell, and called it <a
@@ -133,7 +185,7 @@ the beauty of Lisp. That hasn’t changed today in 2024.</p>
 <li><a href="https://github.com/chrisdone-archive/lisk">Github
 archive</a></li>
 </ul>
-<h1 id="section-1">2008</h1>
+<h1 id="section-3">2008</h1>
 <h2 id="kibro">Kibro</h2>
 <p>In 2008 I was working for a small sum on a hair salon’s new web site,
 in Haskell. And I made a very trivial web library called “Kibro” (from
@@ -154,7 +206,7 @@ IRC bot with various capabilitis.</p>
 archive</a></li>
 <li><a href="https://chrisdone.com/posts/lojbot/">Blog post</a></li>
 </ul>
-<h1 id="section-2">2006</h1>
+<h1 id="section-4">2006</h1>
 <h2 id="slsksoulski">SLSK/Soulski</h2>
 <p>A project for the Soulseek music sharing network. Web site, which may
 not remain long-term: <a
@@ -178,6 +230,23 @@ C</a>. It would overlay some plain text notes on your desktop and you
 could click it and get an edit box and then hit Enter to save again.</p>
 <p>Then I ported it, or tried to, <a
 href="/archives/2006/wdn/wdn.lisp">to Lisp</a>.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>In retrospect I mishandled a situation where Fay was
+being used in production and we were breaking its APIs too often, and I
+blocked Adam’s <code>master</code> push access to the repo to give me
+some breathing room to slow things down, but this was obviously the
+wrong move. That was my first experience managing a project, so I cut my
+younger self some slack. However, he was very gracious about it in the
+moment.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>See a complete history <a
+href="https://chrisdone.com/posts/clientside-programming-haskell/">here.</a><a
+href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
 
 
 <footer>
