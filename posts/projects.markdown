@@ -12,6 +12,17 @@ Not as a CV (an advertisement of paid work), but a comprehensive list of *everyt
 I'll start with the old stuff and continuously make updates a little bit per day.
 After a few weeks I should be done.
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [Introduction](#introduction)
+- [2006](#2006)
+    - [SLSK/Soulski](#slsksoulski)
+    - [WDN](#wdn)
+
+<!-- markdown-toc end -->
+
+
 # 2006
 
 ## SLSK/Soulski
