@@ -4,8 +4,6 @@ title: Projects
 description: A hopefully complete list of all the software projects I worked on
 ---
 
-# Introduction
-
 It might be a "getting old[-er]" thing, but I've recently started feeling like documenting the complete set of software projects I've worked on that I remember.
 Not as a CV (an advertisement of paid work), but a comprehensive list of *everything*.
 
@@ -15,26 +13,125 @@ After a few weeks I should be done.
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
-- [Introduction](#introduction)
+- [2013](#2013)
+    - [pure-io](#pure-io)
+    - [god-mode](#god-mode)
+    - [structured-haskell-mode](#structured-haskell-mode)
+    - [haskellnews](#haskellnews)
+    - [ircbrowse](#ircbrowse)
 - [2012](#2012)
-    - [Fay](#fay)
+    - [fay](#fay)
 - [2011](#2011)
-    - [Hulk](#hulk)
-    - [Ji](#ji)
+    - [hulk](#hulk)
+    - [ji](#ji)
 - [2010](#2010)
-    - [Lisk](#lisk)
+    - [lisk](#lisk)
 - [2008](#2008)
-    - [Kibro](#kibro)
+    - [kibro](#kibro)
     - [lojbot](#lojbot)
 - [2006](#2006)
-    - [SLSK/Soulski](#slsksoulski)
-    - [WDN](#wdn)
+    - [slsk/soulski](#slsksoulski)
+    - [wdn](#wdn)
 
 <!-- markdown-toc end -->
 
+<!-- # 2023 -->
+
+<!-- ## hell -->
+
+<!-- # 2020 -->
+
+<!-- ## early -->
+
+<!-- ## inflex -->
+
+<!-- # 2019 -->
+
+<!-- ## vado -->
+
+<!-- # 2017 -->
+
+<!-- ## xeno -->
+
+<!-- # 2015 -->
+
+<!-- ## path -->
+
+<!-- # 2014 -->
+
+<!-- ## ace -->
+
+<!-- ## hl -->
+
+<!-- ## formatting -->
+
+<!-- ## hindent -->
+
+<!-- ## shell-conduit -->
+
+<!-- ## lucid -->
+
+# 2013
+
+## pure-io
+
+A small project called
+[pure-io](https://github.com/chrisdone-archive/pure-io) that provided
+a little IO monad that would run as a pure function. I used this for
+tryhaskell.org.
+
+## god-mode
+
+After suffering from RSI for a while, I had decided with Emacs I'd
+look at my typing with statistics. After a week or so of full day
+typing every day, I found that I made a significent proportion of key
+chords in succession. I evaluated vim modes and realised that they
+depart from Emacs quite a bit or lacked a story for many modes. In the
+end I had the thought to make the Ctrl implicitly on all the time, and
+this turned out to be undeniably productive and practical in the form
+of [god-mode](https://github.com/chrisdone-archive/god-mode).
+
+I'm still using it to this day, although it has been folded into my
+Emacs config.
+
+## structured-haskell-mode
+
+In similar themes to god-mode, I made a structured editor for Emacs's
+haskell-mode that would essentially let one edit Haskell code like
+paredit. That used a Haskell parser via haskell-src-exts, and produced
+a set of s-expressions for Emacs to convert to a set of markers. The
+minor mode was called
+[structured-haskell-mode](https://github.com/chrisdone-archive/structured-haskell-mode).
+
+## haskellnews
+
+[haskellnews](https://github.com/chrisdone-archive/haskellnews) was a
+simple web app to list all the sources of blogs, posts, tweets,
+etc. about Haskell. I sort of lost interest in social meda and
+therefore stopped running it. But for a while I enjoyed using it.
+
+## ircbrowse
+
+I wrote [ircbrowse](https://github.com/chrisdone-archive/ircbrowse) at
+ircbrowse.net to be a replacement to the much older
+ircbrowse.com.
+
+ircbrowse.com was a great web site for browsing chat logs of various
+IRC channels, it was also infamously slow as hell. So a fundamental
+motivator was to make something that would be instant, and I succeeded
+on that, much to my personal pride.
+
+It could handle about 30 million lines of chat across a few channels
+for about 10 years of logs. There were something in the order of 30k
+lines of chat from the #haskell channel per month.
+
+I stopped running it after I lost interest in IRC, but it was a very
+satisfying project and I learned a lot about PostgreSQL's performance
+characteristics in the process.
+
 # 2012
 
-## Fay
+## fay
 
 I wrote a language called Fay, which was a Haskell without
 type-classes that compiled to JavaScript, and used GHC's type system
@@ -57,7 +154,7 @@ etc.).[^2]
 
 # 2011
 
-## Hulk
+## hulk
 
 I wrote an IRC server for use at work for us to chat on. We used it
 for some years after we all left, until we eventually migrated to
@@ -71,7 +168,7 @@ any language.
 * [Github archive](https://github.com/chrisdone-archive/hulk)
 * [Blog post](/posts/hulk-haskell-irc-server)
 
-## Ji
+## ji
 
 I wrote a library called [Ji](/posts/ji-haskell-web/), which is a
 simple concept to write a web app in Haskell that sends commands to a
@@ -84,7 +181,7 @@ all of it by this point.
 
 # 2010
 
-## Lisk
+## lisk
 
 I had enough hubris to think I would be able to write a Lisp syntax on
 top of Haskell, and called it [Lisk](/posts/lisk-lisp-haskell).
@@ -96,7 +193,7 @@ beauty of Lisp. That hasn't changed today in 2024.
 
 # 2008
 
-## Kibro
+## kibro
 
 In 2008 I was working for a small sum on a hair salon's new web site,
 in Haskell. And I made a very trivial web library called "Kibro" (from
@@ -115,7 +212,7 @@ Around this time I was an enthusiastic Lojban hobbyist, so I wrote an IRC bot wi
 
 # 2006
 
-## SLSK/Soulski
+## slsk/soulski
 
 A project for the Soulseek music sharing network.
 Web site, which may not remain long-term: [slsk.sourceforge.net](https://slsk.sourceforge.net/).
@@ -129,7 +226,7 @@ I originally had big ambitions for this, but later lost interest. It
 looks like I planned to rewrite it in Common Lisp, but got bored of
 the project before I did.
 
-## WDN
+## wdn
 
 I had a project called 'windows desktop notes' (WDN), that I
 originally [wrote in C](/archives/2006/wdm/slsk-code-r110-wdm.zip). It
