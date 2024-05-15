@@ -112,6 +112,11 @@ bit per day. After a few weeks I should be done.</p>
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 <p><strong>Table of Contents</strong></p>
 <ul>
+<li><a href="#2014">2014</a>
+<ul>
+<li><a href="#shell-conduit">shell-conduit</a></li>
+<li><a href="#lucid">lucid</a></li>
+</ul></li>
 <li><a href="#2013">2013</a>
 <ul>
 <li><a href="#pure-io">pure-io</a></li>
@@ -156,14 +161,29 @@ bit per day. After a few weeks I should be done.</p>
 <!-- ## xeno -->
 <!-- # 2015 -->
 <!-- ## path -->
-<!-- # 2014 -->
+<h1 id="section">2014</h1>
 <!-- ## ace -->
 <!-- ## hl -->
 <!-- ## formatting -->
 <!-- ## hindent -->
-<!-- ## shell-conduit -->
-<!-- ## lucid -->
-<h1 id="section">2013</h1>
+<h2 id="shell-conduit">shell-conduit</h2>
+<p>I’ve been wanted to write shell scripts since 2014. This attempt, <a
+href="https://github.com/chrisdone-archive/shell-conduit">shell-conduit</a>,
+was to get all available names in the <code>PATH</code>, available as
+real Haskell identifiers to run. And then “scripts” would be regular
+Haskell programs.</p>
+<p>I’ve since changed my mind that this is a good idea, and see above
+for the <a href="#hell">Hell</a> project.</p>
+<h2 id="lucid">lucid</h2>
+<p><a href="https://github.com/chrisdone/lucid">Lucid</a> is still
+actively developed, and was motivated by have a uniformity of
+combinators, like HTML handling in Common Lisp.</p>
+<p>It’s also a proper monad transformer, which has a small theoretical
+satisfaction to it.</p>
+<p>It’s one of my projects that is using the <a
+href="https://chrisdone.com/posts/ipp/">Immutable Publishing
+Policy</a>.</p>
+<h1 id="section-1">2013</h1>
 <h2 id="pure-io">pure-io</h2>
 <p>A small project called <a
 href="https://github.com/chrisdone-archive/pure-io">pure-io</a> that
@@ -207,7 +227,7 @@ lines of chat from the #haskell channel per month.</p>
 <p>I stopped running it after I lost interest in IRC, but it was a very
 satisfying project and I learned a lot about PostgreSQL’s performance
 characteristics in the process.</p>
-<h1 id="section-1">2012</h1>
+<h1 id="section-2">2012</h1>
 <h2 id="fay">fay</h2>
 <p>I wrote a language called Fay, which was a Haskell without
 type-classes that compiled to JavaScript, and used GHC’s type system for
@@ -227,7 +247,7 @@ class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 <ul>
 <li><a href="/posts/fay">Blog post</a></li>
 </ul>
-<h1 id="section-2">2011</h1>
+<h1 id="section-3">2011</h1>
 <h2 id="hulk">hulk</h2>
 <p>I wrote an IRC server for use at work for us to chat on. We used it
 for some years after we all left, until we eventually migrated to an app
@@ -250,7 +270,7 @@ listen to.</p>
 href="https://github.com/HeinrichApfelmus/threepenny-gui">threepenny-gui</a>,
 after which he added many FRP-based things and has likely rewritten all
 of it by this point.</p>
-<h1 id="section-3">2010</h1>
+<h1 id="section-4">2010</h1>
 <h2 id="lisk">lisk</h2>
 <p>I had enough hubris to think I would be able to write a Lisp syntax
 on top of Haskell, and called it <a
@@ -261,7 +281,7 @@ the beauty of Lisp. That hasn’t changed today in 2024.</p>
 <li><a href="https://github.com/chrisdone-archive/lisk">Github
 archive</a></li>
 </ul>
-<h1 id="section-4">2008</h1>
+<h1 id="section-5">2008</h1>
 <h2 id="kibro">kibro</h2>
 <p>In 2008 I was working for a small sum on a hair salon’s new web site,
 in Haskell. And I made a very trivial web library called “Kibro” (from
@@ -282,7 +302,7 @@ IRC bot with various capabilitis.</p>
 archive</a></li>
 <li><a href="https://chrisdone.com/posts/lojbot/">Blog post</a></li>
 </ul>
-<h1 id="section-5">2006</h1>
+<h1 id="section-6">2006</h1>
 <h2 id="slsksoulski">slsk/soulski</h2>
 <p>A project for the Soulseek music sharing network. Web site, which may
 not remain long-term: <a

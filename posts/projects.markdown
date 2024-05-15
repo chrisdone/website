@@ -13,6 +13,9 @@ After a few weeks I should be done.
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
+- [2014](#2014)
+    - [shell-conduit](#shell-conduit)
+    - [lucid](#lucid)
 - [2013](#2013)
     - [pure-io](#pure-io)
     - [god-mode](#god-mode)
@@ -57,7 +60,7 @@ After a few weeks I should be done.
 
 <!-- ## path -->
 
-<!-- # 2014 -->
+# 2014
 
 <!-- ## ace -->
 
@@ -67,9 +70,28 @@ After a few weeks I should be done.
 
 <!-- ## hindent -->
 
-<!-- ## shell-conduit -->
+## shell-conduit
 
-<!-- ## lucid -->
+I've been wanted to write shell scripts since 2014. This attempt,
+[shell-conduit](https://github.com/chrisdone-archive/shell-conduit),
+was to get all available names in the `PATH`, available as real
+Haskell identifiers to run. And then "scripts" would be regular
+Haskell programs.
+
+I've since changed my mind that this is a good idea, and see above for
+the [Hell](#hell) project.
+
+## lucid
+
+[Lucid](https://github.com/chrisdone/lucid) is still actively
+developed, and was motivated by have a uniformity of combinators, like
+HTML handling in Common Lisp.
+
+It's also a proper monad transformer, which has a small theoretical
+satisfaction to it.
+
+It's one of my projects that is using the [Immutable Publishing
+Policy](https://chrisdone.com/posts/ipp/).
 
 # 2013
 
