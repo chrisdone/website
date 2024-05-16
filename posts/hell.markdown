@@ -20,27 +20,31 @@ because of the downsides of bash.
 And [other problems.](https://danluu.com/cli-complexity/#maven)
 
 Bash, zsh, fish, etc. have problems:
-They're incomprehensible gobbledegook.
-They use quotation (`x=$(ls -1) ..`) which makes it easy to make mistakes.
-They lean far too heavily on sub processes to do basic things.
-Therefore things like equality, arithmetic, ordering,
-etc. are completely unprincipled. Absolutely full of pitfalls.[^4]
+
+* They're incomprehensible gobbledegook.
+* They use quotation (`x=$(ls -1) ..`) which makes it easy to make mistakes.
+* They lean far too heavily on sub processes to do basic things.
+* Therefore things like equality, arithmetic, ordering,
+  etc. are completely unprincipled. Absolutely full of pitfalls.[^4]
 
 But, bash does have some upsides: It's stable, it's simple, and it
 works the same on every machine.
 You can write a bash script and keep it running for years while never
 having to change any code.
-The code you wrote last year will be the same next year.
+The code you wrote last year will be the same next year, which is not
+true of most popular programming languages.
 
 So in the interest of defining a language that I *would* like to use,
-let's discuss the anatomy of a shell scripting language: It should be
-very basic.
-It should run immediately (no visible compilation steps).
-It should have no module system.
-It should have no package system.
-It should have no abstraction capabilities (classes, data types, polymorphic
-functions, etc.).
-And it does not change in backwards-incompatible ways.[^2]
+let's discuss the anatomy of a shell scripting language:
+
+* It should be very basic.
+* It should run immediately (no visible compilation steps).
+* It should have no module system.
+* It should have no package system.[^5]
+* It should have no abstraction capabilities (classes, data types, polymorphic
+* functions, etc.).
+* And it does not change in backwards-incompatible ways.[^2]
+
 Why no module or package system? They make it harder for a system to
 be "done." There always some other integration that you can do; some
 other feature.
@@ -49,31 +53,34 @@ software](https://dubroy.com/blog/cold-blooded-software/), there's
 [beauty in finished
 software](https://josem.co/the-beauty-of-finished-software/).
 
-Based on the above I can define a "Scripting Threshold" meaning, when
+Based on the above I can define a _scripting threshold_, meaning, when
 you reach for a module system or a package system, or abstraction
 capabilities, or when you want more than what’s in the standard
 library, then you probably want a general purpose programming language
 instead.
 
 Taking this into consideration, I opted for making a Haskell dialect[^3]
-because: I know Haskell.
-It’s my go-to.
-It has a good story about equality, ordering, etc.,
-it has a good runtime capable of trivially doing concurrency,
-it's garbage collected, no funny business,
-it distinguishes bytes and text properly,
-it can be compiled to a static Linux x86 binary,
-it performs well,
-and it has static types!
+because of the following reasons:
+
+* I know Haskell.
+* It’s my go-to.
+* It has a good story about equality, ordering, etc.
+* It has a good runtime capable of trivially doing concurrency.
+* It's garbage collected.
+* It distinguishes bytes and text properly.
+* It can be compiled to a static Linux x86 binary.
+* It performs well.
+* It has static types!
 
 I made the following decisions when designing the language:
-Use a faithful Haskell syntax parser.
-It’s better that way; you get re-use.
-It has no imports/modules/packages.
-It doesn't support recursive definitions, but can use `fix` to do so.
-It supports basic type-classes (Eq, Ord, Show, Monad), which are needed for e.g. List.lookup and familiar equality things.
-It does not support polytypes. That’s a kind of abstraction and not needed.
-It use all the same names for things (List.lookup, Monad.forM,
+
+* Use a faithful Haskell syntax parser.
+* It’s better that way; you get re-use.
+* It has no imports/modules/packages.
+* It doesn't support recursive definitions, but can use `fix` to do so.
+* It supports basic type-classes (Eq, Ord, Show, Monad), which are needed for e.g. List.lookup and familiar equality things.
+* It does not support polytypes. That’s a kind of abstraction and not needed.
+* It use all the same names for things (List.lookup, Monad.forM,
 Async.race, etc.) that are already used in Haskell, which lets me re-use intuitions.
 
 You can download statically-linked Linux binaries from [the
@@ -92,3 +99,7 @@ presenting Hell at work.
 
 [^4]: Just check out the huge list of
   [linting issues in ShellCheck.](https://github.com/koalaman/shellcheck)
+
+[^5]: This excludes scripting languages like
+    [zx](https://github.com/google/zx), which sits, unbelievably, on
+    the nodejs ecosystem.

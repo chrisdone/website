@@ -801,54 +801,79 @@ id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 name of automation. I’ve always avoided this because of the downsides of
 bash. And <a href="https://danluu.com/cli-complexity/#maven">other
 problems.</a></p>
-<p>Bash, zsh, fish, etc. have problems: They’re incomprehensible
-gobbledegook. They use quotation (<code>x=$(ls -1) ..</code>) which
-makes it easy to make mistakes. They lean far too heavily on sub
-processes to do basic things. Therefore things like equality,
-arithmetic, ordering, etc. are completely unprincipled. Absolutely full
-of pitfalls.<a href="#fn2" class="footnote-ref" id="fnref2"
-role="doc-noteref"><sup>2</sup></a></p>
+<p>Bash, zsh, fish, etc. have problems:</p>
+<ul>
+<li>They’re incomprehensible gobbledegook.</li>
+<li>They use quotation (<code>x=$(ls -1) ..</code>) which makes it easy
+to make mistakes.</li>
+<li>They lean far too heavily on sub processes to do basic things.</li>
+<li>Therefore things like equality, arithmetic, ordering, etc. are
+completely unprincipled. Absolutely full of pitfalls.<a href="#fn2"
+class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a></li>
+</ul>
 <p>But, bash does have some upsides: It’s stable, it’s simple, and it
 works the same on every machine. You can write a bash script and keep it
 running for years while never having to change any code. The code you
-wrote last year will be the same next year.</p>
+wrote last year will be the same next year, which is not true of most
+popular programming languages.</p>
 <p>So in the interest of defining a language that I <em>would</em> like
-to use, let’s discuss the anatomy of a shell scripting language: It
-should be very basic. It should run immediately (no visible compilation
-steps). It should have no module system. It should have no package
-system. It should have no abstraction capabilities (classes, data types,
-polymorphic functions, etc.). And it does not change in
-backwards-incompatible ways.<a href="#fn3" class="footnote-ref"
-id="fnref3" role="doc-noteref"><sup>3</sup></a> Why no module or package
-system? They make it harder for a system to be “done.” There always some
-other integration that you can do; some other feature. I’d prefer Hell
-to be <a
+to use, let’s discuss the anatomy of a shell scripting language:</p>
+<ul>
+<li>It should be very basic.</li>
+<li>It should run immediately (no visible compilation steps).</li>
+<li>It should have no module system.</li>
+<li>It should have no package system.<a href="#fn3" class="footnote-ref"
+id="fnref3" role="doc-noteref"><sup>3</sup></a></li>
+<li>It should have no abstraction capabilities (classes, data types,
+polymorphic</li>
+<li>functions, etc.).</li>
+<li>And it does not change in backwards-incompatible ways.<a href="#fn4"
+class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a></li>
+</ul>
+<p>Why no module or package system? They make it harder for a system to
+be “done.” There always some other integration that you can do; some
+other feature. I’d prefer Hell to be <a
 href="https://dubroy.com/blog/cold-blooded-software/">cold-blooded
 software</a>, there’s <a
 href="https://josem.co/the-beauty-of-finished-software/">beauty in
 finished software</a>.</p>
-<p>Based on the above I can define a “Scripting Threshold” meaning, when
-you reach for a module system or a package system, or abstraction
-capabilities, or when you want more than what’s in the standard library,
-then you probably want a general purpose programming language
-instead.</p>
+<p>Based on the above I can define a <em>scripting threshold</em>,
+meaning, when you reach for a module system or a package system, or
+abstraction capabilities, or when you want more than what’s in the
+standard library, then you probably want a general purpose programming
+language instead.</p>
 <p>Taking this into consideration, I opted for making a Haskell
-dialect<a href="#fn4" class="footnote-ref" id="fnref4"
-role="doc-noteref"><sup>4</sup></a> because: I know Haskell. It’s my
-go-to. It has a good story about equality, ordering, etc., it has a good
-runtime capable of trivially doing concurrency, it’s garbage collected,
-no funny business, it distinguishes bytes and text properly, it can be
-compiled to a static Linux x86 binary, it performs well, and it has
-static types!</p>
-<p>I made the following decisions when designing the language: Use a
-faithful Haskell syntax parser. It’s better that way; you get re-use. It
-has no imports/modules/packages. It doesn’t support recursive
-definitions, but can use <code>fix</code> to do so. It supports basic
-type-classes (Eq, Ord, Show, Monad), which are needed for
-e.g. List.lookup and familiar equality things. It does not support
-polytypes. That’s a kind of abstraction and not needed. It use all the
-same names for things (List.lookup, Monad.forM, Async.race, etc.) that
-are already used in Haskell, which lets me re-use intuitions.</p>
+dialect<a href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a> because of the following
+reasons:</p>
+<ul>
+<li>I know Haskell.</li>
+<li>It’s my go-to.</li>
+<li>It has a good story about equality, ordering, etc.</li>
+<li>It has a good runtime capable of trivially doing concurrency.</li>
+<li>It’s garbage collected.</li>
+<li>It distinguishes bytes and text properly.</li>
+<li>It can be compiled to a static Linux x86 binary.</li>
+<li>It performs well.</li>
+<li>It has static types!</li>
+</ul>
+<p>I made the following decisions when designing the language:</p>
+<ul>
+<li>Use a faithful Haskell syntax parser.</li>
+<li>It’s better that way; you get re-use.</li>
+<li>It has no imports/modules/packages.</li>
+<li>It doesn’t support recursive definitions, but can use
+<code>fix</code> to do so.</li>
+<li>It supports basic type-classes (Eq, Ord, Show, Monad), which are
+needed for e.g. List.lookup and familiar equality things.</li>
+<li>It does not support polytypes. That’s a kind of abstraction and not
+needed.</li>
+<li>It use all the same names for things (List.lookup, Monad.forM,
+Async.race, etc.) that are already used in Haskell, which lets me re-use
+intuitions.</li>
+</ul>
 <p>You can download statically-linked Linux binaries from <a
 href="https://github.com/chrisdone/hell/releases">the releases page.</a>
 To read about the implementation internals, see <a
@@ -865,16 +890,20 @@ href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 href="https://github.com/koalaman/shellcheck">linting issues in
 ShellCheck.</a><a href="#fnref2" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>See also: <a
+<li id="fn3"><p>This excludes scripting languages like <a
+href="https://github.com/google/zx">zx</a>, which sits, unbelievably, on
+the nodejs ecosystem.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>See also: <a
 href="https://stevelosh.com/blog/2018/08/a-road-to-common-lisp/#s4-escaping-the-hamster-wheel-of-backwards-incompatibility">Escaping
-the Hamster Wheel of Backwards Incompatibility</a><a href="#fnref3"
+the Hamster Wheel of Backwards Incompatibility</a><a href="#fnref4"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>And not using some other alt. shell scripting language
+<li id="fn5"><p>And not using some other alt. shell scripting language
 or <a
 href="https://arathunku.com/b/2024/shell-scripting-with-elixir/">using
 Elixir</a>, or <a
 href="http://www.oilshell.org/blog/2018/01/28.html">Oil</a>.<a
-href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
