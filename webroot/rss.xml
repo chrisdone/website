@@ -25,8 +25,9 @@
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -378,8 +379,9 @@ href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -533,8 +535,9 @@ web programming in Haskell: A retrospective</a>.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -713,8 +716,9 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -797,6 +801,13 @@ own shell scripting purposes. As of February, I’m using Hell to <a
 href="https://github.com/chrisdone/hell/blob/main/examples/19-blog-generator.hell">generate
 this blog</a>, instead of Hakyll.<a href="#fn1" class="footnote-ref"
 id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#!/usr/bin/env hell</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="st">&quot;Please enter your name and hit ENTER:&quot;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  name <span class="ot">&lt;-</span> Text.getLine</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="st">&quot;Thanks, your name is: &quot;</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn name</span></code></pre></div>
 <p>My 2024 New Year’s Resolution is to write more shell scripts in the
 name of automation. I’ve always avoided this because of the downsides of
 bash. And <a href="https://danluu.com/cli-complexity/#maven">other
@@ -941,8 +952,9 @@ href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -1063,8 +1075,9 @@ possible.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -1200,8 +1213,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -1333,8 +1347,9 @@ browsers</title>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -1461,8 +1476,9 @@ you’re working on this please email me.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -1589,8 +1605,9 @@ faith!</em></p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -1718,8 +1735,9 @@ sluggishly when a tamagotchi is used instead.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -1841,8 +1859,9 @@ arithmetic?</li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -2005,8 +2024,9 @@ ever changing or evolving.</li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -2159,8 +2179,9 @@ talk slides</a> - these are very technical.</li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -2448,8 +2469,9 @@ code</title>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -2664,8 +2686,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -2823,8 +2846,9 @@ Haskell.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -3122,8 +3146,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -3354,8 +3379,9 @@ href="https://www.resolversystems.com/">https://www.resolversystems.com/</a></li
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -3567,8 +3593,9 @@ href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -3763,8 +3790,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -4082,8 +4110,9 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -4421,8 +4450,9 @@ href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -4735,8 +4765,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -4953,8 +4984,9 @@ special instances, and the <code>?</code> is more readable.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -5155,8 +5187,9 @@ saver.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -5320,8 +5353,9 @@ declaration.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -5581,8 +5615,9 @@ over time.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -5810,8 +5845,9 @@ we are fixing it.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -6086,8 +6122,9 @@ and <code>numeratorInt</code>’s name (<code>n</code>) is different.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -6286,8 +6323,9 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a 
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -6492,8 +6530,9 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a 
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -6689,8 +6728,9 @@ retrospective</title>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -6999,8 +7039,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -7240,8 +7281,9 @@ href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -7395,8 +7437,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -7634,8 +7677,9 @@ to Blink for Safari.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -7785,8 +7829,9 @@ finite number. That’s pretty cool.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -7920,8 +7965,9 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a 
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -8689,8 +8735,9 @@ good home. I’m not looking for more packages to maintain.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -8927,8 +8974,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -9156,8 +9204,9 @@ other pure languages like Idris or PureScript or Elm.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -9352,8 +9401,9 @@ probably won’t come naturally, but try it out.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -9839,8 +9889,9 @@ expect there’ll be more.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -10050,8 +10101,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -10274,8 +10326,9 @@ newbies</title>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -10485,8 +10538,9 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a 
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -10859,8 +10913,9 @@ the moment. I’ll update the page if this changes.</li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -11099,8 +11154,9 @@ you’re doing benchmarking, check out the <code>clock</code> package!</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -11603,8 +11659,9 @@ now.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -11918,8 +11975,9 @@ href="https://github.com/relrod/isysuclosed.com/blob/haskell/Main.hs#L34">isysuc
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -12143,8 +12201,9 @@ Conduit</title>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -12566,8 +12625,9 @@ going to be satisfactory for a long while.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -13105,8 +13165,9 @@ href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -13410,8 +13471,9 @@ combinator-based mini-language with all the same benefits.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -13893,8 +13955,9 @@ finds the sequence in that list.</li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -14317,8 +14380,9 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -14470,8 +14534,9 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a 
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -14643,8 +14708,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -14834,8 +14900,9 @@ that you can click to get more output.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -15344,8 +15411,9 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -15696,8 +15764,9 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -15867,8 +15936,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -16189,8 +16259,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -16432,8 +16503,9 @@ I can see when new mail has arrived in my panel.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -16679,8 +16751,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -16871,8 +16944,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -17076,8 +17150,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -17284,8 +17359,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -17422,8 +17498,9 @@ write out a .gif I’d use</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -17564,8 +17641,9 @@ everything.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -18141,8 +18219,9 @@ available.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -18370,8 +18449,9 @@ to disable God mode, similar to Vim’s i.</p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -18500,8 +18580,9 @@ most complex terms possible.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -18636,8 +18717,9 @@ component</li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -18853,8 +18935,9 @@ And I’ve found <code>M-e</code>, a more convenient binding for
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -19026,8 +19109,9 @@ library from time to time.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -19229,8 +19313,9 @@ I’ll keep that.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -19431,8 +19516,9 @@ href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -19596,8 +19682,9 @@ waiting to happen to someone.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -19742,8 +19829,9 @@ Haskell</title>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -19906,8 +19994,9 @@ href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -20062,8 +20151,9 @@ to see it. If you have some interesting ideas, feel free to comment.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -20208,8 +20298,9 @@ glookup key map =
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -20955,8 +21046,9 @@ href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -21174,8 +21266,9 @@ CL: nil</code></pre>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -21346,8 +21439,9 @@ examples</title>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -21594,8 +21688,9 @@ use today.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -21760,8 +21855,9 @@ compiler</title>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -22155,8 +22251,9 @@ Chapter 11</title>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -22526,8 +22623,9 @@ But I’ll stop here.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -22709,8 +22807,9 @@ iff x y = guard $ x == y</code></pre>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -23205,8 +23304,9 @@ expected.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -23347,8 +23447,9 @@ of time to work on it right now, but I will be doing.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -23609,8 +23710,9 @@ namelessness of writing <code>fieldOf 23</code>:</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -23883,8 +23985,9 @@ cropping up in my daily coding.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -24363,8 +24466,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -24511,8 +24615,9 @@ the documentation for more information.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -24779,8 +24884,9 @@ validation</title>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -25480,8 +25586,9 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -25637,8 +25744,9 @@ chrisdone@gmail.com or comment on this blog post.</p>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e
@@ -25962,8 +26070,9 @@ role="doc-backlink">↩︎</a></p></li>
       word-wrap: break-word;
       }
       pre {
-      margin-left: 1.5em;
+      padding-left: 1em;
       line-height: 1.5em;
+      border-left: 5px solid #efefef;
       }
       a {
       color: #1a6e8e

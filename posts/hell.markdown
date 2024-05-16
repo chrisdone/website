@@ -13,6 +13,15 @@ As of February, I'm using Hell to [generate this
 blog](https://github.com/chrisdone/hell/blob/main/examples/19-blog-generator.hell),
 instead of Hakyll.[^1]
 
+```haskell
+#!/usr/bin/env hell
+main = do
+  Text.putStrLn "Please enter your name and hit ENTER:"
+  name <- Text.getLine
+  Text.putStrLn "Thanks, your name is: "
+  Text.putStrLn name
+```
+
 My 2024 New Year's Resolution is to write more
 shell scripts in the name of automation.
 I've always avoided this
