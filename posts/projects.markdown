@@ -14,6 +14,7 @@ After a few weeks I should be done.
 **Table of Contents**
 
 - [2014](#2014)
+    - [foreign-store](#foreign-store)
     - [shell-conduit](#shell-conduit)
     - [lucid](#lucid)
 - [2013](#2013)
@@ -80,7 +81,7 @@ which I wrote [for the purpose of hot
 reloading.](https://chrisdone.com/posts/ghci-reload/) It's actually
 still used to this day and maintained by someone else. There are 12
 direct dependencies of it on Hackage, mostly various different ways of
-doing code reloading. They're all fancy wrappers around this.
+doing code reloading.[^3] They're all fancy wrappers around this.
 
 10 years after it had been published and not been touched for just as
 long, someone found and fixed a segfaulting bug in the C code. Can you
@@ -283,3 +284,5 @@ Then I ported it, or tried to, [to Lisp](/archives/2006/wdn/wdn.lisp).
     moment.
 
 [^2]: See a complete history [here.](https://chrisdone.com/posts/clientside-programming-haskell/)
+
+[^3]: componentm-devel, espial, essence-of-live-coding, essence-of-live-coding-gloss, essence-of-live-coding-pulse, ghci-websockets, halive, jsaddle-warp, monomer, nvim-hs, rapid

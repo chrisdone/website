@@ -107,6 +107,7 @@ bit per day. After a few weeks I should be done.</p>
 <ul>
 <li><a href="#2014">2014</a>
 <ul>
+<li><a href="#foreign-store">foreign-store</a></li>
 <li><a href="#shell-conduit">shell-conduit</a></li>
 <li><a href="#lucid">lucid</a></li>
 </ul></li>
@@ -167,8 +168,10 @@ you keep a reference to a Haskell object between GHCi reloads, which I
 wrote <a href="https://chrisdone.com/posts/ghci-reload/">for the purpose
 of hot reloading.</a> It’s actually still used to this day and
 maintained by someone else. There are 12 direct dependencies of it on
-Hackage, mostly various different ways of doing code reloading. They’re
-all fancy wrappers around this.</p>
+Hackage, mostly various different ways of doing code reloading.<a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> They’re all fancy wrappers around
+this.</p>
 <p>10 years after it had been published and not been touched for just as
 long, someone found and fixed a segfaulting bug in the C code. Can you
 believe it?</p>
@@ -241,15 +244,15 @@ the type-checking.</p>
 <p>It ended up being quite popular, it garnered its own <a
 href="https://github.com/faylang/">organization</a>, and I had a
 comaintainer called Adam Bergmark, who was very nice and smart.<a
-href="#fn1" class="footnote-ref" id="fnref1"
-role="doc-noteref"><sup>1</sup></a></p>
+href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a></p>
 <p>I was invited to and went to a conference in Lisbon to give a talk on
 it.</p>
 <p>FP Complete used it for their IDE which was a web based Haskell IDE,
 which is pretty much how I got the job at FP Complete in 2013. A couple
 years or so later, after the IDE project petered out, we stopped using
-it. There were better options by then (PureScript, etc.).<a href="#fn2"
-class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
+it. There were better options by then (PureScript, etc.).<a href="#fn3"
+class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
 <ul>
 <li><a href="/posts/fay">Blog post</a></li>
 </ul>
@@ -336,17 +339,21 @@ href="/archives/2006/wdn/wdn.lisp">to Lisp</a>.</p>
 role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>In retrospect I mishandled a situation where Fay was
+<li id="fn1"><p>componentm-devel, espial, essence-of-live-coding,
+essence-of-live-coding-gloss, essence-of-live-coding-pulse,
+ghci-websockets, halive, jsaddle-warp, monomer, nvim-hs, rapid<a
+href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>In retrospect I mishandled a situation where Fay was
 being used in production and we were breaking its APIs too often, and I
 blocked Adam’s <code>master</code> push access to the repo to give me
 some breathing room to slow things down, but this was obviously the
 wrong move, and not how you should treat early collaborators. That was
 my first experience managing a project, so I cut my younger self some
 slack. However, he was very gracious about it in the moment.<a
-href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>See a complete history <a
-href="https://chrisdone.com/posts/clientside-programming-haskell/">here.</a><a
 href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>See a complete history <a
+href="https://chrisdone.com/posts/clientside-programming-haskell/">here.</a><a
+href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
