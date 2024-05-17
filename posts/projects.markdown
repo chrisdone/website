@@ -70,6 +70,22 @@ After a few weeks I should be done.
 
 <!-- ## hindent -->
 
+## foreign-store
+
+The
+[foreign-store](https://github.com/chrisdone-archive/foreign-store)
+package is a simple bit of C code wrapped in a Haskell package that
+lets you keep a reference to a Haskell object between GHCi reloads,
+which I wrote [for the purpose of hot
+reloading.](https://chrisdone.com/posts/ghci-reload/) It's actually
+still used to this day and maintained by someone else. There are 12
+direct dependencies of it on Hackage, mostly various different ways of
+doing code reloading. They're all fancy wrappers around this.
+
+10 years after it had been published and not been touched for just as
+long, someone found and fixed a segfaulting bug in the C code. Can you
+believe it?
+
 ## shell-conduit
 
 I've been wanted to write shell scripts since 2014. This attempt,

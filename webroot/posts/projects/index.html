@@ -159,6 +159,19 @@ bit per day. After a few weeks I should be done.</p>
 <!-- ## hl -->
 <!-- ## formatting -->
 <!-- ## hindent -->
+<h2 id="foreign-store">foreign-store</h2>
+<p>The <a
+href="https://github.com/chrisdone-archive/foreign-store">foreign-store</a>
+package is a simple bit of C code wrapped in a Haskell package that lets
+you keep a reference to a Haskell object between GHCi reloads, which I
+wrote <a href="https://chrisdone.com/posts/ghci-reload/">for the purpose
+of hot reloading.</a> It’s actually still used to this day and
+maintained by someone else. There are 12 direct dependencies of it on
+Hackage, mostly various different ways of doing code reloading. They’re
+all fancy wrappers around this.</p>
+<p>10 years after it had been published and not been touched for just as
+long, someone found and fixed a segfaulting bug in the C code. Can you
+believe it?</p>
 <h2 id="shell-conduit">shell-conduit</h2>
 <p>I’ve been wanted to write shell scripts since 2014. This attempt, <a
 href="https://github.com/chrisdone-archive/shell-conduit">shell-conduit</a>,
