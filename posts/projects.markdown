@@ -33,6 +33,8 @@ After a few weeks I should be done.
     - [hulk](#hulk)
     - [ji](#ji)
 - [2010](#2010)
+    - [tryhaskell](#tryhaskell)
+    - [jquery-console](#jquery-console)
     - [lisk](#lisk)
 - [2008](#2008)
     - [kibro](#kibro)
@@ -282,6 +284,28 @@ after which he added many FRP-based things and has likely rewritten
 all of it by this point.
 
 # 2010
+
+## tryhaskell
+
+This was a big splash when I made it, it hit the top of some big
+subreddits and Hacker News. It was inspired by tryruby.org, which was
+made by _whytheluckystiff, the mysterious Rubyist who disappeared
+from the community. It runs you through an interactive tutorial about
+Haskell basics and checks your answers.
+
+I've been meaning to rewrite this one day, but so far haven't been
+sufficiently inspired to do so.
+
+It's been running for 14 years, which is quite a long time.
+
+## jquery-console
+
+Written for Try Haskell, this is
+[was](https://github.com/chrisdone-archive/jquery-console) dumb
+terminal/console-like experience in the browser using JQuery. It still
+works correctly to this day, on tablets, phones and computers. I
+stopped maintaining it as a separate package years and years ago, but
+tryhaskell still works fine.
 
 ## lisk
 

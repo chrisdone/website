@@ -142,6 +142,8 @@ bit per day. After a few weeks I should be done.</p>
 </ul></li>
 <li><a href="#2010">2010</a>
 <ul>
+<li><a href="#tryhaskell">tryhaskell</a></li>
+<li><a href="#jquery-console">jquery-console</a></li>
 <li><a href="#lisk">lisk</a></li>
 </ul></li>
 <li><a href="#2008">2008</a>
@@ -345,6 +347,22 @@ href="https://github.com/HeinrichApfelmus/threepenny-gui">threepenny-gui</a>,
 after which he added many FRP-based things and has likely rewritten all
 of it by this point.</p>
 <h1 id="section-4">2010</h1>
+<h2 id="tryhaskell">tryhaskell</h2>
+<p>This was a big splash when I made it, it hit the top of some big
+subreddits and Hacker News. It was inspired by tryruby.org, which was
+made by _whytheluckystiff, the mysterious Rubyist who disappeared from
+the community. It runs you through an interactive tutorial about Haskell
+basics and checks your answers.</p>
+<p>I’ve been meaning to rewrite this one day, but so far haven’t been
+sufficiently inspired to do so.</p>
+<p>It’s been running for 14 years, which is quite a long time.</p>
+<h2 id="jquery-console">jquery-console</h2>
+<p>Written for Try Haskell, this is <a
+href="https://github.com/chrisdone-archive/jquery-console">was</a> dumb
+terminal/console-like experience in the browser using JQuery. It still
+works correctly to this day, on tablets, phones and computers. I stopped
+maintaining it as a separate package years and years ago, but tryhaskell
+still works fine.</p>
 <h2 id="lisk">lisk</h2>
 <p>I had enough hubris to think I would be able to write a Lisp syntax
 on top of Haskell, and called it <a
