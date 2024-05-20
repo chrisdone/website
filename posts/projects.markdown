@@ -14,6 +14,7 @@ After a few weeks I should be done.
 **Table of Contents**
 
 - [2014](#2014)
+    - [ace](#ace)
     - [foreign-store](#foreign-store)
     - [shell-conduit](#shell-conduit)
     - [lucid](#lucid)
@@ -63,7 +64,24 @@ After a few weeks I should be done.
 
 # 2014
 
-<!-- ## ace -->
+## ace
+
+In the afterglow of growing bored of Lojban, but still enamoured by
+formal human languages, I got into Attempto (Latin for 'I dare')
+Controlled English. I ended up writing a parser package for it in
+Haskell [here](https://github.com/chrisdone-archive/ace). It's
+surprisingly comprehensive, I wrote [a blog post on
+it](https://chrisdone.com/posts/attempto-controlled-english/). It even
+permits passing a record of parsers, permitting the user to define
+their own vocabulary and syntax for terms.
+
+When I wrote it, use of such things was questionable. Combine it with
+a logic database and *poof*, magic understanding! In reality, not
+quite. Arguably, the use for such a thing in today's brave new world
+of LLMs is even more questionable.
+
+But I suppose there still lies a small place in my heart for a formal
+language that is also readable by anyone who speaks English.
 
 <!-- ## hl -->
 
@@ -123,7 +141,7 @@ tryhaskell.org.
 
 After suffering from RSI for a while, I had decided with Emacs I'd
 look at my typing with statistics. After a week or so of full day
-typing every day, I found that I made a significent proportion of key
+typing every day, I found that I made a significant proportion of key
 chords in succession. I evaluated vim modes and realised that they
 depart from Emacs quite a bit or lacked a story for many modes. In the
 end I had the thought to make the Ctrl implicitly on all the time, and
@@ -146,7 +164,7 @@ minor mode was called
 
 [haskellnews](https://github.com/chrisdone-archive/haskellnews) was a
 simple web app to list all the sources of blogs, posts, tweets,
-etc. about Haskell. I sort of lost interest in social meda and
+etc. about Haskell. I sort of lost interest in social Mead and
 therefore stopped running it. But for a while I enjoyed using it.
 
 ## ircbrowse
@@ -177,7 +195,7 @@ type-classes that compiled to JavaScript, and used GHC's type system
 for the type-checking.
 
 It ended up being quite popular, it garnered its own
-[organization](https://github.com/faylang/), and I had a comaintainer
+[organisation](https://github.com/faylang/), and I had a co-maintainer
 called Adam Bergmark, who was very nice and smart.[^1]
 
 I was invited to and went to a conference in Lisbon to give a talk on
@@ -204,7 +222,7 @@ working on a sockets server in Haskell. I would note that architecting
 an IRC server in a nice way remains an unsolved problem in my head. In
 any language.
 
-* [Github archive](https://github.com/chrisdone-archive/hulk)
+* [GitHub archive](https://github.com/chrisdone-archive/hulk)
 * [Blog post](/posts/hulk-haskell-irc-server)
 
 ## ji
@@ -228,7 +246,7 @@ top of Haskell, and called it [Lisk](/posts/lisk-lisp-haskell).
 I was happy with Haskell, but bummed out by its syntax compared to the
 beauty of Lisp. That hasn't changed today in 2024.
 
-* [Github archive](https://github.com/chrisdone-archive/lisk)
+* [GitHub archive](https://github.com/chrisdone-archive/lisk)
 
 # 2008
 
@@ -244,9 +262,9 @@ PHP, which is how I was running it.
 
 ## lojbot
 
-Around this time I was an enthusiastic Lojban hobbyist, so I wrote an IRC bot with various capabilitis.
+Around this time I was an enthusiastic Lojban hobbyist, so I wrote an IRC bot with various capabilities.
 
-* [Github archive](https://github.com/chrisdone-archive/lojbot)
+* [GitHub archive](https://github.com/chrisdone-archive/lojbot)
 * [Blog post](https://chrisdone.com/posts/lojbot/)
 
 # 2006

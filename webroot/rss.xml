@@ -115,6 +115,7 @@ bit per day. After a few weeks I should be done.</p>
 <ul>
 <li><a href="#2014">2014</a>
 <ul>
+<li><a href="#ace">ace</a></li>
 <li><a href="#foreign-store">foreign-store</a></li>
 <li><a href="#shell-conduit">shell-conduit</a></li>
 <li><a href="#lucid">lucid</a></li>
@@ -164,7 +165,21 @@ bit per day. After a few weeks I should be done.</p>
 <!-- # 2015 -->
 <!-- ## path -->
 <h1 id="section">2014</h1>
-<!-- ## ace -->
+<h2 id="ace">ace</h2>
+<p>In the afterglow of growing bored of Lojban, but still enamoured by
+formal human languages, I got into Attempto (Latin for ‘I dare’)
+Controlled English. I ended up writing a parser package for it in
+Haskell <a href="https://github.com/chrisdone-archive/ace">here</a>.
+It’s surprisingly comprehensive, I wrote <a
+href="https://chrisdone.com/posts/attempto-controlled-english/">a blog
+post on it</a>. It even permits passing a record of parsers, permitting
+the user to define their own vocabulary and syntax for terms.</p>
+<p>When I wrote it, use of such things was questionable. Combine it with
+a logic database and <em>poof</em>, magic understanding! In reality, not
+quite. Arguably, the use for such a thing in today’s brave new world of
+LLMs is even more questionable.</p>
+<p>But I suppose there still lies a small place in my heart for a formal
+language that is also readable by anyone who speaks English.</p>
 <!-- ## hl -->
 <!-- ## formatting -->
 <!-- ## hindent -->
@@ -209,7 +224,7 @@ this for tryhaskell.org.</p>
 <h2 id="god-mode">god-mode</h2>
 <p>After suffering from RSI for a while, I had decided with Emacs I’d
 look at my typing with statistics. After a week or so of full day typing
-every day, I found that I made a significent proportion of key chords in
+every day, I found that I made a significant proportion of key chords in
 succession. I evaluated vim modes and realised that they depart from
 Emacs quite a bit or lacked a story for many modes. In the end I had the
 thought to make the Ctrl implicitly on all the time, and this turned out
@@ -228,7 +243,7 @@ href="https://github.com/chrisdone-archive/structured-haskell-mode">structured-h
 <p><a
 href="https://github.com/chrisdone-archive/haskellnews">haskellnews</a>
 was a simple web app to list all the sources of blogs, posts, tweets,
-etc. about Haskell. I sort of lost interest in social meda and therefore
+etc. about Haskell. I sort of lost interest in social Mead and therefore
 stopped running it. But for a while I enjoyed using it.</p>
 <h2 id="ircbrowse">ircbrowse</h2>
 <p>I wrote <a
@@ -250,8 +265,8 @@ characteristics in the process.</p>
 type-classes that compiled to JavaScript, and used GHC’s type system for
 the type-checking.</p>
 <p>It ended up being quite popular, it garnered its own <a
-href="https://github.com/faylang/">organization</a>, and I had a
-comaintainer called Adam Bergmark, who was very nice and smart.<a
+href="https://github.com/faylang/">organisation</a>, and I had a
+co-maintainer called Adam Bergmark, who was very nice and smart.<a
 href="#fn2" class="footnote-ref" id="fnref2"
 role="doc-noteref"><sup>2</sup></a></p>
 <p>I was invited to and went to a conference in Lisbon to give a talk on
@@ -274,7 +289,7 @@ working on a sockets server in Haskell. I would note that architecting
 an IRC server in a nice way remains an unsolved problem in my head. In
 any language.</p>
 <ul>
-<li><a href="https://github.com/chrisdone-archive/hulk">Github
+<li><a href="https://github.com/chrisdone-archive/hulk">GitHub
 archive</a></li>
 <li><a href="/posts/hulk-haskell-irc-server">Blog post</a></li>
 </ul>
@@ -295,7 +310,7 @@ href="/posts/lisk-lisp-haskell">Lisk</a>.</p>
 <p>I was happy with Haskell, but bummed out by its syntax compared to
 the beauty of Lisp. That hasn’t changed today in 2024.</p>
 <ul>
-<li><a href="https://github.com/chrisdone-archive/lisk">Github
+<li><a href="https://github.com/chrisdone-archive/lisk">GitHub
 archive</a></li>
 </ul>
 <h1 id="section-5">2008</h1>
@@ -313,9 +328,9 @@ refactoring</a></li>
 </ul>
 <h2 id="lojbot">lojbot</h2>
 <p>Around this time I was an enthusiastic Lojban hobbyist, so I wrote an
-IRC bot with various capabilitis.</p>
+IRC bot with various capabilities.</p>
 <ul>
-<li><a href="https://github.com/chrisdone-archive/lojbot">Github
+<li><a href="https://github.com/chrisdone-archive/lojbot">GitHub
 archive</a></li>
 <li><a href="https://chrisdone.com/posts/lojbot/">Blog post</a></li>
 </ul>
