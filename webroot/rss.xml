@@ -116,6 +116,9 @@ bit per day. After a few weeks I should be done.</p>
 <li><a href="#2014">2014</a>
 <ul>
 <li><a href="#ace">ace</a></li>
+<li><a href="#hl">hl</a></li>
+<li><a href="#formatting">formatting</a></li>
+<li><a href="#hindent">hindent</a></li>
 <li><a href="#foreign-store">foreign-store</a></li>
 <li><a href="#shell-conduit">shell-conduit</a></li>
 <li><a href="#lucid">lucid</a></li>
@@ -180,9 +183,48 @@ quite. Arguably, the use for such a thing in today’s brave new world of
 LLMs is even more questionable.</p>
 <p>But I suppose there still lies a small place in my heart for a formal
 language that is also readable by anyone who speaks English.</p>
-<!-- ## hl -->
-<!-- ## formatting -->
-<!-- ## hindent -->
+<h2 id="hl">hl</h2>
+<p>The Haskell web site has already been a bit crap. Today, it’s okay.
+It’s been much worse. During that period of much-worseness, I wrote <a
+href="https://github.com/chrisdone-archive/hl">hl</a>, an alternative
+Haskell homepage, complete with <a
+href="https://chrisdone.com/posts/haskell-lang/">reasoning</a>, which I
+launched at haskell-lang.org as an alternative competing page, due to
+making no progress at all for years in trying to get access to
+haskell.org itself. Eventually, it did become the Haskell homepage due
+to some diplomatic heroics. In that sense, I suppose the project was a
+success. There was, as expected, lots of politics surrounding it, but
+that’s always the case with home pages of community projects.</p>
+<h2 id="formatting">formatting</h2>
+<p>I thought that the <a
+href="https://hackage.haskell.org/package/HoleyMonoid">HoleyMonoid</a>
+package was very neat, and decided it would make a perfect type-safe
+printf-like package. I called it <a
+href="https://github.com/chrisdone-archive/formatting">formatting</a>,
+after Common Lisp’s FORMAT.</p>
+<p>Actually, it turned out that despite the neat trick, I really doing
+like the position-dependent style of printf/FORMAT at all. I prefer just
+writing <code>x &lt;&gt; " and " &lt;&gt; y</code> instead, or
+<code>concat [x, "and", y]</code>. So the whole thing became an
+experiment in novelty, but ultimately I lost interest and passed the
+maintainership onto someone else.</p>
+<h2 id="hindent">hindent</h2>
+<p><a href="https://github.com/chrisdone-archive/hindent">hindent</a>
+was my bold attempt to make a complete pretty printer for Haskell, so
+that manual code formatting would be a thing of the past. This was quite
+a substantial project and took a lot of work. <a
+href="https://chrisdone.com/posts/hindent/">The blog post</a> explains
+the motivations, but I just wanted to type less and get autoformatting.
+I later went one step further and limited it to a single style (which is
+what gofmt famously did), which I documented <a
+href="https://chrisdone.com/posts/hindent-5/">here</a>. I even chose a
+style that I didn’t like, but that was popular. The decision to enforce
+just one style made a lot of people mad.</p>
+<p>Years later, there was a remake project called Ormolu<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>,
+which also enforced one style. There was subsequently a fork called
+Fourmolu, which permitted more style configuration.<a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></p>
 <h2 id="foreign-store">foreign-store</h2>
 <p>The <a
 href="https://github.com/chrisdone-archive/foreign-store">foreign-store</a>
@@ -192,8 +234,8 @@ wrote <a href="https://chrisdone.com/posts/ghci-reload/">for the purpose
 of hot reloading.</a> It’s actually still used to this day and
 maintained by someone else. There are 12 direct dependencies of it on
 Hackage, mostly various different ways of doing code reloading.<a
-href="#fn1" class="footnote-ref" id="fnref1"
-role="doc-noteref"><sup>1</sup></a> They’re all fancy wrappers around
+href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a> They’re all fancy wrappers around
 this.</p>
 <p>10 years after it had been published and not been touched for just as
 long, someone found and fixed a segfaulting bug in the C code. Can you
@@ -267,15 +309,15 @@ the type-checking.</p>
 <p>It ended up being quite popular, it garnered its own <a
 href="https://github.com/faylang/">organisation</a>, and I had a
 co-maintainer called Adam Bergmark, who was very nice and smart.<a
-href="#fn2" class="footnote-ref" id="fnref2"
-role="doc-noteref"><sup>2</sup></a></p>
+href="#fn4" class="footnote-ref" id="fnref4"
+role="doc-noteref"><sup>4</sup></a></p>
 <p>I was invited to and went to a conference in Lisbon to give a talk on
 it.</p>
 <p>FP Complete used it for their IDE which was a web based Haskell IDE,
 which is pretty much how I got the job at FP Complete in 2013. A couple
 years or so later, after the IDE project petered out, we stopped using
-it. There were better options by then (PureScript, etc.).<a href="#fn3"
-class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+it. There were better options by then (PureScript, etc.).<a href="#fn5"
+class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a></p>
 <ul>
 <li><a href="/posts/fay">Blog post</a></li>
 </ul>
@@ -362,21 +404,29 @@ href="/archives/2006/wdn/wdn.lisp">to Lisp</a>.</p>
 role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>componentm-devel, espial, essence-of-live-coding,
+<li id="fn1"><p>It just had a small technological advantage of being
+based on GHC’s parser, rather than haskell-src-exts, which is always
+playing catch-up.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Which I consider a bit of a setback towards the dream of
+making style choices a thing of the past. But I think Ormolu will win
+eventually. Maintaining forks is hard work.<a href="#fnref2"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>componentm-devel, espial, essence-of-live-coding,
 essence-of-live-coding-gloss, essence-of-live-coding-pulse,
 ghci-websockets, halive, jsaddle-warp, monomer, nvim-hs, rapid<a
-href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>In retrospect I mishandled a situation where Fay was
+href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>In retrospect I mishandled a situation where Fay was
 being used in production and we were breaking its APIs too often, and I
 blocked Adam’s <code>master</code> push access to the repo to give me
 some breathing room to slow things down, but this was obviously the
 wrong move, and not how you should treat early collaborators. That was
 my first experience managing a project, so I cut my younger self some
 slack. However, he was very gracious about it in the moment.<a
-href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>See a complete history <a
+href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>See a complete history <a
 href="https://chrisdone.com/posts/clientside-programming-haskell/">here.</a><a
-href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

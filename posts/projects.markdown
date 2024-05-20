@@ -15,6 +15,9 @@ After a few weeks I should be done.
 
 - [2014](#2014)
     - [ace](#ace)
+    - [hl](#hl)
+    - [formatting](#formatting)
+    - [hindent](#hindent)
     - [foreign-store](#foreign-store)
     - [shell-conduit](#shell-conduit)
     - [lucid](#lucid)
@@ -83,11 +86,53 @@ of LLMs is even more questionable.
 But I suppose there still lies a small place in my heart for a formal
 language that is also readable by anyone who speaks English.
 
-<!-- ## hl -->
+## hl
 
-<!-- ## formatting -->
+The Haskell web site has already been a bit crap. Today, it's
+okay. It's been much worse. During that period of much-worseness, I
+wrote [hl](https://github.com/chrisdone-archive/hl), an alternative
+Haskell homepage, complete with
+[reasoning](https://chrisdone.com/posts/haskell-lang/), which I
+launched at haskell-lang.org as an alternative competing page, due to
+making no progress at all for years in trying to get access to
+haskell.org itself. Eventually, it did become the Haskell homepage due
+to some diplomatic heroics. In that sense, I suppose the project was a
+success. There was, as expected, lots of politics surrounding it, but
+that's always the case with home pages of community projects.
 
-<!-- ## hindent -->
+## formatting
+
+I thought that the
+[HoleyMonoid](https://hackage.haskell.org/package/HoleyMonoid) package
+was very neat, and decided it would make a perfect type-safe
+printf-like package. I called it
+[formatting](https://github.com/chrisdone-archive/formatting), after
+Common Lisp's FORMAT.
+
+Actually, it turned out that despite the neat trick, I really doing
+like the position-dependent style of printf/FORMAT at all. I prefer
+just writing `x <> " and " <> y` instead, or `concat [x, "and",
+y]`. So the whole thing became an experiment in novelty, but
+ultimately I lost interest and passed the maintainership onto someone
+else.
+
+## hindent
+
+[hindent](https://github.com/chrisdone-archive/hindent) was my bold
+attempt to make a complete pretty printer for Haskell, so that manual
+code formatting would be a thing of the past. This was quite a
+substantial project and took a lot of work. [The blog
+post](https://chrisdone.com/posts/hindent/) explains the motivations,
+but I just wanted to type less and get autoformatting. I later went
+one step further and limited it to a single style (which is what gofmt
+famously did), which I documented
+[here](https://chrisdone.com/posts/hindent-5/). I even chose a style
+that I didn't like, but that was popular. The decision to enforce just
+one style made a lot of people mad.
+
+Years later, there was a remake project called Ormolu[^4], which also
+enforced one style. There was subsequently a fork called Fourmolu,
+which permitted more style configuration.[^5]
 
 ## foreign-store
 
@@ -304,3 +349,7 @@ Then I ported it, or tried to, [to Lisp](/archives/2006/wdn/wdn.lisp).
 [^2]: See a complete history [here.](https://chrisdone.com/posts/clientside-programming-haskell/)
 
 [^3]: componentm-devel, espial, essence-of-live-coding, essence-of-live-coding-gloss, essence-of-live-coding-pulse, ghci-websockets, halive, jsaddle-warp, monomer, nvim-hs, rapid
+
+[^4]:  It just had a small technological advantage of being based on GHC's parser, rather than haskell-src-exts, which is always playing catch-up.
+
+[^5]: Which I consider a bit of a setback towards the dream of making style choices a thing of the past. But I think Ormolu will win eventually. Maintaining forks is hard work.
