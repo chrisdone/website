@@ -287,6 +287,8 @@ all of it by this point.
 
 ## tryhaskell
 
+[tryhaskell.org](https://tryhaskell.org/)
+
 This was a big splash when I made it, it hit the top of some big
 subreddits and Hacker News. It was inspired by tryruby.org, which was
 made by _whytheluckystiff, the mysterious Rubyist who disappeared
