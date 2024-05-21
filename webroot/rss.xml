@@ -178,11 +178,14 @@ bit per day. After a few weeks I should be done.</p>
 use-cases, which typically involved multi-package projects and wanting
 to avoid the cabal solver. Motivated by previous success with internal
 tools,<a href="#fn1" class="footnote-ref" id="fnref1"
-role="doc-noteref"><sup>1</sup></a> I made <a
+role="doc-noteref"><sup>1</sup></a> we decided to make a proper tool and
+decided the name would be ‘stack’ (from stackage). I made <a
 href="https://github.com/chrisdone-archive/stack/commit/cb95f21855e23c715a106bb484b307623529e323">the
 first commit for Stack</a>. I worked on it for a year or two, alongside
 many people at FP Complete like Michael Sloan, Manny Borsboom, Dan
-Burton and Michael Snoyman, and I have used it ever since.</p>
+Burton and Michael Snoyman, and I have used it ever since. Most everyone
+else did the bulk of the work, I only kick started the basics (reading
+cabal files, GHCi support, things like that).</p>
 <p>The first version used Shake, but we discovered it was very hard to
 reason about what it was doing. Michael rewrote the scheduler to not
 need Shake, and did further work to basically make Stack a bit like Nix

@@ -73,11 +73,14 @@ After a few weeks I should be done.
 At FP Complete, clients wanted a tool that covered all their
 use-cases, which typically involved multi-package projects and wanting
 to avoid the cabal solver. Motivated by previous success with internal
-tools,[^6] I made [the first commit for
+tools,[^6] we decided to make a proper tool and decided the name would
+be 'stack' (from stackage). I made [the first commit for
 Stack](https://github.com/chrisdone-archive/stack/commit/cb95f21855e23c715a106bb484b307623529e323). I
 worked on it for a year or two, alongside many people at FP Complete
 like Michael Sloan, Manny Borsboom, Dan Burton and Michael Snoyman,
-and I have used it ever since.
+and I have used it ever since. Most everyone else did the bulk of the
+work, I only kick started the basics (reading cabal files, GHCi
+support, things like that).
 
 The first version used Shake, but we discovered it was very hard to
 reason about what it was doing. Michael rewrote the scheduler to not
