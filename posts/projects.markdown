@@ -13,6 +13,9 @@ After a few weeks I should be done.
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
+- [2015](#2015)
+    - [stack](#stack)
+    - [path](#path)
 - [2014](#2014)
     - [ace](#ace)
     - [hl](#hl)
@@ -63,9 +66,43 @@ After a few weeks I should be done.
 
 <!-- ## xeno -->
 
-<!-- # 2015 -->
+# 2015
 
-<!-- ## path -->
+## stack
+
+At FP Complete, clients wanted a tool that covered all their
+use-cases, which typically involved multi-package projects and wanting
+to avoid the cabal solver. Motivated by previous success with internal
+tools,[^6] I made [the first commit for
+Stack](https://github.com/chrisdone-archive/stack/commit/cb95f21855e23c715a106bb484b307623529e323). I
+worked on it for a year or two, alongside many people at FP Complete
+like Michael Sloan, Manny Borsboom, Dan Burton and Michael Snoyman,
+and I have used it ever since.
+
+The first version used Shake, but we discovered it was very hard to
+reason about what it was doing. Michael rewrote the scheduler to not
+need Shake, and did further work to basically make Stack a bit like
+Nix and lock down all packages, package sets into with SHA256
+hashes. I wrote [casa.stackage.org](https://casa.stackage.org/) to
+store content-addressed blobs of package files for Stack to later
+retrieve.
+
+It went on to become the build tool of choice for Haskell projects for
+some years. It's only in recent years that cabal-install has caught up
+with feature parity and the sentiment seems to be shifting back to
+cabal-install. I still use stack because the ergonomics are more
+designed for my workflow.
+
+## path
+
+As part of my work on stack, we deal with filepaths a lot, so I wrote
+the [path package](https://github.com/chrisdone-archive/path), [with a
+blog post motivating it](https://chrisdone.com/posts/path-package/). I
+was pretty happy with this package, it solved a real need that
+initially a lot of people were sceptical of, but colleagues told me it
+saved their asses a few times.
+
+That package is still maintained to my knowledge.
 
 # 2014
 
@@ -379,3 +416,5 @@ Then I ported it, or tried to, [to Lisp](/archives/2006/wdn/wdn.lisp).
 [^4]:  It just had a small technological advantage of being based on GHC's parser, rather than haskell-src-exts, which is always playing catch-up.
 
 [^5]: Which I consider a bit of a setback towards the dream of making style choices a thing of the past. But I think Ormolu will win eventually. Maintaining forks is hard work.
+
+[^6]: Michael had previously built a tool called fpbuild which basically was kind of like a big lock file and was unreasonably effective at building very large Yesod-based projects.
