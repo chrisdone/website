@@ -255,7 +255,8 @@ sync. It basically just watches the clipboard for changes and then POSTs
 the content to interested parties. At work I use a MacBook, but I also
 have my Linux laptop next to it, so being able to copy/paste between the
 two is handy.</p>
-<!-- ## hell -->
+<h2 id="hell">hell</h2>
+<p>https://github.com/chrisdone/hell</p>
 <h1 id="section-1">2021</h1>
 <h2 id="proclog">proclog</h2>
 <p>While consulting on a project that ran executables deeply within it,

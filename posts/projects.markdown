@@ -127,7 +127,9 @@ POSTs the content to interested parties. At work I use a MacBook, but
 I also have my Linux laptop next to it, so being able to copy/paste
 between the two is handy.
 
-<!-- ## hell -->
+## hell
+
+https://github.com/chrisdone/hell
 
 # 2021
 
