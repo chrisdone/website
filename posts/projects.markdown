@@ -22,8 +22,10 @@ After a few weeks I should be done.
 - [2020](#2020)
     - [inflex](#inflex)
 - [2019](#2019)
+    - [streaming-parsers](#streaming-parsers)
     - [forge](#forge)
 - [2018](#2018)
+    - [intero](#intero)
     - [cron-daemon](#cron-daemon)
 - [2017](#2017)
     - [jl](#jl)
@@ -131,6 +133,19 @@ trade-offs are brilliant and I researched everything over 2 years. The
 
 # 2019
 
+## streaming-parsers
+
+I wrote, along with Michael Snoyman, some streaming JSON/YAML parsers,
+in a package I called
+[streaming-parsers](https://github.com/chrisdone-archive/streaming-parsers),
+with the express intent to avoid security issues implied by packages
+like `aeson` which consume the whole input given by the user. This
+package never got used, but I did end up using `reparsec` elsewhere,
+which was like a parsec that streams like attoparsec, but works on any
+token rather than Text/ByteString. Arguably megaparsec fits that niche
+these days, although I find megaparsec kind of awkward and I can never
+remember how to use it.
+
 ## forge
 
 I wrote [forge](https://github.com/chrisdone-archive/forge) as my
@@ -149,6 +164,23 @@ However, it introduces a few novel ideas:
 <!-- ## vado -->
 
 # 2018
+
+## intero
+
+[intero](https://github.com/chrisdone-archive/intero) was my
+"complete" (_intero_ is Italian for 'whole') Haskell IDE in Emacs. I
+was given space at FP Complete to work on it as a product to solve the
+whole Haskell tooling issue. It was actually a brilliant project, and
+worked on almost everything, and rarely if ever broke. There was a lot
+of Emacs Lisp, and a modicum of Haskell in a GHCi fork I called
+`intero`.
+
+Some of that Elisp still lives on in my Emacs config, but the project
+itself I sunsetted some years ago after I was subjected to one final
+GHC upgrade and could not bare to port my code over to yet another GHC
+API API change. I just gave up.
+
+But on the whole it was a great project and had 1k users at least.
 
 ## cron-daemon
 
