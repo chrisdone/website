@@ -113,6 +113,33 @@ bit per day. After a few weeks I should be done.</p>
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 <p><strong>Table of Contents</strong></p>
 <ul>
+<li><a href="#2023">2023</a>
+<ul>
+<li><a href="#copy-paste-sync">copy-paste-sync</a></li>
+</ul></li>
+<li><a href="#2021">2021</a>
+<ul>
+<li><a href="#proclog">proclog</a></li>
+<li><a href="#lexx">lexx</a></li>
+<li><a href="#hag">hag</a></li>
+</ul></li>
+<li><a href="#2020">2020</a>
+<ul>
+<li><a href="#inflex">inflex</a></li>
+</ul></li>
+<li><a href="#2019">2019</a>
+<ul>
+<li><a href="#forge">forge</a></li>
+</ul></li>
+<li><a href="#2018">2018</a>
+<ul>
+<li><a href="#cron-daemon">cron-daemon</a></li>
+</ul></li>
+<li><a href="#2017">2017</a>
+<ul>
+<li><a href="#jl">jl</a></li>
+<li><a href="#duet">duet</a></li>
+</ul></li>
 <li><a href="#2015">2015</a>
 <ul>
 <li><a href="#stack">stack</a></li>
@@ -120,6 +147,7 @@ bit per day. After a few weeks I should be done.</p>
 </ul></li>
 <li><a href="#2014">2014</a>
 <ul>
+<li><a href="#present">present</a></li>
 <li><a href="#ace">ace</a></li>
 <li><a href="#hl">hl</a></li>
 <li><a href="#formatting">formatting</a></li>
@@ -130,6 +158,7 @@ bit per day. After a few weeks I should be done.</p>
 </ul></li>
 <li><a href="#2013">2013</a>
 <ul>
+<li><a href="#ini">ini</a></li>
 <li><a href="#pure-io">pure-io</a></li>
 <li><a href="#god-mode">god-mode</a></li>
 <li><a href="#structured-haskell-mode">structured-haskell-mode</a></li>
@@ -173,20 +202,102 @@ the content to interested parties. At work I use a MacBook, but I also
 have my Linux laptop next to it, so being able to copy/paste between the
 two is handy.</p>
 <!-- ## hell -->
-<!-- # 2020 -->
+<h1 id="section-1">2021</h1>
+<h2 id="proclog">proclog</h2>
+<p>While consulting on a project that ran executables deeply within it,
+I wrote <a
+href="https://github.com/chrisdone-archive/proclog">proclog</a> as a
+kind of ‘smarter tee’. I haven’t used this for a while and it isn’t
+maintained anymore, but it was handy in the moment.</p>
+<h2 id="lexx">lexx</h2>
+<p>I wrote a project called <a
+href="https://github.com/chrisdone-archive/lexx">lexx</a>, which lexes
+Haskell code, specifically <code>Show</code> instances, but it can
+handle fairly unstructured input, and still pretty print it with colours
+nicely. It’s good for dev logs or general pretty printers.</p>
+<h2 id="hag">hag</h2>
+<p>I fiddled about with a project called <a
+href="https://github.com/chrisdone-archive/hag">hag</a>, “Haskell ag”,
+which would let one “grep” Haskell files for identifiers, and exclude
+strings, comments, etc. by lexing them properly. I haven’t used this for
+a while, it’s currently in the freezer.</p>
+<h1 id="section-2">2020</h1>
+<h2 id="inflex">inflex</h2>
+<p>This was my dream project that I planned on being The Big One for my
+30s. It involves all my skills: web, services, parsers, type checkers,
+interpreters, UI, etc. I had a business, a registered trademark, lawyers
+draft up Ts&amp;Cs and a privacy policy, accountant, Stripe account,
+etc. It was going to be an online spreadsheet competitor. <a
+href="https://chrisdone.com/posts/inflex/">Inflex</a> was going to be a
+big hit.</p>
+<p>I had a kid and then it took a back seat, I couldn’t financially
+justify paying an accountant and for all the services when I only had an
+hour a week to dabble in it. So I packed it in.</p>
+<p>However, it has some of my best work. The compiler pipeline is
+beautiful. Some of the implementation is wonderful. The design
+trade-offs are brilliant and I researched everything over 2 years. The
+<a href="https://github.com/chrisdone-archive/inflex">archive repo is
+here</a>.</p>
 <!-- ## early -->
 <!-- ## inflex -->
-<!-- # 2019 -->
+<h1 id="section-3">2019</h1>
+<h2 id="forge">forge</h2>
+<p>I wrote <a
+href="https://github.com/chrisdone-archive/forge">forge</a> as my answer
+to modernizing formlets,<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> after the world forgot about
+multi-page web apps and switched to frontend/backend stratification.</p>
+<p>However, it introduces a few novel ideas:</p>
+<ul>
+<li>Static checking of the uniqueness of names within a form</li>
+<li>Errors can go both up <em>and</em> down in the form, meaning you can
+“send” a validation error from above down to the input that caused
+it</li>
+<li>Selective-like behavior</li>
+<li>Typed handling of optional vs required fields, which in other
+libraries is a bit wishy-washy</li>
+</ul>
 <!-- ## vado -->
-<!-- # 2017 -->
+<h1 id="section-4">2018</h1>
+<h2 id="cron-daemon">cron-daemon</h2>
+<p>I wanted a handy way to have a ‘service’ run and re-run easily, which
+I called <a
+href="https://github.com/chrisdone-archive/cron-daemon">cron-daemon</a>.
+This was my first tool that I statically built with musl. I haven’t used
+this for a while, but I might use it in the future. It can be used in
+combination with
+<code>stack build --file-watch --exec 'cron-daemon ..'</code> to cause a
+service to restart after recompiling.</p>
+<h1 id="section-5">2017</h1>
+<h2 id="jl">jl</h2>
+<p>I like <code>jq</code> a bit, but I always found myself just wishing
+I had a basic mini lambda calculus/Haskell. So I wrote a small
+statically typed mini language called <a
+href="https://github.com/chrisdone-archive/jl">jl</a>. I used it for a
+while, but somehow I’ve managed to go years and years without needing to
+do JSON munging in scripts or anything. So this project died due to lack
+of use. I otherwise think the design and implementation are both
+good.</p>
+<h2 id="duet">duet</h2>
+<p>I have no idea why I started working on this, but I wrote a <a
+href="https://github.com/chrisdone-archive/duet">small Haskell
+implementation</a> called Duet, which is helpful for teaching because it
+has a substitution-based interpreter. It was based on Typing Haskell in
+Haskell, which was refactored a bit, more types added, etc. It’s quite a
+viable Haskell implementation. Great for teaching.</p>
+<p>I never found other uses for it, because frankly I don’t fully
+understand the type-checker, because I didn’t author it from scratch.
+Future projects involved writing one from scratch, which I do
+understand. See <a href="#inflex">Inflex</a> or <a
+href="#hell">Hell</a>.</p>
 <!-- ## xeno -->
-<h1 id="section-1">2015</h1>
+<h1 id="section-6">2015</h1>
 <h2 id="stack">stack</h2>
 <p>At FP Complete, clients wanted a tool that covered all their
 use-cases, which typically involved multi-package projects and wanting
 to avoid the cabal solver. Motivated by previous success with internal
-tools,<a href="#fn1" class="footnote-ref" id="fnref1"
-role="doc-noteref"><sup>1</sup></a> we decided to make a proper tool and
+tools,<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a> we decided to make a proper tool and
 decided the name would be ‘stack’ (from stackage). I made <a
 href="https://github.com/chrisdone-archive/stack/commit/cb95f21855e23c715a106bb484b307623529e323">the
 first commit for Stack</a>. I worked on it for a year or two, alongside
@@ -214,7 +325,18 @@ blog post motivating it</a>. I was pretty happy with this package, it
 solved a real need that initially a lot of people were sceptical of, but
 colleagues told me it saved their asses a few times.</p>
 <p>That package is still maintained to my knowledge.</p>
-<h1 id="section-2">2014</h1>
+<h1 id="section-7">2014</h1>
+<h2 id="present">present</h2>
+<p>After looking at CLIM (Common Lisp Interface Manager), I really liked
+the idea of being able to <em>present</em> a value with multiple
+interpretations. That’s what <a
+href="https://github.com/chrisdone-archive/present">present</a> was
+about. I used template-haskell to inspect any type and derive a
+representation for it. Even <code>ByteString</code> had multiple views,
+e.g. as a list of bytes, as UTF-8 text, hex, a pointer, etc.</p>
+<p>I kind of ran myself into the ground with this when it came to higher
+kinded types. I got stuck and lost interest. I would love to pick it up
+again some day.</p>
 <h2 id="ace">ace</h2>
 <p>In the afterglow of growing bored of Lojban, but still enamoured by
 formal human languages, I got into Attempto (Latin for ‘I dare’)
@@ -267,11 +389,11 @@ what gofmt famously did), which I documented <a
 href="https://chrisdone.com/posts/hindent-5/">here</a>. I even chose a
 style that I didn’t like, but that was popular. The decision to enforce
 just one style made a lot of people mad.</p>
-<p>Years later, there was a remake project called Ormolu<a href="#fn2"
-class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>,
+<p>Years later, there was a remake project called Ormolu<a href="#fn3"
+class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>,
 which also enforced one style. There was subsequently a fork called
-Fourmolu, which permitted more style configuration.<a href="#fn3"
-class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+Fourmolu, which permitted more style configuration.<a href="#fn4"
+class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
 <h2 id="foreign-store">foreign-store</h2>
 <p>The <a
 href="https://github.com/chrisdone-archive/foreign-store">foreign-store</a>
@@ -281,8 +403,8 @@ wrote <a href="https://chrisdone.com/posts/ghci-reload/">for the purpose
 of hot reloading.</a> It’s actually still used to this day and
 maintained by someone else. There are 12 direct dependencies of it on
 Hackage, mostly various different ways of doing code reloading.<a
-href="#fn4" class="footnote-ref" id="fnref4"
-role="doc-noteref"><sup>4</sup></a> They’re all fancy wrappers around
+href="#fn5" class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a> They’re all fancy wrappers around
 this.</p>
 <p>10 years after it had been published and not been touched for just as
 long, someone found and fixed a segfaulting bug in the C code. Can you
@@ -304,7 +426,14 @@ satisfaction to it.</p>
 <p>It’s one of my projects that is using the <a
 href="https://chrisdone.com/posts/ipp/">Immutable Publishing
 Policy</a>.</p>
-<h1 id="section-3">2013</h1>
+<h1 id="section-8">2013</h1>
+<h2 id="ini">ini</h2>
+<p>Back before YAML took over, there wasn’t a winning configuration
+format. XML had lost its lustre. So I wrote <a
+href="https://github.com/chrisdone-archive/ini/">ini</a>, which parsed
+the simple INI format.</p>
+<p>Since, YAML is now de-facto standard (although TOML is floating
+around), so I stopped using this.</p>
 <h2 id="pure-io">pure-io</h2>
 <p>A small project called <a
 href="https://github.com/chrisdone-archive/pure-io">pure-io</a> that
@@ -348,7 +477,7 @@ lines of chat from the #haskell channel per month.</p>
 <p>I stopped running it after I lost interest in IRC, but it was a very
 satisfying project and I learned a lot about PostgreSQL’s performance
 characteristics in the process.</p>
-<h1 id="section-4">2012</h1>
+<h1 id="section-9">2012</h1>
 <h2 id="fay">fay</h2>
 <p>I wrote a language called Fay, which was a Haskell without
 type-classes that compiled to JavaScript, and used GHC’s type system for
@@ -356,19 +485,19 @@ the type-checking.</p>
 <p>It ended up being quite popular, it garnered its own <a
 href="https://github.com/faylang/">organisation</a>, and I had a
 co-maintainer called Adam Bergmark, who was very nice and smart.<a
-href="#fn5" class="footnote-ref" id="fnref5"
-role="doc-noteref"><sup>5</sup></a></p>
+href="#fn6" class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a></p>
 <p>I was invited to and went to a conference in Lisbon to give a talk on
 it.</p>
 <p>FP Complete used it for their IDE which was a web based Haskell IDE,
 which is pretty much how I got the job at FP Complete in 2013. A couple
 years or so later, after the IDE project petered out, we stopped using
-it. There were better options by then (PureScript, etc.).<a href="#fn6"
-class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
+it. There were better options by then (PureScript, etc.).<a href="#fn7"
+class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
 <ul>
 <li><a href="/posts/fay">Blog post</a></li>
 </ul>
-<h1 id="section-5">2011</h1>
+<h1 id="section-10">2011</h1>
 <h2 id="hulk">hulk</h2>
 <p>I wrote an IRC server for use at work for us to chat on. We used it
 for some years after we all left, until we eventually migrated to an app
@@ -391,7 +520,7 @@ listen to.</p>
 href="https://github.com/HeinrichApfelmus/threepenny-gui">threepenny-gui</a>,
 after which he added many FRP-based things and has likely rewritten all
 of it by this point.</p>
-<h1 id="section-6">2010</h1>
+<h1 id="section-11">2010</h1>
 <h2 id="tryhaskell">tryhaskell</h2>
 <p><a href="https://tryhaskell.org/">tryhaskell.org</a></p>
 <p>This was a big splash when I made it, it hit the top of some big
@@ -419,7 +548,7 @@ the beauty of Lisp. That hasn’t changed today in 2024.</p>
 <li><a href="https://github.com/chrisdone-archive/lisk">GitHub
 archive</a></li>
 </ul>
-<h1 id="section-7">2008</h1>
+<h1 id="section-12">2008</h1>
 <h2 id="kibro">kibro</h2>
 <p>In 2008 I was working for a small sum on a hair salon’s new web site,
 in Haskell. And I made a very trivial web library called “Kibro” (from
@@ -440,7 +569,7 @@ IRC bot with various capabilities.</p>
 archive</a></li>
 <li><a href="https://chrisdone.com/posts/lojbot/">Blog post</a></li>
 </ul>
-<h1 id="section-8">2006</h1>
+<h1 id="section-13">2006</h1>
 <h2 id="slsksoulski">slsk/soulski</h2>
 <p>A project for the Soulseek music sharing network. Web site, which may
 not remain long-term: <a
@@ -468,33 +597,37 @@ href="/archives/2006/wdn/wdn.lisp">to Lisp</a>.</p>
 role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Michael had previously built a tool called fpbuild which
-basically was kind of like a big lock file and was unreasonably
-effective at building very large Yesod-based projects.<a href="#fnref1"
-class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>It just had a small technological advantage of being
-based on GHC’s parser, rather than haskell-src-exts, which is always
-playing catch-up.<a href="#fnref2" class="footnote-back"
+<li id="fn1"><p>Ezra Cooper, Samuel Lindley, Philip Wadler and Jeremy
+Yallop “An idiom’s guide to formlets” Technical Report,
+EDI-INF-RR-1263.<a href="#fnref1" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>Which I consider a bit of a setback towards the dream of
-making style choices a thing of the past. But I think Ormolu will win
-eventually. Maintaining forks is hard work.<a href="#fnref3"
+<li id="fn2"><p>Michael had previously built a tool called fpbuild which
+basically was kind of like a big lock file and was unreasonably
+effective at building very large Yesod-based projects.<a href="#fnref2"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>componentm-devel, espial, essence-of-live-coding,
+<li id="fn3"><p>It just had a small technological advantage of being
+based on GHC’s parser, rather than haskell-src-exts, which is always
+playing catch-up.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Which I consider a bit of a setback towards the dream of
+making style choices a thing of the past. But I think Ormolu will win
+eventually. Maintaining forks is hard work.<a href="#fnref4"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>componentm-devel, espial, essence-of-live-coding,
 essence-of-live-coding-gloss, essence-of-live-coding-pulse,
 ghci-websockets, halive, jsaddle-warp, monomer, nvim-hs, rapid<a
-href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>In retrospect I mishandled a situation where Fay was
+href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>In retrospect I mishandled a situation where Fay was
 being used in production and we were breaking its APIs too often, and I
 blocked Adam’s <code>master</code> push access to the repo to give me
 some breathing room to slow things down, but this was obviously the
 wrong move, and not how you should treat early collaborators. That was
 my first experience managing a project, so I cut my younger self some
 slack. However, he was very gracious about it in the moment.<a
-href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn6"><p>See a complete history <a
-href="https://chrisdone.com/posts/clientside-programming-haskell/">here.</a><a
 href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>See a complete history <a
+href="https://chrisdone.com/posts/clientside-programming-haskell/">here.</a><a
+href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 

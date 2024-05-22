@@ -13,10 +13,26 @@ After a few weeks I should be done.
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
+- [2023](#2023)
+    - [copy-paste-sync](#copy-paste-sync)
+- [2021](#2021)
+    - [proclog](#proclog)
+    - [lexx](#lexx)
+    - [hag](#hag)
+- [2020](#2020)
+    - [inflex](#inflex)
+- [2019](#2019)
+    - [forge](#forge)
+- [2018](#2018)
+    - [cron-daemon](#cron-daemon)
+- [2017](#2017)
+    - [jl](#jl)
+    - [duet](#duet)
 - [2015](#2015)
     - [stack](#stack)
     - [path](#path)
 - [2014](#2014)
+    - [present](#present)
     - [ace](#ace)
     - [hl](#hl)
     - [formatting](#formatting)
@@ -25,6 +41,7 @@ After a few weeks I should be done.
     - [shell-conduit](#shell-conduit)
     - [lucid](#lucid)
 - [2013](#2013)
+    - [ini](#ini)
     - [pure-io](#pure-io)
     - [god-mode](#god-mode)
     - [structured-haskell-mode](#structured-haskell-mode)
@@ -62,17 +79,112 @@ between the two is handy.
 
 <!-- ## hell -->
 
-<!-- # 2020 -->
+# 2021
+
+## proclog
+
+While consulting on a project that ran executables deeply within it, I
+wrote [proclog](https://github.com/chrisdone-archive/proclog) as a
+kind of 'smarter tee'. I haven't used this for a while and it isn't
+maintained anymore, but it was handy in the moment.
+
+## lexx
+
+I wrote a project called
+[lexx](https://github.com/chrisdone-archive/lexx), which lexes Haskell
+code, specifically `Show` instances, but it can handle fairly
+unstructured input, and still pretty print it with colours
+nicely. It's good for dev logs or general pretty printers.
+
+## hag
+
+I fiddled about with a project called
+[hag](https://github.com/chrisdone-archive/hag), "Haskell ag", which
+would let one "grep" Haskell files for identifiers, and exclude
+strings, comments, etc. by lexing them properly. I haven't used this
+for a while, it's currently in the freezer.
+
+# 2020
+
+## inflex
+
+This was my dream project that I planned on being The Big One for my
+30s. It involves all my skills: web, services, parsers, type checkers,
+interpreters, UI, etc. I had a business, a registered trademark,
+lawyers draft up Ts&Cs and a privacy policy, accountant, Stripe
+account, etc. It was going to be an online spreadsheet
+competitor. [Inflex](https://chrisdone.com/posts/inflex/) was going to
+be a big hit.
+
+I had a kid and then it took a back seat, I couldn't financially
+justify paying an accountant and for all the services when I only had
+an hour a week to dabble in it. So I packed it in.
+
+However, it has some of my best work. The compiler pipeline is
+beautiful. Some of the implementation is wonderful. The design
+trade-offs are brilliant and I researched everything over 2 years. The
+[archive repo is here](https://github.com/chrisdone-archive/inflex).
 
 <!-- ## early -->
 
 <!-- ## inflex -->
 
-<!-- # 2019 -->
+# 2019
+
+## forge
+
+I wrote [forge](https://github.com/chrisdone-archive/forge) as my
+answer to modernizing formlets,[^7] after the world forgot about
+multi-page web apps and switched to frontend/backend stratification.
+
+However, it introduces a few novel ideas:
+
+* Static checking of the uniqueness of names within a form
+* Errors can go both up *and* down in the form, meaning you can "send"
+  a validation error from above down to the input that caused it
+* Selective-like behavior
+* Typed handling of optional vs required fields, which in other
+  libraries is a bit wishy-washy
 
 <!-- ## vado -->
 
-<!-- # 2017 -->
+# 2018
+
+## cron-daemon
+
+I wanted a handy way to have a 'service' run and re-run easily, which
+I called
+[cron-daemon](https://github.com/chrisdone-archive/cron-daemon). This
+was my first tool that I statically built with musl. I haven't used
+this for a while, but I might use it in the future. It can be used in
+combination with `stack build --file-watch --exec 'cron-daemon ..'` to
+cause a service to restart after recompiling.
+
+# 2017
+
+## jl
+
+I like `jq` a bit, but I always found myself just wishing I had a
+basic mini lambda calculus/Haskell. So I wrote a small statically
+typed mini language called
+[jl](https://github.com/chrisdone-archive/jl). I used it for a while,
+but somehow I've managed to go years and years without needing to do
+JSON munging in scripts or anything. So this project died due to lack
+of use. I otherwise think the design and implementation are both good.
+
+## duet
+
+I have no idea why I started working on this, but I wrote a [small
+Haskell implementation](https://github.com/chrisdone-archive/duet)
+called Duet, which is helpful for teaching because it has a
+substitution-based interpreter. It was based on Typing Haskell in
+Haskell, which was refactored a bit, more types added, etc. It's quite
+a viable Haskell implementation. Great for teaching.
+
+I never found other uses for it, because frankly I don't fully
+understand the type-checker, because I didn't author it from
+scratch. Future projects involved writing one from scratch, which I do
+understand. See [Inflex](#inflex) or [Hell](#hell).
 
 <!-- ## xeno -->
 
@@ -118,6 +230,20 @@ saved their asses a few times.
 That package is still maintained to my knowledge.
 
 # 2014
+
+## present
+
+After looking at CLIM (Common Lisp Interface Manager), I really liked
+the idea of being able to _present_ a value with multiple
+interpretations. That's what
+[present](https://github.com/chrisdone-archive/present) was about. I
+used template-haskell to inspect any type and derive a representation
+for it. Even `ByteString` had multiple views, e.g. as a list of bytes,
+as UTF-8 text, hex, a pointer, etc.
+
+I kind of ran myself into the ground with this when it came to higher
+kinded types. I got stuck and lost interest. I would love to pick it
+up again some day.
 
 ## ace
 
@@ -226,6 +352,16 @@ It's one of my projects that is using the [Immutable Publishing
 Policy](https://chrisdone.com/posts/ipp/).
 
 # 2013
+
+## ini
+
+Back before YAML took over, there wasn't a winning configuration
+format. XML had lost its lustre. So I wrote
+[ini](https://github.com/chrisdone-archive/ini/), which parsed the
+simple INI format.
+
+Since, YAML is now de-facto standard (although TOML is floating
+around), so I stopped using this.
 
 ## pure-io
 
@@ -431,3 +567,5 @@ Then I ported it, or tried to, [to Lisp](/archives/2006/wdn/wdn.lisp).
 [^5]: Which I consider a bit of a setback towards the dream of making style choices a thing of the past. But I think Ormolu will win eventually. Maintaining forks is hard work.
 
 [^6]: Michael had previously built a tool called fpbuild which basically was kind of like a big lock file and was unreasonably effective at building very large Yesod-based projects.
+
+[^7]: Ezra Cooper, Samuel Lindley, Philip Wadler and Jeremy Yallop "An idiom's guide to formlets" Technical Report, EDI-INF-RR-1263.
