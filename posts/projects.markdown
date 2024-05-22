@@ -15,6 +15,7 @@ After a few weeks I should be done.
 
 - [2023](#2023)
     - [copy-paste-sync](#copy-paste-sync)
+    - [hell](#hell)
 - [2021](#2021)
     - [proclog](#proclog)
     - [lexx](#lexx)
