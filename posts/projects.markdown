@@ -22,18 +22,44 @@ After a few weeks I should be done.
 - [2020](#2020)
     - [inflex](#inflex)
 - [2019](#2019)
+    - [novella](#novella)
     - [streaming-parsers](#streaming-parsers)
     - [forge](#forge)
+    - [env-args](#env-args)
+    - [dynamic](#dynamic)
+    - [webshow](#webshow)
 - [2018](#2018)
+    - [hex-server](#hex-server)
+    - [sdl2-sprite](#sdl2-sprite)
+    - [caseof](#caseof)
+    - [rocksdb-haskell-ng](#rocksdb-haskell-ng)
+    - [phase](#phase)
+    - [audit](#audit)
+    - [codeparty](#codeparty)
+    - [duta](#duta)
+    - [prana](#prana)
     - [intero](#intero)
     - [cron-daemon](#cron-daemon)
 - [2017](#2017)
+    - [snappy](#snappy)
+    - [liquid-post](#liquid-post)
+    - [tdiff](#tdiff)
+    - [vado](#vado)
     - [jl](#jl)
     - [duet](#duet)
+- [2016](#2016)
+    - [purify](#purify)
+    - [labels](#labels)
+    - [org-focus](#org-focus)
 - [2015](#2015)
+    - [descriptive](#descriptive)
     - [stack](#stack)
     - [path](#path)
+    - [xinput-conduit](#xinput-conduit)
+    - [conditions](#conditions)
+    - [haskell-trace](#haskell-trace)
 - [2014](#2014)
+    - [clockin](#clockin)
     - [present](#present)
     - [ace](#ace)
     - [hl](#hl)
@@ -42,6 +68,13 @@ After a few weeks I should be done.
     - [foreign-store](#foreign-store)
     - [shell-conduit](#shell-conduit)
     - [lucid](#lucid)
+    - [wrap](#wrap)
+    - [gmail](#gmail)
+    - [osdkeys](#osdkeys)
+    - [keyboard-stats](#keyboard-stats)
+    - [ghc-server](#ghc-server)
+    - [ats-examples](#ats-examples)
+    - [carvo](#carvo)
 - [2013](#2013)
     - [ini](#ini)
     - [pure-io](#pure-io)
@@ -49,15 +82,30 @@ After a few weeks I should be done.
     - [structured-haskell-mode](#structured-haskell-mode)
     - [haskellnews](#haskellnews)
     - [ircbrowse](#ircbrowse)
+    - [snap-app](#snap-app)
+    - [cabal-sign](#cabal-sign)
 - [2012](#2012)
+    - [sourcemap](#sourcemap)
     - [fay](#fay)
+    - [scrobble](#scrobble)
+    - [bdo](#bdo)
 - [2011](#2011)
+    - [pdfinfo](#pdfinfo)
+    - [chrisdone-xmonad](#chrisdone-xmonad)
+    - [flo](#flo)
+    - [freenect](#freenect)
     - [hulk](#hulk)
     - [ji](#ji)
+    - [pgsql-simple](#pgsql-simple)
+    - [css](#css)
+    - [url-generic](#url-generic)
+    - [hog](#hog)
 - [2010](#2010)
     - [tryhaskell](#tryhaskell)
     - [jquery-console](#jquery-console)
     - [lisk](#lisk)
+- [2009](#2009)
+    - [asp-mode](#asp-mode)
 - [2008](#2008)
     - [kibro](#kibro)
     - [lojbot](#lojbot)
@@ -129,9 +177,31 @@ trade-offs are brilliant and I researched everything over 2 years. The
 
 <!-- ## early -->
 
-<!-- ## inflex -->
-
 # 2019
+
+## novella
+
+For some bizarre reason, I thought it would be a good idea to make a
+structured editor in the terminal called
+[novella](https://github.com/chrisdone-archive/novella): the big idea
+was to define a simple grammar for any language and get a structured
+editor out of it, like this:
+
+```haskell
+grammar :: Grammar
+grammar = $(checkGrammar $ runDefine $ mdo
+  -- General expression
+  expression       <- rule "Expression" (ChoiceSchema [variable, constructor, parentheses
+                                                      ,tuple, let', application, string])
+  application      <- rule "Application" (CompositeSchema [expression, expression])
+  parentheses      <- rule "Parentheses" (CompositeSchema [openParenSchema, expression, closeParenSchema])
+  -- Tuple
+  tuple            <- rule "Tuple" (CompositeSchema [openParenSchema, tupleElements, closeParenSchema])
+  tupleElements    <- rule "Tuple elements" (ListSchema expression ",")
+  -- Identifiers
+  variable         <- rule "Variable" (IdentifierSchema "Variable")
+  constructor      <- rule "Constructor" (IdentifierSchema "Constructor")
+```
 
 ## streaming-parsers
 
@@ -163,7 +233,109 @@ However, it introduces a few novel ideas:
 
 <!-- ## vado -->
 
+## env-args
+
+A simple tool called
+[env-args](https://github.com/chrisdone-archive/env-args) that would
+convert environment variables to program arguments. With this, it
+became trivial to either pass --foo arguments or PROGRAM_FOO
+variables. Used for a client.
+
+## dynamic
+
+Partly as a joke, partly serious, I made a package called
+[dynamic](https://github.com/chrisdone-archive/dynamic) which gives
+you dynamic types in Haskell. It makes it trivial to explore unknown
+data in Haskell. I've never used it, but in principal it is
+interesting.
+
+## webshow
+
+I made a simple tool to generate a hierchical data structure browser
+for Haskell `Show` output (similar to [present](#present)), and called
+it [webshow](https://github.com/chrisdone-archive/webshow). I have
+occasionallly resurrected this, when I need to explore really hairy
+Haskell data structures.
+
 # 2018
+
+## hex-server
+
+I can't explain some of the motivations for my projects. I wrote
+[hex-server](https://github.com/chrisdone-archive/hex-server) which
+was a ground-up implementation of Xorg-server in Haskell. I have no
+idea why. Curiosity, I guess.
+
+## sdl2-sprite
+
+I was fiddling about with sdl2 at this
+time. [sdl2-sprite](https://github.com/chrisdone-archive/sdl2-sprite)
+just repeats a sprite for you (see the README gif). I think there are
+other tools around for this, but I found this one just did exactly
+what I wanted while making a sprite in InkScape.
+
+## caseof
+
+The [caseof](https://github.com/chrisdone-archive/caseof) package is
+just a proof of concept to test whether I could avoid lens and get
+what I wanted: trivially ask whether a value is of a particular
+constructor and if so, return a `Maybe` of the slots. Answer is: yes,
+you can. Does anyone use it? No, lens is too popular.
+
+## rocksdb-haskell-ng
+
+[rocksdb-haskell-ng](https://github.com/chrisdone-archive/rocksdb-haskell-ng)
+was needed for some cryptocurrency client, who were inadvisedly using
+rocksdb, in Haskell, and the existing package was, well, neither
+stable or efficient. I rewrote it from scratch, with stability and
+performance in mind. I'm quite proud of the work I did on this, it was
+good work.
+
+## phase
+
+Another case of having too much time on my hands
+perhaps. [phase](https://github.com/chrisdone-archive/phase) basically
+provides a frontend to Emacs in your browser. It's not as native as
+the GTK or terminal frontends, but the latency wasn't too bad. I'm not
+sure I'll ever pick this up again. But it was surprisingly usable.
+
+## audit
+
+I had to audit a number of projects at FP Complete. This [emacs
+mode](https://github.com/chrisdone-archive/audit) helped me
+interactively mark any selection of any file as viewed, accepted or
+problematic, with comments. I would still use this today if I need to
+audit or heavily review a project.
+
+## codeparty
+
+When teaching Haskell to companies at FP Complete, it was handy to
+have everyone type out the answer to an exercise live on screen. For
+that I made
+[codeparty](https://github.com/chrisdone-archive/codeparty), which was
+a bit like a mass screen share, but more efficient, and ensured
+everyone had the same editing experience. I would use this again if I
+needed to teach Haskell again.
+
+## duta
+
+I wrote my own email server called
+[duta](https://github.com/chrisdone-archive/duta), which was about
+being able to self-host email. I actually ran it for years; it was
+only because LetsEncrypt at the time was harder to use and required
+upgrades and maintenance that I gave up on it, but for a while I was
+reading my mail with my own Haskell-made email web and Emacs client.
+
+## prana
+
+I was really into the idea of being able to interpret Haskell within
+Haskell, so I made a project called
+[prana](https://github.com/chrisdone-archive/prana) which would
+    compile GHC Haskell down to STG, convert that STG to an internal
+format, and then interpret it. It turns out, there are quite a few
+"implicit" things in STG that you just have to know, figure out or ask
+around about. The GHC internals change far too often, so I gave up on
+this. But I took a good crack at it.
 
 ## intero
 
@@ -194,6 +366,35 @@ cause a service to restart after recompiling.
 
 # 2017
 
+## snappy
+
+A brief experiment called
+[snappy](https://github.com/chrisdone-archive/snappy) to try out
+Reflex-like FRP with SVG. It's not as easy as you think to do this,
+and there are all sorts of gotchas. Where possible, don't DIY
+FRP. It's hard.
+
+## liquid-post
+
+I wrote a post about Liquid Haskell for FP Complete, but [this
+repo](https://github.com/chrisdone-archive/liquid-post) shows all the
+examples and they are quite good, I think.
+
+## tdiff
+
+I still use this
+sometimes. [tdiff](https://github.com/chrisdone-archive/tdiff) just
+gives you timing between lines of output from a process. This can be
+really good for checking timings of other programs than your own.
+
+## vado
+
+In an exhibition of sorts, I made a 90s-style web browser called
+[vado](https://github.com/chrisdone-archive/vado) ("I go" in Italian),
+which can show rich text documents and browse around. I think it's
+pretty cool that I was able to do this in a few hundred lines of code,
+and it works/worked on Windows, macOS and Linux, too!
+
 ## jl
 
 I like `jq` a bit, but I always found myself just wishing I had a
@@ -220,7 +421,43 @@ understand. See [Inflex](#inflex) or [Hell](#hell).
 
 <!-- ## xeno -->
 
+# 2016
+
+## purify
+
+I was doing more PureScript dev in 2016, so I made
+[purify](https://github.com/chrisdone-archive/purify), which was
+basically stackage+stack, but for PureScript. It was popular for a
+while, but then the main PureScript package manager gained these
+capabilities and it wasn't necessary anymore. But it was a solid
+project, I think.
+
+## labels
+
+As part of proving out whether Haskell could really be useful as a
+data analysis language (answer: not really), I wrote
+[labels](https://github.com/chrisdone-archive/labels), which is an
+extensible records package, along with CSV, JSON capabilities. It
+worked, actually, but nothing much came of it after that.
+
+## org-focus
+
+In an effort to track all my time on projects, I wrote
+[org-focus](https://github.com/chrisdone-archive/org-focus) for
+Emacs. It was a bit like org-agenda, but included time spent,
+estimates, and stuff that a consultant might need. I don't track my
+time with such fine-grain detail these days, so I stopped using it.
+
 # 2015
+
+## descriptive
+
+I noticed that optparse-applicative, formlets, yaml/json parsing,
+etc. were all a type of self-describing parser. Hence
+[descriptive](https://github.com/chrisdone-archive/descriptive). I
+think the task of generalizing all of these under one framework is
+harder than I anticipated, despite the grand vision, and the project
+died.
 
 ## stack
 
@@ -261,7 +498,26 @@ saved their asses a few times.
 
 That package is still maintained to my knowledge.
 
+## xinput-conduit
+
+https://github.com/chrisdone-archive/xinput-conduit
+
+## conditions
+
+https://github.com/chrisdone-archive/conditions
+
+## haskell-trace
+
+https://github.com/chrisdone-archive/haskell-trace
+
 # 2014
+
+## clockin
+
+I wrote [clockin](https://github.com/chrisdone-archive/clockin) as a
+command-line app to be able to clockin and clockout of any task. I
+used this for a while, maybe a year, before losing interest in
+clocking my time so accurately.
 
 ## present
 
@@ -383,6 +639,34 @@ satisfaction to it.
 It's one of my projects that is using the [Immutable Publishing
 Policy](https://chrisdone.com/posts/ipp/).
 
+## wrap
+
+https://github.com/chrisdone-archive/wrap
+
+## gmail
+
+https://github.com/chrisdone-archive/gmail
+
+## osdkeys
+
+https://github.com/chrisdone-archive/osdkeys
+
+## keyboard-stats
+
+https://github.com/chrisdone-archive/keyboard-stats
+
+## ghc-server
+
+https://github.com/chrisdone-archive/ghc-server
+
+## ats-examples
+
+https://github.com/chrisdone-archive/ats-examples
+
+## carvo
+
+https://github.com/chrisdone-archive/carvo
+
 # 2013
 
 ## ini
@@ -451,7 +735,23 @@ I stopped running it after I lost interest in IRC, but it was a very
 satisfying project and I learned a lot about PostgreSQL's performance
 characteristics in the process.
 
+## snap-app
+
+https://github.com/chrisdone-archive/snap-app
+
+## cabal-sign
+
+https://github.com/chrisdone-archive/cabal-sign
+
 # 2012
+
+## sourcemap
+
+For [fay](#fay), I thought it'd be good to include
+[sourcemaps](https://github.com/chrisdone-archive/sourcemap), so I
+wrote this package as a more or less line-by-line translation of the
+reference implementation. The spec itself was very informal. It
+worked, though, and performed fairly well.
 
 ## fay
 
@@ -474,7 +774,45 @@ etc.).[^2]
 
 * [Blog post](/posts/fay)
 
+## scrobble
+
+https://github.com/chrisdone-archive/scrobble
+
+## bdo
+
+https://github.com/chrisdone-archive/bdo
+
 # 2011
+
+## pdfinfo
+
+This [utility](https://github.com/chrisdone-archive/pdfinfo) package
+just launches pdfinfo and parses the output. I needed it for work at
+the time.
+
+## chrisdone-xmonad
+
+I was using xmonad in 2011, hence [my
+config](https://github.com/chrisdone-archive/chrisdone-xmonad) of
+course was published on GitHub. Like your Emacs config, it's
+traditional to publish your XMonad. I don't use tiling window managers
+anymore. But XMonad is a good one.
+
+## flo
+
+I wrote a small tool that would let you annotate your source code and
+project a flow diagram, called
+[flo](https://github.com/chrisdone-archive/flo). This could still be
+used today with relative ease, I think. It's language-agnostic. I
+never advertised it, though.
+
+## freenect
+
+I bought a Kinect, which was Microsoft's XBox
+camera/infra-red-distance viewer hardware. There were C libs, so I
+wrote Haskell bindings to it and called it
+[freenect](https://github.com/chrisdone-archive/freenect). There were
+some fun things I made with it.
 
 ## hulk
 
@@ -500,6 +838,22 @@ It was taken over by Heinrich Apfelmus and renamed to
 [threepenny-gui](https://github.com/HeinrichApfelmus/threepenny-gui),
 after which he added many FRP-based things and has likely rewritten
 all of it by this point.
+
+## pgsql-simple
+
+https://github.com/chrisdone-archive/pgsql-simple
+
+## css
+
+https://github.com/chrisdone-archive/css
+
+## url-generic
+
+https://github.com/chrisdone-archive/url-generic
+
+## hog
+
+https://github.com/chrisdone-archive/hog
 
 # 2010
 
@@ -536,6 +890,12 @@ I was happy with Haskell, but bummed out by its syntax compared to the
 beauty of Lisp. That hasn't changed today in 2024.
 
 * [GitHub archive](https://github.com/chrisdone-archive/lisk)
+
+# 2009
+
+## asp-mode
+
+https://github.com/chrisdone-archive/asp-mode
 
 # 2008
 

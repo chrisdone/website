@@ -129,26 +129,54 @@ bit per day. After a few weeks I should be done.</p>
 </ul></li>
 <li><a href="#2019">2019</a>
 <ul>
+<li><a href="#novella">novella</a></li>
 <li><a href="#streaming-parsers">streaming-parsers</a></li>
 <li><a href="#forge">forge</a></li>
+<li><a href="#env-args">env-args</a></li>
+<li><a href="#dynamic">dynamic</a></li>
+<li><a href="#webshow">webshow</a></li>
 </ul></li>
 <li><a href="#2018">2018</a>
 <ul>
+<li><a href="#hex-server">hex-server</a></li>
+<li><a href="#sdl2-sprite">sdl2-sprite</a></li>
+<li><a href="#caseof">caseof</a></li>
+<li><a href="#rocksdb-haskell-ng">rocksdb-haskell-ng</a></li>
+<li><a href="#phase">phase</a></li>
+<li><a href="#audit">audit</a></li>
+<li><a href="#codeparty">codeparty</a></li>
+<li><a href="#duta">duta</a></li>
+<li><a href="#prana">prana</a></li>
 <li><a href="#intero">intero</a></li>
 <li><a href="#cron-daemon">cron-daemon</a></li>
 </ul></li>
 <li><a href="#2017">2017</a>
 <ul>
+<li><a href="#snappy">snappy</a></li>
+<li><a href="#liquid-post">liquid-post</a></li>
+<li><a href="#tdiff">tdiff</a></li>
+<li><a href="#vado">vado</a></li>
 <li><a href="#jl">jl</a></li>
 <li><a href="#duet">duet</a></li>
 </ul></li>
+<li><a href="#2016">2016</a>
+<ul>
+<li><a href="#purify">purify</a></li>
+<li><a href="#labels">labels</a></li>
+<li><a href="#org-focus">org-focus</a></li>
+</ul></li>
 <li><a href="#2015">2015</a>
 <ul>
+<li><a href="#descriptive">descriptive</a></li>
 <li><a href="#stack">stack</a></li>
 <li><a href="#path">path</a></li>
+<li><a href="#xinput-conduit">xinput-conduit</a></li>
+<li><a href="#conditions">conditions</a></li>
+<li><a href="#haskell-trace">haskell-trace</a></li>
 </ul></li>
 <li><a href="#2014">2014</a>
 <ul>
+<li><a href="#clockin">clockin</a></li>
 <li><a href="#present">present</a></li>
 <li><a href="#ace">ace</a></li>
 <li><a href="#hl">hl</a></li>
@@ -157,6 +185,13 @@ bit per day. After a few weeks I should be done.</p>
 <li><a href="#foreign-store">foreign-store</a></li>
 <li><a href="#shell-conduit">shell-conduit</a></li>
 <li><a href="#lucid">lucid</a></li>
+<li><a href="#wrap">wrap</a></li>
+<li><a href="#gmail">gmail</a></li>
+<li><a href="#osdkeys">osdkeys</a></li>
+<li><a href="#keyboard-stats">keyboard-stats</a></li>
+<li><a href="#ghc-server">ghc-server</a></li>
+<li><a href="#ats-examples">ats-examples</a></li>
+<li><a href="#carvo">carvo</a></li>
 </ul></li>
 <li><a href="#2013">2013</a>
 <ul>
@@ -166,21 +201,38 @@ bit per day. After a few weeks I should be done.</p>
 <li><a href="#structured-haskell-mode">structured-haskell-mode</a></li>
 <li><a href="#haskellnews">haskellnews</a></li>
 <li><a href="#ircbrowse">ircbrowse</a></li>
+<li><a href="#snap-app">snap-app</a></li>
+<li><a href="#cabal-sign">cabal-sign</a></li>
 </ul></li>
 <li><a href="#2012">2012</a>
 <ul>
+<li><a href="#sourcemap">sourcemap</a></li>
 <li><a href="#fay">fay</a></li>
+<li><a href="#scrobble">scrobble</a></li>
+<li><a href="#bdo">bdo</a></li>
 </ul></li>
 <li><a href="#2011">2011</a>
 <ul>
+<li><a href="#pdfinfo">pdfinfo</a></li>
+<li><a href="#chrisdone-xmonad">chrisdone-xmonad</a></li>
+<li><a href="#flo">flo</a></li>
+<li><a href="#freenect">freenect</a></li>
 <li><a href="#hulk">hulk</a></li>
 <li><a href="#ji">ji</a></li>
+<li><a href="#pgsql-simple">pgsql-simple</a></li>
+<li><a href="#css">css</a></li>
+<li><a href="#url-generic">url-generic</a></li>
+<li><a href="#hog">hog</a></li>
 </ul></li>
 <li><a href="#2010">2010</a>
 <ul>
 <li><a href="#tryhaskell">tryhaskell</a></li>
 <li><a href="#jquery-console">jquery-console</a></li>
 <li><a href="#lisk">lisk</a></li>
+</ul></li>
+<li><a href="#2009">2009</a>
+<ul>
+<li><a href="#asp-mode">asp-mode</a></li>
 </ul></li>
 <li><a href="#2008">2008</a>
 <ul>
@@ -241,8 +293,27 @@ trade-offs are brilliant and I researched everything over 2 years. The
 <a href="https://github.com/chrisdone-archive/inflex">archive repo is
 here</a>.</p>
 <!-- ## early -->
-<!-- ## inflex -->
 <h1 id="section-3">2019</h1>
+<h2 id="novella">novella</h2>
+<p>For some bizarre reason, I thought it would be a good idea to make a
+structured editor in the terminal called <a
+href="https://github.com/chrisdone-archive/novella">novella</a>: the big
+idea was to define a simple grammar for any language and get a
+structured editor out of it, like this:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">grammar ::</span> <span class="dt">Grammar</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>grammar <span class="ot">=</span> <span class="op">$</span>(checkGrammar <span class="op">$</span> runDefine <span class="op">$</span> mdo</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- General expression</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  expression       <span class="ot">&lt;-</span> rule <span class="st">&quot;Expression&quot;</span> (<span class="dt">ChoiceSchema</span> [variable, constructor, parentheses</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                                                      ,tuple, let&#39;, application, string])</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  application      <span class="ot">&lt;-</span> rule <span class="st">&quot;Application&quot;</span> (<span class="dt">CompositeSchema</span> [expression, expression])</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  parentheses      <span class="ot">&lt;-</span> rule <span class="st">&quot;Parentheses&quot;</span> (<span class="dt">CompositeSchema</span> [openParenSchema, expression, closeParenSchema])</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Tuple</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  tuple            <span class="ot">&lt;-</span> rule <span class="st">&quot;Tuple&quot;</span> (<span class="dt">CompositeSchema</span> [openParenSchema, tupleElements, closeParenSchema])</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  tupleElements    <span class="ot">&lt;-</span> rule <span class="st">&quot;Tuple elements&quot;</span> (<span class="dt">ListSchema</span> expression <span class="st">&quot;,&quot;</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Identifiers</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  variable         <span class="ot">&lt;-</span> rule <span class="st">&quot;Variable&quot;</span> (<span class="dt">IdentifierSchema</span> <span class="st">&quot;Variable&quot;</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  constructor      <span class="ot">&lt;-</span> rule <span class="st">&quot;Constructor&quot;</span> (<span class="dt">IdentifierSchema</span> <span class="st">&quot;Constructor&quot;</span>)</span></code></pre></div>
 <h2 id="streaming-parsers">streaming-parsers</h2>
 <p>I wrote, along with Michael Snoyman, some streaming JSON/YAML
 parsers, in a package I called <a
@@ -271,7 +342,87 @@ it</li>
 libraries is a bit wishy-washy</li>
 </ul>
 <!-- ## vado -->
+<h2 id="env-args">env-args</h2>
+<p>A simple tool called <a
+href="https://github.com/chrisdone-archive/env-args">env-args</a> that
+would convert environment variables to program arguments. With this, it
+became trivial to either pass –foo arguments or PROGRAM_FOO variables.
+Used for a client.</p>
+<h2 id="dynamic">dynamic</h2>
+<p>Partly as a joke, partly serious, I made a package called <a
+href="https://github.com/chrisdone-archive/dynamic">dynamic</a> which
+gives you dynamic types in Haskell. It makes it trivial to explore
+unknown data in Haskell. I’ve never used it, but in principal it is
+interesting.</p>
+<h2 id="webshow">webshow</h2>
+<p>I made a simple tool to generate a hierchical data structure browser
+for Haskell <code>Show</code> output (similar to <a
+href="#present">present</a>), and called it <a
+href="https://github.com/chrisdone-archive/webshow">webshow</a>. I have
+occasionallly resurrected this, when I need to explore really hairy
+Haskell data structures.</p>
 <h1 id="section-4">2018</h1>
+<h2 id="hex-server">hex-server</h2>
+<p>I can’t explain some of the motivations for my projects. I wrote <a
+href="https://github.com/chrisdone-archive/hex-server">hex-server</a>
+which was a ground-up implementation of Xorg-server in Haskell. I have
+no idea why. Curiosity, I guess.</p>
+<h2 id="sdl2-sprite">sdl2-sprite</h2>
+<p>I was fiddling about with sdl2 at this time. <a
+href="https://github.com/chrisdone-archive/sdl2-sprite">sdl2-sprite</a>
+just repeats a sprite for you (see the README gif). I think there are
+other tools around for this, but I found this one just did exactly what
+I wanted while making a sprite in InkScape.</p>
+<h2 id="caseof">caseof</h2>
+<p>The <a href="https://github.com/chrisdone-archive/caseof">caseof</a>
+package is just a proof of concept to test whether I could avoid lens
+and get what I wanted: trivially ask whether a value is of a particular
+constructor and if so, return a <code>Maybe</code> of the slots. Answer
+is: yes, you can. Does anyone use it? No, lens is too popular.</p>
+<h2 id="rocksdb-haskell-ng">rocksdb-haskell-ng</h2>
+<p><a
+href="https://github.com/chrisdone-archive/rocksdb-haskell-ng">rocksdb-haskell-ng</a>
+was needed for some cryptocurrency client, who were inadvisedly using
+rocksdb, in Haskell, and the existing package was, well, neither stable
+or efficient. I rewrote it from scratch, with stability and performance
+in mind. I’m quite proud of the work I did on this, it was good
+work.</p>
+<h2 id="phase">phase</h2>
+<p>Another case of having too much time on my hands perhaps. <a
+href="https://github.com/chrisdone-archive/phase">phase</a> basically
+provides a frontend to Emacs in your browser. It’s not as native as the
+GTK or terminal frontends, but the latency wasn’t too bad. I’m not sure
+I’ll ever pick this up again. But it was surprisingly usable.</p>
+<h2 id="audit">audit</h2>
+<p>I had to audit a number of projects at FP Complete. This <a
+href="https://github.com/chrisdone-archive/audit">emacs mode</a> helped
+me interactively mark any selection of any file as viewed, accepted or
+problematic, with comments. I would still use this today if I need to
+audit or heavily review a project.</p>
+<h2 id="codeparty">codeparty</h2>
+<p>When teaching Haskell to companies at FP Complete, it was handy to
+have everyone type out the answer to an exercise live on screen. For
+that I made <a
+href="https://github.com/chrisdone-archive/codeparty">codeparty</a>,
+which was a bit like a mass screen share, but more efficient, and
+ensured everyone had the same editing experience. I would use this again
+if I needed to teach Haskell again.</p>
+<h2 id="duta">duta</h2>
+<p>I wrote my own email server called <a
+href="https://github.com/chrisdone-archive/duta">duta</a>, which was
+about being able to self-host email. I actually ran it for years; it was
+only because LetsEncrypt at the time was harder to use and required
+upgrades and maintenance that I gave up on it, but for a while I was
+reading my mail with my own Haskell-made email web and Emacs client.</p>
+<h2 id="prana">prana</h2>
+<p>I was really into the idea of being able to interpret Haskell within
+Haskell, so I made a project called <a
+href="https://github.com/chrisdone-archive/prana">prana</a> which would
+compile GHC Haskell down to STG, convert that STG to an internal format,
+and then interpret it. It turns out, there are quite a few “implicit”
+things in STG that you just have to know, figure out or ask around
+about. The GHC internals change far too often, so I gave up on this. But
+I took a good crack at it.</p>
 <h2 id="intero">intero</h2>
 <p><a href="https://github.com/chrisdone-archive/intero">intero</a> was
 my “complete” (<em>intero</em> is Italian for ‘whole’) Haskell IDE in
@@ -296,6 +447,27 @@ combination with
 <code>stack build --file-watch --exec 'cron-daemon ..'</code> to cause a
 service to restart after recompiling.</p>
 <h1 id="section-5">2017</h1>
+<h2 id="snappy">snappy</h2>
+<p>A brief experiment called <a
+href="https://github.com/chrisdone-archive/snappy">snappy</a> to try out
+Reflex-like FRP with SVG. It’s not as easy as you think to do this, and
+there are all sorts of gotchas. Where possible, don’t DIY FRP. It’s
+hard.</p>
+<h2 id="liquid-post">liquid-post</h2>
+<p>I wrote a post about Liquid Haskell for FP Complete, but <a
+href="https://github.com/chrisdone-archive/liquid-post">this repo</a>
+shows all the examples and they are quite good, I think.</p>
+<h2 id="tdiff">tdiff</h2>
+<p>I still use this sometimes. <a
+href="https://github.com/chrisdone-archive/tdiff">tdiff</a> just gives
+you timing between lines of output from a process. This can be really
+good for checking timings of other programs than your own.</p>
+<h2 id="vado">vado</h2>
+<p>In an exhibition of sorts, I made a 90s-style web browser called <a
+href="https://github.com/chrisdone-archive/vado">vado</a> (“I go” in
+Italian), which can show rich text documents and browse around. I think
+it’s pretty cool that I was able to do this in a few hundred lines of
+code, and it works/worked on Windows, macOS and Linux, too!</p>
 <h2 id="jl">jl</h2>
 <p>I like <code>jq</code> a bit, but I always found myself just wishing
 I had a basic mini lambda calculus/Haskell. So I wrote a small
@@ -318,7 +490,34 @@ Future projects involved writing one from scratch, which I do
 understand. See <a href="#inflex">Inflex</a> or <a
 href="#hell">Hell</a>.</p>
 <!-- ## xeno -->
-<h1 id="section-6">2015</h1>
+<h1 id="section-6">2016</h1>
+<h2 id="purify">purify</h2>
+<p>I was doing more PureScript dev in 2016, so I made <a
+href="https://github.com/chrisdone-archive/purify">purify</a>, which was
+basically stackage+stack, but for PureScript. It was popular for a
+while, but then the main PureScript package manager gained these
+capabilities and it wasn’t necessary anymore. But it was a solid
+project, I think.</p>
+<h2 id="labels">labels</h2>
+<p>As part of proving out whether Haskell could really be useful as a
+data analysis language (answer: not really), I wrote <a
+href="https://github.com/chrisdone-archive/labels">labels</a>, which is
+an extensible records package, along with CSV, JSON capabilities. It
+worked, actually, but nothing much came of it after that.</p>
+<h2 id="org-focus">org-focus</h2>
+<p>In an effort to track all my time on projects, I wrote <a
+href="https://github.com/chrisdone-archive/org-focus">org-focus</a> for
+Emacs. It was a bit like org-agenda, but included time spent, estimates,
+and stuff that a consultant might need. I don’t track my time with such
+fine-grain detail these days, so I stopped using it.</p>
+<h1 id="section-7">2015</h1>
+<h2 id="descriptive">descriptive</h2>
+<p>I noticed that optparse-applicative, formlets, yaml/json parsing,
+etc. were all a type of self-describing parser. Hence <a
+href="https://github.com/chrisdone-archive/descriptive">descriptive</a>.
+I think the task of generalizing all of these under one framework is
+harder than I anticipated, despite the grand vision, and the project
+died.</p>
 <h2 id="stack">stack</h2>
 <p>At FP Complete, clients wanted a tool that covered all their
 use-cases, which typically involved multi-package projects and wanting
@@ -352,7 +551,19 @@ blog post motivating it</a>. I was pretty happy with this package, it
 solved a real need that initially a lot of people were sceptical of, but
 colleagues told me it saved their asses a few times.</p>
 <p>That package is still maintained to my knowledge.</p>
-<h1 id="section-7">2014</h1>
+<h2 id="xinput-conduit">xinput-conduit</h2>
+<p>https://github.com/chrisdone-archive/xinput-conduit</p>
+<h2 id="conditions">conditions</h2>
+<p>https://github.com/chrisdone-archive/conditions</p>
+<h2 id="haskell-trace">haskell-trace</h2>
+<p>https://github.com/chrisdone-archive/haskell-trace</p>
+<h1 id="section-8">2014</h1>
+<h2 id="clockin">clockin</h2>
+<p>I wrote <a
+href="https://github.com/chrisdone-archive/clockin">clockin</a> as a
+command-line app to be able to clockin and clockout of any task. I used
+this for a while, maybe a year, before losing interest in clocking my
+time so accurately.</p>
 <h2 id="present">present</h2>
 <p>After looking at CLIM (Common Lisp Interface Manager), I really liked
 the idea of being able to <em>present</em> a value with multiple
@@ -453,7 +664,21 @@ satisfaction to it.</p>
 <p>It’s one of my projects that is using the <a
 href="https://chrisdone.com/posts/ipp/">Immutable Publishing
 Policy</a>.</p>
-<h1 id="section-8">2013</h1>
+<h2 id="wrap">wrap</h2>
+<p>https://github.com/chrisdone-archive/wrap</p>
+<h2 id="gmail">gmail</h2>
+<p>https://github.com/chrisdone-archive/gmail</p>
+<h2 id="osdkeys">osdkeys</h2>
+<p>https://github.com/chrisdone-archive/osdkeys</p>
+<h2 id="keyboard-stats">keyboard-stats</h2>
+<p>https://github.com/chrisdone-archive/keyboard-stats</p>
+<h2 id="ghc-server">ghc-server</h2>
+<p>https://github.com/chrisdone-archive/ghc-server</p>
+<h2 id="ats-examples">ats-examples</h2>
+<p>https://github.com/chrisdone-archive/ats-examples</p>
+<h2 id="carvo">carvo</h2>
+<p>https://github.com/chrisdone-archive/carvo</p>
+<h1 id="section-9">2013</h1>
 <h2 id="ini">ini</h2>
 <p>Back before YAML took over, there wasn’t a winning configuration
 format. XML had lost its lustre. So I wrote <a
@@ -504,7 +729,17 @@ lines of chat from the #haskell channel per month.</p>
 <p>I stopped running it after I lost interest in IRC, but it was a very
 satisfying project and I learned a lot about PostgreSQL’s performance
 characteristics in the process.</p>
-<h1 id="section-9">2012</h1>
+<h2 id="snap-app">snap-app</h2>
+<p>https://github.com/chrisdone-archive/snap-app</p>
+<h2 id="cabal-sign">cabal-sign</h2>
+<p>https://github.com/chrisdone-archive/cabal-sign</p>
+<h1 id="section-10">2012</h1>
+<h2 id="sourcemap">sourcemap</h2>
+<p>For <a href="#fay">fay</a>, I thought it’d be good to include <a
+href="https://github.com/chrisdone-archive/sourcemap">sourcemaps</a>, so
+I wrote this package as a more or less line-by-line translation of the
+reference implementation. The spec itself was very informal. It worked,
+though, and performed fairly well.</p>
 <h2 id="fay">fay</h2>
 <p>I wrote a language called Fay, which was a Haskell without
 type-classes that compiled to JavaScript, and used GHC’s type system for
@@ -524,7 +759,34 @@ class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a></p>
 <ul>
 <li><a href="/posts/fay">Blog post</a></li>
 </ul>
-<h1 id="section-10">2011</h1>
+<h2 id="scrobble">scrobble</h2>
+<p>https://github.com/chrisdone-archive/scrobble</p>
+<h2 id="bdo">bdo</h2>
+<p>https://github.com/chrisdone-archive/bdo</p>
+<h1 id="section-11">2011</h1>
+<h2 id="pdfinfo">pdfinfo</h2>
+<p>This <a
+href="https://github.com/chrisdone-archive/pdfinfo">utility</a> package
+just launches pdfinfo and parses the output. I needed it for work at the
+time.</p>
+<h2 id="chrisdone-xmonad">chrisdone-xmonad</h2>
+<p>I was using xmonad in 2011, hence <a
+href="https://github.com/chrisdone-archive/chrisdone-xmonad">my
+config</a> of course was published on GitHub. Like your Emacs config,
+it’s traditional to publish your XMonad. I don’t use tiling window
+managers anymore. But XMonad is a good one.</p>
+<h2 id="flo">flo</h2>
+<p>I wrote a small tool that would let you annotate your source code and
+project a flow diagram, called <a
+href="https://github.com/chrisdone-archive/flo">flo</a>. This could
+still be used today with relative ease, I think. It’s language-agnostic.
+I never advertised it, though.</p>
+<h2 id="freenect">freenect</h2>
+<p>I bought a Kinect, which was Microsoft’s XBox
+camera/infra-red-distance viewer hardware. There were C libs, so I wrote
+Haskell bindings to it and called it <a
+href="https://github.com/chrisdone-archive/freenect">freenect</a>. There
+were some fun things I made with it.</p>
 <h2 id="hulk">hulk</h2>
 <p>I wrote an IRC server for use at work for us to chat on. We used it
 for some years after we all left, until we eventually migrated to an app
@@ -547,7 +809,15 @@ listen to.</p>
 href="https://github.com/HeinrichApfelmus/threepenny-gui">threepenny-gui</a>,
 after which he added many FRP-based things and has likely rewritten all
 of it by this point.</p>
-<h1 id="section-11">2010</h1>
+<h2 id="pgsql-simple">pgsql-simple</h2>
+<p>https://github.com/chrisdone-archive/pgsql-simple</p>
+<h2 id="css">css</h2>
+<p>https://github.com/chrisdone-archive/css</p>
+<h2 id="url-generic">url-generic</h2>
+<p>https://github.com/chrisdone-archive/url-generic</p>
+<h2 id="hog">hog</h2>
+<p>https://github.com/chrisdone-archive/hog</p>
+<h1 id="section-12">2010</h1>
 <h2 id="tryhaskell">tryhaskell</h2>
 <p><a href="https://tryhaskell.org/">tryhaskell.org</a></p>
 <p>This was a big splash when I made it, it hit the top of some big
@@ -575,7 +845,10 @@ the beauty of Lisp. That hasn’t changed today in 2024.</p>
 <li><a href="https://github.com/chrisdone-archive/lisk">GitHub
 archive</a></li>
 </ul>
-<h1 id="section-12">2008</h1>
+<h1 id="section-13">2009</h1>
+<h2 id="asp-mode">asp-mode</h2>
+<p>https://github.com/chrisdone-archive/asp-mode</p>
+<h1 id="section-14">2008</h1>
 <h2 id="kibro">kibro</h2>
 <p>In 2008 I was working for a small sum on a hair salon’s new web site,
 in Haskell. And I made a very trivial web library called “Kibro” (from
@@ -596,7 +869,7 @@ IRC bot with various capabilities.</p>
 archive</a></li>
 <li><a href="https://chrisdone.com/posts/lojbot/">Blog post</a></li>
 </ul>
-<h1 id="section-13">2006</h1>
+<h1 id="section-15">2006</h1>
 <h2 id="slsksoulski">slsk/soulski</h2>
 <p>A project for the Soulseek music sharing network. Web site, which may
 not remain long-term: <a
