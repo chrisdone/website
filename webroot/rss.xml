@@ -163,7 +163,15 @@ bit per day. After a few weeks I should be done.</p>
 </ul></li>
 </ul>
 <!-- markdown-toc end -->
-<!-- # 2023 -->
+<h1 id="section">2023</h1>
+<h2 id="copy-paste-sync">copy-paste-sync</h2>
+<p>I wrote this trivial tool called <a
+href="https://github.com/chrisdone-archive/copy-paste-sync">copy-paste-sync</a>
+that can copy/paste between systems by always keeping the clipboard in
+sync. It basically just watches the clipboard for changes and then POSTs
+the content to interested parties. At work I use a MacBook, but I also
+have my Linux laptop next to it, so being able to copy/paste between the
+two is handy.</p>
 <!-- ## hell -->
 <!-- # 2020 -->
 <!-- ## early -->
@@ -172,7 +180,7 @@ bit per day. After a few weeks I should be done.</p>
 <!-- ## vado -->
 <!-- # 2017 -->
 <!-- ## xeno -->
-<h1 id="section">2015</h1>
+<h1 id="section-1">2015</h1>
 <h2 id="stack">stack</h2>
 <p>At FP Complete, clients wanted a tool that covered all their
 use-cases, which typically involved multi-package projects and wanting
@@ -206,7 +214,7 @@ blog post motivating it</a>. I was pretty happy with this package, it
 solved a real need that initially a lot of people were sceptical of, but
 colleagues told me it saved their asses a few times.</p>
 <p>That package is still maintained to my knowledge.</p>
-<h1 id="section-1">2014</h1>
+<h1 id="section-2">2014</h1>
 <h2 id="ace">ace</h2>
 <p>In the afterglow of growing bored of Lojban, but still enamoured by
 formal human languages, I got into Attempto (Latin for ‘I dare’)
@@ -296,7 +304,7 @@ satisfaction to it.</p>
 <p>It’s one of my projects that is using the <a
 href="https://chrisdone.com/posts/ipp/">Immutable Publishing
 Policy</a>.</p>
-<h1 id="section-2">2013</h1>
+<h1 id="section-3">2013</h1>
 <h2 id="pure-io">pure-io</h2>
 <p>A small project called <a
 href="https://github.com/chrisdone-archive/pure-io">pure-io</a> that
@@ -340,7 +348,7 @@ lines of chat from the #haskell channel per month.</p>
 <p>I stopped running it after I lost interest in IRC, but it was a very
 satisfying project and I learned a lot about PostgreSQL’s performance
 characteristics in the process.</p>
-<h1 id="section-3">2012</h1>
+<h1 id="section-4">2012</h1>
 <h2 id="fay">fay</h2>
 <p>I wrote a language called Fay, which was a Haskell without
 type-classes that compiled to JavaScript, and used GHC’s type system for
@@ -360,7 +368,7 @@ class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a></p>
 <ul>
 <li><a href="/posts/fay">Blog post</a></li>
 </ul>
-<h1 id="section-4">2011</h1>
+<h1 id="section-5">2011</h1>
 <h2 id="hulk">hulk</h2>
 <p>I wrote an IRC server for use at work for us to chat on. We used it
 for some years after we all left, until we eventually migrated to an app
@@ -383,7 +391,7 @@ listen to.</p>
 href="https://github.com/HeinrichApfelmus/threepenny-gui">threepenny-gui</a>,
 after which he added many FRP-based things and has likely rewritten all
 of it by this point.</p>
-<h1 id="section-5">2010</h1>
+<h1 id="section-6">2010</h1>
 <h2 id="tryhaskell">tryhaskell</h2>
 <p><a href="https://tryhaskell.org/">tryhaskell.org</a></p>
 <p>This was a big splash when I made it, it hit the top of some big
@@ -411,7 +419,7 @@ the beauty of Lisp. That hasn’t changed today in 2024.</p>
 <li><a href="https://github.com/chrisdone-archive/lisk">GitHub
 archive</a></li>
 </ul>
-<h1 id="section-6">2008</h1>
+<h1 id="section-7">2008</h1>
 <h2 id="kibro">kibro</h2>
 <p>In 2008 I was working for a small sum on a hair salon’s new web site,
 in Haskell. And I made a very trivial web library called “Kibro” (from
@@ -432,7 +440,7 @@ IRC bot with various capabilities.</p>
 archive</a></li>
 <li><a href="https://chrisdone.com/posts/lojbot/">Blog post</a></li>
 </ul>
-<h1 id="section-7">2006</h1>
+<h1 id="section-8">2006</h1>
 <h2 id="slsksoulski">slsk/soulski</h2>
 <p>A project for the Soulseek music sharing network. Web site, which may
 not remain long-term: <a

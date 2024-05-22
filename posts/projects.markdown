@@ -48,7 +48,17 @@ After a few weeks I should be done.
 
 <!-- markdown-toc end -->
 
-<!-- # 2023 -->
+# 2023
+
+## copy-paste-sync
+
+I wrote this trivial tool called
+[copy-paste-sync](https://github.com/chrisdone-archive/copy-paste-sync)
+that can copy/paste between systems by always keeping the clipboard in
+sync. It basically just watches the clipboard for changes and then
+POSTs the content to interested parties. At work I use a MacBook, but
+I also have my Linux laptop next to it, so being able to copy/paste
+between the two is handy.
 
 <!-- ## hell -->
 
