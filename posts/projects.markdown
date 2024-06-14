@@ -130,7 +130,10 @@ between the two is handy.
 
 ## hell
 
-https://github.com/chrisdone/hell
+[Hell](https://github.com/chrisdone/hell) is a shell scripting
+language that is a tiny dialect of Haskell that I wrote for my own
+shell scripting purposes. Full blog post about it
+[here.](https://chrisdone.com/posts/hell/)
 
 # 2022
 
