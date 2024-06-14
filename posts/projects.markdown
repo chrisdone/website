@@ -683,33 +683,45 @@ satisfaction to it.
 It's one of my projects that is using the [Immutable Publishing
 Policy](https://chrisdone.com/posts/ipp/).
 
-## wrap
-
-https://github.com/chrisdone-archive/wrap
-
 ## gmail
 
-https://github.com/chrisdone-archive/gmail
+When Google released a new mail app, that was a smaller version of
+GMail, with an API, I rejoiced and [made an Emacs mode for
+it](https://github.com/chrisdone-archive/gmail). Google would later
+kill it, as they killed all things eventually. One of many lessons
+learned about depending on any kind of public software service.
 
 ## osdkeys
 
-https://github.com/chrisdone-archive/osdkeys
-
-## keyboard-stats
-
-https://github.com/chrisdone-archive/keyboard-stats
+[A simple tool](https://github.com/chrisdone-archive/osdkeys) that
+would display keys pressed on the screen, for screencasting.
 
 ## ghc-server
 
-https://github.com/chrisdone-archive/ghc-server
+[ghc-server](https://github.com/chrisdone-archive/ghc-server) was my
+attempt to make a language server before "language server" was a
+meaningful term, inspired by SWANK for Common Lisp, that powers the
+SLIME Emacs package. It had a good start, but I encountered a lot of
+lockups and issues. Also, I couldn't make GHC stop outputting things
+to stdout. I found it really hard to bring the GHC API under
+control. Eventually, I just gave up.
 
 ## ats-examples
 
-https://github.com/chrisdone-archive/ats-examples
+ATS is a fascinating C-like programming language with linear types and
+proofs, it has linear memory management (track malloc/free's), among
+other features like unpacked data, and tail recursion, and macros. It
+could have been Rust before Rust. But its author, Hongwei Xi, didn't
+do the best job of presenting it well. I made [these
+examples](https://github.com/chrisdone-archive/ats-examples) based on
+reading the book.
 
 ## carvo
 
-https://github.com/chrisdone-archive/carvo
+Part of a "Maker Space" place, we wanted to make some visual
+representation of poetry, so I made [this
+one](https://chrisdone.com/toys/corvo/) which "handwrites" Poe's _The
+Raven_.
 
 # 2013
 
