@@ -529,15 +529,30 @@ That package is still maintained to my knowledge.
 
 ## xinput-conduit
 
-https://github.com/chrisdone-archive/xinput-conduit
+[This](https://github.com/chrisdone-archive/xinput-conduit) package
+simply converts the `xinput` output (which yields all keys pressed in
+Xorg), and provides them as a Haskell source conduit. I was using it
+for keypress analysis back then. I still think it's a nifty trick.
 
 ## conditions
 
-https://github.com/chrisdone-archive/conditions
+Conditions are a Common Lisp idea. Unlike exceptions which unwind the
+stack, they call a function which is bound in the dynamic scope, which
+gives the option of providing a different value for the calling code
+to use. There are whole workflows built around them in Lisp. You can
+be reading from a bunch of files in a loop, encounter a problem, fix
+it, and then continue running the program.
+
+I was inspired to demonstrate that [in
+Haskell.](https://github.com/chrisdone-archive/conditions) But it's
+not as good as in Lisp, which embraces it fully.
 
 ## haskell-trace
 
-https://github.com/chrisdone-archive/haskell-trace
+I wrote [a small
+tool](https://github.com/chrisdone-archive/haskell-trace) to add trace
+calls in one's Haskell code. This is something that Haskell sorely
+lacks, and I can't see acquiring any time soon.
 
 # 2014
 

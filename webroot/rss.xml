@@ -257,7 +257,10 @@ the content to interested parties. At work I use a MacBook, but I also
 have my Linux laptop next to it, so being able to copy/paste between the
 two is handy.</p>
 <h2 id="hell">hell</h2>
-<p>https://github.com/chrisdone/hell</p>
+<p><a href="https://github.com/chrisdone/hell">Hell</a> is a shell
+scripting language that is a tiny dialect of Haskell that I wrote for my
+own shell scripting purposes. Full blog post about it <a
+href="https://chrisdone.com/posts/hell/">here.</a></p>
 <h1 id="section-1">2022</h1>
 <h2 id="envy">envy</h2>
 <p>I found myself using tools that want to control my shell environment
@@ -351,7 +354,17 @@ it</li>
 <li>Typed handling of optional vs required fields, which in other
 libraries is a bit wishy-washy</li>
 </ul>
-<!-- ## vado -->
+<h2 id="vado">vado</h2>
+<p><a href="https://github.com/chrisdone-archive/vado">Vado</a> is a
+demonstration program that is able to load a web page up and render it
+like in the early 90’s. It supports laying out text, different font
+sizes for headings, inline and block elements, hyperlinks, bold and
+italics. It supports mousewheel scrolling, too.</p>
+<p>I wrote this in a couple evenings, because it seemed straight-forward
+to do so given the libraries available at the time. Also, there’s an
+inarticulate gut feeling I have that tells me maybe it’s worth
+celebrating these days in which the web is still viewable in its
+simplest, earliest form.</p>
 <h2 id="env-args">env-args</h2>
 <p>A simple tool called <a
 href="https://github.com/chrisdone-archive/env-args">env-args</a> that
@@ -472,7 +485,7 @@ shows all the examples and they are quite good, I think.</p>
 href="https://github.com/chrisdone-archive/tdiff">tdiff</a> just gives
 you timing between lines of output from a process. This can be really
 good for checking timings of other programs than your own.</p>
-<h2 id="vado">vado</h2>
+<h2 id="vado-1">vado</h2>
 <p>In an exhibition of sorts, I made a 90s-style web browser called <a
 href="https://github.com/chrisdone-archive/vado">vado</a> (“I go” in
 Italian), which can show rich text documents and browse around. I think
@@ -562,11 +575,27 @@ solved a real need that initially a lot of people were sceptical of, but
 colleagues told me it saved their asses a few times.</p>
 <p>That package is still maintained to my knowledge.</p>
 <h2 id="xinput-conduit">xinput-conduit</h2>
-<p>https://github.com/chrisdone-archive/xinput-conduit</p>
+<p><a
+href="https://github.com/chrisdone-archive/xinput-conduit">This</a>
+package simply converts the <code>xinput</code> output (which yields all
+keys pressed in Xorg), and provides them as a Haskell source conduit. I
+was using it for keypress analysis back then. I still think it’s a nifty
+trick.</p>
 <h2 id="conditions">conditions</h2>
-<p>https://github.com/chrisdone-archive/conditions</p>
+<p>Conditions are a Common Lisp idea. Unlike exceptions which unwind the
+stack, they call a function which is bound in the dynamic scope, which
+gives the option of providing a different value for the calling code to
+use. There are whole workflows built around them in Lisp. You can be
+reading from a bunch of files in a loop, encounter a problem, fix it,
+and then continue running the program.</p>
+<p>I was inspired to demonstrate that <a
+href="https://github.com/chrisdone-archive/conditions">in Haskell.</a>
+But it’s not as good as in Lisp, which embraces it fully.</p>
 <h2 id="haskell-trace">haskell-trace</h2>
-<p>https://github.com/chrisdone-archive/haskell-trace</p>
+<p>I wrote <a
+href="https://github.com/chrisdone-archive/haskell-trace">a small
+tool</a> to add trace calls in one’s Haskell code. This is something
+that Haskell sorely lacks, and I can’t see acquiring any time soon.</p>
 <h1 id="section-9">2014</h1>
 <h2 id="clockin">clockin</h2>
 <p>I wrote <a
