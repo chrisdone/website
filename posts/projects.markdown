@@ -843,11 +843,19 @@ etc.).[^2]
 
 ## scrobble
 
-https://github.com/chrisdone-archive/scrobble
+Like many people, I used Last.fm/Audioscrobbler, and would 'scrobble'
+all my music listens to the service, and get back in response
+recommendations. I wrote [a Haskell
+library](https://github.com/chrisdone-archive/scrobble) to do it. It's
+irrelevant these days, nobody scrobbles.
 
 ## bdo
 
-https://github.com/chrisdone-archive/bdo
+[This Emacs library](https://github.com/chrisdone-archive/bdo) permits
+one to update .js/.css files in the browser live. This predates many
+"modern" tools like Vite or whatever. I don't use it these days,
+because all web programming exists inside of a build system. But there
+was a glorious period in which that wasn't the case.
 
 # 2011
 
