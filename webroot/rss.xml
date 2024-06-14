@@ -788,9 +788,19 @@ lines of chat from the #haskell channel per month.</p>
 satisfying project and I learned a lot about PostgreSQL’s performance
 characteristics in the process.</p>
 <h2 id="snap-app">snap-app</h2>
-<p>https://github.com/chrisdone-archive/snap-app</p>
+<p><a href="https://github.com/chrisdone-archive/snap-app">snap-app</a>
+was my small library to wrap the Snap web framework (for Haskell), with
+an MVC structure, so that there would be Model and Controller monads,
+and some associated functions.</p>
+<p>After that, Snap became irrelevant and Yesod remained the only real
+web framework for a while.</p>
 <h2 id="cabal-sign">cabal-sign</h2>
-<p>https://github.com/chrisdone-archive/cabal-sign</p>
+<p>There was an old discussion in Haskell about signed packages. So I
+made a demo tool called <a
+href="https://github.com/chrisdone-archive/cabal-sign">cabal-sign</a>
+which, given a .tar.gz, would sign it, and then inject the signature
+into the .tar.gz. It was never used by anyone, but it did contribute to
+a discussion.</p>
 <h1 id="section-11">2012</h1>
 <h2 id="sourcemap">sourcemap</h2>
 <p>For <a href="#fay">fay</a>, I thought it’d be good to include <a

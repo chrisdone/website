@@ -793,11 +793,22 @@ characteristics in the process.
 
 ## snap-app
 
-https://github.com/chrisdone-archive/snap-app
+[snap-app](https://github.com/chrisdone-archive/snap-app) was my small
+library to wrap the Snap web framework (for Haskell), with an MVC
+structure, so that there would be Model and Controller monads, and
+some associated functions.
+
+After that, Snap became irrelevant and Yesod remained the only real
+web framework for a while.
 
 ## cabal-sign
 
-https://github.com/chrisdone-archive/cabal-sign
+There was an old discussion in Haskell about signed packages. So I
+made a demo tool called
+[cabal-sign](https://github.com/chrisdone-archive/cabal-sign) which,
+given a .tar.gz, would sign it, and then inject the signature into the
+.tar.gz. It was never used by anyone, but it did contribute to a
+discussion.
 
 # 2012
 
