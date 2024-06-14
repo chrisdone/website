@@ -1,14 +1,24 @@
 ---
 date: 2024-05-12
-title: Projects
+title: All my projects (2008-2023)
 description: A hopefully complete list of all the software projects I worked on
 ---
 
-It might be a "getting old[-er]" thing, but I've recently started feeling like documenting the complete set of software projects I've worked on that I remember.
-Not as a CV (an advertisement of paid work), but a comprehensive list of *everything*.
+It might be a "getting old[-er]" thing, but I've recently started
+feeling like documenting the complete set of software projects I've
+worked on that I remember.  Not as a CV (an advertisement of paid
+work), but a comprehensive list of *everything*.
 
-I'll start with the old stuff and continuously make updates a little bit per day.
-After a few weeks I should be done.
+I'm done for now for 2008-2023. I filled out all the headings of my
+projects with blank bodies. I started with the old stuff and
+continuously made updates a little bit per day.  After a month I was
+done.  At somepoint I was saying "oh for god sake, there's still more
+left", which, if I may boast a little, indicates I did a lot of things
+over the years.
+
+Some of these projects are trivial, frivolous, very dubious, and some
+of them are genuinely interesting, novel, or high quality. But it's
+all me.
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
@@ -16,6 +26,8 @@ After a few weeks I should be done.
 - [2023](#2023)
     - [copy-paste-sync](#copy-paste-sync)
     - [hell](#hell)
+- [2022](#2022)
+    - [envy](#envy)
 - [2021](#2021)
     - [proclog](#proclog)
     - [lexx](#lexx)
@@ -26,6 +38,7 @@ After a few weeks I should be done.
     - [novella](#novella)
     - [streaming-parsers](#streaming-parsers)
     - [forge](#forge)
+    - [vado](#vado)
     - [env-args](#env-args)
     - [dynamic](#dynamic)
     - [webshow](#webshow)
@@ -45,7 +58,7 @@ After a few weeks I should be done.
     - [snappy](#snappy)
     - [liquid-post](#liquid-post)
     - [tdiff](#tdiff)
-    - [vado](#vado)
+    - [vado](#vado-1)
     - [jl](#jl)
     - [duet](#duet)
 - [2016](#2016)
@@ -69,10 +82,8 @@ After a few weeks I should be done.
     - [foreign-store](#foreign-store)
     - [shell-conduit](#shell-conduit)
     - [lucid](#lucid)
-    - [wrap](#wrap)
     - [gmail](#gmail)
     - [osdkeys](#osdkeys)
-    - [keyboard-stats](#keyboard-stats)
     - [ghc-server](#ghc-server)
     - [ats-examples](#ats-examples)
     - [carvo](#carvo)
@@ -916,19 +927,32 @@ all of it by this point.
 
 ## pgsql-simple
 
-https://github.com/chrisdone-archive/pgsql-simple
+[pgsql-simple](https://github.com/chrisdone-archive/pgsql-simple) was
+my naive, although fairly successful, attempt to talk to the
+PostgreSQL protocol directly from Haskell, without any C library. It
+worked, and some people used it at work. But it was slow, and not
+featureful. And I wasn't interested in maintaining it as a real,
+serious project, with serious users. Still, it was quite fun.
 
 ## css
 
-https://github.com/chrisdone-archive/css
+[css](https://github.com/chrisdone-archive/css) is a miniature DSL
+letting one write CSS in Haskell. Similar to SASS and
+Tailwind. Nothing special, but I did use it on at least one app.
 
 ## url-generic
 
-https://github.com/chrisdone-archive/url-generic
+This is [a fully worked out
+package](https://github.com/chrisdone-archive/url-generic) that would,
+given a type that's an instance of `Data`, produce a parser/printer as
+a URL. No one ever used it, including myself. But it was a nice exercise.
 
 ## hog
 
-https://github.com/chrisdone-archive/hog
+I wrote an IRC logger called
+[hog](https://github.com/chrisdone-archive/hog), which I used for
+years on my personal IRC server with friends. There isn't much special
+in here, but I used it.
 
 # 2010
 
@@ -970,7 +994,13 @@ beauty of Lisp. That hasn't changed today in 2024.
 
 ## asp-mode
 
-https://github.com/chrisdone-archive/asp-mode
+I wrote a lot of ASP and PHP in my early career, so I had a small
+Emacs mode called
+[asp-mode](https://github.com/chrisdone-archive/asp-mode). Nothing
+interesting in here, other than to note how seriously I was using ASP
+enough to warrant a mode, but obstinantly refused to use Dreamweaver
+or whatever was popular at the time. Now-a-days the equivalent would
+be Visual Studio Code.
 
 # 2008
 

@@ -6,12 +6,12 @@
 <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
 <atom:link href="https://chrisdone.com/rss.xml" rel="self" type="application/rss+xml" />
 <lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>
-<item><title><![CDATA[Projects]]></title><link>https://chrisdone.com/posts/projects</link><guid>https://chrisdone.com/posts/projects</guid><description><![CDATA[<!doctype html>
+<item><title><![CDATA[All my projects (2008-2023)]]></title><link>https://chrisdone.com/posts/projects</link><guid>https://chrisdone.com/posts/projects</guid><description><![CDATA[<!doctype html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Projects</title>
+    <title>All my projects (2008-2023)</title>
     <style>
       body {
       max-width: 40em;
@@ -102,14 +102,21 @@
   <body>
     <div class="page-wrap">
 
-<h1>Projects</h1>
+<h1>All my projects (2008-2023)</h1>
 
 <p>It might be a “getting old[-er]” thing, but I’ve recently started
 feeling like documenting the complete set of software projects I’ve
 worked on that I remember. Not as a CV (an advertisement of paid work),
 but a comprehensive list of <em>everything</em>.</p>
-<p>I’ll start with the old stuff and continuously make updates a little
-bit per day. After a few weeks I should be done.</p>
+<p>I’m done for now for 2008-2023. I filled out all the headings of my
+projects with blank bodies. I started with the old stuff and
+continuously made updates a little bit per day. After a month I was
+done. At somepoint I was saying “oh for god sake, there’s still more
+left”, which, if I may boast a little, indicates I did a lot of things
+over the years.</p>
+<p>Some of these projects are trivial, frivolous, very dubious, and some
+of them are genuinely interesting, novel, or high quality. But it’s all
+me.</p>
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 <p><strong>Table of Contents</strong></p>
 <ul>
@@ -117,6 +124,10 @@ bit per day. After a few weeks I should be done.</p>
 <ul>
 <li><a href="#copy-paste-sync">copy-paste-sync</a></li>
 <li><a href="#hell">hell</a></li>
+</ul></li>
+<li><a href="#2022">2022</a>
+<ul>
+<li><a href="#envy">envy</a></li>
 </ul></li>
 <li><a href="#2021">2021</a>
 <ul>
@@ -133,6 +144,7 @@ bit per day. After a few weeks I should be done.</p>
 <li><a href="#novella">novella</a></li>
 <li><a href="#streaming-parsers">streaming-parsers</a></li>
 <li><a href="#forge">forge</a></li>
+<li><a href="#vado">vado</a></li>
 <li><a href="#env-args">env-args</a></li>
 <li><a href="#dynamic">dynamic</a></li>
 <li><a href="#webshow">webshow</a></li>
@@ -156,7 +168,7 @@ bit per day. After a few weeks I should be done.</p>
 <li><a href="#snappy">snappy</a></li>
 <li><a href="#liquid-post">liquid-post</a></li>
 <li><a href="#tdiff">tdiff</a></li>
-<li><a href="#vado">vado</a></li>
+<li><a href="#vado-1">vado</a></li>
 <li><a href="#jl">jl</a></li>
 <li><a href="#duet">duet</a></li>
 </ul></li>
@@ -186,10 +198,8 @@ bit per day. After a few weeks I should be done.</p>
 <li><a href="#foreign-store">foreign-store</a></li>
 <li><a href="#shell-conduit">shell-conduit</a></li>
 <li><a href="#lucid">lucid</a></li>
-<li><a href="#wrap">wrap</a></li>
 <li><a href="#gmail">gmail</a></li>
 <li><a href="#osdkeys">osdkeys</a></li>
-<li><a href="#keyboard-stats">keyboard-stats</a></li>
 <li><a href="#ghc-server">ghc-server</a></li>
 <li><a href="#ats-examples">ats-examples</a></li>
 <li><a href="#carvo">carvo</a></li>
@@ -886,13 +896,27 @@ href="https://github.com/HeinrichApfelmus/threepenny-gui">threepenny-gui</a>,
 after which he added many FRP-based things and has likely rewritten all
 of it by this point.</p>
 <h2 id="pgsql-simple">pgsql-simple</h2>
-<p>https://github.com/chrisdone-archive/pgsql-simple</p>
+<p><a
+href="https://github.com/chrisdone-archive/pgsql-simple">pgsql-simple</a>
+was my naive, although fairly successful, attempt to talk to the
+PostgreSQL protocol directly from Haskell, without any C library. It
+worked, and some people used it at work. But it was slow, and not
+featureful. And I wasn’t interested in maintaining it as a real, serious
+project, with serious users. Still, it was quite fun.</p>
 <h2 id="css">css</h2>
-<p>https://github.com/chrisdone-archive/css</p>
+<p><a href="https://github.com/chrisdone-archive/css">css</a> is a
+miniature DSL letting one write CSS in Haskell. Similar to SASS and
+Tailwind. Nothing special, but I did use it on at least one app.</p>
 <h2 id="url-generic">url-generic</h2>
-<p>https://github.com/chrisdone-archive/url-generic</p>
+<p>This is <a href="https://github.com/chrisdone-archive/url-generic">a
+fully worked out package</a> that would, given a type that’s an instance
+of <code>Data</code>, produce a parser/printer as a URL. No one ever
+used it, including myself. But it was a nice exercise.</p>
 <h2 id="hog">hog</h2>
-<p>https://github.com/chrisdone-archive/hog</p>
+<p>I wrote an IRC logger called <a
+href="https://github.com/chrisdone-archive/hog">hog</a>, which I used
+for years on my personal IRC server with friends. There isn’t much
+special in here, but I used it.</p>
 <h1 id="section-13">2010</h1>
 <h2 id="tryhaskell">tryhaskell</h2>
 <p><a href="https://tryhaskell.org/">tryhaskell.org</a></p>
@@ -923,7 +947,13 @@ archive</a></li>
 </ul>
 <h1 id="section-14">2009</h1>
 <h2 id="asp-mode">asp-mode</h2>
-<p>https://github.com/chrisdone-archive/asp-mode</p>
+<p>I wrote a lot of ASP and PHP in my early career, so I had a small
+Emacs mode called <a
+href="https://github.com/chrisdone-archive/asp-mode">asp-mode</a>.
+Nothing interesting in here, other than to note how seriously I was
+using ASP enough to warrant a mode, but obstinantly refused to use
+Dreamweaver or whatever was popular at the time. Now-a-days the
+equivalent would be Visual Studio Code.</p>
 <h1 id="section-15">2008</h1>
 <h2 id="kibro">kibro</h2>
 <p>In 2008 I was working for a small sum on a hair salon’s new web site,
