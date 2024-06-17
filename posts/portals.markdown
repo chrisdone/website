@@ -29,7 +29,7 @@ design is intentional, so that no process can ever really overwhelm
 Emacs. It's an extremely aggressive design. Even the line length in
 the preview is limited to 80 columns.
 
-Another motiviation is simply UX-based, which is that I run a lot of
+Another motivation is simply UX-based, which is that I run a lot of
 commands at work that spit out a bunch of useless output. Like
 Terraform, Cabal, GHC, etc. Most of the output is not of interest, but
 occasionally, one does one to read the output.
