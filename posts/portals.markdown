@@ -80,6 +80,8 @@ part of it.
 It also works perfectly with envrc mode, which is how Emacs integrates
 with direnv.
 
+`C-c C-c` on a portal will interrupt the process, as expected.
+
 I've been using this for a few weeks and frankly I'm surprised how
 well it works and fits my workflow. At work I have a foo.portals
 buffer which has 30 portals in it. Of those, 3 are presently running,
