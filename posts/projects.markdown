@@ -299,6 +299,31 @@ Haskell data structures.
 
 # 2018
 
+## lpaste
+
+Back before GitHub's gist took over, I wrote a service called
+[lpaste](https://github.com/chrisdone-archive/lambda-paste) which sat
+at lpaste.net, and superceded hpaste.org (Haskell paste), for pasting
+code samples. It was mostly IRC-driven. It actually featured some
+useful features, where e.g. pasting a revision would notify users on
+IRC in a given channel. That facilitated a lot of discussion about a
+given piece of code, with people able to make suggestions and
+improvements.
+
+Spam became a large problem, and after I stopped using IRC I didn't
+feel like continuing to run it.
+
+## odbc
+
+For a client, I needed to interact with SQL Server, but it was clear
+that the libraries out there were all quite badly put together. So I
+took Microsoft's own now-native Linux driver and wrote a from-scratch
+Haskell library to talk to it,
+[here](https://github.com/chrisdone-archive/odbc). This one is still
+maintained and used as far as I'm aware, but a few companies. I put
+special care and attention into stability and performance, and I think
+did a good job on that.
+
 ## hex-server
 
 I can't explain some of the motivations for my projects. I wrote
@@ -405,6 +430,31 @@ combination with `stack build --file-watch --exec 'cron-daemon ..'` to
 cause a service to restart after recompiling.
 
 # 2017
+
+## xeno
+
+After seeing that Neil Mitchell had written a fast XML parser by using
+C for the parsing, I was motivated to use it as a [demonstration of
+writing fast parsers in
+Haskell.](https://chrisdone.com/posts/fast-haskell-c-parsing-xml/) The
+resulting demonstration library, I called
+[xeno](https://github.com/chrisdone-archive/xeno), but left it for
+someone else to pick and maintain, which Marco Z took up. It was 100x
+faster than the other "fast" Haskell XML parser called Hexpat. It was
+faster than the C one at SAX parsing, and 2x slower at allocating a
+DOM, but this also predates the introduction of proper Word8, Word16,
+etc. types in GHC.
+
+## profile-query
+
+I wrote a tool at FP Complete called
+[profile-query](https://github.com/chrisdone-archive/profile-query) to
+parse GHC's profiler output (.prof) and to provide aggregated
+summaries of cost centres, with sorting by e.g. time or
+allocations.
+
+It was a handy tool, but isn't maintained today. I expect it would
+still work, though.
 
 ## snappy
 
@@ -736,6 +786,15 @@ Raven_.
 
 # 2013
 
+## z
+
+I wrote a post called [z](/posts/z) and accompanying
+[source](https://github.com/chrisdone-archive/z) which demonstrated an
+idea that a language could be built upon a macro system which is based
+on indentation rather than delimiters like `( )` or `[| .. |]`. I
+still think it's a fun idea, because it has unlimited extent. I might
+return to it one day.
+
 ## ini
 
 Back before YAML took over, there wasn't a winning configuration
@@ -869,6 +928,14 @@ because all web programming exists inside of a build system. But there
 was a glorious period in which that wasn't the case.
 
 # 2011
+
+## numbergeddon
+
+I wrote a fun game called
+[Numbergeddon](https://chrisdone.com/toys/numbergeddon/), on the basis
+that one could rote learn arithmetic by typing it. I think I got
+inspiration from games at the time that involved typing out words to
+destroy ships, in order to practice touch-typing.
 
 ## pdfinfo
 
