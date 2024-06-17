@@ -151,6 +151,8 @@ me.</p>
 </ul></li>
 <li><a href="#2018">2018</a>
 <ul>
+<li><a href="#lpaste">lpaste</a></li>
+<li><a href="#odbc">odbc</a></li>
 <li><a href="#hex-server">hex-server</a></li>
 <li><a href="#sdl2-sprite">sdl2-sprite</a></li>
 <li><a href="#caseof">caseof</a></li>
@@ -165,6 +167,8 @@ me.</p>
 </ul></li>
 <li><a href="#2017">2017</a>
 <ul>
+<li><a href="#xeno">xeno</a></li>
+<li><a href="#profile-query">profile-query</a></li>
 <li><a href="#snappy">snappy</a></li>
 <li><a href="#liquid-post">liquid-post</a></li>
 <li><a href="#tdiff">tdiff</a></li>
@@ -206,6 +210,7 @@ me.</p>
 </ul></li>
 <li><a href="#2013">2013</a>
 <ul>
+<li><a href="#z">z</a></li>
 <li><a href="#ini">ini</a></li>
 <li><a href="#pure-io">pure-io</a></li>
 <li><a href="#god-mode">god-mode</a></li>
@@ -224,6 +229,7 @@ me.</p>
 </ul></li>
 <li><a href="#2011">2011</a>
 <ul>
+<li><a href="#numbergeddon">numbergeddon</a></li>
 <li><a href="#pdfinfo">pdfinfo</a></li>
 <li><a href="#chrisdone-xmonad">chrisdone-xmonad</a></li>
 <li><a href="#flo">flo</a></li>
