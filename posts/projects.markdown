@@ -38,7 +38,6 @@ all me.
     - [novella](#novella)
     - [streaming-parsers](#streaming-parsers)
     - [forge](#forge)
-    - [vado](#vado)
     - [env-args](#env-args)
     - [dynamic](#dynamic)
     - [webshow](#webshow)
@@ -264,20 +263,6 @@ However, it introduces a few novel ideas:
 * Selective-like behavior
 * Typed handling of optional vs required fields, which in other
   libraries is a bit wishy-washy
-
-## vado
-
-[Vado](https://github.com/chrisdone-archive/vado) is a demonstration
-program that is able to load a web page up and render it like in the
-early 90's. It supports laying out text, different font sizes for
-headings, inline and block elements, hyperlinks, bold and italics. It
-supports mousewheel scrolling, too.
-
-I wrote this in a couple evenings, because it seemed straight-forward
-to do so given the libraries available at the time. Also, there's an
-inarticulate gut feeling I have that tells me maybe it's worth
-celebrating these days in which the web is still viewable in its
-simplest, earliest form.
 
 ## env-args
 

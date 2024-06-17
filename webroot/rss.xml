@@ -144,7 +144,6 @@ me.</p>
 <li><a href="#novella">novella</a></li>
 <li><a href="#streaming-parsers">streaming-parsers</a></li>
 <li><a href="#forge">forge</a></li>
-<li><a href="#vado">vado</a></li>
 <li><a href="#env-args">env-args</a></li>
 <li><a href="#dynamic">dynamic</a></li>
 <li><a href="#webshow">webshow</a></li>
@@ -370,17 +369,6 @@ it</li>
 <li>Typed handling of optional vs required fields, which in other
 libraries is a bit wishy-washy</li>
 </ul>
-<h2 id="vado">vado</h2>
-<p><a href="https://github.com/chrisdone-archive/vado">Vado</a> is a
-demonstration program that is able to load a web page up and render it
-like in the early 90’s. It supports laying out text, different font
-sizes for headings, inline and block elements, hyperlinks, bold and
-italics. It supports mousewheel scrolling, too.</p>
-<p>I wrote this in a couple evenings, because it seemed straight-forward
-to do so given the libraries available at the time. Also, there’s an
-inarticulate gut feeling I have that tells me maybe it’s worth
-celebrating these days in which the web is still viewable in its
-simplest, earliest form.</p>
 <h2 id="env-args">env-args</h2>
 <p>A simple tool called <a
 href="https://github.com/chrisdone-archive/env-args">env-args</a> that
@@ -540,7 +528,7 @@ shows all the examples and they are quite good, I think.</p>
 href="https://github.com/chrisdone-archive/tdiff">tdiff</a> just gives
 you timing between lines of output from a process. This can be really
 good for checking timings of other programs than your own.</p>
-<h2 id="vado-1">vado</h2>
+<h2 id="vado">vado</h2>
 <p>In an exhibition of sorts, I made a 90s-style web browser called <a
 href="https://github.com/chrisdone-archive/vado">vado</a> (“I go” in
 Italian), which can show rich text documents and browse around. I think
