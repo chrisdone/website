@@ -16,7 +16,7 @@ shell scripts. It inserts a nano-ID for the portal,
 e.g. `portal_abc123456sdkjfal`, as text into the buffer at the current
 point. It creates a corresponding directory under `~/.portals/`. All
 stdout and stderr are redirected to files under
-`~/.portals/{stdout,stderr,command,directory,env}`.
+`~/.portals/$portalid/{stdout,stderr,command,directory,env}`.
 
 The purpose of this is that Emacs can lock up a bit when you run a
 very long running process, or one that spews output very

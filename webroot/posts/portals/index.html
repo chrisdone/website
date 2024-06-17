@@ -107,7 +107,8 @@ way of running shell scripts. It inserts a nano-ID for the portal,
 e.g. <code>portal_abc123456sdkjfal</code>, as text into the buffer at
 the current point. It creates a corresponding directory under
 <code>~/.portals/</code>. All stdout and stderr are redirected to files
-under <code>~/.portals/{stdout,stderr,command,directory,env}</code>.</p>
+under
+<code>~/.portals/$portalid/{stdout,stderr,command,directory,env}</code>.</p>
 <p>The purpose of this is that Emacs can lock up a bit when you run a
 very long running process, or one that spews output very quickly.
 Instead of storing it in a buffer or displaying all of it, Portal just
