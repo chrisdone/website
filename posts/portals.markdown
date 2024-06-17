@@ -32,7 +32,7 @@ the preview is limited to 80 columns.
 Another motivation is simply UX-based, which is that I run a lot of
 commands at work that spit out a bunch of useless output. Like
 Terraform, Cabal, GHC, etc. Most of the output is not of interest, but
-occasionally, one does one to read the output.
+occasionally, one does want to read the output.
 
 Example, below:
 
