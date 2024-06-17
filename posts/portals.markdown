@@ -73,9 +73,9 @@ find the outputs of a previously ran portal.
 Emacs handles all the stdout and stderr, so it could in theory be
 possible to pipe from one portal to another. One could even attach and
 detach portals to/from one another, or edit arguments and restart,
-while some of processes are still running. But I haven't explored this
-because it's more of a side-effect of my design than an intentional
-part of it.
+while some of the processes are still running. But I haven't explored
+this because it's more of a side-effect of my design than an
+intentional part of it.
 
 It also works perfectly with envrc mode, which is how Emacs integrates
 with direnv.
