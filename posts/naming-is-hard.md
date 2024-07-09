@@ -12,7 +12,7 @@ assuming any kind of aesthetic appreciation.
 
 To take a trivial example, it’s only thanks to George Boole that we
 have an elegant and concise name for the type of terms that consist of
-either true or false. If we went for “truth“ or “truthiness“ we’d be
+either true or false. If we went for “truth” or “truthiness” we’d be
 left unsatisfied because this name is biased towards one of the two
 choices.
 
