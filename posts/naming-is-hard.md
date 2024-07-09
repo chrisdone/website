@@ -19,8 +19,8 @@ choices.
 A more realistic example is the type of terms that consist of either
 “local” or “remote.” If we call this “locality” then we are both
 biased towards the local and overlap with a common, political
-understanding of the word “locality.” “Remoteness“ presents similar
-problems. The word “location“ doesn’t capture the modality. I’ll stop
+understanding of the word “locality.” “Remoteness” presents similar
+problems. The word “location” doesn’t capture the modality. I’ll stop
 here because I’m just upsetting myself.
 
 Another example is the challenge of expressing whether something is
