@@ -6,6 +6,148 @@
 <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
 <atom:link href="https://chrisdone.com/rss.xml" rel="self" type="application/rss+xml" />
 <lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>
+<item><title><![CDATA[Naming sum types is often hard]]></title><link>https://chrisdone.com/posts/naming-is-hard</link><guid>https://chrisdone.com/posts/naming-is-hard</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Naming sum types is often hard</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      text-decoration: none;
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Naming sum types is often hard</h1>
+
+<p>After doing quite a lot of software design in systems which encourage
+use of enumeration types, I’ve noticed that there’s a common challenge
+in naming both the type and the cases of the type. It usually exposes a
+painful inadequacy in the English language and my grasp of it, assuming
+any kind of aesthetic appreciation.</p>
+<p>To take a trivial example, it’s only thanks to George Boole that we
+have an elegant and concise name for the type of terms that consist of
+either true or false. If we went for “truth“ or “truthiness“ we’d be
+left unsatisfied because this name is biased towards one of the two
+choices.</p>
+<p>A more realistic example is the type of terms that consist of either
+“local” or “remote.” If we call this “locality” then we are both biased
+towards the local and overlap with a common, political understanding of
+the word “locality.” “Remoteness“ presents similar problems. The word
+“location“ doesn’t capture the modality. I’ll stop here because I’m just
+upsetting myself.</p>
+<p>Another example is the challenge of expressing whether something is
+qualified or not qualified, in the sense of prefixed or suffixed with
+some extra term. It’s really grating to have to express the thing in
+terms of not-something. We prefer to say static versus dynamic, and not
+static versus non-static or, above, local versus non-local. Ignoring
+this, what do we call the type of these terms? “Qualified” is biased.
+“Qualification” overlaps with a recognised achievement. We frown and
+move on with something rubbish.</p>
+<p>I probed an LLM to search for more obvious, satisfying answers to
+these, in vain. But these are mere examples of a common experience. I
+know that one of the two hard problems of computer science is naming
+things, but this feels like a particularly bothersome flavour of it.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2024-07-09 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Tue, 09 Jul 2024 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
 <item><title><![CDATA[Portals in Emacs]]></title><link>https://chrisdone.com/posts/portals</link><guid>https://chrisdone.com/posts/portals</guid><description><![CDATA[<!doctype html>
 <html>
   <head>
