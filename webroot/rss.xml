@@ -6,12 +6,12 @@
 <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
 <atom:link href="https://chrisdone.com/rss.xml" rel="self" type="application/rss+xml" />
 <lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>
-<item><title><![CDATA[Naming sum types is often hard]]></title><link>https://chrisdone.com/posts/naming-is-hard</link><guid>https://chrisdone.com/posts/naming-is-hard</guid><description><![CDATA[<!doctype html>
+<item><title><![CDATA[A modest critique of Htmx]]></title><link>https://chrisdone.com/posts/htmx-critique</link><guid>https://chrisdone.com/posts/htmx-critique</guid><description><![CDATA[<!doctype html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Naming sum types is often hard</title>
+    <title>A modest critique of Htmx</title>
     <style>
       body {
       max-width: 40em;
@@ -40,7 +40,6 @@
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -97,6 +96,246 @@
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>A modest critique of Htmx</h1>
+
+<p>At work, we really like the basic simple idea of Htmx. Based on using
+Htmx in a non-trivial user interface, across a team, we’ve found that
+the following cases are actually not simple and are quite
+complicated.</p>
+<h2
+id="inheritance-of-htmx-properties-is-a-definite-mistake">Inheritance of
+Htmx properties is a definite mistake</h2>
+<p>Across pieces of code, it’s very surprising and it’s implicit. Like
+in CSS, inheritance is a cheap hack but you get what you pay for.</p>
+<p>It contradicts <a
+href="https://htmx.org/essays/locality-of-behaviour/">the author’s
+reasonable argument of locality of behaviour.</a> It’s not local, it
+comes from all the way up there or some other module. Pretty much
+dynamic binding.</p>
+<p>Default inheritance differs across various properties
+(e.g. <code>hx-delete</code> is not inherited, but
+<code>hx-confirm</code> and <code>hx-ext</code> are). So you have to
+remember these exceptions and you end up just being explicit about
+everything, which means inheritance is pointless.</p>
+<h2
+id="most-interesting-web-apps-cannot-replace-wholesale-a-dom-element">Most
+interesting web apps cannot replace wholesale a DOM element</h2>
+<p>Because DOM elements almost always have browser-local state, such as
+the open/closed state of a <code>&lt;details&gt;</code> element, the
+input of an <code>&lt;input&gt;</code> element, the open/close state of
+a dropdown element (which, note, is not encoded by an attribute of the
+element when you click it). All of this state is lost if you replace
+outerHTML directly with the naive happy path of Htmx.</p>
+<p>Even <a
+href="https://v1.htmx.org/extensions/morphdom-swap/">morphdom</a>
+overwrites some things you’d expect it not to, so we had to patch it to
+avoid messing with input elements, and details elements.</p>
+<h2 id="storing-state-in-the-dom-element-itself-is-a-bad-idea">Storing
+state in the DOM element itself is a bad idea</h2>
+<p><a href="https://v1.htmx.org/extensions/morphdom-swap/">Morphdom</a>
+is intended to correct the pains of the previous heading, but we
+discovered that the way that Htmx works <em>assumes</em> it’s based on
+replacing elements wholesale: it stores the request queue for the
+element on the DOM element itself. When you kick off a request, either
+from this element or from another that points to it, you have a request
+queue. Some bad failure modes are avoided by wholesale-replacing the DOM
+element, as the queue is reset. But with morphdom, the queue is retained
+because the element is retained. You’re now in a sort of <a
+href="https://en.wikipedia.org/wiki/Undefined_behavior">undefined
+behavior land</a>, where the designs of Htmx are violated.</p>
+<h2 id="the-default-queuing-mode-is-bonkers">The default queuing mode is
+bonkers</h2>
+<p>By default, Htmx will cancel requests that are in-flight if you
+trigger another request on the same queue (element). That’s the default
+strategy. We discovered this afterwards. It’s highly unintuitive, it
+meant we were losing work.</p>
+<h2 id="event-triggers-are-non-local">Event triggers are non-local</h2>
+<p>Event triggers often help to make things happen, but they’re a
+non-local effect, and suffer from similar issues as property
+inheritance. A bit of DSL work in the server-side language can help with
+this, but it feels like old-school JavaScript callback-based programming
+to some extent; where you “subscribe” to an event happening and do
+something.</p>
+<h2 id="component-state-cannot-be-maintained-very-well">Component state
+cannot be maintained very well</h2>
+<p>A broader problem, similar to the DOM element state issue, is that
+your own components have their own state. E.g. if you want a page that
+consists of three sections that have their own state that the server
+needs (e.g. which page of a set of results) and state that some
+e.g. React or WebComponents need, then you have a problem of
+synchronising state between a parent component and the child
+component.</p>
+<p>Htmx does not provide a good story for this. We have some ideas, but
+they all have big caveats: use query parameters, use hidden form inputs,
+use event triggers.</p>
+<p>React and Halogen (see also <a
+href="https://chrisdone.com/posts/halogen-is-better-than-react/">Halogen
+is better than React at everything</a>) <em>do</em> have an answer to
+this. In both cases, child components have their own state, and parents
+can give them “props” which are pretty much “advice”, and they also have
+their own internal state, and can choose to ignore/take precedence over
+props. The props are typically sourced from the server or derived from
+the server, and the state is usually some client-side state.</p>
+<p>We often do need to use React for off-the-shelf components or
+components that we have to use that are just provided as React. React
+and Htmx do not interact nicely.</p>
+<ul>
+<li>We’ve done some unsatisfying work with WebComponents, but those
+things have bizarre limitations that are surprising.</li>
+<li>We’ve also made a bridge directly to React components that we use
+from our server-side language, but in general Htmx and React fight for
+control over the flow of state and management of DOM elements.</li>
+<li>We’ve played with Alpine, which is nice, but it represents <em>yet
+another</em> client-side-programming library and is therefore redundant
+if React is already in your codebase.</li>
+</ul>
+<h2 id="the-up-sides">The up sides</h2>
+<p>Our current thinking is that being able to use your server side
+language is <strong>a huge obvious and uncontroversial win</strong>, no
+one on the team would want to go back to writing all this business logic
+in TypeScript:</p>
+<ul>
+<li>No serialisation from our DB types to frontend types is needed.
+<ul>
+<li>No data leaks, and no GraphQL needed.</li>
+</ul></li>
+<li>We can use our (in our opinion) more powerful abstraction facilities
+of the server-side language.</li>
+<li>We can use the form builder in our server side language; instead of
+doing one frontend <em>and also</em> one backend implementation of the
+same validations.</li>
+</ul>
+<p>But the above downsides are real.</p>
+<h2 id="htmx-in-react">Htmx-in-React?</h2>
+<p>An attractive future direction might be to re-implement Htmx in
+React:</p>
+<ul>
+<li>The server sends a JSON blob that React converts into virtual DOM
+components.</li>
+<li>That would solve the component state problem.</li>
+<li>It would mean we require no special bridge to use React
+components.</li>
+<li>It would let us use our React-connected web fetching library, and
+carefully avoid the queuing choices made by Htmx.</li>
+<li>It would solve the morphdom problems and browser DOM input elements
+problem, too, which is pretty much a solved problem in React.</li>
+</ul>
+<p>In this way, we could drop the Htmx dependency but retain the
+benefits of the idea. That is, given a budget to embark on such a big
+piece of work.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2024-08-20 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>
+]]></description><pubDate>Tue, 20 Aug 2024 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Naming sum types is often hard]]></title><link>https://chrisdone.com/posts/naming-is-hard</link><guid>https://chrisdone.com/posts/naming-is-hard</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Naming sum types is often hard</title>
+    <style>
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+      border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -182,7 +421,6 @@ things, but this feels like a particularly bothersome flavour of it.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -239,6 +477,7 @@ things, but this feels like a particularly bothersome flavour of it.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -368,7 +607,6 @@ rip, riff and remix! Hope someone found this fun!</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -425,6 +663,7 @@ rip, riff and remix! Hope someone found this fun!</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -1460,7 +1699,6 @@ href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -1517,6 +1755,7 @@ href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -1616,7 +1855,6 @@ web programming in Haskell: A retrospective</a>.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -1673,6 +1911,7 @@ web programming in Haskell: A retrospective</a>.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -1797,7 +2036,6 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -1854,6 +2092,7 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -2033,7 +2272,6 @@ href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -2090,6 +2328,7 @@ href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -2156,7 +2395,6 @@ possible.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -2213,6 +2451,7 @@ possible.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -2294,7 +2533,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -2351,6 +2589,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -2428,7 +2667,6 @@ browsers</title>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -2485,6 +2723,7 @@ browsers</title>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -2557,7 +2796,6 @@ you’re working on this please email me.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -2614,6 +2852,7 @@ you’re working on this please email me.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -2686,7 +2925,6 @@ faith!</em></p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -2743,6 +2981,7 @@ faith!</em></p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -2816,7 +3055,6 @@ sluggishly when a tamagotchi is used instead.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -2873,6 +3111,7 @@ sluggishly when a tamagotchi is used instead.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -2940,7 +3179,6 @@ arithmetic?</li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -2997,6 +3235,7 @@ arithmetic?</li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -3105,7 +3344,6 @@ ever changing or evolving.</li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -3162,6 +3400,7 @@ ever changing or evolving.</li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -3260,7 +3499,6 @@ talk slides</a> - these are very technical.</li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -3317,6 +3555,7 @@ talk slides</a> - these are very technical.</li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -3550,7 +3789,6 @@ code</title>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -3607,6 +3845,7 @@ code</title>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -3767,7 +4006,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -3824,6 +4062,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -3927,7 +4166,6 @@ Haskell.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -3984,6 +4222,7 @@ Haskell.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -4227,7 +4466,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -4284,6 +4522,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -4460,7 +4699,6 @@ href="https://www.resolversystems.com/">https://www.resolversystems.com/</a></li
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -4517,6 +4755,7 @@ href="https://www.resolversystems.com/">https://www.resolversystems.com/</a></li
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -4674,7 +4913,6 @@ href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -4731,6 +4969,7 @@ href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -4871,7 +5110,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -4928,6 +5166,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -5191,7 +5430,6 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -5248,6 +5486,7 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -5531,7 +5770,6 @@ href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -5588,6 +5826,7 @@ href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -5846,7 +6085,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -5903,6 +6141,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -6065,7 +6304,6 @@ special instances, and the <code>?</code> is more readable.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -6122,6 +6360,7 @@ special instances, and the <code>?</code> is more readable.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -6268,7 +6507,6 @@ saver.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -6325,6 +6563,7 @@ saver.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -6434,7 +6673,6 @@ declaration.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -6491,6 +6729,7 @@ declaration.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -6696,7 +6935,6 @@ over time.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -6753,6 +6991,7 @@ over time.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -6926,7 +7165,6 @@ we are fixing it.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -6983,6 +7221,7 @@ we are fixing it.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -7203,7 +7442,6 @@ and <code>numeratorInt</code>’s name (<code>n</code>) is different.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -7260,6 +7498,7 @@ and <code>numeratorInt</code>’s name (<code>n</code>) is different.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -7404,7 +7643,6 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a 
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -7461,6 +7699,7 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a 
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -7611,7 +7850,6 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a 
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -7668,6 +7906,7 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a 
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -7809,7 +8048,6 @@ retrospective</title>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -7866,6 +8104,7 @@ retrospective</title>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -8120,7 +8359,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -8177,6 +8415,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -8362,7 +8601,6 @@ href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -8419,6 +8657,7 @@ href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -8518,7 +8757,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -8575,6 +8813,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -8758,7 +8997,6 @@ to Blink for Safari.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -8815,6 +9053,7 @@ to Blink for Safari.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -8910,7 +9149,6 @@ finite number. That’s pretty cool.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -8967,6 +9205,7 @@ finite number. That’s pretty cool.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -9046,7 +9285,6 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a 
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -9103,6 +9341,7 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a 
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -9816,7 +10055,6 @@ good home. I’m not looking for more packages to maintain.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -9873,6 +10111,7 @@ good home. I’m not looking for more packages to maintain.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -10055,7 +10294,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -10112,6 +10350,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -10285,7 +10524,6 @@ other pure languages like Idris or PureScript or Elm.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -10342,6 +10580,7 @@ other pure languages like Idris or PureScript or Elm.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -10482,7 +10721,6 @@ probably won’t come naturally, but try it out.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -10539,6 +10777,7 @@ probably won’t come naturally, but try it out.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -10970,7 +11209,6 @@ expect there’ll be more.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -11027,6 +11265,7 @@ expect there’ll be more.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -11182,7 +11421,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -11239,6 +11477,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -11407,7 +11646,6 @@ newbies</title>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -11464,6 +11702,7 @@ newbies</title>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -11619,7 +11858,6 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a 
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -11676,6 +11914,7 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a 
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -11994,7 +12233,6 @@ the moment. I’ll update the page if this changes.</li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -12051,6 +12289,7 @@ the moment. I’ll update the page if this changes.</li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -12235,7 +12474,6 @@ you’re doing benchmarking, check out the <code>clock</code> package!</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -12292,6 +12530,7 @@ you’re doing benchmarking, check out the <code>clock</code> package!</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -12740,7 +12979,6 @@ now.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -12797,6 +13035,7 @@ now.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -13056,7 +13295,6 @@ href="https://github.com/relrod/isysuclosed.com/blob/haskell/Main.hs#L34">isysuc
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -13113,6 +13351,7 @@ href="https://github.com/relrod/isysuclosed.com/blob/haskell/Main.hs#L34">isysuc
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -13282,7 +13521,6 @@ Conduit</title>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -13339,6 +13577,7 @@ Conduit</title>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -13706,7 +13945,6 @@ going to be satisfactory for a long while.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -13763,6 +14001,7 @@ going to be satisfactory for a long while.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -14246,7 +14485,6 @@ href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -14303,6 +14541,7 @@ href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -14552,7 +14791,6 @@ combinator-based mini-language with all the same benefits.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -14609,6 +14847,7 @@ combinator-based mini-language with all the same benefits.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -15036,7 +15275,6 @@ finds the sequence in that list.</li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -15093,6 +15331,7 @@ finds the sequence in that list.</li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -15461,7 +15700,6 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -15518,6 +15756,7 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -15615,7 +15854,6 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a 
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -15672,6 +15910,7 @@ class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a 
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -15789,7 +16028,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -15846,6 +16084,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -15981,7 +16220,6 @@ that you can click to get more output.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -16038,6 +16276,7 @@ that you can click to get more output.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -16492,7 +16731,6 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -16549,6 +16787,7 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -16845,7 +17084,6 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -16902,6 +17140,7 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -17017,7 +17256,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -17074,6 +17312,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -17340,7 +17579,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -17397,6 +17635,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -17584,7 +17823,6 @@ I can see when new mail has arrived in my panel.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -17641,6 +17879,7 @@ I can see when new mail has arrived in my panel.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -17832,7 +18071,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -17889,6 +18127,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -18025,7 +18264,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -18082,6 +18320,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -18231,7 +18470,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -18288,6 +18526,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -18440,7 +18679,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -18497,6 +18735,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -18579,7 +18818,6 @@ write out a .gif I’d use</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -18636,6 +18874,7 @@ write out a .gif I’d use</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -18722,7 +18961,6 @@ everything.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -18779,6 +19017,7 @@ everything.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -19300,7 +19539,6 @@ available.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -19357,6 +19595,7 @@ available.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -19530,7 +19769,6 @@ to disable God mode, similar to Vim’s i.</p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -19587,6 +19825,7 @@ to disable God mode, similar to Vim’s i.</p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -19661,7 +19900,6 @@ most complex terms possible.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -19718,6 +19956,7 @@ most complex terms possible.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -19798,7 +20037,6 @@ component</li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -19855,6 +20093,7 @@ component</li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -20016,7 +20255,6 @@ And I’ve found <code>M-e</code>, a more convenient binding for
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -20073,6 +20311,7 @@ And I’ve found <code>M-e</code>, a more convenient binding for
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -20190,7 +20429,6 @@ library from time to time.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -20247,6 +20485,7 @@ library from time to time.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -20394,7 +20633,6 @@ I’ll keep that.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -20451,6 +20689,7 @@ I’ll keep that.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -20597,7 +20836,6 @@ href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -20654,6 +20892,7 @@ href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -20763,7 +21002,6 @@ waiting to happen to someone.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -20820,6 +21058,7 @@ waiting to happen to someone.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -20910,7 +21149,6 @@ Haskell</title>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -20967,6 +21205,7 @@ Haskell</title>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -21075,7 +21314,6 @@ href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -21132,6 +21370,7 @@ href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -21232,7 +21471,6 @@ to see it. If you have some interesting ideas, feel free to comment.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -21289,6 +21527,7 @@ to see it. If you have some interesting ideas, feel free to comment.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -21379,7 +21618,6 @@ glookup key map =
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -21436,6 +21674,7 @@ glookup key map =
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -22127,7 +22366,6 @@ href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -22184,6 +22422,7 @@ href="#fnref12" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -22347,7 +22586,6 @@ CL: nil</code></pre>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -22404,6 +22642,7 @@ CL: nil</code></pre>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -22520,7 +22759,6 @@ examples</title>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -22577,6 +22815,7 @@ examples</title>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -22769,7 +23008,6 @@ use today.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -22826,6 +23064,7 @@ use today.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -22936,7 +23175,6 @@ compiler</title>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -22993,6 +23231,7 @@ compiler</title>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -23332,7 +23571,6 @@ Chapter 11</title>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -23389,6 +23627,7 @@ Chapter 11</title>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -23704,7 +23943,6 @@ But I’ll stop here.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -23761,6 +23999,7 @@ But I’ll stop here.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -23888,7 +24127,6 @@ iff x y = guard $ x == y</code></pre>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -23945,6 +24183,7 @@ iff x y = guard $ x == y</code></pre>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -24385,7 +24624,6 @@ expected.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -24442,6 +24680,7 @@ expected.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -24528,7 +24767,6 @@ of time to work on it right now, but I will be doing.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -24585,6 +24823,7 @@ of time to work on it right now, but I will be doing.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -24791,7 +25030,6 @@ namelessness of writing <code>fieldOf 23</code>:</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -24848,6 +25086,7 @@ namelessness of writing <code>fieldOf 23</code>:</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -25066,7 +25305,6 @@ cropping up in my daily coding.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -25123,6 +25361,7 @@ cropping up in my daily coding.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -25547,7 +25786,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -25604,6 +25842,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -25696,7 +25935,6 @@ the documentation for more information.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -25753,6 +25991,7 @@ the documentation for more information.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -25965,7 +26204,6 @@ validation</title>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -26022,6 +26260,7 @@ validation</title>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -26667,7 +26906,6 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -26724,6 +26962,7 @@ class="footnote-back" role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -26825,7 +27064,6 @@ chrisdone@gmail.com or comment on this blog post.</p>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -26882,6 +27120,7 @@ chrisdone@gmail.com or comment on this blog post.</p>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
@@ -27151,7 +27390,6 @@ role="doc-backlink">↩︎</a></p></li>
       }
 
       h1 a,h2 a,h3 a,h4 a {
-      text-decoration: none;
       color: inherit;
       }
 
@@ -27208,6 +27446,7 @@ role="doc-backlink">↩︎</a></p></li>
       }
       }
       .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
     </style>
   </head>
   <body>
