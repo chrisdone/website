@@ -41,7 +41,7 @@ works the same on every machine.
 You can write a bash script and keep it running for years while never
 having to change any code.
 The code you wrote last year will be the same next year, which is not
-true of most popular programming languages.
+true of most popular programming languages. [Look at Haskell.](http://h2.jaguarpaw.co.uk/posts/ghc-8.10-9.6-experience-report/)
 
 So in the interest of defining a language that I *would* like to use,
 let's discuss the anatomy of a shell scripting language:
