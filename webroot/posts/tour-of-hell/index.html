@@ -3,7 +3,7 @@
   <head>
     <style>
       body {
-          max-width: 40em;
+          max-width: 60em;
           margin: .5in auto;
           font-size: 18px;
           font-family: serif;
@@ -12,7 +12,8 @@
       h1,h2,h3,h4,h5,h6 {
           font-family: Helvetica;
       }
-
+      code { background: #eee; border: #aaa; border-radius: 3px;
+          padding: 0.2em 0.5em }
       h1 a,h2 a,h3 a,h4 a {
           color: inherit;
       }
@@ -25,6 +26,7 @@
       }
       .slides { display: flex; flex-direction: column; row-gap: 2em }
       .slide { display: flex; flex-direction: row; column-gap: 2em; }
+      .slide p { line-height: 1.8em; }
       .slide a {
           text-decoration: none;
       }
@@ -35,10 +37,12 @@
       .slide p:first-child {
           margin-top: 0;
       }
+      .date { margin-bottom: 2em; padding-top: 0em; }
     </style>
   </head>
   <body>
     <h1>A Tour of Hell</h1>
+    <p class="date"><em>Feb 9th 2024</em></p>
     <div class="slides">
       <div class="slide">
         <a href="slide-9.png"><img src="slide-9.png"></a>
@@ -48,16 +52,29 @@
         </div>
       </div class="slide">
       <div class="slide">
-        <a href="slide-10.png"><img src="slide-10.png"></a>
-      </div class="slide">
-      <div class="slide">
         <a href="slide-11.png"><img src="slide-11.png"></a>
-      </div class="slide">
-      <div class="slide">
-        <a href="slide-12.png"><img src="slide-12.png"></a>
-      </div class="slide">
-      <div class="slide">
-        <a href="slide-13.png"><img src="slide-13.png"></a>
+        <div>
+          <p>There are a few limits on the language; no imports, no
+          polymorphism (poly types) i.e. no declaration is ever
+          inferred with a <code>forall a.</code> in it. Poly types are
+          awesome, but they make the implementation harder, and are a
+          form of abstraction that you might not need in a scripting
+          language. I don't need them in my case, YMMV.
+          </p>
+          <p>
+            No imports: instead, all names that usually come under a
+            package name like <code>async</code>
+            become <code>Async.race</code>, <code>List.map</code>,
+            etc. All identifiers are explicitly qualified except
+            lambda parameters: <code>\x -> x</code> -- not qualified.
+          </p>
+          <p>
+            Recursion is completely ruled out, but <code>fix</code>
+            works fine, so you still have it as a primitive
+            function. It's just not something you can produce
+            yourself.
+          </p>
+        </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-14.png"><img src="slide-14.png"></a>
