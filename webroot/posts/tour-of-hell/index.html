@@ -127,10 +127,29 @@
             a (Lisp) Interpreter (in Python)</a>, you store a
             function <em>as a real function</em>.
           </p>
+          <p>
+            This evaluator is <em>total</em> and won't crash. This is
+            really neat and tidy. The only downside really is that
+            it's opaque. It's hard to work with functions, because you
+            can't look inside them once you've made them. You also
+            can't smooth out the wrinkles inside them, at least, as
+            far as I'm aware. I've heard of cunning approaches to do
+            so, but some things are best left alone.
+          </p>
+          <p>
+            Let's consider another approach.
+          </p>
         </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-19.png"><img src="slide-19.png"></a>
+        <div>
+          <p>
+            I encountered this approach while perusing Oleg Kiselyov's
+            <em>Typed Tagless Final Interpreters</em> paper and he dropped in
+            this example like it was the most normal thing in the world.
+          </p>
+        </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-20.png"><img src="slide-20.png"></a>
