@@ -13,7 +13,7 @@
           font-family: Helvetica;
       }
       code { background: #eee; border: #aaa; border-radius: 3px;
-          padding: 0.2em 0.5em }
+             padding: 0.2em 0.5em }
       h1 a,h2 a,h3 a,h4 a {
           color: inherit;
       }
@@ -32,7 +32,7 @@
       }
       .slide img {
           width: 20em; border: 1px solid #ddd; border-radius: 3px;
-      box-shadow: 0.1em 0.1em 0.1em 0.1em rgba(100, 100, 100, .1);
+          box-shadow: 0.1em 0.1em 0.1em 0.1em rgba(100, 100, 100, .1);
       }
       .slide p:first-child {
           margin-top: 0;
@@ -48,18 +48,18 @@
         <a href="slide-9.png"><img src="slide-9.png"></a>
         <div>
           <p>This set of slides sketches out the solution, as an
-          implementation, in technical detail.</p>
+            implementation, in technical detail.</p>
         </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-11.png"><img src="slide-11.png"></a>
         <div>
           <p>There are a few limits on the language; no imports, no
-          polymorphism (poly types) i.e. no declaration is ever
-          inferred with a <code>forall a.</code> in it. Poly types are
-          awesome, but they make the implementation harder, and are a
-          form of abstraction that you might not need in a scripting
-          language. I don't need them in my case, YMMV.
+            polymorphism (poly types) i.e. no declaration is ever
+            inferred with a <code>forall a.</code> in it. Poly types are
+            awesome, but they make the implementation harder, and are a
+            form of abstraction that you might not need in a scripting
+            language. I don't need them in my case, YMMV.
           </p>
           <p>
             No imports: instead, all names that usually come under a
@@ -78,15 +78,56 @@
       </div class="slide">
       <div class="slide">
         <a href="slide-15.png"><img src="slide-15.png"></a>
+        <div>
+          <p>
+            Rather than bothering to implement a parser, I used
+            haskell-src-exts. That package isn't really maintained
+            anymore, but I'm kind of used to it now, and GHC's parser is
+            a bit too wordy for me.
+          </p>
+          <p>
+            Re-using a parser is usually wise, parsing layout in Haskell
+            is fiddly and I just wanted something that works as I'm used
+            to.
+          </p>
+        </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-16.png"><img src="slide-16.png"></a>
+        <div>
+          <p>
+            What's the next step? Well, we have to <em>desugar</em>
+            this syntax into something
+            smaller. <code>do</code>-notation becomes
+            nested <code>>>=</code> calls, etc.
+          </p>
+        </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-17.png"><img src="slide-17.png"></a>
+        <div>
+          <p>
+            But before we do that, let's stop. We're currently at the
+            beginning of the pipeline: parsing. Let's fast-forward and
+            imagine we've done all that and we're at writing the
+            evaluator. What does a trivial, but total evaluator look
+            like in Haskell?
+          </p>
+        </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-18.png"><img src="slide-18.png"></a>
+        <div>
+          <p>
+            Here's a basic one. It's called "higher-order abstract
+            syntax" because you've got syntax productions that take
+            functions as arguments. Rather than carrying an
+            environment around, like in,
+            e.g. <a href="https://norvig.com/lispy.html">How to Write
+            a (Lisp) Interpreter (in Python)</a>, you store a
+            function <em>as a real function</em>.
+          </p>
+        </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-19.png"><img src="slide-19.png"></a>
