@@ -97,8 +97,7 @@
         <a href="slide-16.png"><img src="slide-16.png"></a>
         <div>
           <p>
-            What's the next step? Well, we have to <em>desugar</em>
-            this syntax into something
+            The next step is to desugar this syntax into something
             smaller. <code>do</code>-notation becomes
             nested <code>>>=</code> calls, etc.
           </p>
@@ -108,14 +107,13 @@
         <a href="slide-17.png"><img src="slide-17.png"></a>
         <div>
           <p>
-            But before we do that, let's stop. We're currently at the
-            beginning of the pipeline: parsing. For this project, a
-            primary concern was to make the evaluator as lean as
-            possible, and, ideally,
+            Parsing is the beginning of the pipeline. For this
+            project, a primary concern was to make the evaluator as
+            lean as possible, and, ideally,
             <a href="https://en.wikipedia.org/wiki/Partial_function">total</a>
-            and complete. So I want to start at the interpreter and
-            then work backwards from there. What does a trivial but
-            total evaluator look like in Haskell?
+            and complete. With this in mind, I started at the
+            interpreter and worked backwards from there. What does a
+            trivial but total evaluator look like in Haskell?
           </p>
         </div>
       </div class="slide">
