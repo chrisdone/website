@@ -30,6 +30,7 @@
       .slide a {
           text-decoration: none;
       }
+      .slide p a { text-decoration: underline }
       .slide img {
           width: 20em; border: 1px solid #ddd; border-radius: 3px;
           box-shadow: 0.1em 0.1em 0.1em 0.1em rgba(100, 100, 100, .1);
@@ -111,7 +112,7 @@
             beginning of the pipeline: parsing. For this project, a
             primary concern was to make the evaluator as lean as
             possible, and, ideally,
-            [total](https://en.wikipedia.org/wiki/Partial_function)
+            <a href="https://en.wikipedia.org/wiki/Partial_function">total</a>
             and complete. So I want to start at the interpreter and
             then work backwards from there. What does a trivial but
             total evaluator look like in Haskell?
@@ -128,7 +129,9 @@
             environment around, like in,
             e.g. <a href="https://norvig.com/lispy.html">How to Write
             a (Lisp) Interpreter (in Python)</a>, you store a
-            function <em>as a real function</em>.
+            function <em>as a real function</em>. When you pass an
+            environment around, you tend to have a lookup function
+            that could throw an error if you got your evaluator wrong.
           </p>
           <p>
             This evaluator is <em>total</em> and won't crash. This is
@@ -149,7 +152,7 @@
         <div>
           <p>
             I encountered this approach while perusing Oleg Kiselyov's
-            <em>Typed Tagless Final Interpreters</em> paper and he dropped in
+            <a href="https://okmij.org/ftp/tagless-final/course/lecture.pdf"><em>Typed Tagless Final Interpreters</em></a> paper and he dropped in
             this example like it was the most normal thing in the world.
           </p>
         </div>
