@@ -248,7 +248,7 @@
             you might parse from a string. Note: there is
             a <code>UType</code> explicit type attached to the lambda
             that tells us what type the parameter is; your parser
-            would parse e.g. `\(x::Bool) -> ..` into this.</p>
+            would parse e.g. <code>\(x::Bool) -> ..</code> into this.</p>
           <p>In this example, <code>UType</code> is simply an "untyped" (meaning
             in the meta language doesn't have attached type
             information) type, which is either <code>Bool</code> or <code>Bool ->
@@ -271,7 +271,7 @@
           <p>
             As for the <code>Ty</code> itself, it's a type-indexed equivalent of
             the <code>UType</code> type. The meta language (or host language) is
-            using its own type system to mirror what's in the meta
+            using its own type system to mirror what's in the object
             language (or guest language). In the types as well as in
             term-level code.
           </p>
