@@ -26,7 +26,7 @@
       }
       .slides { display: flex; flex-direction: column; row-gap: 2em }
       .slide { display: flex; flex-direction: row; column-gap: 2em; }
-      .slide p { line-height: 1.8em; }
+      .slide p, .slide li { line-height: 1.8em; text-align: justify; }
       .slide a {
           text-decoration: none;
       }
@@ -140,29 +140,84 @@
             far as I'm aware. I've heard of cunning approaches to do
             so, but some things are best left alone.
           </p>
-          <p>
-            Let's consider another approach.
-          </p>
         </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-19.png"><img src="slide-19.png"></a>
         <div>
           <p>
-            I encountered this approach while perusing Oleg Kiselyov's
+            I encountered another approach while perusing Oleg
+            Kiselyov's
             <a href="https://okmij.org/ftp/tagless-final/course/lecture.pdf"><em>Typed Tagless Final Interpreters</em></a> paper and he dropped in
-            this example like it was the most normal thing in the world.
+            this example like it was the most normal thing in the
+            world. I'm not sure where Oleg got this from.
           </p>
         </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-20.png"><img src="slide-20.png"></a>
+
+        <div>
+          <p>
+This evaluator is not higher order. It features environment lookup and
+the evaluator carries around an environment. But there's something
+clever here: that lookup will always succeed.
+          </p>
+          <p>
+The environment is a simple stack of tuples. When evaluating a lambda,
+we wrap the environment in another tuple with the argument being
+passed.
+          </p>
+          <p>
+Variables are church numerals: 0 is <code>VZ</code>, 1 is <code>VS VZ</code>, 2 is <code>VS (VS VZ)</code>,
+etc. It means "how far up the stack do you go?" Lookup simply walks
+both the church numeral and the environment until we reach the zero
+case (<code>VZ</code>) and then we return what's there in the stack.
+          </p>
+          <p>
+The way we make this total and guaranteed to be correct is via the
+<code>env</code> type parameter that both the <code>Exp</code> type and the <code>Var</code> type
+share.
+It took me a few readings to believe that this actually works. It's
+beautiful.
+          </p>
+        </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-21.png"><img src="slide-21.png"></a>
+        <div>
+          <p>Hell's core AST and evaluator are almost identical, with a couple
+            adjustments.</p>
+
+          <ol>
+            <li>Oleg's example hard-codes Bool just for demonstration
+   purposes. Hell's AST has <code>Lit</code> instead, which can produce any
+   <code>a</code>. All primitive functions e.g. <code>List.map</code> or e.g. literals like
+              <code>123</code> are kept in there.</li>
+            <li>
+ In the zero case for <code>Var</code>, Hell keeps a function as a final
+   accessor function. This lets us easily pull out a tuple slot from a
+   function argument, e.g. <code>\(x,y) -> x</code> becomes, conceptually, <code>\xy
+   -> fst x</code>. This could later possibly be used for e.g. <code>\X{x,y} ->
+x</code>.
+            </li>
+          </ol>
+            <p>(The <code>TypeRep</code> isn't technically needed; I had it there for nice
+   pretty printing for debugging, and it should be gone by the time
+              this post is published.)</p>
+
+<p>Otherwise it's exactly the same, and in the year since I wrote the
+first version of Hell, this AST and the evaluator function have not
+  changed at all. For me, this is an achievement. It's lovely to keep it so simple.</p>
+        </div>
       </div class="slide">
       <div class="slide">
         <a href="slide-22.png"><img src="slide-22.png"></a>
+        <p>
+          Working backwards, an immediate question arises: how do you
+          produce this quite strongly-typed AST from a completely
+          untyped text input?
+        </p>
       </div class="slide">
       <div class="slide">
         <a href="slide-23.png"><img src="slide-23.png"></a>
@@ -295,3 +350,4 @@
       </div class="slide">
     </div>
   </body>
+</html>
