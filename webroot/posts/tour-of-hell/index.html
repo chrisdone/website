@@ -51,7 +51,7 @@
           <p>This set of slides sketches out the solution, as an
             implementation, in technical detail.</p>
         </div>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-11.png"><img src="slide-11.png"></a>
         <div>
@@ -76,7 +76,7 @@
             yourself.
           </p>
         </div>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-15.png"><img src="slide-15.png"></a>
         <div>
@@ -92,7 +92,7 @@
             to.
           </p>
         </div>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-16.png"><img src="slide-16.png"></a>
         <div>
@@ -102,7 +102,7 @@
             nested <code>>>=</code> calls, etc.
           </p>
         </div>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-17.png"><img src="slide-17.png"></a>
         <div>
@@ -116,7 +116,7 @@
             trivial but total evaluator look like in Haskell?
           </p>
         </div>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-18.png"><img src="slide-18.png"></a>
         <div>
@@ -126,7 +126,7 @@
             functions as arguments. Rather than carrying an
             environment around, like in,
             e.g. <a href="https://norvig.com/lispy.html">How to Write
-            a (Lisp) Interpreter (in Python)</a>, you store a
+              a (Lisp) Interpreter (in Python)</a>, you store a
             function <em>as a real function</em>. When you pass an
             environment around, you tend to have a lookup function
             that could throw an error if you got your evaluator wrong.
@@ -141,7 +141,7 @@
             so, but some things are best left alone.
           </p>
         </div>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-19.png"><img src="slide-19.png"></a>
         <div>
@@ -153,36 +153,41 @@
             world. I'm not sure where Oleg got this from.
           </p>
         </div>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-20.png"><img src="slide-20.png"></a>
 
         <div>
           <p>
-This evaluator is not higher order. It features environment lookup and
-the evaluator carries around an environment. But there's something
-clever here: that lookup will always succeed.
+            This evaluator is not higher order. It features environment lookup and
+            the evaluator carries around an environment. But there's something
+            clever here: that lookup will always succeed.
           </p>
           <p>
-The environment is a simple stack of tuples. When evaluating a lambda,
-we wrap the environment in another tuple with the argument being
-passed.
+            The environment is a simple stack of tuples. When
+            evaluating a lambda, simply wrap the environment in
+            another tuple with the argument being passed.
           </p>
           <p>
-Variables are church numerals: 0 is <code>VZ</code>, 1 is <code>VS VZ</code>, 2 is <code>VS (VS VZ)</code>,
-etc. It means "how far up the stack do you go?" Lookup simply walks
-both the church numeral and the environment until we reach the zero
-case (<code>VZ</code>) and then we return what's there in the stack.
+            Variables are church numerals: 0 is <code>VZ</code>, 1
+            is <code>VS VZ</code>, 2 is <code>VS (VS VZ)</code>, etc.
+            It's
+            a <a href="https://en.wikipedia.org/wiki/De_Bruijn_index">de
+            Bruijn index</a> that is statically typed. It means "how
+            far up the stack do you go?" Lookup simply walks both the
+            church numeral and the environment until the zero case
+            (<code>VZ</code>) is reached, and then what's there in the
+            stack is returned.
           </p>
           <p>
-The way we make this total and guaranteed to be correct is via the
-<code>env</code> type parameter that both the <code>Exp</code> type and the <code>Var</code> type
-share.
-It took me a few readings to believe that this actually works. It's
-beautiful.
+            The way to make this total and guaranteed to be correct is via the
+            <code>env</code> type parameter that both the <code>Exp</code> type and the <code>Var</code> type
+            share.
+            It took me a few readings to believe that this actually works. It's
+            beautiful.
           </p>
         </div>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-21.png"><img src="slide-21.png"></a>
         <div>
@@ -191,163 +196,281 @@ beautiful.
 
           <ol>
             <li>Oleg's example hard-codes Bool just for demonstration
-   purposes. Hell's AST has <code>Lit</code> instead, which can produce any
-   <code>a</code>. All primitive functions e.g. <code>List.map</code> or e.g. literals like
+              purposes. Hell's AST has <code>Lit</code> instead, which can produce any
+              <code>a</code>. All primitive functions e.g. <code>List.map</code> or e.g. literals like
               <code>123</code> are kept in there.</li>
             <li>
- In the zero case for <code>Var</code>, Hell keeps a function as a final
-   accessor function. This lets us easily pull out a tuple slot from a
-   function argument, e.g. <code>\(x,y) -> x</code> becomes, conceptually, <code>\xy
-   -> fst x</code>. This could later possibly be used for e.g. <code>\X{x,y} ->
-x</code>.
+              In the zero case for <code>Var</code>, Hell keeps a function as a final
+              accessor function. This lets us easily pull out a tuple slot from a
+              function argument, e.g. <code>\(x,y) -> x</code> becomes, conceptually, <code>\xy
+                -> fst x</code>. This could later possibly be used for e.g. <code>\X{x,y} ->
+                x</code>.
             </li>
           </ol>
-            <p>(The <code>TypeRep</code> isn't technically needed; I had it there for nice
-   pretty printing for debugging, and it should be gone by the time
-              this post is published.)</p>
+          <p>(The <code>TypeRep</code> is gone now. It was just
+            handy for debugging at the time.)</p>
 
-<p>Otherwise it's exactly the same, and in the year since I wrote the
-first version of Hell, this AST and the evaluator function have not
-  changed at all. For me, this is an achievement. It's lovely to keep it so simple.</p>
+          <p>Otherwise it's exactly the same, and in the year since I wrote the
+            first version of Hell, this AST and the evaluator function have not
+            changed at all. For me, this is an achievement. It's lovely to keep it so simple.</p>
         </div>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-22.png"><img src="slide-22.png"></a>
-        <p>
-          Working backwards, an immediate question arises: how do you
-          produce this quite strongly-typed AST from a completely
-          untyped text input?
-        </p>
-      </div class="slide">
+        <div>
+          <p>
+            Working backwards, an immediate question arises: how do you
+            produce this quite strongly-typed AST from a completely
+            untyped text input?
+          </p>
+          <p>Stephanie Weirich published a
+            single <a href="https://www.cs.ox.ac.uk/projects/gip/school/tc.hs>">file</a>
+            type checker implementation that addresses this problem
+            neatly. It blew my mind that this was possible in Haskell
+            so cleanly.</p>
+        </div>
+      </div>
       <div class="slide">
         <a href="slide-23.png"><img src="slide-23.png"></a>
-      </div class="slide">
+        <div>
+          <p>
+            The type signature essentially goes
+            from <code>UTerm</code> (an untyped term) to a
+            typed <code>Term</code> which has the type of the term as
+            a parameter.
+          </p>
+        </div>
+      </div>
       <div class="slide">
         <a href="slide-24.png"><img src="slide-24.png"></a>
-      </div class="slide">
+        <div>
+          <p>The <code>UTerm</code> AST is a simple model of an AST that
+            you might parse from a string. Note: there is
+            a <code>UType</code> explicit type attached to the lambda
+            that tells us what type the parameter is; your parser
+            would parse e.g. `\(x::Bool) -> ..` into this.</p>
+          <p>In this example, <code>UType</code> is simply an "untyped" (meaning
+            in the meta language doesn't have attached type
+            information) type, which is either <code>Bool</code> or <code>Bool ->
+              Bool</code> etc.</p>
+          <p>
+            There's a familiar pattern here. Just like the evaluator
+            seen above in Oleg's paper, the <code>Var</code> type
+            gives us a variable reference whose scope is statically
+            determined. Note the <code>Term (g,a)</code> in
+            the <code>Lam</code> constructor; the <code>g</code>
+            corresponds to the one in <code>Var g t</code>.
+          </p>
+          <p>The type-checkers job is to not only check that the types match up,
+            but to build up this well-typed variable referencing.</p>
+        </div>
+      </div>
       <div class="slide">
         <a href="slide-25.png"><img src="slide-25.png"></a>
-      </div class="slide">
+        <div>
+          <p>
+            As for the <code>Ty</code> itself, it's a type-indexed equivalent of
+            the <code>UType</code> type. The meta language (or host language) is
+            using its own type system to mirror what's in the meta
+            language (or guest language). In the types as well as in
+            term-level code.
+          </p>
+          <p>
+            Here's how the <code>UType</code> becomes a <code>Ty
+          t</code>. A handy existential is needed that'll be used in
+          the type-checker called
+<code>ExType</code> that just holds the result of the type-check.
+          </p>
+          <p>With these types in place, the typechecker for <code>UType ->
+            ExType</code> practically writes itself.</p>
+        </div>
+      </div>
       <div class="slide">
         <a href="slide-26.png"><img src="slide-26.png"></a>
-      </div class="slide">
+<div>
+  <p>
+    Turning to type-checking terms, type-checking an if requires an
+    extra trick which is to compare that two types are equal and get a
+    proof that they are so.  The
+    <code>cmpTy</code> function starts with an <code>a</code> and <code>b</code> and by
+    pattern-matching and aided by a handy GADT called <code>Equal</code> which
+    essentially makes first class the ability to get both a
+    value-level and type-level proof that <code>a ~ b</code>. There
+    are shorter ways to do this, of course, but this is how it's done
+    in this small example file.
+  </p>
+  <p>
+    Finally, it can produce a convenient type
+    called <code>Typed</code> that just couples up a thing with its
+    type, as both the thing and the ty are indexed by the same
+    thing. It locks in that relationship.
+  </p>
+</div>
+      </div>
       <div class="slide">
         <a href="slide-27.png"><img src="slide-27.png"></a>
-      </div class="slide">
+<div>
+  <p>
+    To both type-check and also scope-check a variable, there's need
+    for an environment to keep track of those things in a typed lookup
+    table while doing type-checking. It's like the stack earlier, but
+    has a <code>String</code> in it to help build the correct de Bruijn index
+    level based on the name. The more the <code>TyEnv</code> is walked, the more
+    nested <code>Var</code> becomes.
+  </p>
+  <p>Type-checking a <code>UVar</code> then just becomes a lookup. (Imagine that
+  the <code>error</code> calls are instead returning <code>Left</code>, but they were
+    omitted for simplicity of the implementation.)</p>
+  <p>Type-checking a lambda is more complicated and where the meat
+  is:</p>
+  <ol>
+    <li>First, get a <code>Ty a</code> of the lambda's parameter type.</li>
+    <li>Type-check the body <em>with the parameter in scope</em>.</li>
+    <li>We construct an <code>a -> b</code> type with <code>Arr</code> for the binder and
+      the body.</li>
+    <li>Finally, the <code>Lam</code> has enough type proofs in scope to be
+      constructed.</li>
+  </ol>
+</div>
+      </div>
       <div class="slide">
         <a href="slide-28.png"><img src="slide-28.png"></a>
-      </div class="slide">
+        <div>
+          <p>
+            Comparatively, type-checking applications is easy. It's
+            just a quick check that the function being applied is of
+            type <code>a -> b</code> and then that the argument is of type <code>a</code>.
+          </p>
+        </div>
+      </div>
       <div class="slide">
         <a href="slide-29.png"><img src="slide-29.png"></a>
-      </div class="slide">
+        <div>
+          <p>
+            In review, this is the whole type checker. The example
+            `main` shows how one might construct a basic untyped
+            `UTerm` and then type-check it. The initial argument to
+            `tc` is, unsurprisingly, `Nil` for the environment.
+          </p>
+          <p>That's it! Isn't that beautiful!</p>
+        </div>
+      </div>
       <div class="slide">
         <a href="slide-30.png"><img src="slide-30.png"></a>
-      </div class="slide">
+        <div>
+          <p>
+            Evaluating this AST is exactly the same as evaluating as
+            we saw above. We now know that we can type-check an
+            untyped AST and then evaluate it with a total
+            evaluator. Noice!
+          </p>
+        </div>
+      </div>
       <div class="slide">
         <a href="slide-31.png"><img src="slide-31.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-32.png"><img src="slide-32.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-33.png"><img src="slide-33.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-34.png"><img src="slide-34.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-35.png"><img src="slide-35.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-36.png"><img src="slide-36.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-37.png"><img src="slide-37.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-38.png"><img src="slide-38.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-39.png"><img src="slide-39.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-40.png"><img src="slide-40.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-41.png"><img src="slide-41.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-42.png"><img src="slide-42.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-43.png"><img src="slide-43.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-44.png"><img src="slide-44.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-45.png"><img src="slide-45.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-46.png"><img src="slide-46.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-47.png"><img src="slide-47.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-48.png"><img src="slide-48.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-49.png"><img src="slide-49.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-50.png"><img src="slide-50.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-51.png"><img src="slide-51.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-52.png"><img src="slide-52.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-53.png"><img src="slide-53.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-54.png"><img src="slide-54.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-55.png"><img src="slide-55.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-56.png"><img src="slide-56.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-57.png"><img src="slide-57.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-58.png"><img src="slide-58.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-59.png"><img src="slide-59.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-60.png"><img src="slide-60.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-61.png"><img src="slide-61.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-62.png"><img src="slide-62.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-63.png"><img src="slide-63.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-64.png"><img src="slide-64.png"></a>
-      </div class="slide">
+      </div>
       <div class="slide">
         <a href="slide-65.png"><img src="slide-65.png"></a>
-      </div class="slide">
+      </div>
     </div>
   </body>
 </html>
