@@ -326,7 +326,7 @@
   <ol>
     <li>First, get a <code>Ty a</code> of the lambda's parameter type.</li>
     <li>Type-check the body <em>with the parameter in scope</em>.</li>
-    <li>We construct an <code>a -> b</code> type with <code>Arr</code> for the binder and
+    <li>Construct an <code>a -> b</code> type with <code>Arr</code> for the binder and
       the body.</li>
     <li>Finally, the <code>Lam</code> has enough type proofs in scope to be
       constructed.</li>
@@ -360,9 +360,8 @@
         <div>
           <p>
             Evaluating this AST is exactly the same as evaluating as
-            we saw above. We now know that we can type-check an
-            untyped AST and then evaluate it with a total
-            evaluator. Noice!
+            seen above. This shows that you can type-check an untyped
+            AST and then evaluate it with a total evaluator. Noice!
           </p>
         </div>
       </div>
@@ -374,7 +373,7 @@
             to <a href="https://chrisdone.com/posts/three-questions-of-lang-design/">Three
             questions of language design</a>, it's not long before the
             question of how to do equality and ordering comes up. How
-            do we compare strings, integers, etc? And how do we do
+            do you compare strings, integers, etc? And how do you do
             things like sets and maps that require some kind of
             ordering.
           </p>
@@ -431,21 +430,70 @@
       </div>
       <div class="slide">
         <a href="slide-34.png"><img src="slide-34.png"></a>
+        <div>
+          <p>
+            The <code>Ty</code> type defined earlier is fine, and the <code>Equal</code>
+            utility, but it turns out Stephanie later made the
+            <code>Type.Reflection</code> abstraction which replaces <code>Ty a</code> with
+            <code>TypeRep a</code>, and provides equality, too. It can
+            also deal with any Haskell type, of any kind.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="slide-35.png"><img src="slide-35.png"></a>
+        <div>
+          <p>
+            As a reminder, I showed that the <code>TypeRep (a ::
+            Type)</code> is used in the <code>Term</code> type instead
+            of the <code>Ty a</code> used in Stephanie's demo file
+            that was much older.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="slide-36.png"><img src="slide-36.png"></a>
+        <div>
+          <p>
+            From <code>Type.Reflection</code> you've got a <code>TypeRep a</code> type, you
+            can get a <code>TypeRep a</code> from any type that's an instance of
+            <code>Typeable</code>, and can compare types for equality.
+          </p>
+          <p>
+            Because any kind of type can be worked with, you often
+            have to check that the kind is the one you expect before
+            working with the type, so <code>typeRepKind</code> comes in handy
+            there, too.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="slide-37.png"><img src="slide-37.png"></a>
+        <div>
+          <p>
+            Here's an example of how I wrote a trivial function to
+            apply some unknown one type to another which is used in
+            the inferer later on. There's a much better implementation
+            later down the page, but this is fairly easy to read.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="slide-38.png"><img src="slide-38.png"></a>
+        <div>
+          <p>
+            Sliding back further up the pipeline to the desugarer, the
+            parsed AST should be converted to the untyped AST type
+            seen above aka <code>UTerm</code>.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="slide-39.png"><img src="slide-39.png"></a>
+        <div>
+          <p>
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="slide-40.png"><img src="slide-40.png"></a>
