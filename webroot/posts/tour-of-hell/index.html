@@ -368,12 +368,58 @@
       </div>
       <div class="slide">
         <a href="slide-31.png"><img src="slide-31.png"></a>
+        <div>
+          <p>
+            According
+            to <a href="https://chrisdone.com/posts/three-questions-of-lang-design/">Three
+            questions of language design</a>, it's not long before the
+            question of how to do equality and ordering comes up. How
+            do we compare strings, integers, etc? And how do we do
+            things like sets and maps that require some kind of
+            ordering.
+          </p>
+          <p>
+            Haskell already has good answers for this:
+            type-classes. For Hell, I didn't want to have to
+            support <em>full</em> type-classes and all attendant
+            features, but I equally didn't want to give up on
+            including <code>Map</code> and <code>Set</code> or
+            even <code>List.lookup</code>, and end up with <code>Int.eq</code>,
+            <code>Text.eq</code>, etc.
+          </p>
+          <p>
+            Luckily I discovered that Eitan Chatav had posted
+            somewhere on reddit an example of exactly what I wanted to
+            do, which was to infer based on known types type-class
+            dictionaries for a few specific type-classes.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="slide-32.png"><img src="slide-32.png"></a>
+        <div>
+          <p>
+            In the term type, an actual class constraint can be added
+            in there! Eitan's terms, types and <code>Ty</code>-equivalent are
+            slightly different, but are otherwise identical.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="slide-33.png"><img src="slide-33.png"></a>
+        <div>
+          <p>
+            The trick here is simply to dispatch on the well-typed
+            type-indexed GADT of <code>Type</code> and in that case one can
+            "capture" the type-class instance dictionary and then the
+            <code>T_Add</code> constructor is able to use that for its class
+            constraint!
+          </p>
+          <p>
+            This makes sense after you've seen it, but it blew my mind
+            when I first saw it.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="slide-34.png"><img src="slide-34.png"></a>
