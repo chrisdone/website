@@ -1,6 +1,5 @@
-<!doctype html>
-<html>
-  <head>
+<!DOCTYPE html>
+<html><head>
     <style>
       body {
           max-width: 60em;
@@ -12,7 +11,7 @@
       h1,h2,h3,h4,h5,h6 {
           font-family: Helvetica;
       }
-      code { background: #eee; border: #aaa; border-radius: 3px;
+      code, pre { background: #eee; border: #aaa; border-radius: 3px;
              padding: 0.2em 0.5em }
       h1 a,h2 a,h3 a,h4 a {
           color: inherit;
@@ -46,14 +45,14 @@
     <p class="date"><em>Feb 9th 2024</em></p>
     <div class="slides">
       <div class="slide">
-        <a href="slide-9.png"><img src="slide-9.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-9.png"><img src="chrisdone.com_files/slide-9.png"></a>
         <div>
           <p>This set of slides sketches out the solution, as an
             implementation, in technical detail.</p>
         </div>
       </div>
       <div class="slide">
-        <a href="slide-11.png"><img src="slide-11.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-11.png"><img src="chrisdone.com_files/slide-11.png"></a>
         <div>
           <p>There are a few limits on the language; no imports, no
             polymorphism (poly types) i.e. no declaration is ever
@@ -67,7 +66,7 @@
             package name like <code>async</code>
             become <code>Async.race</code>, <code>List.map</code>,
             etc. All identifiers are explicitly qualified except
-            lambda parameters: <code>\x -> x</code> -- not qualified.
+            lambda parameters: <code>\x -&gt; x</code> -- not qualified.
           </p>
           <p>
             Recursion is completely ruled out, but <code>fix</code>
@@ -78,7 +77,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-15.png"><img src="slide-15.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-15.png"><img src="chrisdone.com_files/slide-15.png"></a>
         <div>
           <p>
             Rather than bothering to implement a parser, I used
@@ -94,17 +93,17 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-16.png"><img src="slide-16.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-16.png"><img src="chrisdone.com_files/slide-16.png"></a>
         <div>
           <p>
             The next step is to desugar this syntax into something
             smaller. <code>do</code>-notation becomes
-            nested <code>>>=</code> calls, etc.
+            nested <code>&gt;&gt;=</code> calls, etc.
           </p>
         </div>
       </div>
       <div class="slide">
-        <a href="slide-17.png"><img src="slide-17.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-17.png"><img src="chrisdone.com_files/slide-17.png"></a>
         <div>
           <p>
             Parsing is the beginning of the pipeline. For this
@@ -118,7 +117,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-18.png"><img src="slide-18.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-18.png"><img src="chrisdone.com_files/slide-18.png"></a>
         <div>
           <p>
             Here's a basic one. It's called "higher-order abstract
@@ -143,7 +142,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-19.png"><img src="slide-19.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-19.png"><img src="chrisdone.com_files/slide-19.png"></a>
         <div>
           <p>
             I encountered another approach while perusing Oleg
@@ -155,7 +154,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-20.png"><img src="slide-20.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-20.png"><img src="chrisdone.com_files/slide-20.png"></a>
 
         <div>
           <p>
@@ -189,7 +188,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-21.png"><img src="slide-21.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-21.png"><img src="chrisdone.com_files/slide-21.png"></a>
         <div>
           <p>Hell's core AST and evaluator are almost identical, with a couple
             adjustments.</p>
@@ -202,8 +201,8 @@
             <li>
               In the zero case for <code>Var</code>, Hell keeps a function as a final
               accessor function. This lets us easily pull out a tuple slot from a
-              function argument, e.g. <code>\(x,y) -> x</code> becomes, conceptually, <code>\xy
-                -> fst x</code>. This could later possibly be used for e.g. <code>\X{x,y} ->
+              function argument, e.g. <code>\(x,y) -&gt; x</code> becomes, conceptually, <code>\xy
+                -&gt; fst x</code>. This could later possibly be used for e.g. <code>\X{x,y} -&gt;
                 x</code>.
             </li>
           </ol>
@@ -216,7 +215,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-22.png"><img src="slide-22.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-22.png"><img src="chrisdone.com_files/slide-22.png"></a>
         <div>
           <p>
             Working backwards, an immediate question arises: how do you
@@ -224,14 +223,14 @@
             untyped text input?
           </p>
           <p>Stephanie Weirich published a
-            single <a href="https://www.cs.ox.ac.uk/projects/gip/school/tc.hs>">file</a>
+            single <a href="https://www.cs.ox.ac.uk/projects/gip/school/tc.hs%3E">file</a>
             type checker implementation that addresses this problem
             neatly. It blew my mind that this was possible in Haskell
             so cleanly.</p>
         </div>
       </div>
       <div class="slide">
-        <a href="slide-23.png"><img src="slide-23.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-23.png"><img src="chrisdone.com_files/slide-23.png"></a>
         <div>
           <p>
             The type signature essentially goes
@@ -242,16 +241,16 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-24.png"><img src="slide-24.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-24.png"><img src="chrisdone.com_files/slide-24.png"></a>
         <div>
           <p>The <code>UTerm</code> AST is a simple model of an AST that
             you might parse from a string. Note: there is
             a <code>UType</code> explicit type attached to the lambda
             that tells us what type the parameter is; your parser
-            would parse e.g. <code>\(x::Bool) -> ..</code> into this.</p>
+            would parse e.g. <code>\(x::Bool) -&gt; ..</code> into this.</p>
           <p>In this example, <code>UType</code> is simply an "untyped" (meaning
             in the meta language doesn't have attached type
-            information) type, which is either <code>Bool</code> or <code>Bool ->
+            information) type, which is either <code>Bool</code> or <code>Bool -&gt;
               Bool</code> etc.</p>
           <p>
             There's a familiar pattern here. Just like the evaluator
@@ -266,7 +265,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-25.png"><img src="slide-25.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-25.png"><img src="chrisdone.com_files/slide-25.png"></a>
         <div>
           <p>
             As for the <code>Ty</code> itself, it's a type-indexed equivalent of
@@ -281,12 +280,12 @@
           the type-checker called
 <code>ExType</code> that just holds the result of the type-check.
           </p>
-          <p>With these types in place, the typechecker for <code>UType ->
+          <p>With these types in place, the typechecker for <code>UType -&gt;
             ExType</code> practically writes itself.</p>
         </div>
       </div>
       <div class="slide">
-        <a href="slide-26.png"><img src="slide-26.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-26.png"><img src="chrisdone.com_files/slide-26.png"></a>
 <div>
   <p>
     Turning to type-checking terms, type-checking an if requires an
@@ -308,7 +307,7 @@
 </div>
       </div>
       <div class="slide">
-        <a href="slide-27.png"><img src="slide-27.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-27.png"><img src="chrisdone.com_files/slide-27.png"></a>
 <div>
   <p>
     To both type-check and also scope-check a variable, there's need
@@ -326,7 +325,7 @@
   <ol>
     <li>First, get a <code>Ty a</code> of the lambda's parameter type.</li>
     <li>Type-check the body <em>with the parameter in scope</em>.</li>
-    <li>Construct an <code>a -> b</code> type with <code>Arr</code> for the binder and
+    <li>Construct an <code>a -&gt; b</code> type with <code>Arr</code> for the binder and
       the body.</li>
     <li>Finally, the <code>Lam</code> has enough type proofs in scope to be
       constructed.</li>
@@ -334,17 +333,17 @@
 </div>
       </div>
       <div class="slide">
-        <a href="slide-28.png"><img src="slide-28.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-28.png"><img src="chrisdone.com_files/slide-28.png"></a>
         <div>
           <p>
             Comparatively, type-checking applications is easy. It's
             just a quick check that the function being applied is of
-            type <code>a -> b</code> and then that the argument is of type <code>a</code>.
+            type <code>a -&gt; b</code> and then that the argument is of type <code>a</code>.
           </p>
         </div>
       </div>
       <div class="slide">
-        <a href="slide-29.png"><img src="slide-29.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-29.png"><img src="chrisdone.com_files/slide-29.png"></a>
         <div>
           <p>
             In review, this is the whole type checker. The example
@@ -356,7 +355,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-30.png"><img src="slide-30.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-30.png"><img src="chrisdone.com_files/slide-30.png"></a>
         <div>
           <p>
             Evaluating this AST is exactly the same as evaluating as
@@ -366,7 +365,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-31.png"><img src="slide-31.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-31.png"><img src="chrisdone.com_files/slide-31.png"></a>
         <div>
           <p>
             According
@@ -397,7 +396,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-32.png"><img src="slide-32.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-32.png"><img src="chrisdone.com_files/slide-32.png"></a>
         <div>
           <p>
             In the term type, an actual class constraint can be added
@@ -407,7 +406,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-33.png"><img src="slide-33.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-33.png"><img src="chrisdone.com_files/slide-33.png"></a>
         <div>
           <p>
             The trick here is simply to dispatch on the well-typed
@@ -429,7 +428,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-34.png"><img src="slide-34.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-34.png"><img src="chrisdone.com_files/slide-34.png"></a>
         <div>
           <p>
             The <code>Ty</code> type defined earlier is fine, and the <code>Equal</code>
@@ -441,7 +440,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-35.png"><img src="slide-35.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-35.png"><img src="chrisdone.com_files/slide-35.png"></a>
         <div>
           <p>
             As a reminder, I showed that the <code>TypeRep (a ::
@@ -452,7 +451,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-36.png"><img src="slide-36.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-36.png"><img src="chrisdone.com_files/slide-36.png"></a>
         <div>
           <p>
             From <code>Type.Reflection</code> you've got a <code>TypeRep a</code> type, you
@@ -468,7 +467,7 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-37.png"><img src="slide-37.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-37.png"><img src="chrisdone.com_files/slide-37.png"></a>
         <div>
           <p>
             Here's an example of how I wrote a trivial function to
@@ -479,100 +478,319 @@
         </div>
       </div>
       <div class="slide">
-        <a href="slide-38.png"><img src="slide-38.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-38.png"><img src="chrisdone.com_files/slide-38.png"></a>
         <div>
           <p>
-            Sliding back further up the pipeline to the desugarer, the
-            parsed AST should be converted to the untyped AST type
-            seen above aka <code>UTerm</code>.
+            Up to here I've covered a parser which yields
+            <code>HSE.Exp</code> (the haskell-src-exts type) and I've described
+            the <code>Term</code> AST that a type-checker is able to produce and
+            an evaluator able to interpret. What's missing is the
+            "untyped" term type, <code>UTerm</code>. Additionally, I
+            want type inference, which is a step that should sit
+            somewhere between parsing and final type-checking.
           </p>
         </div>
       </div>
       <div class="slide">
-        <a href="slide-39.png"><img src="slide-39.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-39.png"><img src="chrisdone.com_files/slide-39.png"></a>
         <div>
           <p>
+            Desugaring in Hell goes from <code>HSE.Exp HSE.SrcSpanInfo</code>
+            (haskell-src-exts) to <code>UTerm ()</code>.
           </p>
         </div>
       </div>
       <div class="slide">
-        <a href="slide-40.png"><img src="slide-40.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-40.png"><img src="chrisdone.com_files/slide-40.png"></a>
+        <div>
+          <p>
+            The <code>UTerm</code> type now takes an extra parameter <code>t</code> in which
+            I'll put <code>SomeTypeRep</code> - so it's similar to earlier, but
+            I can now put other choices of type annotation in there.
+          </p>
+          <p>
+            I use a handy type <code>SomeStarType</code> which just constrains
+            the kind of the <code>a</code> in the <code>TypeRep a</code> to be <code>Type</code>
+            (previously <code>*</code> in GHC); the type of regular
+            values. You can see this concept in action in <code>toStarType</code>
+            seen in the slide.
+          </p>
+        </div>
       </div>
       <div class="slide">
-        <a href="slide-41.png"><img src="slide-41.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-41.png"><img src="chrisdone.com_files/slide-41.png"></a>
+        <div>
+        <p>I tried for a while with Hell to avoid type inference,
+          because it can complicate everything. I don't need no
+          stinkin' type inference! ... But after trying to write a real
+          script in Hell, I realised that writing out the types of
+          everything gets tedious really quickly.
+        </p>
+        </div>
       </div>
       <div class="slide">
-        <a href="slide-42.png"><img src="slide-42.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-42.png"><img src="chrisdone.com_files/slide-42.png"></a>
+        <div>
+          <p>
+            When doing type inference, instead of working with
+            <code>SomeTypeRep</code> as seen above, which has no concept
+            of <em>variables</em>, I've defined <code>IRep</code>
+            (<em>inference</em> type rep) for that. It has a type
+            parameter for the representation of variables. While doing
+            inference, it's going to be a little newtype wrapper
+            around numbers called <code>IMetaVar</code>. When inference is
+            finished, it'll be <code>Void</code>, ready for converting to
+            <code>SomeTypeRep</code>.
+          </p>
+        </div>
       </div>
       <div class="slide">
-        <a href="slide-43.png"><img src="slide-43.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-43.png"><img src="chrisdone.com_files/slide-43.png"></a>
+        <div>
+          <p>
+            <code>inferExp</code>'s job is to make a <code>UTerm ()</code> into a <code>UTerm
+            SomeTypeRep</code> -- if it can't do that, then there's either a
+            type mismatch, an ambiguous type
+            (<a href="https://stackoverflow.com/questions/31889048/what-does-the-ghc-source-mean-by-zonk">zonking</a>
+            failed), or an infinite type. You can see in the
+            implementation of <code>zonk</code> that it's just making sure that
+            there are no type variables anymore.</p>
+          <p>After that,
+            <code>toSomeTypeRep</code> just converts
+            our <code>IRep</code> tree into
+            a <code>SomeTypeRep</code>. That can still fail if our
+            type inferer has a bug. Unlikely, but it's not ruled out.
+          </p>
+        </div>
       </div>
       <div class="slide">
-        <a href="slide-44.png"><img src="slide-44.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-44.png"><img src="chrisdone.com_files/slide-44.png"></a>
+        <div>
+          <p>
+            A typical split in a type inferer is "elaborate, unify"
+            which means first walk the AST and simply generate
+            equality constraints like <code>f ~ a -> b</code>
+            and <code>a ~ [Char]</code> and <code>b ~ Int</code>, and
+            then the second part is to unify these constraints to get
+            e.g. <code>[Char] -> Int</code>. It's a nice clean
+            separation. Many industrial compilers will do these two
+            phases in the same phase in the name of efficiency and the
+            ability to generate new constraints on the fly, but I
+            prefer the clean separation.
+          </p>
+        </div>
       </div>
       <div class="slide">
-        <a href="slide-45.png"><img src="slide-45.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-45.png"><img src="chrisdone.com_files/slide-45.png"></a>
+        <div>
+          <p>
+            <code>fromSomeStarType</code> produces an <code>IRep void</code> for the case
+            that I know the type of something ahead of time, i.e. my
+            primitives (<code>Int.plus</code>, etc.).
+          </p>
+          <p>
+            On the right is a sample of elaborations of different
+            parts of the AST. There isn't really anything in here
+            that's out of the ordinary or that I'm excited to go into
+            detail about.
+          </p>
+        </div>
       </div>
       <div class="slide">
-        <a href="slide-46.png"><img src="slide-46.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-46.png"><img src="chrisdone.com_files/slide-46.png"></a>
+        <div>
+          <p>
+            For unification, there's nothing new in here, either; it's
+            very by the book. Given a set of equality constraints,
+            generate a set of substitutions (replace these variables
+            with these types). Afterwards, one can apply those
+            substitutions to any type. In our case, that's all
+            the <code>t</code> in <code>UTerm</code>.
+          </p>
+          <p>
+            You can use off-the-shelf unification libraries like
+            unification-fd or implement a mutable algorithm for extra
+            speed, or use union-find, but this one fits on a page and
+            does the job presently.
+          </p>
+        </div>
       </div>
       <div class="slide">
-        <a href="slide-47.png"><img src="slide-47.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-47.png"><img src="chrisdone.com_files/slide-47.png"></a>
+        <div>
+          <p>
+            Initially the AST had this for primitive terms:
+          </p>
+          <p><pre>ConBool :: Bool -> Term g Bool
+ConString :: String -> Term g String</pre></p>
+          <p>
+            Which is fine if you want to enumerate every single type
+            of value you want to be able to work with. I didn't want
+            to do that. There's a way to make that shorter:
+          </p>
+          <p>
+            <pre>Lit :: a -> Term g a
+...
+ULit (forall g. Typed (Term g))</pre>
+          </p>
+          <p>
+            And then when you want to express e.g. <code>True</code> in the
+            object language, you can just write a handy function like
+            this that'll go straight from any <code>Typeable</code> into a
+            <code>Typed</code>:
+          </p>
+          <p><pre>lit :: Type.Reflection.Typeable a => a -> UTerm
+lit l = ULit (Typed (Type.Reflection.typeOf l) (Lit l))</pre></p>
+          <p>The typechecker case is a no-op:</p>
+          <p>
+            <code>tc (ULit lit) _env = lit</code>
+          </p>
+          <p>
+            And then simply <code>lit True</code> will work.
+          </p>
+          <p>So far so good, but what about polymorphic things? Like
+            the function <code>id</code>? My solution was to make a newtype
+            around a function, and that function accepted the type as
+            an argument, just like in system F:</p>
+          <p>
+            <pre>newtype Forall =
+  Forall (forall (a :: Type) g.
+   TypeRep a -> Typed (Term g))
+...
+UForall SomeStarType Forall</pre>
+          </p>
+          <p>And in <code>UTerm</code>, carry a type and the forall together. So
+          e.g. <code>id</code> would be represented like this:</p>
+          <p>
+<pre>id_ :: Forall
+id_ = Forall (\a -> Typed (Type.Reflection.Fun a a) (Lit id))</pre></p>
+          <p>I can then instantiate <code>id_</code> with whatever
+          type I want, such as <code>Bool</code>:</p>
+          <p>
+            <pre>UForall (SomeStarType (Type.Reflection.typeRep @Bool)) id_</pre>
+          </p>
+          <p>It would merely be the type inferer's job to provide
+            these type reps to the `UForall`, with the checker just
+            applying the function:
+          </p>
+          <p><pre>tc (UForall (SomeStarType typeRep) (Forall f)) _env =
+              f typeRep</pre>
+          </p>
+        </div>
       </div>
       <div class="slide">
-        <a href="slide-48.png"><img src="slide-48.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-48.png"><img src="chrisdone.com_files/slide-48.png"></a>
+<div>
+        <p>Since that initial discovery and implementing type
+        inference, I changed <code>Forall</code> to be a GADT which represents a
+        chain, so that it can be for example: <code>Eq a => Monad m => ...</code>
+        </p>
+        <p>Type inference adds a load of extra metadata to the
+          <code>UForall</code> constructor, but the core idea is the
+          same.</p>
+</div>
       </div>
       <div class="slide">
-        <a href="slide-49.png"><img src="slide-49.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-49.png"><img src="chrisdone.com_files/slide-49.png"></a>
+<div><p>
+  The example of <code>id</code> hasn't changed very much, although here I'm
+  using the <code>TypeRep</code> pattern to be able to bring the <code>a</code>
+  type variable in directly. </p><p>In fact, I've since
+  enabled any kind of type, so it becomes a full <code>SomeTypeRep</code> in
+  <code>UForall</code>, in order to support records (which I'll show
+  later) and their <code>Symbol</code> field names.</p></div>
       </div>
       <div class="slide">
-        <a href="slide-50.png"><img src="slide-50.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-50.png"><img src="chrisdone.com_files/slide-50.png"></a>
+<div>
+<p>
+When type-checking these foralls, it's just a loop that successively
+applies poly type arguments to functions that accept them. In the case
+of type-classes like <code>OrdEqShow</code>, I use Eitan's trick of proving that
+the type is e.g. one of <code>Int</code>, <code>Bool</code> etc. known types that support
+<code>Ord</code>, <code>Eq</code> and <code>Show</code> and then simply continue applying the
+arguments. Yes, this works, and yes, I was surprised. Even
+higher-order kinded stuff like <code>Monad</code> had no trouble.
+</p>
+</div>
       </div>
       <div class="slide">
-        <a href="slide-51.png"><img src="slide-51.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-51.png"><img src="chrisdone.com_files/slide-51.png"></a>
+<div>
+<p>
+Elaboration of foralls was straight-forward and this hasn't changed
+since I made these slides. All I'm doing is generating a
+meta-variable for each poly type in the <code>forall</code>, so <code>a</code>, <code>b</code>,
+etc. Then I transform the type signature like <code>forall a. a -> a</code> that
+is originally <code>IRep TH.Uniq</code> (template-haskell's way of
+generating unique references) to <code>IRep IMetaVar</code>. Now I
+can use it in the unifier.
+</p><p>
+The <code>types</code> variable represents any manually specified types like
+<code>id @Int</code>, in which case we can emit an equality constraint on
+the first poly type as <code>a ~ Int</code>.
+</p></div>
       </div>
       <div class="slide">
-        <a href="slide-52.png"><img src="slide-52.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-52.png"><img src="chrisdone.com_files/slide-52.png"></a>
+<div>
+  <p>Primops that aren't polymorphic can all be defined via <code>lit</code>,
+    like this.</p>
+</div>
       </div>
       <div class="slide">
-        <a href="slide-53.png"><img src="slide-53.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-53.png"><img src="chrisdone.com_files/slide-53.png"></a>
+<div>
+  <p>As you saw above, writing out polymorphic prims
+  like <code>id</code> is a bit boring and long. So i wrote some
+  template-haskell to generate them for me based on a list like
+  this. I won't go into the implementation because you can imagine
+  it. Just generate the boilerplate.</p>
+</div>
       </div>
       <div class="slide">
-        <a href="slide-54.png"><img src="slide-54.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-54.png"><img src="chrisdone.com_files/slide-54.png"></a>
+<div>
+  <p>The nice thing about using <code>TypeRep</code> is I didn't have to write
+  much when listing out the supported types. I just specify their
+  name and use <code>typeRep</code>. It doesn't matter what kind they
+  are, which is quite nice.</p>
+</div>
       </div>
       <div class="slide">
-        <a href="slide-55.png"><img src="slide-55.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-55.png"><img src="chrisdone.com_files/slide-55.png"></a>
       </div>
       <div class="slide">
-        <a href="slide-56.png"><img src="slide-56.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-56.png"><img src="chrisdone.com_files/slide-56.png"></a>
       </div>
       <div class="slide">
-        <a href="slide-57.png"><img src="slide-57.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-57.png"><img src="chrisdone.com_files/slide-57.png"></a>
       </div>
       <div class="slide">
-        <a href="slide-58.png"><img src="slide-58.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-58.png"><img src="chrisdone.com_files/slide-58.png"></a>
       </div>
       <div class="slide">
-        <a href="slide-59.png"><img src="slide-59.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-59.png"><img src="chrisdone.com_files/slide-59.png"></a>
       </div>
       <div class="slide">
-        <a href="slide-60.png"><img src="slide-60.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-60.png"><img src="chrisdone.com_files/slide-60.png"></a>
       </div>
       <div class="slide">
-        <a href="slide-61.png"><img src="slide-61.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-61.png"><img src="chrisdone.com_files/slide-61.png"></a>
       </div>
       <div class="slide">
-        <a href="slide-62.png"><img src="slide-62.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-62.png"><img src="chrisdone.com_files/slide-62.png"></a>
       </div>
       <div class="slide">
-        <a href="slide-63.png"><img src="slide-63.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-63.png"><img src="chrisdone.com_files/slide-63.png"></a>
       </div>
       <div class="slide">
-        <a href="slide-64.png"><img src="slide-64.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-64.png"><img src="chrisdone.com_files/slide-64.png"></a>
       </div>
       <div class="slide">
-        <a href="slide-65.png"><img src="slide-65.png"></a>
+        <a href="https://chrisdone.com/posts/tour-of-hell/slide-65.png"><img src="chrisdone.com_files/slide-65.png"></a>
       </div>
     </div>
-  </body>
-</html>
+
+
+</body></html>
