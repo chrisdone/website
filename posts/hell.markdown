@@ -95,7 +95,7 @@ Async.race, etc.) that are already used in Haskell, which lets me re-use intuiti
 You can download statically-linked Linux binaries from [the
 releases page.](https://github.com/chrisdone/hell/releases)
 To read about the implementation internals, see [Tour of
-Hell](/pdfs/tour-of-hell.pdf) which is a set of slides I made for
+Hell](https://chrisdone.com/posts/tour-of-hell/) which is a set of slides I made for
 presenting Hell at work.
 
 [^1]: Tired of issues like [this](https://discourse.haskell.org/t/hakyll-error-watching-and-building/8834).
