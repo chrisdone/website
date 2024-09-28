@@ -8,6 +8,7 @@
           font-family: serif;
           line-height: 1.5;
       }
+      a { color: #1a6e8e }
       h1,h2,h3,h4,h5,h6 {
           font-family: Helvetica;
       }
@@ -286,7 +287,7 @@
           the type-checker called
 <code>ExType</code> that just holds the result of the type-check.
           </p>
-          <p>With these types in place, the typechecker for <code>UType -&gt;
+          <p>With these types in place, the type checker for <code>UType -&gt;
             ExType</code> practically writes itself.</p>
         </div>
       </div>
@@ -647,7 +648,7 @@ ULit (forall g. Typed (Term g))</pre>
           </p>
           <p><pre>lit :: Type.Reflection.Typeable a => a -> UTerm
 lit l = ULit (Typed (Type.Reflection.typeOf l) (Lit l))</pre></p>
-          <p>The typechecker case is a no-op:</p>
+          <p>The type checker case is a no-op:</p>
           <p>
             <code>tc (ULit lit) _env = lit</code>
           </p>
@@ -676,7 +677,7 @@ id_ = Forall (\a -> Typed (Type.Reflection.Fun a a) (Lit id))</pre></p>
             <pre>UForall (SomeStarType (Type.Reflection.typeRep @Bool)) id_</pre>
           </p>
           <p>It would merely be the type inferer's job to provide
-            these type reps to the `UForall`, with the checker just
+            these type reps to the <code>UForall</code>, with the checker just
             applying the function:
           </p>
           <p><pre>tc (UForall (SomeStarType typeRep) (Forall f)) _env =
@@ -765,37 +766,188 @@ the first poly type as <code>a ~ Int</code>.
       </div>
       <div class="slide">
         <a href="https://chrisdone.com/posts/tour-of-hell/slide-55.png"><img src="slide-55.png"></a>
+        <div>
+          <p>
+            I'd originally intended to eventually add records to the
+            language, just for ferry data around within a script. But
+            I took some months before settling on an approach.
+          </p>
+          <p>
+            The hard part about supporting records that are type-safe
+            in both the meta language and the object language is
+            mostly about lookup. A fairly obvious thing is that I'd
+            need some kind of anonymous records implementation, but it
+            wasn't clear for a while about how to do safe lookup.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="https://chrisdone.com/posts/tour-of-hell/slide-56.png"><img src="slide-56.png"></a>
+        <div>
+          <p>
+            In the language, declaring records is regular
+            Haskell. Accessing records is done via getters and
+            setters, rather than pattern-matching or dot-notation. I
+            would like dot-notation, but that requires work on the
+            parser, so I'll return to it in the future.
+          </p>
+          <p>
+            The constructor must be qualified like all other names.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="https://chrisdone.com/posts/tour-of-hell/slide-57.png"><img src="slide-57.png"></a>
+        <div>
+          <p>
+            I used a classic GADT-driven implementation of records,
+            with a type-level list consisting of a <code>Symbol</code> (which is
+            why I had to support any <code>SomeTypeRep</code> in the type
+            inferer) and a type. There isn't anything particularly
+            special about <code>Record</code> and <code>List</code>, unless you've never
+            seen HList or anonymous records before.
+          </p>
+          <p>
+            One thing that is a little new is simply that the types,
+            like <code>Person</code> above, are simply <code>Tagged "Main.Person"
+            (ConsR .. )</code> which avoids accidentally permitting two
+            structurally equivalent types from unifying; the tag keeps
+            it <em>nominal</em>. Handily, this does permit me to
+            support true anonymous records down the line, though at
+            the moment, I don't want to stray much from "regular"
+            Haskell if I can help it.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="https://chrisdone.com/posts/tour-of-hell/slide-58.png"><img src="slide-58.png"></a>
+        <div>
+          <p>
+            As I said above, having to support <code>SomeTypeRep</code> motivated
+            me to write a much better implementation of <code>applyTypes</code>
+            which works for any kind of types. And it turns out to be
+            shorter. Although it took a couple of tries to get it
+            right. Unlike, say, Idris or Agda, this kind of type magic
+            in Haskell has bad error messages and not a lot of helpful
+            explanation to guide you along.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="https://chrisdone.com/posts/tour-of-hell/slide-59.png"><img src="slide-59.png"></a>
+        <div>
+          <p>I really did not want to have to write some kind of
+            <code>HashMap</code>-based record implementation with <code>error</code> calls in
+            it. That would harsh my vibe.</p>
+          <p>
+            Fortunately, I figured out another way using
+            <code>Type.Reflection</code> again. I'm really happy with this
+            result; I was able to generate accessors (get, set,
+            modify) for a record that is type-safe in the meta
+            language and also the object language, with no
+            partiality. At type-checking time in Hell's type-checker,
+            it simply returns a <code>Maybe ...</code>  function, and
+            if you get a <code>Just</code>, it compiles; if not, no
+            compile.
+          </p>
+          <p>
+            The implementation I did not expect to work at all. First
+            I unwrap the <code>Tagged</code>. Then I have a
+            loop, <code>go</code>, which walks the
+            record's <em>type</em>, and while walking the type,
+            accumulates a function capable of walking a
+            record's <em>value</em>. If all the types match up and it
+            can find the field with the right name and type, at the
+            end you'll get an accessor function. If not, you get
+            <code>Nothing</code>. Good day, sir!
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="https://chrisdone.com/posts/tour-of-hell/slide-60.png"><img src="slide-60.png"></a>
+        <div>
+          <p>
+          A few notes follow about some things that have been
+          desugared.
+          </p>
+          <p>
+            I will note that Hell desugars everything <em>before</em>
+            type-checking, and inlines everything, all in one step to
+            get one giant expression to type check. That's not normal;
+            usually you type check and then desugar. But it does mean I
+            don't have to implement <a href="https://en.wikipedia.org/wiki/System_F">System F</a>. It's just plain old
+            <a href="https://en.wikipedia.org/wiki/Simply_typed_lambda_calculus">simply
+            typed lambda calculus</a> with a few built-in primitive
+            type constructors.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="https://chrisdone.com/posts/tour-of-hell/slide-61.png"><img src="slide-61.png"></a>
+        <div>
+          <p>
+            This slide shows that record expressions really are just
+            rewritten to applications of <code>Tagged "x" (ConsR @"a"
+            .. NilR)</code>. It all happens before type-checking happens.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="https://chrisdone.com/posts/tour-of-hell/slide-62.png"><img src="slide-62.png"></a>
+        <div>
+          <p>
+            <code>do</code>-notation follows the usual Haskell approach; it's
+            desugared into a series of <code>>>=</code> and <code>>></code>. I've later
+            adjusted this to rewrite <code>HSE.Exp -> HSE.Exp</code> and then
+            call the desugarer on that expression, rather than going
+            straight from <code>do</code>-notation to a <code>UTerm</code>, just to make
+            scope-checking better.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="https://chrisdone.com/posts/tour-of-hell/slide-63.png"><img src="slide-63.png"></a>
+        <div>
+          <p>
+            While working on this I've been thinking of Hell's
+            compiler as "front-loaded". <em>All</em> the heavy lifting
+            happens in the desugarer and the inferer. The type checker
+            is on the order of 100 lines and the evaluator is about 10
+            lines. I really quite like this style of compiler.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="https://chrisdone.com/posts/tour-of-hell/slide-64.png"><img src="slide-64.png"></a>
+        <div>
+          <p>
+            The main entry point that executes scripts looks like
+            this. Parse it, desugar it, infer it, type check it, and
+            then finally, check that <code>main</code> is of
+            type <code>IO ()</code>. If so, simply run the function!
+            That's it.
+          </p>
+        </div>
       </div>
       <div class="slide">
         <a href="https://chrisdone.com/posts/tour-of-hell/slide-65.png"><img src="slide-65.png"></a>
+        <div>
+          <p>
+            End of slides. Hopefully this will actually be legible,
+            both for myself and anyone with niche interest enough to
+            be reading through it.
+          </p>
+          <p>
+            Future work probably includes at
+            least <a href="https://www.youtube.com/watch?v=rdVqQUOvxSU">adding
+            locations to types</a>, adding sum types, and adding a
+            <code>case</code> syntax.
+          </p>
+        </div>
       </div>
+<p>
+  <a href="https://chrisdone.com/">Back to homepage</a>
+</p>
     </div>
 
 
