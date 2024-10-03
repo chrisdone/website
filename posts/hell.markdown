@@ -13,6 +13,9 @@ As of February, I'm using Hell to [generate this
 blog](https://github.com/chrisdone/hell/blob/main/examples/19-blog-generator.hell),
 instead of Hakyll.[^1]
 
+**Update:** As of 3rd Oct 2024, I'm using it on various large (2k
+line) scripts at work in combination with Terraform and various APIs.
+
 ```haskell
 #!/usr/bin/env hell
 main = do
@@ -50,19 +53,17 @@ let's discuss the anatomy of a shell scripting language:
 * It should run immediately (no visible compilation steps).
 * It should have no module system.
 * It should have no package system.[^5]
-* It should have no abstraction capabilities (classes, data types, polymorphic
-* functions, etc.).
-* And it does not change in backwards-incompatible ways.[^2]
+* It should have no abstraction capabilities (classes, fancy data types, polymorphic functions, etc.).
+* It should not change in backwards-incompatible ways.[^2]
 
-Why no module or package system? They make it harder for a system to
-be "done." There always some other integration that you can do; some
-other feature.
+Why no module or package system? They make it harder for a system to be "done."
+There's always some other integration that you can do; some other feature to add.
 I'd prefer Hell to be [cold-blooded
 software](https://dubroy.com/blog/cold-blooded-software/), there's
 [beauty in finished
 software](https://josem.co/the-beauty-of-finished-software/).
 
-Based on the above I can define a _scripting threshold_, meaning, when
+Based on the above, I can define a _scripting threshold_, meaning, when
 you reach for a module system or a package system, or abstraction
 capabilities, or when you want more than what’s in the standard
 library, then you probably want a general purpose programming language
@@ -86,7 +87,7 @@ I made the following decisions when designing the language:
 * Use a faithful Haskell syntax parser.
 * It’s better that way; you get re-use.
 * It has no imports/modules/packages.
-* It doesn't support recursive definitions, but can use `fix` to do so.
+* It doesn't support recursive definitions, but you can use `fix` to do so.
 * It supports basic type-classes (Eq, Ord, Show, Monad), which are needed for e.g. List.lookup and familiar equality things.
 * It does not support polytypes. That’s a kind of abstraction and not needed.
 * It use all the same names for things (List.lookup, Monad.forM,
@@ -98,7 +99,7 @@ To read about the implementation internals, see [Tour of
 Hell](https://chrisdone.com/posts/tour-of-hell/) which is a set of slides I made for
 presenting Hell at work.
 
-[^1]: Tired of issues like [this](https://discourse.haskell.org/t/hakyll-error-watching-and-building/8834).
+[^1]: I'm tired of issues like [this](https://discourse.haskell.org/t/hakyll-error-watching-and-building/8834).
 
 [^2]: See also: [Escaping the Hamster Wheel of Backwards Incompatibility](https://stevelosh.com/blog/2018/08/a-road-to-common-lisp/#s4-escaping-the-hamster-wheel-of-backwards-incompatibility)
 
