@@ -198,7 +198,7 @@ choice. Other things considered: ClojureScript, TypeScript, Rust,
 [ReasonML](https://reasonml.github.io/), Elm,
 [OCaml](https://ocsigen.org/js_of_ocaml/3.1.0/manual/overview).
 
-As of today 2019, I was personally still using PureScript with
+As of 2019, I was personally still using PureScript with
 Halogen.
 
 In 2023 have pushed for our team at Artificial Labs to start trying
@@ -212,7 +212,7 @@ post about it [here.](https://chrisdone.com/posts/htmx-critique/)
 As of 2024, I still think that [Halogen is better than React at
 everything](https://chrisdone.com/posts/halogen-is-better-than-react/),
 and that Halogen is the best way to write an SPA that I have
-experienced.
+experienced, but I haven't used it since 2022.
 
 [^1]: In retrospect, if it was marketed in the same way Elm was, and
 less "academic", it may have taken off. But it could just be that it
