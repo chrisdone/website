@@ -205,7 +205,9 @@ to start trying [Htmx](https://htmx.org/) combined with Haskell. So
 far, the experience is good: we like writing Haskell. There are some
 downsides to Htmx, however: inheritence is a bad idea, request queues
 have bad defaults and are hard to manage, and htmx intuitions (such as
-related to request queues) don't play well with morphdom.
+related to request queues) don't play well with morphdom. I've written
+a full post about it
+[here.](https://chrisdone.com/posts/htmx-critique/)
 
 [^1]: In retrospect, if it was marketed in the same way Elm was, and
 less "academic", it may have taken off. But it could just be that it
