@@ -198,16 +198,21 @@ choice. Other things considered: ClojureScript, TypeScript, Rust,
 [ReasonML](https://reasonml.github.io/), Elm,
 [OCaml](https://ocsigen.org/js_of_ocaml/3.1.0/manual/overview).
 
-2019: As of today, I am personally still using PureScript with Halogen.
+As of today 2019, I was personally still using PureScript with
+Halogen.
 
-**2024 update:** In 2023 have pushed for our team at Artificial Labs
-to start trying [Htmx](https://htmx.org/) combined with Haskell. So
-far, the experience is good: we like writing Haskell. There are some
-downsides to Htmx, however: inheritence is a bad idea, request queues
-have bad defaults and are hard to manage, and htmx intuitions (such as
-related to request queues) don't play well with morphdom. I've written
-a full post about it
-[here.](https://chrisdone.com/posts/htmx-critique/)
+In 2023 have pushed for our team at Artificial Labs to start trying
+[Htmx](https://htmx.org/) combined with Haskell. So far, the
+experience is good: we like writing Haskell. There are some downsides
+to Htmx, however: inheritence is a bad idea, request queues have bad
+defaults and are hard to manage, and htmx intuitions (such as related
+to request queues) don't play well with morphdom. I've written a full
+post about it [here.](https://chrisdone.com/posts/htmx-critique/)
+
+As of 2024, I still think that [Halogen is better than React at
+everything](https://chrisdone.com/posts/halogen-is-better-than-react/),
+and that Halogen is the best way to write an SPA that I have
+experienced.
 
 [^1]: In retrospect, if it was marketed in the same way Elm was, and
 less "academic", it may have taken off. But it could just be that it
