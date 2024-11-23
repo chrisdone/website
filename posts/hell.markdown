@@ -37,7 +37,7 @@ Bash, zsh, fish, etc. have problems:
 * They use quotation (`x=$(ls -1) ..`) which makes it easy to make mistakes.
 * They lean far too heavily on sub processes to do basic things.
 * Therefore things like equality, arithmetic, ordering,
-  etc. are completely unprincipled. Absolutely full of pitfalls.[^4]
+  etc. are completely unprincipled. Absolutely full of pitfalls.[^4][^6]
 
 But, bash does have some upsides: It's stable, it's simple, and it
 works the same on every machine.
@@ -113,3 +113,5 @@ presenting Hell at work.
 [^5]: This excludes scripting languages like
     [zx](https://github.com/google/zx), which sits, unbelievably, on
     the nodejs ecosystem.
+
+[^6]: See [this blog post about code execution](https://yossarian.net/til/post/some-surprising-code-execution-sources-in-bash/)
