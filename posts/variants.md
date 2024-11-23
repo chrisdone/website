@@ -118,7 +118,7 @@ _Text = Variant.right (Variant.left @"Text" x))
 And replaces
 
 ```haskell
-case .. x of Number -> Show.show i; Text t -> t
+case .. x of Number i -> Show.show i; Text t -> t
 ```
 
 with
