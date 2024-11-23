@@ -49,7 +49,7 @@ Hell](https://chrisdone.com/posts/tour-of-hell/).
 This week I added a very rudimentary implementation of sum types, so
 the following is a valid Hell program:
 
-```
+```haskell
 data Value = Text Text | Number Int
 
 main = do
