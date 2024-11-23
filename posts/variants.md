@@ -132,23 +132,7 @@ Variant.run
 ```
 
 I thought this was pretty neat, because it's very simple and very
-clean, and total! As a reminder this is still Hell's entire
-interpreter:
-
-```haskell
--- This is the entire evaluator. Type-safe and total.
-eval :: env -> Term env t -> t
-eval env (Var v) = lookp v env
-eval env (Lam e) = \x -> eval (env, x) e
-eval env (App e1 e2) = (eval env e1) (eval env e2)
-eval _env (Lit a) = a
-
--- Type-safe, total lookup. The final @slot@ determines which slot of
--- a given tuple to pick out.
-lookp :: Var env t -> env -> t
-lookp (ZVar slot) (_, x) = slot x
-lookp (SVar v) (env, _) = lookp v env
-```
+clean, and total!
 
 (To be entirely precise, Hell wraps both records and variants defined
 with `data Foo` with a `Tagged "Foo"` to keep some semblance of
