@@ -1,6 +1,6 @@
 ---
 date: 2025-01-12
-title: "Hell: Year in Review"
+title: "Hell (Haskell shell): Year in Review"
 ---
 
 [Hell](https://chrisdone.github.io/hell/) is my little shell scripting

@@ -6,12 +6,12 @@
 <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
 <atom:link href="https://chrisdone.com/rss.xml" rel="self" type="application/rss+xml" />
 <lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>
-<item><title><![CDATA[Hell: Year in Review]]></title><link>https://chrisdone.com/posts/hell-year-in-review-2025</link><guid>https://chrisdone.com/posts/hell-year-in-review-2025</guid><description><![CDATA[<!doctype html>
+<item><title><![CDATA[Hell (Haskell shell): Year in Review]]></title><link>https://chrisdone.com/posts/hell-year-in-review-2025</link><guid>https://chrisdone.com/posts/hell-year-in-review-2025</guid><description><![CDATA[<!doctype html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hell: Year in Review</title>
+    <title>Hell (Haskell shell): Year in Review</title>
     <style>
     h2 a,h3 a,h4 a,h5 a {
       text-decoration: none;
@@ -121,7 +121,7 @@ h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
   <body>
     <div class="page-wrap">
 
-<h1>Hell: Year in Review</h1>
+<h1>Hell (Haskell shell): Year in Review</h1>
 
 <p><a href="https://chrisdone.github.io/hell/">Hell</a> is my little
 shell scripting language which is a thin layer<a href="#fn1"
