@@ -1,0 +1,327 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hell: Year in Review</title>
+    <style>
+    h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Hell: Year in Review</h1>
+
+<p><a href="https://chrisdone.github.io/hell/">Hell</a> is my little
+shell scripting language which is a thin layer<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>
+over Haskell, using its syntax, its standard library and runtime, with a
+simpler static type system. You can find <a
+href="https://chrisdone.github.io/hell/examples/">examples here</a>.</p>
+<p>Over the year of 2024, I’ve written a few non-trivial shell scripts
+in Hell at work, and now a few colleagues have used it, too. Now I can
+use that to evaluate strengths and weaknesses of it as a tool. I can’t
+really share those shell scripts because it’s not open source, but I’ll
+drop in some contrived example code at the start of each heading as an
+amuse-bouche. The short version of work scripts is:</p>
+<ul>
+<li>Generating an HTML page summarising deployments by talking to Git
+and Terraform and pushing it somewhere to be served up as a web page.
+Like a small, read-only version of ArgoCD.</li>
+<li>Triggering notifications when deploys happen.</li>
+<li>Script to import many “things” via our own customer API in an
+idempotent way.</li>
+<li>Running end-to-end tests involving launching processes together and
+coordinating where they write and what happens when one fails, etc.</li>
+<li>Generally; talking to various APIs (Notion, Intercom, GitHub,
+etc.).</li>
+</ul>
+<p>In Hell, I also implemented type inference, record types, sum types,
+and added a whole bunch of library functions.</p>
+<h2 id="practical">Practical</h2>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Run two things concurrently and return both results</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  (left, right) <span class="ot">&lt;-</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    Async.concurrently</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>       (Main.curl <span class="st">&quot;https://worldtimeapi.org/api/timezone/Europe/London&quot;</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>       (Main.curl <span class="st">&quot;https://worldtimeapi.org/api/timezone/Europe/Rome&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn left</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn right</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Run two things concurrently and return the one that completes first</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    Async.race</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>       (Main.curl <span class="st">&quot;https://worldtimeapi.org/api/timezone/Europe/London&quot;</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>       (Main.curl <span class="st">&quot;https://worldtimeapi.org/api/timezone/Europe/Rome&quot;</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Either</span><span class="op">.</span><span class="fu">either</span> Text.putStrLn Text.putStrLn result</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>curl <span class="ot">=</span> \url <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  (out, err) <span class="ot">&lt;-</span> Text.readProcess_ (Process.proc <span class="st">&quot;curl&quot;</span> [url])</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="dt">IO</span><span class="op">.</span><span class="fu">pure</span> out</span></code></pre></div>
+<p>I’ve seen that it scales quite well e.g. to scripts that are a few
+hundred lines, without feeling that the file is getting out of hand.
+That’s not a surprise and is the main reason I decided to make this
+project in the first place.</p>
+<p>Because the runtime performance is about as good as GHCi, it seems to
+be fast enough for all purposes I’ve used so far. Really, scripting
+languages need to be nimble enough not to show themselves as being
+slower than the I/O and sub-process work they inevitably perform.</p>
+<p>Concurrency in Haskell is very good. Some say “best in class,” which
+is debatable, but it’s had green threads for decades and has a maturity
+and predictability about it. Hell grabs that power tool from the shelf
+and puts it under your belt. So, things like “race” or “map
+concurrently” are things you often want in a shell script, because many
+things are just I/O intensive but embarrassingly parallel jobs. The
+other benefit is that you often want to run N sub-processes concurrently
+for a long time, such as web services and attendant jobs.</p>
+<p>Another absolute win, which I’m sure the PowerScript and Oil Shell
+people will tell you, is that using <em>real</em> data structures in a
+script is phenomenal. I’ve got a script at work (The Deploy Dashboard)
+that uses <code>Map</code> and <code>Set</code> in non-trivial ways to
+time slices over a Git commit history, for example. They’re ample
+efficient, but mostly the benefit comes from a sensible data structure
+that has a predictable behaviour about it.</p>
+<h2 id="ergonomic">Ergonomic</h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  env <span class="ot">&lt;-</span> Environment.getEnvironment</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Maybe monad works!</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Maybe</span><span class="op">.</span><span class="fu">maybe</span> (Text.putStrLn <span class="st">&quot;Oops!&quot;</span>) Text.putStrLn</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>     (<span class="kw">do</span> path <span class="ot">&lt;-</span> List.lookup <span class="st">&quot;PATH&quot;</span> env</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>         home <span class="ot">&lt;-</span> <span class="dt">Functor</span><span class="op">.</span><span class="fu">fmap</span> Text.reverse <span class="op">$</span> List.lookup <span class="st">&quot;HOME&quot;</span> env</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>         <span class="dt">Monad</span><span class="op">.</span><span class="fu">return</span> (Text.concat [path, <span class="st">&quot; and &quot;</span>, home]))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Either monad works!</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Either</span><span class="op">.</span><span class="fu">either</span> Text.putStrLn Text.putStrLn</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">do</span> x <span class="ot">&lt;-</span> Main.parse <span class="st">&quot;foo&quot;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        y <span class="ot">&lt;-</span> Main.parse <span class="st">&quot;foo&quot;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Monad</span><span class="op">.</span><span class="fu">return</span> (Text.concat [x,y]))</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>parse <span class="ot">=</span> \s <span class="ot">-&gt;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="kw">if</span> <span class="dt">Eq</span><span class="op">.</span>eq s <span class="st">&quot;foo&quot;</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>     <span class="kw">then</span> <span class="dt">Either</span><span class="op">.</span><span class="dt">Right</span> <span class="st">&quot;foooo :-)&quot;</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>     <span class="kw">else</span> <span class="dt">Either</span><span class="op">.</span><span class="dt">Left</span> <span class="st">&quot;oh noes!&quot;</span></span></code></pre></div>
+<p>As the syntax is familiar, it’s pretty ergonomic. It’s a very, very
+small subset of Haskell, as can be seen in <a
+href="https://chrisdone.github.io/hell/examples/">the examples.</a> I
+think when I write it, I’m mostly checking what’s in <a
+href="https://chrisdone.github.io/hell/api/">this small page</a> of API
+functions. I think the familiarity and small scope makes it predictable
+and that means one can approach a task using it with confidence.</p>
+<p>As a Haskeller, being easy to write is great. But the larger part is
+being easy to read. It was easy at the start of this project in early
+2024 to say I like reading the code, because I was the only user. Now,
+after reading the code of a few colleagues, I still find it very easy to
+read the code. That’s big win for me.</p>
+<p>When writing scripts for work, I use the <code>--check</code> flag to
+typecheck it regularly. (Pairing with
+<code>watchexec</code>/<code>entr</code> is snappy.) The type system
+saves me time, as often scripts will run something that’s sluggish like
+Terraform that takes ages to do anything, and then you find out you made
+a silly mistake after all that. So it increases the feedback loop.</p>
+<h2 id="low-risk">Low risk</h2>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  Temp.withSystemTempFile <span class="st">&quot;example&quot;</span> \filePath handle <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    Text.putStrLn <span class="op">$</span> Text.concat [<span class="st">&quot;Created temp file &quot;</span>, filePath]</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> proc <span class="ot">=</span> Process.setStdout (Process.useHandleClose handle) <span class="op">$</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>         Process.proc <span class="st">&quot;ls&quot;</span> [<span class="st">&quot;-al&quot;</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    Process.runProcess_ proc</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    contents <span class="ot">&lt;-</span> Text.readFile filePath</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    Text.putStrLn contents</span></code></pre></div>
+<p>The nice thing about this project is that because it doesn’t
+deviate<a href="#fn2" class="footnote-ref" id="fnref2"
+role="doc-noteref"><sup>2</sup></a> from Haskell, one could easily
+translate any script literally to Haskell by adding some imports and
+then compile it to a binary. So any scripts written in Hell has a low
+buss factor: you can always just “lift” it into Haskell and be on a
+maintained ecosystem. This is incidentally the same answer to the
+question: what if my script isn’t fast enough? Haskell compiles to
+competitive machine code with a high throughput garbage collector.</p>
+<p>The other part is that I haven’t added any backwards-incompatible
+changes, because I made it easy for myself not to.</p>
+<p>The first way to do that is to just Learn to Stop Worrying and let
+things stay in that I don’t like. I’ve written about this <a
+href="https://chrisdone.com/posts/ipp/">elsewhere</a>; not breaking
+things for your users doesn’t come naturally, because, ew, I hate this
+function and regret it being born. In the long-run, though, it makes
+everything easier to just accept that some small blemishes.</p>
+<p>The other way is to defer 95% of design decisions to the host
+language (Haskell) and its libraries. So if you see any API in Hell that
+you don’t like, well, it’s not <em>my</em> design, sorry! It’s standard
+Haskell! None of the below is my design, it’s all lifted from Haskell.
+Getting into API design is tempting and a sign of hubris; it can drive
+some to madness!</p>
+<p>A final benefit of not diverging is that one can use any regular
+Haskell source formatter. A source formatter is a huge undertaking for
+any language with a big surface area like Haskell. So Hell gets that for
+free. Use ormolu.</p>
+<h2 id="weaknesses">Weaknesses</h2>
+<p>It has no editor support. Well, it has an Emacs module I wrote for
+myself. But I don’t plan on writing editor support for it. That’s a
+large undertaking; larger than writing the language itself, I expect. So
+this might remain rubbish.</p>
+<p>The error messages aren’t great. They’re okay, but they’re a bit
+barebones. The type errors might point out a location that isn’t
+obvious. This can be improved, discussion on GitHub here: <a
+href="https://github.com/chrisdone/hell/discussions/75">Reproduction of
+a bad type error message</a></p>
+<h2 id="future-work">Future work</h2>
+<p>For the year 2025, I will probably work on these:</p>
+<ul>
+<li>Better error messages.</li>
+<li>Move from haskell-src-exts to GHC’s own parser, to reduce any
+possible deviations from the norm, and to get recent syntactic goodies.
+This is a big job, but I’ve got the whole year.</li>
+<li>Move to an efficient unifier for the inference pipeline.</li>
+<li>Probably a steady but decreasing pace of adding library
+functions.</li>
+</ul>
+<p>Otherwise I think my plans are more oriented around using it to write
+automation, than adding any new features.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>AKA shallow embedding: The object language reuses as
+many features of the meta language as possible. Many aspects are
+delegated to the meta language.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Not much. There are a few library functions that differ
+and the type-system is dumber.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2025-01-12 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+    var headers = document.querySelectorAll('h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>

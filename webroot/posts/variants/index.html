@@ -1,0 +1,247 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Adding sum types (variants) to Hell</title>
+    <style>
+    h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Adding sum types (variants) to Hell</h1>
+
+<p><a href="https://chrisdone.github.io/hell/">Hell</a> is my little
+shell scripting language that’s a thin layer over Haskell’s own standard
+library and runtime. This post is for people that like language
+implementation details. It has a simply typed system, without polytypes
+(no <code>forall</code>).</p>
+<p>It has classic Haskell 98-ish records, this is a valid Hell
+program:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Person</span> <span class="ot">=</span> <span class="dt">Person</span> {<span class="ot"> age ::</span> <span class="dt">Int</span>,<span class="ot"> name ::</span> <span class="dt">Text</span> }</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="op">$</span> Record.get <span class="op">@</span><span class="st">&quot;name&quot;</span> Main.person</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="op">$</span> Record.get <span class="op">@</span><span class="st">&quot;name&quot;</span> <span class="op">$</span> Record.set <span class="op">@</span><span class="st">&quot;name&quot;</span> <span class="st">&quot;Mary&quot;</span> Main.person</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="op">$</span> Record.get <span class="op">@</span><span class="st">&quot;name&quot;</span> <span class="op">$</span> Record.modify <span class="op">@</span><span class="st">&quot;name&quot;</span> Text.reverse Main.person</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>person <span class="ot">=</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a> <span class="dt">Main.Person</span> { name <span class="ot">=</span> <span class="st">&quot;Chris&quot;</span>, age <span class="ot">=</span> <span class="dv">23</span> }</span></code></pre></div>
+<p>It’s built upon the following “classic” anonymous records definition
+in Haskell:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">List</span> <span class="ot">=</span> <span class="dt">NilL</span> <span class="op">|</span> <span class="dt">ConsL</span> <span class="dt">Symbol</span> <span class="dt">Type</span> <span class="dt">List</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Record</span> (<span class="ot">xs ::</span> <span class="dt">List</span>) <span class="kw">where</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">NilR</span><span class="ot">  ::</span> <span class="dt">Record</span> <span class="dt">&#39;NilL</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ConsR</span><span class="ot"> ::</span> <span class="kw">forall</span> k a xs<span class="op">.</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    a <span class="ot">-&gt;</span> <span class="dt">Record</span> xs <span class="ot">-&gt;</span> <span class="dt">Record</span> (<span class="dt">ConsL</span> k a xs)</span></code></pre></div>
+<p>The record is a linked list type that is indexed by a type which
+itself is also a linked list, and in both cases we keep both a key
+<code>k</code> and a value <code>a</code>.</p>
+<p>This exact representation is used in Hell. It’s defined in the meta
+language (Haskell) and used in the object language (Hell) directly and
+is manipulated in a type-safe way; so accessor functions are all total
+(they don’t have an “otherwise throw an error” case). I cover this in a
+bit more detail in <a
+href="https://chrisdone.com/posts/tour-of-hell/">Tour of Hell</a>.</p>
+<p>This week I added a very rudimentary implementation of sum types, so
+the following is a valid Hell program:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Value</span> <span class="ot">=</span> <span class="dt">Text</span> <span class="dt">Text</span> <span class="op">|</span> <span class="dt">Number</span> <span class="dt">Int</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> printIt <span class="ot">=</span> \x <span class="ot">-&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        Text.putStrLn <span class="kw">case</span> x <span class="kw">of</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>          <span class="dt">Number</span> i <span class="ot">-&gt;</span> <span class="dt">Show</span><span class="op">.</span><span class="fu">show</span> i</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>          <span class="dt">Text</span> t <span class="ot">-&gt;</span> t</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  printIt <span class="op">$</span> <span class="dt">Main.Number</span> <span class="dv">123</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  printIt <span class="op">$</span> <span class="dt">Main.Text</span> <span class="st">&quot;abc&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Monad</span><span class="op">.</span><span class="fu">mapM_</span> printIt [<span class="dt">Main.Number</span> <span class="dv">123</span>,<span class="dt">Main.Text</span> <span class="st">&quot;abc&quot;</span>]</span></code></pre></div>
+<p>The runtime representation of a constructor is shaped like a
+combination of <code>Either</code> and <code>Record</code>:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Variant</span> (<span class="ot">xs ::</span> <span class="dt">List</span>) <span class="kw">where</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">LeftV</span><span class="ot"> ::</span> <span class="kw">forall</span> k a xs<span class="op">.</span> a <span class="ot">-&gt;</span> <span class="dt">Variant</span> (<span class="dt">ConsL</span> k a xs)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">RightV</span><span class="ot"> ::</span> <span class="kw">forall</span> k a xs k&#39;&#39; a&#39;&#39;<span class="op">.</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Variant</span> (<span class="dt">ConsL</span> k&#39;&#39; a&#39;&#39; xs) <span class="ot">-&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Variant</span> (<span class="dt">ConsL</span> k a (<span class="dt">ConsL</span> k&#39;&#39; a&#39;&#39; xs))</span></code></pre></div>
+<p>The trick here is to note that the index of kind <code>List</code> is
+only ever <code>ConsL ..</code> meaning it cannot be ever
+<code>NilL</code> (empty).</p>
+<p>The challenging question in defining a case analysis on this type is
+how to make it total, and not require an “or else throw” case. I went
+with a simple accessor data structure that looks like a case:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Accessor</span> (<span class="ot">xs ::</span> <span class="dt">List</span>) r <span class="kw">where</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">NilA</span><span class="ot">  ::</span> <span class="dt">Accessor</span> <span class="dt">&#39;NilL</span> r</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">ConsA</span><span class="ot"> ::</span> <span class="kw">forall</span> k a r xs<span class="op">.</span> (a <span class="ot">-&gt;</span> r) <span class="ot">-&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Accessor</span> xs r <span class="ot">-&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Accessor</span> (<span class="dt">ConsL</span> k a xs) r</span></code></pre></div>
+<p>It’s basically the same as <code>Record</code> except that every
+field is <code>(a -&gt; r)</code> instead of just <code>a</code>,
+meaning we have a record of functions.</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">runAccessor ::</span> <span class="dt">Variant</span> xs <span class="ot">-&gt;</span> <span class="dt">Accessor</span> xs r <span class="ot">-&gt;</span> r</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>runAccessor (<span class="dt">LeftV</span> a) (<span class="dt">ConsA</span> f _) <span class="ot">=</span> f a</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>runAccessor (<span class="dt">RightV</span> xs) (<span class="dt">ConsA</span> _ ys) <span class="ot">=</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  runAccessor xs ys</span></code></pre></div>
+<p>This function is total and GHC is happy that it is exhaustive.</p>
+<p>From here, Hell’s runtime didn’t need to be touched. The desugarer
+simply replaces</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Value</span> <span class="ot">=</span> <span class="dt">Number</span> <span class="dt">Int</span> <span class="op">|</span> <span class="dt">Text</span> <span class="dt">Text</span></span></code></pre></div>
+<p>with something like:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>_Number <span class="ot">=</span> Variant.left <span class="op">@</span><span class="st">&quot;Number&quot;</span> x)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>_Text <span class="ot">=</span> Variant.right (Variant.left <span class="op">@</span><span class="st">&quot;Text&quot;</span> x))</span></code></pre></div>
+<p>(I sort the constructors alphabetically for a canonical
+ordering.)</p>
+<p>And replaces</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">case</span> <span class="op">..</span> x <span class="kw">of</span> <span class="dt">Number</span> i <span class="ot">-&gt;</span> <span class="dt">Show</span><span class="op">.</span><span class="fu">show</span> i; <span class="dt">Text</span> t <span class="ot">-&gt;</span> t</span></code></pre></div>
+<p>with</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Variant.run</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  x</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">$</span> Variant.cons <span class="op">@</span><span class="st">&quot;Main.Number&quot;</span> (\i <span class="ot">-&gt;</span> <span class="dt">Show</span><span class="op">.</span><span class="fu">show</span> i) <span class="op">$</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>     Variant.cons <span class="op">@</span><span class="st">&quot;Main.Text&quot;</span> (\t <span class="ot">-&gt;</span> t) <span class="op">$</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>       Variant.nil</span></code></pre></div>
+<p>I thought this was pretty neat, because it’s very simple and very
+clean, and total!</p>
+<p>(To be entirely precise, Hell wraps both records and variants defined
+with <code>data Foo</code> with a <code>Tagged "Foo"</code> to keep some
+semblance of nominal typing. In case someone reads the code and thinks
+the tagged part is important.)</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2024-11-23 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+    var headers = document.querySelectorAll('h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>

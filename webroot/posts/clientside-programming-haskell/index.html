@@ -6,6 +6,22 @@
     <title>Client-side web programming in Haskell: A
 retrospective</title>
     <style>
+    h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
       body {
       max-width: 40em;
       margin: .5in auto;
@@ -47,9 +63,12 @@ retrospective</title>
       footer {
       margin-top: 1.5em;
       padding-top: 1.5em;
-      border-top: 1px solid #ccc;
+          border-top: 1px solid #ccc;
       margin-bottom: 2em
       }
+    hr {
+  border: 0.5px solid #ccc;
+}
 
       footer span {
       display: none;
@@ -273,15 +292,20 @@ PureScript and Halogen come out as the best possible choice. Other
 things considered: ClojureScript, TypeScript, Rust, <a
 href="https://reasonml.github.io/">ReasonML</a>, Elm, <a
 href="https://ocsigen.org/js_of_ocaml/3.1.0/manual/overview">OCaml</a>.</p>
-<p>2019: As of today, I am personally still using PureScript with
-Halogen.</p>
-<p><strong>2024 update:</strong> In 2023 have pushed for our team at
-Artificial Labs to start trying <a href="https://htmx.org/">Htmx</a>
-combined with Haskell. So far, the experience is good: we like writing
-Haskell. There are some downsides to Htmx, however: inheritence is a bad
-idea, request queues have bad defaults and are hard to manage, and htmx
-intuitions (such as related to request queues) don’t play well with
-morphdom.</p>
+<p>As of 2019, I was personally still using PureScript with Halogen.</p>
+<p>In 2023 have pushed for our team at Artificial Labs to start trying
+<a href="https://htmx.org/">Htmx</a> combined with Haskell. So far, the
+experience is good: we like writing Haskell. There are some downsides to
+Htmx, however: inheritence is a bad idea, request queues have bad
+defaults and are hard to manage, and htmx intuitions (such as related to
+request queues) don’t play well with morphdom. I’ve written a full post
+about it <a
+href="https://chrisdone.com/posts/htmx-critique/">here.</a></p>
+<p>As of 2024, I still think that <a
+href="https://chrisdone.com/posts/halogen-is-better-than-react/">Halogen
+is better than React at everything</a>, and that Halogen is the best way
+to write an SPA that I have experienced, but I haven’t used it since
+2022.</p>
 <section id="footnotes" class="footnotes footnotes-end-of-document"
 role="doc-endnotes">
 <hr />
@@ -306,5 +330,18 @@ role="doc-backlink">↩︎</a></p></li>
 </footer>
 
     </div>
+    <script>
+    var headers = document.querySelectorAll('h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
   </body>
 </html>

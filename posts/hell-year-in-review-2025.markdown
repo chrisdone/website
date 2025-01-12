@@ -1,11 +1,12 @@
 ---
 date: 2025-01-12
-title: "Hell: Year in Review (2025)"
+title: "Hell: Year in Review"
 ---
 
 [Hell](https://chrisdone.github.io/hell/) is my little shell scripting
 language which is a thin layer[^1] over Haskell, using its syntax, its
-standard library and runtime, with a simpler static type system.
+standard library and runtime, with a simpler static type system. You
+can find [examples here](https://chrisdone.github.io/hell/examples/).
 
 Over the year of 2024, I've written a few non-trivial shell scripts in
 Hell at work, and now a few colleagues have used it, too. Now I can

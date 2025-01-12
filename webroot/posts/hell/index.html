@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hell: Shell scripting Haskell dialect</title>
     <style>
+    h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
       body {
       max-width: 40em;
       margin: .5in auto;
@@ -46,9 +62,12 @@
       footer {
       margin-top: 1.5em;
       padding-top: 1.5em;
-      border-top: 1px solid #ccc;
+          border-top: 1px solid #ccc;
       margin-bottom: 2em
       }
+    hr {
+  border: 0.5px solid #ccc;
+}
 
       footer span {
       display: none;
@@ -102,6 +121,9 @@ own shell scripting purposes. As of February, I’m using Hell to <a
 href="https://github.com/chrisdone/hell/blob/main/examples/19-blog-generator.hell">generate
 this blog</a>, instead of Hakyll.<a href="#fn1" class="footnote-ref"
 id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p><strong>Update:</strong> As of 3rd Oct 2024, I’m using it on various
+large (2k line) scripts at work in combination with Terraform and
+various APIs.</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#!/usr/bin/env hell</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
@@ -121,44 +143,46 @@ to make mistakes.</li>
 <li>They lean far too heavily on sub processes to do basic things.</li>
 <li>Therefore things like equality, arithmetic, ordering, etc. are
 completely unprincipled. Absolutely full of pitfalls.<a href="#fn2"
-class="footnote-ref" id="fnref2"
-role="doc-noteref"><sup>2</sup></a></li>
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a><a
+href="#fn3" class="footnote-ref" id="fnref3"
+role="doc-noteref"><sup>3</sup></a></li>
 </ul>
 <p>But, bash does have some upsides: It’s stable, it’s simple, and it
 works the same on every machine. You can write a bash script and keep it
 running for years while never having to change any code. The code you
 wrote last year will be the same next year, which is not true of most
-popular programming languages.</p>
+popular programming languages. <a
+href="http://h2.jaguarpaw.co.uk/posts/ghc-8.10-9.6-experience-report/">Look
+at Haskell.</a></p>
 <p>So in the interest of defining a language that I <em>would</em> like
 to use, let’s discuss the anatomy of a shell scripting language:</p>
 <ul>
 <li>It should be very basic.</li>
 <li>It should run immediately (no visible compilation steps).</li>
 <li>It should have no module system.</li>
-<li>It should have no package system.<a href="#fn3" class="footnote-ref"
-id="fnref3" role="doc-noteref"><sup>3</sup></a></li>
-<li>It should have no abstraction capabilities (classes, data types,
-polymorphic</li>
-<li>functions, etc.).</li>
-<li>And it does not change in backwards-incompatible ways.<a href="#fn4"
-class="footnote-ref" id="fnref4"
-role="doc-noteref"><sup>4</sup></a></li>
+<li>It should have no package system.<a href="#fn4" class="footnote-ref"
+id="fnref4" role="doc-noteref"><sup>4</sup></a></li>
+<li>It should have no abstraction capabilities (classes, fancy data
+types, polymorphic functions, etc.).</li>
+<li>It should not change in backwards-incompatible ways.<a href="#fn5"
+class="footnote-ref" id="fnref5"
+role="doc-noteref"><sup>5</sup></a></li>
 </ul>
 <p>Why no module or package system? They make it harder for a system to
-be “done.” There always some other integration that you can do; some
-other feature. I’d prefer Hell to be <a
+be “done.” There’s always some other integration that you can do; some
+other feature to add. I’d prefer Hell to be <a
 href="https://dubroy.com/blog/cold-blooded-software/">cold-blooded
 software</a>, there’s <a
 href="https://josem.co/the-beauty-of-finished-software/">beauty in
 finished software</a>.</p>
-<p>Based on the above I can define a <em>scripting threshold</em>,
+<p>Based on the above, I can define a <em>scripting threshold</em>,
 meaning, when you reach for a module system or a package system, or
 abstraction capabilities, or when you want more than what’s in the
 standard library, then you probably want a general purpose programming
 language instead.</p>
 <p>Taking this into consideration, I opted for making a Haskell
-dialect<a href="#fn5" class="footnote-ref" id="fnref5"
-role="doc-noteref"><sup>5</sup></a> because of the following
+dialect<a href="#fn6" class="footnote-ref" id="fnref6"
+role="doc-noteref"><sup>6</sup></a> because of the following
 reasons:</p>
 <ul>
 <li>I know Haskell.</li>
@@ -176,7 +200,7 @@ reasons:</p>
 <li>Use a faithful Haskell syntax parser.</li>
 <li>It’s better that way; you get re-use.</li>
 <li>It has no imports/modules/packages.</li>
-<li>It doesn’t support recursive definitions, but can use
+<li>It doesn’t support recursive definitions, but you can use
 <code>fix</code> to do so.</li>
 <li>It supports basic type-classes (Eq, Ord, Show, Monad), which are
 needed for e.g. List.lookup and familiar equality things.</li>
@@ -189,33 +213,37 @@ intuitions.</li>
 <p>You can download statically-linked Linux binaries from <a
 href="https://github.com/chrisdone/hell/releases">the releases page.</a>
 To read about the implementation internals, see <a
-href="/pdfs/tour-of-hell.pdf">Tour of Hell</a> which is a set of slides
-I made for presenting Hell at work.</p>
+href="https://chrisdone.com/posts/tour-of-hell/">Tour of Hell</a> which
+is a set of slides I made for presenting Hell at work.</p>
 <section id="footnotes" class="footnotes footnotes-end-of-document"
 role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Tired of issues like <a
+<li id="fn1"><p>I’m tired of issues like <a
 href="https://discourse.haskell.org/t/hakyll-error-watching-and-building/8834">this</a>.<a
 href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Just check out the huge list of <a
 href="https://github.com/koalaman/shellcheck">linting issues in
 ShellCheck.</a><a href="#fnref2" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>This excludes scripting languages like <a
-href="https://github.com/google/zx">zx</a>, which sits, unbelievably, on
-the nodejs ecosystem.<a href="#fnref3" class="footnote-back"
-role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>See also: <a
-href="https://stevelosh.com/blog/2018/08/a-road-to-common-lisp/#s4-escaping-the-hamster-wheel-of-backwards-incompatibility">Escaping
-the Hamster Wheel of Backwards Incompatibility</a><a href="#fnref4"
+<li id="fn3"><p>See <a
+href="https://yossarian.net/til/post/some-surprising-code-execution-sources-in-bash/">this
+blog post about code execution</a><a href="#fnref3"
 class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn5"><p>And not using some other alt. shell scripting language
+<li id="fn4"><p>This excludes scripting languages like <a
+href="https://github.com/google/zx">zx</a>, which sits, unbelievably, on
+the nodejs ecosystem.<a href="#fnref4" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>See also: <a
+href="https://stevelosh.com/blog/2018/08/a-road-to-common-lisp/#s4-escaping-the-hamster-wheel-of-backwards-incompatibility">Escaping
+the Hamster Wheel of Backwards Incompatibility</a><a href="#fnref5"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>And not using some other alt. shell scripting language
 or <a
 href="https://arathunku.com/b/2024/shell-scripting-with-elixir/">using
 Elixir</a>, or <a
 href="http://www.oilshell.org/blog/2018/01/28.html">Oil</a>.<a
-href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -230,5 +258,18 @@ href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </footer>
 
     </div>
+    <script>
+    var headers = document.querySelectorAll('h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
   </body>
 </html>

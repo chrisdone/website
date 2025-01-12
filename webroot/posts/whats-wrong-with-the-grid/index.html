@@ -5,6 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>What’s wrong with the grid?</title>
     <style>
+    h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
       body {
       max-width: 40em;
       margin: .5in auto;
@@ -46,9 +62,12 @@
       footer {
       margin-top: 1.5em;
       padding-top: 1.5em;
-      border-top: 1px solid #ccc;
+          border-top: 1px solid #ccc;
       margin-bottom: 2em
       }
+    hr {
+  border: 0.5px solid #ccc;
+}
 
       footer span {
       display: none;
@@ -224,5 +243,18 @@ we are fixing it.</p>
 </footer>
 
     </div>
+    <script>
+    var headers = document.querySelectorAll('h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
   </body>
 </html>
