@@ -169,23 +169,25 @@ That’s not a surprise and is the main reason I decided to make this
 project in the first place.</p>
 <p>Because the runtime performance is about as good as GHCi, it seems to
 be fast enough for all purposes I’ve used so far. Really, scripting
-languages need to be nimble enough not to show themselves as being
+languages only need to be nimble enough not to show themselves as being
 slower than the I/O and sub-process work they inevitably perform.</p>
 <p>Concurrency in Haskell is very good. Some say “best in class,” which
 is debatable, but it’s had green threads for decades and has a maturity
 and predictability about it. Hell grabs that power tool from the shelf
 and puts it under your belt. So, things like “race” or “map
 concurrently” are things you often want in a shell script, because many
-things are just I/O intensive but embarrassingly parallel jobs. The
-other benefit is that you often want to run N sub-processes concurrently
-for a long time, such as web services and attendant jobs.</p>
+things are just I/O intensive and can sometimes be embarrassingly
+parallel jobs. The other benefit is that you often want to run N
+sub-processes concurrently for a long time, such as web services and
+attendant jobs, and structured concurrency with <code>Async</code> makes
+that neat and tidy.</p>
 <p>Another absolute win, which I’m sure the PowerScript and Oil Shell
 people will tell you, is that using <em>real</em> data structures in a
 script is phenomenal. I’ve got a script at work (The Deploy Dashboard)
 that uses <code>Map</code> and <code>Set</code> in non-trivial ways to
-time slices over a Git commit history, for example. They’re ample
-efficient, but mostly the benefit comes from a sensible data structure
-that has a predictable behaviour about it.</p>
+compute time slices over a Git commit history, for example. They’re
+ample efficient, but mostly the benefit comes from using a sensible data
+structure that has a predictable behaviour about it.</p>
 <h2 id="ergonomic">Ergonomic</h2>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
@@ -218,13 +220,13 @@ and that means one can approach a task using it with confidence.</p>
 being easy to read. It was easy at the start of this project in early
 2024 to say I like reading the code, because I was the only user. Now,
 after reading the code of a few colleagues, I still find it very easy to
-read the code. That’s big win for me.</p>
+read the code. That’s a big win for me.</p>
 <p>When writing scripts for work, I use the <code>--check</code> flag to
 typecheck it regularly. (Pairing with
 <code>watchexec</code>/<code>entr</code> is snappy.) The type system
 saves me time, as often scripts will run something that’s sluggish like
 Terraform that takes ages to do anything, and then you find out you made
-a silly mistake after all that. So it increases the feedback loop.</p>
+a silly mistake after all that. So it improves the feedback loop.</p>
 <h2 id="low-risk">Low risk</h2>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
@@ -240,51 +242,58 @@ deviate<a href="#fn2" class="footnote-ref" id="fnref2"
 role="doc-noteref"><sup>2</sup></a> from Haskell, one could easily
 translate any script literally to Haskell by adding some imports and
 then compile it to a binary. So any scripts written in Hell has a low
-buss factor: you can always just “lift” it into Haskell and be on a
+bus factor: you can always just “lift” it into Haskell and be on a
 maintained ecosystem. This is incidentally the same answer to the
 question: what if my script isn’t fast enough? Haskell compiles to
-competitive machine code with a high throughput garbage collector.</p>
+competitive machine code with a high throughput garbage collector, so if
+down the line a Hell script became part of some core infra and also
+became a performance problem, you could compile it to get a huge
+performance boost, at the cost of more complicated build infrastructure
+vs Hell which is just a single-binary interpreter.</p>
 <p>The other part is that I haven’t added any backwards-incompatible
-changes, because I made it easy for myself not to.</p>
+changes, because I made it easy for myself not to, in two ways.</p>
 <p>The first way to do that is to just Learn to Stop Worrying and let
 things stay in that I don’t like. I’ve written about this <a
 href="https://chrisdone.com/posts/ipp/">elsewhere</a>; not breaking
 things for your users doesn’t come naturally, because, ew, I hate this
-function and regret it being born. In the long-run, though, it makes
+function and regret it being born! In the long-run, though, it makes
 everything easier to just accept that some small blemishes.</p>
 <p>The other way is to defer 95% of design decisions to the host
-language (Haskell) and its libraries. So if you see any API in Hell that
-you don’t like, well, it’s not <em>my</em> design, sorry! It’s standard
-Haskell! None of the below is my design, it’s all lifted from Haskell.
-Getting into API design is tempting and a sign of hubris; it can drive
-some to madness!</p>
+language (Haskell) and its libraries. So, if you see any API in Hell
+that you don’t like, well, it’s not <em>my</em> design, sorry! It’s
+standard Haskell! None of the above code sample is my design, it’s all
+lifted from Haskell. Getting into API design is tempting, and a sign of
+hubris… it can drive some to madness!</p>
 <p>A final benefit of not diverging is that one can use any regular
 Haskell source formatter. A source formatter is a huge undertaking for
 any language with a big surface area like Haskell. So Hell gets that for
-free. Use ormolu.</p>
+free. Use ormolu the standard Haskell formatter.</p>
 <h2 id="weaknesses">Weaknesses</h2>
-<p>It has no editor support. Well, it has an Emacs module I wrote for
-myself. But I don’t plan on writing editor support for it. That’s a
-large undertaking; larger than writing the language itself, I expect. So
-this might remain rubbish.</p>
+<p>It has no editor support.<a href="#fn3" class="footnote-ref"
+id="fnref3" role="doc-noteref"><sup>3</sup></a> I don’t plan on writing
+editor support for it. That’s a very large undertaking; larger than
+writing the language itself, I expect. So this aspect of the tool might
+remain rubbish.</p>
 <p>The error messages aren’t great. They’re okay, but they’re a bit
 barebones. The type errors might point out a location that isn’t
-obvious. This can be improved, discussion on GitHub here: <a
+obvious. This can be improved and I do want to improve it over time. See
+the discussion on GitHub here: <a
 href="https://github.com/chrisdone/hell/discussions/75">Reproduction of
 a bad type error message</a></p>
 <h2 id="future-work">Future work</h2>
-<p>For the year 2025, I will probably work on these:</p>
+<p>For the year 2025, I will probably work on these over the course of
+the year:</p>
 <ul>
 <li>Better error messages.</li>
-<li>Move from haskell-src-exts to GHC’s own parser, to reduce any
-possible deviations from the norm, and to get recent syntactic goodies.
-This is a big job, but I’ve got the whole year.</li>
+<li>Move from haskell-src-exts (a Haskell parser) to GHC’s own parser,
+to reduce any possible deviations from the norm, and to get recent
+syntactic goodies. This is a big job, but I’ve got the whole year.</li>
 <li>Move to an efficient unifier for the inference pipeline.</li>
 <li>Probably a steady but decreasing pace of adding library
 functions.</li>
 </ul>
-<p>Otherwise I think my plans are more oriented around using it to write
-automation, than adding any new features.</p>
+<p>Otherwise, I think my plans are more orientated around using it to
+write automation, rather than adding any new features.</p>
 <section id="footnotes" class="footnotes footnotes-end-of-document"
 role="doc-endnotes">
 <hr />
@@ -295,6 +304,10 @@ delegated to the meta language.<a href="#fnref1" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Not much. There are a few library functions that differ
 and the type-system is dumber.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>AKA shallow embedding: The object language reuses as
+many features of the meta language as possible. Many aspects are
+delegated to the meta language.<a href="#fnref3" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>

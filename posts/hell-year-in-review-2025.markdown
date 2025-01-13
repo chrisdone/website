@@ -59,25 +59,28 @@ this project in the first place.
 
 Because the runtime performance is about as good as GHCi, it seems to
 be fast enough for all purposes I've used so far. Really, scripting
-languages need to be nimble enough not to show themselves as being
-slower than the I/O and sub-process work they inevitably perform.
+languages only need to be nimble enough not to show themselves as
+being slower than the I/O and sub-process work they inevitably
+perform.
 
 Concurrency in Haskell is very good. Some say "best in class," which
 is debatable, but it's had green threads for decades and has a
 maturity and predictability about it. Hell grabs that power tool from
 the shelf and puts it under your belt. So, things like "race" or "map
 concurrently" are things you often want in a shell script, because
-many things are just I/O intensive but embarrassingly parallel
-jobs. The other benefit is that you often want to run N sub-processes
-concurrently for a long time, such as web services and attendant jobs.
+many things are just I/O intensive and can sometimes be embarrassingly
+parallel jobs. The other benefit is that you often want to run N
+sub-processes concurrently for a long time, such as web services and
+attendant jobs, and structured concurrency with `Async` makes that
+neat and tidy.
 
 Another absolute win, which I'm sure the PowerScript and Oil Shell
 people will tell you, is that using *real* data structures in a script
 is phenomenal. I've got a script at work (The Deploy Dashboard) that
-uses `Map` and `Set` in non-trivial ways to time slices over a Git
-commit history, for example. They're ample efficient, but mostly the
-benefit comes from a sensible data structure that has a predictable
-behaviour about it.
+uses `Map` and `Set` in non-trivial ways to compute time slices over a
+Git commit history, for example. They're ample efficient, but mostly
+the benefit comes from using a sensible data structure that has a
+predictable behaviour about it.
 
 ## Ergonomic
 
@@ -115,13 +118,13 @@ As a Haskeller, being easy to write is great. But the larger part is
 being easy to read. It was easy at the start of this project in early
 2024 to say I like reading the code, because I was the only user. Now,
 after reading the code of a few colleagues, I still find it very easy
-to read the code. That's big win for me.
+to read the code. That's a big win for me.
 
 When writing scripts for work, I use the `--check` flag to typecheck
 it regularly. (Pairing with `watchexec`/`entr` is snappy.) The type
 system saves me time, as often scripts will run something that's
 sluggish like Terraform that takes ages to do anything, and then you
-find out you made a silly mistake after all that. So it increases the
+find out you made a silly mistake after all that. So it improves the
 feedback loop.
 
 ## Low risk
@@ -140,58 +143,66 @@ main = do
 The nice thing about this project is that because it doesn't
 deviate[^2] from Haskell, one could easily translate any script
 literally to Haskell by adding some imports and then compile it to a
-binary. So any scripts written in Hell has a low buss factor: you can
+binary. So any scripts written in Hell has a low bus factor: you can
 always just "lift" it into Haskell and be on a maintained
 ecosystem. This is incidentally the same answer to the question: what
 if my script isn't fast enough? Haskell compiles to competitive
-machine code with a high throughput garbage collector.
+machine code with a high throughput garbage collector, so if down the
+line a Hell script became part of some core infra and also became a
+performance problem, you could compile it to get a huge performance
+boost, at the cost of more complicated build infrastructure vs Hell
+which is just a single-binary interpreter.
 
 The other part is that I haven't added any backwards-incompatible
-changes, because I made it easy for myself not to.
+changes, because I made it easy for myself not to, in two ways.
 
 The first way to do that is to just Learn to Stop Worrying and let
 things stay in that I don't like. I've written about this
 [elsewhere](https://chrisdone.com/posts/ipp/); not breaking things for
 your users doesn't come naturally, because, ew, I hate this function
-and regret it being born. In the long-run, though, it makes everything
+and regret it being born! In the long-run, though, it makes everything
 easier to just accept that some small blemishes.
 
 The other way is to defer 95% of design decisions to the host language
-(Haskell) and its libraries. So if you see any API in Hell that you
+(Haskell) and its libraries. So, if you see any API in Hell that you
 don't like, well, it's not *my* design, sorry! It's standard Haskell!
-None of the below is my design, it's all lifted from Haskell. Getting
-into API design is tempting and a sign of hubris; it can drive some
-to madness!
+None of the above code sample is my design, it's all lifted from
+Haskell. Getting into API design is tempting, and a sign of
+hubris... it can drive some to madness!
 
 A final benefit of not diverging is that one can use any regular
 Haskell source formatter. A source formatter is a huge undertaking for
 any language with a big surface area like Haskell. So Hell gets that
-for free. Use ormolu.
+for free. Use ormolu the standard Haskell formatter.
 
 ## Weaknesses
 
-It has no editor support. Well, it has an Emacs module I wrote for
-myself. But I don't plan on writing editor support for it. That's a
-large undertaking; larger than writing the language itself, I
-expect. So this might remain rubbish.
+It has no editor support.[^1] I don't plan on writing editor support
+for it. That's a very large undertaking; larger than writing the
+language itself, I expect. So this aspect of the tool might remain
+rubbish.
 
 The error messages aren't great. They're okay, but they're a bit
 barebones. The type errors might point out a location that isn't
-obvious. This can be improved, discussion on GitHub here: [Reproduction of a bad type error message](https://github.com/chrisdone/hell/discussions/75)
+obvious. This can be improved and I do want to improve it over
+time. See the discussion on GitHub here: [Reproduction of a bad type
+error message](https://github.com/chrisdone/hell/discussions/75)
 
 ## Future work
 
-For the year 2025, I will probably work on these:
+For the year 2025, I will probably work on these over the course of
+the year:
 
 * Better error messages.
-* Move from haskell-src-exts to GHC's own parser, to reduce any
-  possible deviations from the norm, and to get recent syntactic
-  goodies. This is a big job, but I've got the whole year.
+* Move from haskell-src-exts (a Haskell parser) to GHC's own parser,
+  to reduce any possible deviations from the norm, and to get recent
+  syntactic goodies. This is a big job, but I've got the whole year.
 * Move to an efficient unifier for the inference pipeline.
 * Probably a steady but decreasing pace of adding library functions.
 
-Otherwise I think my plans are more oriented around using it to write
-automation, than adding any new features.
+Otherwise, I think my plans are more orientated around using it to
+write automation, rather than adding any new features.
+
 
 [^1]: AKA shallow embedding: The object language reuses as many features
     of the meta language as possible. Many aspects are delegated to
@@ -199,3 +210,6 @@ automation, than adding any new features.
 
 [^2]: Not much. There are a few library functions that differ and the
     type-system is dumber.
+
+[^3]: Well, it has an Emacs module I wrote for myself.  But nothing
+    shared for other people to use.
