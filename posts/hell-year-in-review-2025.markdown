@@ -177,7 +177,7 @@ for free. Use ormolu the standard Haskell formatter.
 
 ## Weaknesses
 
-It has no editor support.[^1] I don't plan on writing editor support
+It has no editor support.[^3] I don't plan on writing editor support
 for it. That's a very large undertaking; larger than writing the
 language itself, I expect. So this aspect of the tool might remain
 rubbish.
