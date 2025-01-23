@@ -6,6 +6,10 @@ author: Chris Done
 tags: haskell, web, javascript
 ---
 
+**UPDATE**: This project was forked into [Threepenny-gui](https://github.com/HeinrichApfelmus/threepenny-gui) in 2012~.
+
+---
+
 As of recent I have only been creating a lot of new projects, not
 working one existing ones or finishing half done ones off.[^1]
 
@@ -18,15 +22,12 @@ just used a simple poll/push protocol.
 
 The code is on Github:
 
-* [https://github.com/chrisdone/ji](https://github.com/chrisdone/ji)
-
-Haddock docs
-[here](http://chrisdone.com/ji/doc/html/ji/Graphics-UI-Ji.html).
+* [https://github.com/chrisdone-archive/ji](https://github.com/chrisdone-archive/ji)
 
 Here are two examples I made so far:
 
-* [Some simple buttons](http://chrisdone.com/ji/buttons/)
-* [Missing dollars question](http://chrisdone.com/ji/missing-dollars/)
+* [Some simple buttons](http://chrisdone.com/ji/buttons/) [dead link]
+* [Missing dollars question](http://chrisdone.com/ji/missing-dollars/) [dead link]
 
 It seems fairly viable so far. I would have liked to produce many more
 examples, but I couldn't really think of any. I stole the idea for the
