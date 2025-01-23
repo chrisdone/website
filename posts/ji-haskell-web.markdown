@@ -24,10 +24,7 @@ The code is on Github:
 
 * [https://github.com/chrisdone-archive/ji](https://github.com/chrisdone-archive/ji)
 
-Here are two examples I made so far:
-
-* [Some simple buttons](http://chrisdone.com/ji/buttons/) [dead link]
-* [Missing dollars question](http://chrisdone.com/ji/missing-dollars/) [dead link]
+Here are [examples I made.](https://github.com/chrisdone-archive/ji/tree/master/examples)
 
 It seems fairly viable so far. I would have liked to produce many more
 examples, but I couldn't really think of any. I stole the idea for the
