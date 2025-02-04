@@ -44,10 +44,10 @@ There are a few advantages to making estimates like this:
    
 One consideration is that this can either be considered non-additive (like T-shirt sizing), or can be additive, but needs
 special software to add them up. E.g. 1 month = 4 weeks, 1 week = 5 days, 1 day = 8 hours, etc. Either 
-works for me. I think on paper organizations with to work without adding up estimates, but in practice 
+works for me. I think on paper organizations like to work without adding up estimates, but in practice 
 that's what everybody needs anyway.
 
 A handy way to think about the priorities in this scheme is: unit up, split down. I.e. estimates always 
-jump up to the next unit. But your estimates should never be reduced in unit (by e.g. being pressured by
+jump up to the next unit if they grow. But your estimates should never be reduced in unit (by e.g. being pressured by
 stakeholders), and instead be split into separate estimates, if possible. If it's easy to split a 
 week up into two days, great! If it's not, perhaps the week was the right choice after all.
