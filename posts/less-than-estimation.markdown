@@ -5,7 +5,7 @@ title: Less-Than Estimation
 
 ## Mechanics
 
-A method of estimation I've used successfully on a bunch of projects goes 
+A method of estimation I've used successfully on a bunch of projects over the years goes 
 like this. Estimations are one of four choices:
 
 * `<hour`
