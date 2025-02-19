@@ -1,5 +1,8 @@
+---
 title: Registers of code authoring
-date: 2025-02-19
+date: 2025-02-1
+description: Different ways of writing code
+---
 
 I've recently been thinking about the fact that there are 
 very distinct [registers](https://en.wikipedia.org/wiki/Register_(sociolinguistics)) (for lack of a better word)
