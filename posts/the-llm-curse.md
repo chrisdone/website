@@ -1,6 +1,6 @@
 ---
 date: 2025-04-12
-title: LLMs and The Lisp Curse
+title: The LLM Curse
 description: LLMs and The Lisp Curse
 tags: ai
 ---
