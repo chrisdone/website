@@ -19,7 +19,7 @@ say,
 Haskell programmers do. 
 A lot of long discussions in the GHC proposals list could often just be a macro in Lisp, for example. 
 So, in a way, every large project in Lisp is kind of reinventing many ideas sui generis,
-and you’re not advancing *the language* forward. 
+and you’re not advancing *the language* forward.[^1]
 
 Whereas, one could argue, many ideas that have developed in Haskell, that were put into the language itself, have spread to other languages.
 It’s ironic because when you think of assembler or C, that’s (reinvention) the kind of thing that *they* suffer with,
@@ -41,5 +41,5 @@ because you’re just going to use an AI to explain someone else’s project to 
 
 Then we’re back to The Lisp Curse. Coming to a language near you. The LLM Curse?
 
-[1]: Parenthetically, I don’t worry too much about this for Elisp because I consider Emacs to be entirely about 
+[^1]: Parenthetically, I don’t worry too much about this for Elisp because I consider Emacs to be entirely about 
 being selfish and focusing only on your own needs. I’m actively annoyed if they update the language.
