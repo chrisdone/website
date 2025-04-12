@@ -1,6 +1,6 @@
 ---
 title: Registers of code authoring
-date: 2025-02-1
+date: 2025-02-01
 description: Different ways of writing code
 ---
 
