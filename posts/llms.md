@@ -46,7 +46,7 @@ I've been collecting thoughts on LLMs in a peacemeal way. I add to this document
   Hardware was too complex; now it’s been abstracted away. The operating system is a
   layer of abstraction, and the programming language is a layer of abstraction.
   And now there is a language which is not only a black box, but it’s also probabilistic... so it’s yet another layer of unpredictability.
-* [Dijkstra on anthropomorphism:
+* Dijkstra on anthropomorphism:
     * People talking about “asking it..” and “it thinks…” etc. makes me feel icky.
     * Quote from EWD854: I think anthropomorphism is worst of all. I have now seen programs "trying to do things", "wanting to do things", "believing things to be true", "knowing things" etc. Don't be so naive as to believe that this use of language is harmless. It invites the programmer to identify himself with the execution of the program and almost forces upon him the use of operational semantics.
 * The Lisp Curse: see my other article.
