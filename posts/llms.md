@@ -49,7 +49,7 @@ I've been collecting thoughts on LLMs in a peacemeal way. I add to this document
 * Dijkstra on anthropomorphism:
     * People talking about “asking it..” and “it thinks…” etc. makes me feel icky.
     * Quote from EWD854: I think anthropomorphism is worst of all. I have now seen programs "trying to do things", "wanting to do things", "believing things to be true", "knowing things" etc. Don't be so naive as to believe that this use of language is harmless. It invites the programmer to identify himself with the execution of the program and almost forces upon him the use of operational semantics.
-* The Lisp Curse: see my other article: https://chrisdone.com/posts/the-llm-curse
+* The Lisp Curse: see [my other article](https://chrisdone.com/posts/the-llm-curse)
 * A prior colleague remarked, "Category theory is white magic, AI is black magic." It stuck with me as it succinctly summarises much of the above.
 * Humans as machines: Dijkstra and Frank Herbert have this in common: Dijkstra railed against anthropomorphising machines, but he also
-  argued against treating humans in mechnistic terms, i.e. treating them like machines. (https://chrisdone.com/posts/ai-machine-thinking) It's a funny way to flip things around.
+  argued against treating humans in mechnistic terms, i.e. [treating them like machines.](https://chrisdone.com/posts/ai-machine-thinking) It's a funny way to flip things around.
