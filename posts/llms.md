@@ -14,14 +14,14 @@ I've been collecting thoughts on LLMs in a peacemeal way. I add to this document
   documented APIs is now accessible.
 * Not learning: By looking at any topic which is not sufficiently exposed in the training data, one can see that, for example,
   an individual human can learn a given topic and it doesn’t take millions of examples to learn a thing,
-  because we can use reasoning-- symbolic reasoning/manipulation, and to learn a program language which has just one book, for example.
+  because we can use reasoning --symbolic reasoning/manipulation-- to learn a program language which has just one book, for example.
   Whereas the LLM doesn’t actually learn the programing language, but essentially is learning how to parrot it as if it’s a human language.
   This is why all the popular models are kind of crap at Haskell and cannot speak Lojban at all,
   despite there being a complete and comprehensive book describing Lojban's grammar, semantics, dictionaries and everything like that.
 * If it’s not written, it doesn’t exist: Essentially, if someone hasn’t written about it in detail, and posted it online or in a book,
   then it’s basically a piece of human insight which is not accessible to an LLM.
   For example, if nobody ever talked about print debugging online or in books,
-  and then you asked an LLM about different ways to do book a program, I'm quite confident the answer would
+  and then you asked an LLM about different ways to debug a program, I'm quite confident the answer would
   not mention any concept of printf debugging because that is a completely human experience which is interactive and comes from experience.
 * Objective benefit: LLM essentially turn human language into code which is digestible, analysable, translatable, summarisesble and generable.
   That means we can apply all of our regular engineering tools like compression and linting and test suites and DSLs. Modulo nondeterminism.
