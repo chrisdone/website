@@ -23,7 +23,7 @@ I've been collecting thoughts on LLMs in a peacemeal way. I add to this document
   For example, if nobody ever talked about print debugging online or in books,
   and then you asked an LLM about different ways to debug a program, I'm quite confident the answer would
   not mention any concept of printf debugging because that is a completely human experience which is interactive and comes from experience.
-* Objective benefit: LLM essentially turn human language into code which is digestible, analysable, translatable, summarisesble and generable.
+* Objective benefit: LLMs essentially turn human language into code which is digestible, analysable, translatable, summarisesble and generable.
   That means we can apply all of our regular engineering tools like compression and linting and test suites and DSLs. Modulo nondeterminism.
 * Objective limitation: As implemented,
   we know that LLMs are capable within their probabilistic transformers to estimate answers to questions, but,
