@@ -35,7 +35,7 @@ I've been collecting thoughts on LLMs in a peacemeal way. I add to this document
   which can give the appearance and impression of comprehension and an internal mental model. Clever hans.
 * Relating to language theory: I’m reminded of a chapter in Stephen Pinker‘s book The Blank Slate, in which he discusses
   the case of a young woman who has a developmental issue such that she is not able to reason or function independently,
-  but is able to speak and long, detailed tell stories, which are completely fabricated,
+  but is able to speak and tell long, detailed stories, which are completely fabricated,
   but which have an internally consistent grammar and a consistent storyline.
   In this chapter Pinker is pointing out that you can have a grasp of language, but no grasp of logic reasoning et cetera.
 * Relation to a consistent pattern of abstraction due to layers of complexity:
