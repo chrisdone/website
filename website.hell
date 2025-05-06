@@ -20,6 +20,7 @@ main = Main.generate
 -- .md or .markdown files, the extension doesn't matter.
 --
 generate = do
+  Process.runProcess_ $ Process.proc "pandoc" ["--version"]
   posts <- Main.generatePosts
   Main.generateArchive posts
   Main.generateRSS posts
