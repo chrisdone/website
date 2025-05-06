@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LLMs</title>
+    <style>
+    h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>LLMs</h1>
+
+<p>I’ve been collecting thoughts on LLMs in a peacemeal way. I add to
+this document from time to time. It’s not an article as such.</p>
+<ul>
+<li>Hype: On forums like HN people have long, familiar, arguments about
+whether AI is hyped or not. This is consistent with any other hyped
+thing, like crypto or micro services or whatever.</li>
+<li>Objective value: Tools have gotten very good at generating code,
+which means that some people’s work, especially those which involve
+generating throwaway things which are iterated on quickly, has been
+accelerated, and some tasks which were previously inaccessible to people
+who didn’t have the patience to wait through poorly documented APIs is
+now accessible.</li>
+<li>Not learning: By looking at any topic which is not sufficiently
+exposed in the training data, one can see that, for example, an
+individual human can learn a given topic and it doesn’t take millions of
+examples to learn a thing, because we can use reasoning –symbolic
+reasoning/manipulation– to learn a program language which has just one
+book, for example. Whereas the LLM doesn’t actually learn the programing
+language, but essentially is learning how to parrot it as if it’s a
+human language. This is why all the popular models are kind of crap at
+Haskell and cannot speak Lojban at all, despite there being a complete
+and comprehensive book describing Lojban’s grammar, semantics,
+dictionaries and everything like that.</li>
+<li>If it’s not written, it doesn’t exist: Essentially, if someone
+hasn’t written about it in detail, and posted it online or in a book,
+then it’s basically a piece of human insight which is not accessible to
+an LLM. For example, if nobody ever talked about print debugging online
+or in books, and then you asked an LLM about different ways to debug a
+program, I’m quite confident the answer would not mention any concept of
+printf debugging because that is a completely human experience which is
+interactive and comes from experience.</li>
+<li>Objective benefit: LLMs essentially turn human language into code
+which is digestible, analysable, translatable, summarizeable and
+generable. That means we can apply all of our regular engineering tools
+like compression and linting and test suites and DSLs. Modulo
+nondeterminism.</li>
+<li>Objective limitation: As implemented, we know that LLMs are capable
+within their probabilistic transformers to estimate answers to
+questions, but, for example, cannot count the individual letters in a
+word or do basic arithmetic. (At the time of writing; these leaks will
+be plugged eventually by postprocessing and tools, I’m sure.)</li>
+<li>Speculation on anthropomorphism: I think the reason that LLMs
+appeared to reason is that the base model, which is essentially a
+snapshot of the Internet, is then of course trained on millions of
+conversations in which a question is posed and an answer is generated,
+which can give the appearance and impression of comprehension and an
+internal mental model. Clever hans.</li>
+<li>Relating to language theory: I’m reminded of a chapter in Stephen
+Pinker‘s book The Blank Slate, in which he discusses the case of a young
+woman who has a developmental issue such that she is not able to reason
+or function independently, but is able to speak and tell long, detailed
+stories, which are completely fabricated, but which have an internally
+consistent grammar and a consistent storyline. In this chapter Pinker is
+pointing out that you can have a grasp of language, but no grasp of
+logic reasoning et cetera.</li>
+<li>Relation to a consistent pattern of abstraction due to layers of
+complexity: the MIT book Structure and Interpretation of Computer
+Programs was switched from a from-the-ground-up, principles first,
+implementation of various topics, to essentially a goodie bag of
+scientific ways of using vast APIs and Python. And this is completely
+not a criticism of Abelson or Sussman: in fact, this reflects a deep
+insight; that they had the foresight and integrity to accurately reflect
+in the education. Hardware was too complex; now it’s been abstracted
+away. The operating system is a layer of abstraction, and the
+programming language is a layer of abstraction. And now there is a
+language which is not only a black box, but it’s also probabilistic… so
+it’s yet another layer of unpredictability.</li>
+<li>Dijkstra on anthropomorphism:
+<ul>
+<li>People talking about “asking it..” and “it thinks…” etc. makes me
+feel icky.</li>
+<li>Quote from EWD854: I think anthropomorphism is worst of all. I have
+now seen programs “trying to do things”, “wanting to do things”,
+“believing things to be true”, “knowing things” etc. Don’t be so naive
+as to believe that this use of language is harmless. It invites the
+programmer to identify himself with the execution of the program and
+almost forces upon him the use of operational semantics.</li>
+</ul></li>
+<li>The Lisp Curse: see <a
+href="https://chrisdone.com/posts/the-llm-curse">my other
+article</a></li>
+<li>A prior colleague remarked, “Category theory is white magic, AI is
+black magic.” It stuck with me as it succinctly summarises much of the
+above.</li>
+<li>Humans as machines: Dijkstra and Frank Herbert have this in common:
+Dijkstra railed against anthropomorphising machines, but he also argued
+against treating humans in mechnistic terms, i.e. <a
+href="https://chrisdone.com/posts/ai-machine-thinking">treating them
+like machines.</a> It’s a funny way to flip things around.</li>
+</ul>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2025-04-18 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+    var headers = document.querySelectorAll('h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>

@@ -6,6 +6,806 @@
 <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
 <atom:link href="https://chrisdone.com/rss.xml" rel="self" type="application/rss+xml" />
 <lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>
+<item><title><![CDATA[LLMs]]></title><link>https://chrisdone.com/posts/llms</link><guid>https://chrisdone.com/posts/llms</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LLMs</title>
+    <style>
+    h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>LLMs</h1>
+
+<p>I’ve been collecting thoughts on LLMs in a peacemeal way. I add to
+this document from time to time. It’s not an article as such.</p>
+<ul>
+<li>Hype: On forums like HN people have long, familiar, arguments about
+whether AI is hyped or not. This is consistent with any other hyped
+thing, like crypto or micro services or whatever.</li>
+<li>Objective value: Tools have gotten very good at generating code,
+which means that some people’s work, especially those which involve
+generating throwaway things which are iterated on quickly, has been
+accelerated, and some tasks which were previously inaccessible to people
+who didn’t have the patience to wait through poorly documented APIs is
+now accessible.</li>
+<li>Not learning: By looking at any topic which is not sufficiently
+exposed in the training data, one can see that, for example, an
+individual human can learn a given topic and it doesn’t take millions of
+examples to learn a thing, because we can use reasoning –symbolic
+reasoning/manipulation– to learn a program language which has just one
+book, for example. Whereas the LLM doesn’t actually learn the programing
+language, but essentially is learning how to parrot it as if it’s a
+human language. This is why all the popular models are kind of crap at
+Haskell and cannot speak Lojban at all, despite there being a complete
+and comprehensive book describing Lojban’s grammar, semantics,
+dictionaries and everything like that.</li>
+<li>If it’s not written, it doesn’t exist: Essentially, if someone
+hasn’t written about it in detail, and posted it online or in a book,
+then it’s basically a piece of human insight which is not accessible to
+an LLM. For example, if nobody ever talked about print debugging online
+or in books, and then you asked an LLM about different ways to debug a
+program, I’m quite confident the answer would not mention any concept of
+printf debugging because that is a completely human experience which is
+interactive and comes from experience.</li>
+<li>Objective benefit: LLMs essentially turn human language into code
+which is digestible, analysable, translatable, summarizeable and
+generable. That means we can apply all of our regular engineering tools
+like compression and linting and test suites and DSLs. Modulo
+nondeterminism.</li>
+<li>Objective limitation: As implemented, we know that LLMs are capable
+within their probabilistic transformers to estimate answers to
+questions, but, for example, cannot count the individual letters in a
+word or do basic arithmetic. (At the time of writing; these leaks will
+be plugged eventually by postprocessing and tools, I’m sure.)</li>
+<li>Speculation on anthropomorphism: I think the reason that LLMs
+appeared to reason is that the base model, which is essentially a
+snapshot of the Internet, is then of course trained on millions of
+conversations in which a question is posed and an answer is generated,
+which can give the appearance and impression of comprehension and an
+internal mental model. Clever hans.</li>
+<li>Relating to language theory: I’m reminded of a chapter in Stephen
+Pinker‘s book The Blank Slate, in which he discusses the case of a young
+woman who has a developmental issue such that she is not able to reason
+or function independently, but is able to speak and tell long, detailed
+stories, which are completely fabricated, but which have an internally
+consistent grammar and a consistent storyline. In this chapter Pinker is
+pointing out that you can have a grasp of language, but no grasp of
+logic reasoning et cetera.</li>
+<li>Relation to a consistent pattern of abstraction due to layers of
+complexity: the MIT book Structure and Interpretation of Computer
+Programs was switched from a from-the-ground-up, principles first,
+implementation of various topics, to essentially a goodie bag of
+scientific ways of using vast APIs and Python. And this is completely
+not a criticism of Abelson or Sussman: in fact, this reflects a deep
+insight; that they had the foresight and integrity to accurately reflect
+in the education. Hardware was too complex; now it’s been abstracted
+away. The operating system is a layer of abstraction, and the
+programming language is a layer of abstraction. And now there is a
+language which is not only a black box, but it’s also probabilistic… so
+it’s yet another layer of unpredictability.</li>
+<li>Dijkstra on anthropomorphism:
+<ul>
+<li>People talking about “asking it..” and “it thinks…” etc. makes me
+feel icky.</li>
+<li>Quote from EWD854: I think anthropomorphism is worst of all. I have
+now seen programs “trying to do things”, “wanting to do things”,
+“believing things to be true”, “knowing things” etc. Don’t be so naive
+as to believe that this use of language is harmless. It invites the
+programmer to identify himself with the execution of the program and
+almost forces upon him the use of operational semantics.</li>
+</ul></li>
+<li>The Lisp Curse: see <a
+href="https://chrisdone.com/posts/the-llm-curse">my other
+article</a></li>
+<li>A prior colleague remarked, “Category theory is white magic, AI is
+black magic.” It stuck with me as it succinctly summarises much of the
+above.</li>
+<li>Humans as machines: Dijkstra and Frank Herbert have this in common:
+Dijkstra railed against anthropomorphising machines, but he also argued
+against treating humans in mechnistic terms, i.e. <a
+href="https://chrisdone.com/posts/ai-machine-thinking">treating them
+like machines.</a> It’s a funny way to flip things around.</li>
+</ul>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2025-04-18 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+    var headers = document.querySelectorAll('h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Fri, 18 Apr 2025 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[The LLM Curse]]></title><link>https://chrisdone.com/posts/the-llm-curse</link><guid>https://chrisdone.com/posts/the-llm-curse</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The LLM Curse</title>
+    <style>
+    h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>The LLM Curse</h1>
+
+<p>I encountered a package, and 99.9% of the Haskell code of that
+package was–proudly!–written using Claude. I took a browse through the
+code.</p>
+<p>Something that came to mind was The Lisp Curse: Broadly speaking, the
+Lisp curse is that syntactic abstraction, and extension of the language,
+is so powerful that Lisp programmers don’t bother to buy into broader
+abstractions. They don’t make compromises with the community in order to
+get things built into the language in the same way as, say, Haskell
+programmers do. A lot of long discussions in the GHC proposals list
+could often just be a macro in Lisp, for example. So, in a way, every
+large project in Lisp is kind of reinventing many ideas sui generis, and
+you’re not advancing <em>the language</em> forward.<a href="#fn1"
+class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>
+Whereas, one could argue, many ideas that have developed in Haskell,
+that were put into the language itself, have spread to other languages.
+It’s ironic because when you think of assembler or C, that’s
+(reinvention) the kind of thing that <em>they</em> suffer with, and it’s
+not something that you would imagine a really high-level language like
+Lisp would suffer with.</p>
+<p>How a language interacts with <em>the people</em> that use it is
+quite important.</p>
+<p>I am starting to wonder whether this practice of vibe coding,
+i.e. having 99% of the code generated by an LLM interaction, may lead to
+a similar problem. If it’s so cheap for me to generate walls of code
+which have loads of repetition, simply because I can just drop it and
+re-create it on a whim, that reduces the value of abstraction and it
+reduces another human’s interest in reading that code. (I can’t be the
+only one who has zero motivation to read AI-generated code.) In other
+words, you start losing interest in actually programming Haskell, and
+the particular language matters even less, so now every project out
+there will, basically, not have to share any kind of abstractions or
+ideas, because you’re just going to use an AI to explain someone else’s
+project to you anyway.</p>
+<p>Then we’re back to The Lisp Curse. Coming to a language near you. The
+LLM Curse?</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Parenthetically, I don’t worry too much about this for
+Elisp because I consider Emacs to be entirely about being selfish and
+focusing only on your own needs. I’m actively annoyed if they update the
+language.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2025-04-12 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+    var headers = document.querySelectorAll('h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Sat, 12 Apr 2025 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Less-Than Estimation]]></title><link>https://chrisdone.com/posts/less-than-estimation</link><guid>https://chrisdone.com/posts/less-than-estimation</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Less-Than Estimation</title>
+    <style>
+    h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Less-Than Estimation</h1>
+
+<h2 id="mechanics">Mechanics</h2>
+<p>A method of estimation I’ve used successfully on a bunch of projects
+over the years goes like this. Estimations are one of four choices:</p>
+<ul>
+<li><code>&lt;hour</code></li>
+<li><code>&lt;day</code></li>
+<li><code>&lt;week</code></li>
+<li><code>&lt;month</code></li>
+</ul>
+<p>I call it “less than estimation” because if a given piece of work is
+obviously under an hour, your estimate is <code>&lt;hour</code>. If it’s
+not obvious, you bump it up to <code>&lt;day</code>. If it doesn’t
+obviously fit within a day, bump it up to a <code>&lt;week</code>. If
+you’re not sure it’ll fit into a week, my experience says that it could
+take even three weeks, so bump it up to <code>&lt;month.</code></p>
+<p>Finally, if it doesn’t obviously fit into a month, your powers of
+estimation have been exhausted: break the thing down into smaller tasks
+that can be estimated. This also applies to the fact that some people
+may think that a task takes about two weeks, so they don’t want to bump
+it up to a month. But if it takes 2 weeks, then you can split it into
+two tasks.</p>
+<h2 id="advantages">Advantages</h2>
+<p>There are a few advantages to making estimates like this:</p>
+<ol type="1">
+<li>You don’t have to be too precise with granular numbers over
+something that is inherently imprecise. That makes decision-making
+quicker. No dithering!</li>
+<li>People think in terms of time units. An hour, a day, a week, or a
+month fit neatly into people’s heads without extra thinking
+involved.</li>
+<li>Time units are also concrete: people can use them directly, unlike
+T-shirt sizing that is abstract for people to think about.</li>
+<li>Often managers/stakeholders don’t care particularly whether it’s two
+or three of something, they just want that when you estimate something
+that it’s delivered on time. It’s better to be predictable than fall
+short and lose trust.</li>
+<li>Less experienced devs have trouble breaking down work into
+digestible units, this method encourages that.</li>
+</ol>
+<h2 id="considerations">Considerations</h2>
+<p>One consideration is that this can either be considered non-additive
+(like T-shirt sizing), or can be additive, but needs special software to
+add them up. E.g. 1 month = 4 weeks, 1 week = 5 days, 1 day = 8 hours,
+etc. Either works for me. I think on paper organizations like to work
+without adding up estimates, but in practice that’s what everybody needs
+anyway.</p>
+<p>A handy way to think about the priorities in this scheme is: unit up,
+split down. I.e. estimates always jump up to the next unit if they grow.
+But your estimates should never be reduced in unit (by e.g. being
+pressured by stakeholders), and instead be split into separate
+estimates, if possible. If it’s easy to split a week up into two days,
+great! If it’s not, perhaps the week was the right choice after all.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2025-02-04 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+    var headers = document.querySelectorAll('h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Tue, 04 Feb 2025 00:00:00 +0000
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Registers of code authoring]]></title><link>https://chrisdone.com/posts/code-register</link><guid>https://chrisdone.com/posts/code-register</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Registers of code authoring</title>
+    <style>
+    h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Registers of code authoring</h1>
+
+<p>I’ve recently been thinking about the fact that there are very
+distinct <a
+href="https://en.wikipedia.org/wiki/Register_(sociolinguistics)">registers</a>
+(for lack of a better word) of authoring code, for me, depending on the
+type of project.</p>
+<ul>
+<li>Work codebases: in my experience over a couple decades, are of
+medium standard; we do our best with expedience coming first, and code
+reviews attend to quality.</li>
+<li>Open source projects: especially libraries, tend to be exhibitions
+of your best, beauty and good taste is emphasised, you often see
+innovation, idealism, yak shaving, going down the garden path.</li>
+<li>My personal Emacs config: tidy in my own way, but I don’t need to
+impress anyone, I don’t need to make anything reusable. I inline all
+dependencies because I have no need to stay up to date. In fact
+stability is the #1 priority. It’s like slow food. It’s my own little
+work bench and home at the same time.</li>
+<li>Shell scripts: they never really grow beyond one file and can be
+wasteful, avoid any abstraction or reuse, and generally just do the job
+and don’t worry about modelling the domain too much. I’ve gotten a lot
+more enjoyment out of this since making <a
+href="https://chrisdone.github.io/hell">Hell</a>.</li>
+</ul>
+<p>These all tend to talk about how style and aesthetics and quality are
+balanced based on the user of the code, and there’s intent in there
+somewhere. A possible new register (or complete lack of one) may be AI
+generated projects, but we’ll see. They all have their respective
+merits.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2025-02-01 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+    var headers = document.querySelectorAll('h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Sat, 01 Feb 2025 00:00:00 +0000
+</pubDate><dc:creator>Chris Done</dc:creator></item>
 <item><title><![CDATA[Hell (Haskell shell): Year in Review]]></title><link>https://chrisdone.com/posts/hell-year-in-review-2025</link><guid>https://chrisdone.com/posts/hell-year-in-review-2025</guid><description><![CDATA[<!doctype html>
 <html>
   <head>
@@ -313,10 +1113,9 @@ role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Not much. There are a few library functions that differ
 and the type-system is dumber.<a href="#fnref2" class="footnote-back"
 role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>AKA shallow embedding: The object language reuses as
-many features of the meta language as possible. Many aspects are
-delegated to the meta language.<a href="#fnref3" class="footnote-back"
-role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Well, it has an Emacs module I wrote for myself. But
+nothing shared for other people to use.<a href="#fnref3"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
 
@@ -24493,6 +25292,10 @@ h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <h1>Ji, a little library for controlling a web browser from Haskell</h1>
 
+<p><strong>UPDATE</strong>: This project was forked into <a
+href="https://github.com/HeinrichApfelmus/threepenny-gui">Threepenny-gui</a>
+in 2012~.</p>
+<hr />
 <p>As of recent I have only been creating a lot of new projects, not
 working one existing ones or finishing half done ones off.<a href="#fn1"
 class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
@@ -24506,17 +25309,11 @@ protocol.</p>
 <p>The code is on Github:</p>
 <ul>
 <li><a
-href="https://github.com/chrisdone/ji">https://github.com/chrisdone/ji</a></li>
+href="https://github.com/chrisdone-archive/ji">https://github.com/chrisdone-archive/ji</a></li>
 </ul>
-<p>Haddock docs <a
-href="http://chrisdone.com/ji/doc/html/ji/Graphics-UI-Ji.html">here</a>.</p>
-<p>Here are two examples I made so far:</p>
-<ul>
-<li><a href="http://chrisdone.com/ji/buttons/">Some simple
-buttons</a></li>
-<li><a href="http://chrisdone.com/ji/missing-dollars/">Missing dollars
-question</a></li>
-</ul>
+<p>Here are <a
+href="https://github.com/chrisdone-archive/ji/tree/master/examples">examples
+I made.</a></p>
 <p>It seems fairly viable so far. I would have liked to produce many
 more examples, but I couldn’t really think of any. I stole the idea for
 the dollars from Albert Lai. There is more room for optimizations, but

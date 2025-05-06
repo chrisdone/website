@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Less-Than Estimation</title>
+    <style>
+    h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+      li { margin-top: 0.5em; margin-bottom: 0.5em; }
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Less-Than Estimation</h1>
+
+<h2 id="mechanics">Mechanics</h2>
+<p>A method of estimation I’ve used successfully on a bunch of projects
+over the years goes like this. Estimations are one of four choices:</p>
+<ul>
+<li><code>&lt;hour</code></li>
+<li><code>&lt;day</code></li>
+<li><code>&lt;week</code></li>
+<li><code>&lt;month</code></li>
+</ul>
+<p>I call it “less than estimation” because if a given piece of work is
+obviously under an hour, your estimate is <code>&lt;hour</code>. If it’s
+not obvious, you bump it up to <code>&lt;day</code>. If it doesn’t
+obviously fit within a day, bump it up to a <code>&lt;week</code>. If
+you’re not sure it’ll fit into a week, my experience says that it could
+take even three weeks, so bump it up to <code>&lt;month.</code></p>
+<p>Finally, if it doesn’t obviously fit into a month, your powers of
+estimation have been exhausted: break the thing down into smaller tasks
+that can be estimated. This also applies to the fact that some people
+may think that a task takes about two weeks, so they don’t want to bump
+it up to a month. But if it takes 2 weeks, then you can split it into
+two tasks.</p>
+<h2 id="advantages">Advantages</h2>
+<p>There are a few advantages to making estimates like this:</p>
+<ol type="1">
+<li>You don’t have to be too precise with granular numbers over
+something that is inherently imprecise. That makes decision-making
+quicker. No dithering!</li>
+<li>People think in terms of time units. An hour, a day, a week, or a
+month fit neatly into people’s heads without extra thinking
+involved.</li>
+<li>Time units are also concrete: people can use them directly, unlike
+T-shirt sizing that is abstract for people to think about.</li>
+<li>Often managers/stakeholders don’t care particularly whether it’s two
+or three of something, they just want that when you estimate something
+that it’s delivered on time. It’s better to be predictable than fall
+short and lose trust.</li>
+<li>Less experienced devs have trouble breaking down work into
+digestible units, this method encourages that.</li>
+</ol>
+<h2 id="considerations">Considerations</h2>
+<p>One consideration is that this can either be considered non-additive
+(like T-shirt sizing), or can be additive, but needs special software to
+add them up. E.g. 1 month = 4 weeks, 1 week = 5 days, 1 day = 8 hours,
+etc. Either works for me. I think on paper organizations like to work
+without adding up estimates, but in practice that’s what everybody needs
+anyway.</p>
+<p>A handy way to think about the priorities in this scheme is: unit up,
+split down. I.e. estimates always jump up to the next unit if they grow.
+But your estimates should never be reduced in unit (by e.g. being
+pressured by stakeholders), and instead be split into separate
+estimates, if possible. If it’s easy to split a week up into two days,
+great! If it’s not, perhaps the week was the right choice after all.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2025-02-04 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+    var headers = document.querySelectorAll('h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>

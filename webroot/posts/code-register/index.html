@@ -3,8 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Ji, a little library for controlling a web browser from
-Haskell</title>
+    <title>Registers of code authoring</title>
     <style>
     h2 a,h3 a,h4 a,h5 a {
       text-decoration: none;
@@ -114,63 +113,42 @@ h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
   <body>
     <div class="page-wrap">
 
-<h1>Ji, a little library for controlling a web browser from Haskell</h1>
+<h1>Registers of code authoring</h1>
 
-<p><strong>UPDATE</strong>: This project was forked into <a
-href="https://github.com/HeinrichApfelmus/threepenny-gui">Threepenny-gui</a>
-in 2012~.</p>
-<hr />
-<p>As of recent I have only been creating a lot of new projects, not
-working one existing ones or finishing half done ones off.<a href="#fn1"
-class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
-<p>So here’s yet another little project that is to test the concept of
-controlling the web browser’s DOM from Haskell as a means to write user
-applications.</p>
-<p>It doesn’t use websockets as websockets aren’t well supported<a
-href="#fn2" class="footnote-ref" id="fnref2"
-role="doc-noteref"><sup>2</sup></a>, so I just used a simple poll/push
-protocol.</p>
-<p>The code is on Github:</p>
+<p>I’ve recently been thinking about the fact that there are very
+distinct <a
+href="https://en.wikipedia.org/wiki/Register_(sociolinguistics)">registers</a>
+(for lack of a better word) of authoring code, for me, depending on the
+type of project.</p>
 <ul>
-<li><a
-href="https://github.com/chrisdone-archive/ji">https://github.com/chrisdone-archive/ji</a></li>
+<li>Work codebases: in my experience over a couple decades, are of
+medium standard; we do our best with expedience coming first, and code
+reviews attend to quality.</li>
+<li>Open source projects: especially libraries, tend to be exhibitions
+of your best, beauty and good taste is emphasised, you often see
+innovation, idealism, yak shaving, going down the garden path.</li>
+<li>My personal Emacs config: tidy in my own way, but I don’t need to
+impress anyone, I don’t need to make anything reusable. I inline all
+dependencies because I have no need to stay up to date. In fact
+stability is the #1 priority. It’s like slow food. It’s my own little
+work bench and home at the same time.</li>
+<li>Shell scripts: they never really grow beyond one file and can be
+wasteful, avoid any abstraction or reuse, and generally just do the job
+and don’t worry about modelling the domain too much. I’ve gotten a lot
+more enjoyment out of this since making <a
+href="https://chrisdone.github.io/hell">Hell</a>.</li>
 </ul>
-<p>Here are <a
-href="https://github.com/chrisdone-archive/ji/tree/master/examples">examples
-I made.</a></p>
-<p>It seems fairly viable so far. I would have liked to produce many
-more examples, but I couldn’t really think of any. I stole the idea for
-the dollars from Albert Lai. There is more room for optimizations, but
-until I do a more large scale test, hard to say exactly where needs
-it.</p>
-<p>It might be a good test to rewrite TryHaskell with it. Probably still
-too easy. I’ll give it a while to think about it.</p>
-<p>It could be a base on which to build a more high-level library or
-framework.</p>
-<p>I could also write a back-end for digestive-formlets.</p>
-<section id="footnotes" class="footnotes footnotes-end-of-document"
-role="doc-endnotes">
-<hr />
-<ol>
-<li id="fn1"><p>Partly this is a way to feel like I’ve spent my time
-well as it’s easier to complete something small, and partly that ideas I
-get which sound feasible typically linger in my head asking to be
-prototyped, so this is a way of flushing them out.<a href="#fnref1"
-class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>I wanted to use socket.io but there is no Haskell
-socket.Io back-end, and I didn’t feel like writing Node. There are
-several websockets Haskell libraries, but as mentioned websockets itself
-isn’t well supported, I’d have to upgrade to try it (and so would
-everyone else). Websockets would be the eventual protocol, though.<a
-href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section>
+<p>These all tend to talk about how style and aesthetics and quality are
+balanced based on the user of the code, and there’s intent in there
+somewhere. A possible new register (or complete lack of one) may be AI
+generated projects, but we’ll see. They all have their respective
+merits.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2011-12-26 <a href="/">Chris Done</a></td>
+      <td>© 2025-02-01 <a href="/">Chris Done</a></td>
       <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
