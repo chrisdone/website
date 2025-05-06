@@ -1,5 +1,7 @@
 # Chris Done's homepage
 
+Source repo for [chrisdone.com](https://chrisdone.com).
+
 Requires:
 
 * hell-2024-02-20 or above
