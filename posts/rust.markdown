@@ -6,7 +6,7 @@ author: Chris Done
 tags: rust
 ---
 
-**2023-10-13:** Edited based on feedback, but preserves the same content.
+**2023-10-13:** Edited based on feedback, but preserves the same opinions.
 
 This is a little summary of my current thoughts on Rust. I wonder
 whether I'll look back in five years and see if my views have changed.
