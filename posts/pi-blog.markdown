@@ -1,5 +1,5 @@
 ---
-date: 2025-04-09
+date: 2025-05-09
 title: My blog now runs on a Raspberry Pi at home
 description: Running my blog on a raspberry pi
 ---
