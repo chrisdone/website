@@ -27,10 +27,10 @@ In that context, it's a pretty fortunate situation to be able to get a
 static IP at my home address. As a programmer it's more joyful to have
 this.
 
-I grabbed a Raspberry Pi 5 (highly overpowered for a blog), connected
-to my router via gigabit Ethernet, is running with a simple SD
-card for the root file-system. All logs (journals) are moved to
-tmpfs ('volatile' storage mode). The blog itself is sync's via a
+I grabbed a Raspberry Pi 5 (highly overpowered for a blog), connected it
+to my router via gigabit Ethernet, and got it running with a simple SD
+card for the root file-system. All logs (journald) are moved to
+tmpfs ('volatile' storage mode). The blog itself is sync'd via a
 webhook from GitHub, and is stored in tmpfs, too. Like this, it should
 run for a couple years without the SD card wearing out.
 
@@ -38,6 +38,6 @@ The server is [Caddy](https://caddyserver.com/) and the webhook
 service is [webhook](https://github.com/adnanh/webhook), both come as
 systemd services, so the effort was very minimal.
 
-There's no particular technical advantage over you reading this page
-from my home or the Digital Ocean server which only cost me about
-10$/mo. But it was a fun little project.
+There's no particular technical advantage of you reading this page
+from my home, over the Digital Ocean server I've had for years, 
+which only cost me about $10/mo. But it was a fun little project!
