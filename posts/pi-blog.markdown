@@ -30,8 +30,8 @@ this.
 I grabbed a Raspberry Pi 5 (highly overpowered for a blog), connected
 to my router via gigabit Ethernet, is running with a simple SD
 card for the root file-system. All logs (journals) are moved to
-tamps ('volatile' storage mode). The blog itself is sync's via a
-webhook from GitHub, and is stored in tamps, too. Like this, it should
+tmpfs ('volatile' storage mode). The blog itself is sync's via a
+webhook from GitHub, and is stored in tmpfs, too. Like this, it should
 run for a couple years without the SD card wearing out.
 
 The server is [Caddy](https://caddyserver.com/) and the webhook
