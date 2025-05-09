@@ -34,6 +34,10 @@ tamps ('volatile' storage mode). The blog itself is sync's via a
 webhook from GitHub, and is stored in tamps, too. Like this, it should
 run for a couple years without the SD card wearing out.
 
+The server is [Caddy](https://caddyserver.com/) and the webhook
+service is [webhook](https://github.com/adnanh/webhook), both come as
+systemd services, so the effort was very minimal.
+
 There's no particular technical advantage over you reading this page
 from my home or the Digital Ocean server which only cost me about
 10$/mo. But it was a fun little project.
