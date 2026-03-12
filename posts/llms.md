@@ -7,6 +7,15 @@ tags: ai
 This page serves as my place to journal what are hopefully balanced thoughts on the current 
 AI summer, driven by LLMs.
 
+# 2026-03-12
+
+_The Medium is the Message_ keeps coming to mind again and again,
+as people seem frequently surprised by the side-effects of the adoption of LLMs. 
+The content (articles, code, images) produced by LLMs is not the higher order bit, 
+but how they *change* the people and institutions that use them.
+
+No other changes in viewpoints to report this time.
+
 # 2026-02-07
 
 I shared a thought on a big dev call at work, when talking about agentic "skill" based workflows, that one problem is that you
