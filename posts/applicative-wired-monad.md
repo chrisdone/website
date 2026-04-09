@@ -46,6 +46,11 @@ to add a parameter to everything, and in practice all examples I've seen do not 
 and are specialized on a particular type. Sometimes the type isn't actually an `Applicative`, 
 but is similar in spirit (e.g. DB libraries often have `Expr a` returned by `Query a` monad).
 
+Thanks to Liam Goodacre for his suggestion to eliminate the earlier inlined Coyoneda in my example.
+Thanks to Jack Kelly for his suggestion to use a `Coyoneda` rather than free-Applicative, as this example doesn't need it.
+Separately, Emeka Nkurumeh has noted that, if you squint, this is an implementation of relative monads, which I'll likely
+write another post about because it's very interesting!
+
 ```haskell
 {-# language KindSignatures, BlockArguments, GADTs, LambdaCase, GeneralizedNewtypeDeriving #-}
 import Data.Functor.Coyoneda
@@ -138,5 +143,3 @@ Example:
 -- (fromList ["root"],fromList [("read_file_1",fromList []),("read_file_2",fromList ["read_file_1"]),("root",fromList ["read_file_1","read_file_2"])])
 ```
 
-Thanks to Liam Goodacre for his suggestion to eliminate the earlier inlined Coyoneda in my example.
-Thanks to Jack Kelly for his suggestion to use a `Coyoneda` rather than free-Applicative, as this example doesn't need it.
