@@ -239,9 +239,7 @@ functions--because our team at work has been adopting Nushell
 alongside Hell.  Nushell is in many ways is easier than Hell, for
 things like data munging and web requests and such out of the box, and
 it has a proper REPL. Hell doesn't have a REPL and isn't trying to be
-that kind of experience.
-
-It was debated whether we should just use Nushell for everything, but
+that kind of experience. It was debated whether we should just use Nushell for everything, but
 a couple people argued that Hell is particularly good at process
 orchestration due to its simple and easy concurrency primitives. So
 we're using both for now.
