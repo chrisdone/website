@@ -3,8 +3,7 @@ date: 2026-04-23
 title: "Some updates about Hell in 2026"
 ---
 
-I've added a few neat bits and bobs to Hell since I last blogged about
-it.
+I've added a few neat bits and bobs to Hell since I last blogged about it.
 
 On the API side, things have slowed down when compared with the prior
 year,[^1] but other improvements were still made.
