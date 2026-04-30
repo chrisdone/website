@@ -9,6 +9,12 @@ and I'm writing up here the ones that often come to mind.
 I usually forget the name,
 so writing them up might be helpful for remembering in future.
 
+# Brooks's law
+
+Adding manpower to a late software project makes it later.
+
+Ramp-up time, increased communication overhead are the causes.
+
 # Parkinson's Law
 
 C. Northcote Parkinson's law: 
