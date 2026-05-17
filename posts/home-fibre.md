@@ -22,5 +22,5 @@ Components:
 * 2x: SC/APC to SC/APC Simplex Single Mode Fiber Keystone Jack
 
 * Media converters:
-  * TP-Link Gigabit WDM Media Converter, Auto-negotiation, Extends fiber distance up to 20 km (TL-FC311B-20)
-  * TP-Link Gigabit WDM Media Converter, Auto-negotiation, Extends fiber distance up to 20 km (TL-FC311A-20)
+  * TP-Link Gigabit WDM Media Converter, Auto-negotiation, TL-FC311B-20
+  * TP-Link Gigabit WDM Media Converter, Auto-negotiation, TL-FC311A-20
