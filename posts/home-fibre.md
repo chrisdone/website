@@ -24,3 +24,6 @@ Components:
 * Media converters:
   * TP-Link Gigabit WDM Media Converter, Auto-negotiation, TL-FC311B-20
   * TP-Link Gigabit WDM Media Converter, Auto-negotiation, TL-FC311A-20
+
+* Belkin USB-C to 2.5Gb Ethernet Adapter - White
+  * For the MacBook, which doesn't have an RJ45 port
