@@ -11,16 +11,16 @@ When a Cat6 cable does the job, but I want fibre optic anyway.
 
 Components:
 
-* InvisiLight® EZ-Bend™ Indoor Jumpers, 20m, SC APC
+* InvisiLight® EZ-Bend™ Indoor Jumpers, 20m, SC APC, white
   * This 3mm cable is capable of 2.5mm bend radius, is easy to run along a wall and around corners.
 
 * 1m (3ft) Fiber Patch Cable, 1 Fiber, SC APC Simplex to SC APC Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered, Yellow
   * For testing, equivalent to the EZ-Bend one.
 
-* 1m (3ft) Fiber Patch Cable, 1 Fiber, SC UPC Simplex to SC APC Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered, Yellow
+* 2x: 1m (3ft) Fiber Patch Cable, 1 Fiber, SC UPC Simplex to SC APC Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered, Yellow
 
-* SC/APC to SC/APC Simplex Single Mode Fiber Keystone Jack
+* 2x: SC/APC to SC/APC Simplex Single Mode Fiber Keystone Jack
 
-* TP-Link Gigabit WDM Media Converter, Auto-negotiation, Extends fiber distance up to 20 km (TL-FC311B-20)
-
-* TP-Link Gigabit WDM Media Converter, Auto-negotiation, Extends fiber distance up to 20 km (TL-FC311A-20)
+* Media converters:
+  * TP-Link Gigabit WDM Media Converter, Auto-negotiation, Extends fiber distance up to 20 km (TL-FC311B-20)
+  * TP-Link Gigabit WDM Media Converter, Auto-negotiation, Extends fiber distance up to 20 km (TL-FC311A-20)
