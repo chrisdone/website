@@ -6,6 +6,724 @@
 <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
 <atom:link href="https://chrisdone.com/rss.xml" rel="self" type="application/rss+xml" />
 <lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>
+<item><title><![CDATA[Home fibre]]></title><link>https://chrisdone.com/posts/home-fibre</link><guid>https://chrisdone.com/posts/home-fibre</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Home fibre</title>
+    <style>
+    h1 a, h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Home fibre</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
+<blockquote>
+<p>I’ll write up my home fibre setup later. I thought it’d be neat to
+document it here. Still waiting for parts to arrive.</p>
+</blockquote>
+<p>When a Cat6 cable does the job, but I want fibre optic anyway.</p>
+<p>Components:</p>
+<ul>
+<li><p>InvisiLight® EZ-Bend™ Indoor Jumpers, 20m, SC APC, white</p>
+<ul>
+<li>This 3mm cable is capable of 2.5mm bend radius, is easy to run along
+a wall and around corners.</li>
+</ul></li>
+<li><p>1m (3ft) Fiber Patch Cable, 1 Fiber, SC APC Simplex to SC APC
+Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered,
+Yellow</p>
+<ul>
+<li>For testing, equivalent to the EZ-Bend one.</li>
+</ul></li>
+<li><p>2x: 1m (3ft) Fiber Patch Cable, 1 Fiber, SC UPC Simplex to SC APC
+Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered,
+Yellow</p></li>
+<li><p>2x: SC/APC to SC/APC Simplex Single Mode Fiber Keystone
+Jack</p></li>
+<li><p>Media converters:</p>
+<ul>
+<li>TP-Link Gigabit WDM Media Converter, Auto-negotiation,
+TL-FC311B-20</li>
+<li>TP-Link Gigabit WDM Media Converter, Auto-negotiation,
+TL-FC311A-20</li>
+</ul></li>
+<li><p>Belkin USB-C to 2.5Gb Ethernet Adapter - White</p>
+<ul>
+<li>For the MacBook, which doesn’t have an RJ45 port</li>
+</ul></li>
+</ul>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2026-05-17 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Sun, 17 May 2026 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Some updates about Hell in 2026]]></title><link>https://chrisdone.com/posts/hell-year-in-review-2026</link><guid>https://chrisdone.com/posts/hell-year-in-review-2026</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Some updates about Hell in 2026</title>
+    <style>
+    h1 a, h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Some updates about Hell in 2026</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
+<p>I’ve added a few neat bits and bobs to <a
+href="https://chrisdone.github.io/hell/">Hell</a> since I last blogged
+about it.</p>
+<p>On the API side, things have slowed down when compared with the prior
+year,<a href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> but other improvements were still
+made.</p>
+<h2 id="sum-types">Sum types</h2>
+<p>I’ve added support for using case statements on built-in primitive
+types, like <code>Maybe</code>, as in:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">case</span> i <span class="kw">of</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Maybe</span><span class="op">.</span><span class="dt">Just</span> x <span class="ot">-&gt;</span> <span class="dt">IO</span><span class="op">.</span><span class="fu">print</span> x</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Maybe</span><span class="op">.</span><span class="dt">Nothing</span> <span class="ot">-&gt;</span> Text.putStrLn <span class="st">&quot;nope&quot;</span></span></code></pre></div>
+<p>Previously, one only had <code>Maybe.maybe</code>, which is fine, but
+is often not the direct way to write something. So having
+<code>case</code> syntax for that is handy. You just have to qualify the
+constructor names, and then it knows that it’s a built-in.</p>
+<h2 id="type-class-entailment">Type class entailment</h2>
+<p>I’ve added limited support for resolving instances which feature
+entailment on the instance, such as <code>Eq a =&gt; Eq [a]</code>, and
+this works in a nested way. So one can compare values of any depth
+provided they have an <code>Eq</code> instance, as seen in the following
+examples:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Text.putStrLn <span class="op">$</span> <span class="dt">Show</span><span class="op">.</span><span class="fu">show</span> <span class="op">$</span> <span class="dt">Eq</span><span class="op">.</span>eq (<span class="dv">1</span>,<span class="dv">1</span>) (<span class="dv">1</span>,<span class="dv">1</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>Text.putStrLn <span class="op">$</span> <span class="dt">Show</span><span class="op">.</span><span class="fu">show</span> <span class="op">$</span> <span class="dt">Eq</span><span class="op">.</span>eq [<span class="dt">Maybe</span><span class="op">.</span><span class="dt">Just</span> <span class="dv">1</span>] [<span class="dt">Maybe</span><span class="op">.</span><span class="dt">Just</span> <span class="dv">2</span>]</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>Text.putStrLn <span class="op">$</span> <span class="dt">Show</span><span class="op">.</span><span class="fu">show</span> <span class="op">$</span> <span class="dt">Eq</span><span class="op">.</span>eq [<span class="dt">Either</span><span class="op">.</span><span class="dt">Left</span> <span class="dv">1</span>] [<span class="dt">Either</span><span class="op">.</span><span class="dt">Right</span> <span class="st">&quot;abc&quot;</span>]</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">IO</span><span class="op">.</span><span class="fu">print</span> [<span class="dt">Maybe</span><span class="op">.</span><span class="dt">Just</span> <span class="dv">1</span>, <span class="dt">Maybe</span><span class="op">.</span><span class="dt">Nothing</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="dt">IO</span><span class="op">.</span><span class="fu">print</span> <span class="op">$</span> <span class="dt">Maybe</span><span class="op">.</span><span class="dt">Just</span> [<span class="dv">1</span>] <span class="op">&lt;&gt;</span> <span class="dt">Maybe</span><span class="op">.</span><span class="dt">Nothing</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="dt">IO</span><span class="op">.</span><span class="fu">print</span> <span class="op">$</span> [<span class="dt">Either</span><span class="op">.</span><span class="dt">Left</span> (<span class="dt">Maybe</span><span class="op">.</span><span class="dt">Just</span> <span class="dv">1</span>), <span class="dt">Either</span><span class="op">.</span><span class="dt">Right</span> (<span class="dt">Maybe</span><span class="op">.</span><span class="dt">Just</span> <span class="st">&quot;abc&quot;</span>), <span class="dt">Either</span><span class="op">.</span><span class="dt">Left</span> <span class="dt">Maybe</span><span class="op">.</span><span class="dt">Nothing</span>]</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="dt">IO</span><span class="op">.</span><span class="fu">print</span> [<span class="dt">Maybe</span><span class="op">.</span><span class="dt">Just</span> (<span class="dv">1</span>, <span class="dv">2</span>), <span class="dt">Maybe</span><span class="op">.</span><span class="dt">Nothing</span>]</span></code></pre></div>
+<p>The complete list of instances is now on <a
+href="https://chrisdone.github.io/hell/api/">the API documentation
+page</a>.</p>
+<p>The implementation is quite nice, where instances are listed like
+this:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">instances ::</span> <span class="dt">Instances</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>instances <span class="ot">=</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Instances</span> <span class="op">$</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    Map.fromList</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      [ entail1 <span class="op">@</span><span class="dt">Show</span> <span class="op">@</span>[],</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        entail1 <span class="op">@</span><span class="dt">Show</span> <span class="op">@</span><span class="dt">Set</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        entail1 <span class="op">@</span><span class="dt">Show</span> <span class="op">@</span><span class="dt">Tree</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        entail1 <span class="op">@</span><span class="dt">Show</span> <span class="op">@</span><span class="dt">Maybe</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        entail1 <span class="op">@</span><span class="dt">Show</span> <span class="op">@</span><span class="dt">Vector</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        entail2 <span class="op">@</span><span class="dt">Show</span> <span class="op">@</span><span class="dt">Either</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        entail2 <span class="op">@</span><span class="dt">Show</span> <span class="op">@</span>(,),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="op">...</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        instance1 <span class="op">@</span><span class="dt">Functor</span> <span class="op">@</span><span class="dt">Either</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        instance1 <span class="op">@</span><span class="dt">Functor</span> <span class="op">@</span>(,), <span class="co">-- Functor (a,)</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        instance0 <span class="op">@</span><span class="dt">Applicative</span> <span class="op">@</span><span class="dt">IO</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        instance0 <span class="op">@</span><span class="dt">Applicative</span> <span class="op">@</span><span class="dt">Maybe</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        instance0 <span class="op">@</span><span class="dt">Applicative</span> <span class="op">@</span>[],</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        instance0 <span class="op">@</span><span class="dt">Applicative</span> <span class="op">@</span><span class="dt">Tree</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        instance0 <span class="op">@</span><span class="dt">Applicative</span> <span class="op">@</span><span class="dt">Options.Parser</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        instance1 <span class="op">@</span><span class="dt">Applicative</span> <span class="op">@</span><span class="dt">Either</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        instance0 <span class="op">@</span><span class="dt">Alternative</span> <span class="op">@</span><span class="dt">Options.Parser</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        instance0 <span class="op">@</span><span class="dt">Alternative</span> <span class="op">@</span><span class="dt">Maybe</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        entail1 <span class="op">@</span><span class="dt">Monoid</span> <span class="op">@</span><span class="dt">Maybe</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        instance0 <span class="op">@</span><span class="dt">Monoid</span> <span class="op">@</span><span class="dt">Text</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        instance1 <span class="op">@</span><span class="dt">Monoid</span> <span class="op">@</span><span class="dt">Vector</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        instance2 <span class="op">@</span><span class="dt">Monoid</span> <span class="op">@</span><span class="dt">Options.Mod</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        instance1 <span class="op">@</span><span class="dt">Monoid</span> <span class="op">@</span>[],</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        entail1 <span class="op">@</span><span class="dt">Semigroup</span> <span class="op">@</span><span class="dt">Maybe</span>,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        instance2 <span class="op">@</span><span class="dt">Semigroup</span> <span class="op">@</span><span class="dt">Either</span>,</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        instance2 <span class="op">@</span><span class="dt">Semigroup</span> <span class="op">@</span><span class="dt">Options.Mod</span>,</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>        instance0 <span class="op">@</span><span class="dt">Semigroup</span> <span class="op">@</span><span class="dt">Text</span>,</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        <span class="op">...</span></span></code></pre></div>
+<p>With</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">instance0 ::</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">forall</span> cls a<span class="op">.</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  (cls a, <span class="dt">Typeable</span> cls, <span class="dt">Typeable</span> a) <span class="ot">=&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  ((<span class="dt">SomeTypeRep</span>, <span class="dt">SomeTypeRep</span>), <span class="dt">Dynamic</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>instance0 <span class="ot">=</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  ( (<span class="dt">SomeTypeRep</span> <span class="op">$</span> typeRep <span class="op">@</span>cls, <span class="dt">SomeTypeRep</span> <span class="op">$</span> typeRep <span class="op">@</span>a),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    toDyn <span class="op">$</span> <span class="dt">Dict</span> <span class="op">@</span>(cls a)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="ot">instance1 ::</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">forall</span> {k0} {k1} (<span class="ot">c ::</span> k1 <span class="ot">-&gt;</span> <span class="dt">Constraint</span>) (<span class="ot">t ::</span> k0 <span class="ot">-&gt;</span> k1)<span class="op">.</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  ((<span class="kw">forall</span> a<span class="op">.</span> c (t a)), <span class="dt">Typeable</span> c, <span class="dt">Typeable</span> t, <span class="dt">Typeable</span> k0, <span class="dt">Typeable</span> k1) <span class="ot">=&gt;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  ((<span class="dt">SomeTypeRep</span>, <span class="dt">SomeTypeRep</span>), <span class="dt">Dynamic</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>instance1 <span class="ot">=</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  ( (<span class="dt">SomeTypeRep</span> <span class="op">$</span> typeRep <span class="op">@</span>c, <span class="dt">SomeTypeRep</span> <span class="op">$</span> typeRep <span class="op">@</span>t),</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    toDyn <span class="op">$</span> <span class="dt">D1</span> <span class="op">@</span>c <span class="op">@</span>t <span class="dt">Dict</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="ot">entail1 ::</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="kw">forall</span> {k1} (<span class="ot">c ::</span> k1 <span class="ot">-&gt;</span> <span class="dt">Constraint</span>) (<span class="ot">t ::</span> k1 <span class="ot">-&gt;</span> k1)<span class="op">.</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  ((<span class="kw">forall</span> a<span class="op">.</span> c a <span class="ot">=&gt;</span> c (t a)), <span class="dt">Typeable</span> c, <span class="dt">Typeable</span> t,  <span class="dt">Typeable</span> k1) <span class="ot">=&gt;</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  ((<span class="dt">SomeTypeRep</span>, <span class="dt">SomeTypeRep</span>), <span class="dt">Dynamic</span>)</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>entail1 <span class="ot">=</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  ( (<span class="dt">SomeTypeRep</span> <span class="op">$</span> typeRep <span class="op">@</span>c, <span class="dt">SomeTypeRep</span> <span class="op">$</span> typeRep <span class="op">@</span>t),</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    toDyn <span class="op">$</span> <span class="dt">ED1</span> <span class="op">@</span>c <span class="op">@</span>t (<span class="dt">Sub</span> <span class="dt">Dict</span>)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">-- Entailment, c a =&gt; c (t a), E.g. Eq a :- Eq [a]</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">ED1</span> c t <span class="ot">=</span> <span class="dt">ED1</span> (<span class="kw">forall</span> e<span class="op">.</span> c e <span class="op">:-</span> c (t e))</span></code></pre></div>
+<p>And then resolution looks like this:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">resolve1 ::</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">forall</span> {k0} {k1} (<span class="ot">t ::</span> k0 <span class="ot">-&gt;</span> k1) (<span class="ot">c ::</span> k1 <span class="ot">-&gt;</span> <span class="dt">Constraint</span>) (<span class="ot">a ::</span> k0)<span class="op">.</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  (<span class="dt">Typeable</span> k0, <span class="dt">Typeable</span> k1) <span class="ot">=&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">TypeRep</span> (c (t a)) <span class="ot">-&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">TypeRep</span> c <span class="ot">-&gt;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">TypeRep</span> t <span class="ot">-&gt;</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Instances</span> <span class="ot">-&gt;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Maybe</span> (<span class="dt">Dict</span> (c (t a)))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>resolve1 cta c t (<span class="dt">Instances</span> m) <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Dynamic</span> rep dict <span class="ot">&lt;-</span> Map.lookup (<span class="dt">SomeTypeRep</span> c, <span class="dt">SomeTypeRep</span> t) m</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  (<span class="kw">do</span> <span class="dt">Type.HRefl</span> <span class="ot">&lt;-</span> Type.eqTypeRep rep <span class="op">$</span> <span class="dt">Type.App</span> (<span class="dt">Type.App</span> (typeRep <span class="op">@</span><span class="dt">D1</span>) c) t</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>      <span class="kw">let</span> <span class="dt">D1</span> d <span class="ot">=</span> dict</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pure</span> d) <span class="op">&lt;|&gt;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- When we see e.g. C (T A), where T A and A have the same kind,</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- we can lookup C A, for the entailment C A :- C (T A).</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    (<span class="kw">do</span> <span class="kw">case</span> cta <span class="kw">of</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>          <span class="dt">Type.App</span> _c a<span class="op">@</span>(<span class="dt">Type.App</span> f a&#39;) <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>            <span class="dt">Type.HRefl</span> <span class="ot">&lt;-</span> Type.eqTypeRep (typeRepKind a&#39;) (typeRepKind a)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            <span class="dt">Type.HRefl</span> <span class="ot">&lt;-</span> Type.eqTypeRep rep <span class="op">$</span> <span class="dt">Type.App</span> (<span class="dt">Type.App</span> (typeRep <span class="op">@</span><span class="dt">ED1</span>) c) f</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> <span class="dt">ED1</span> entailment <span class="ot">=</span> dict</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>            dictA <span class="ot">&lt;-</span> lookupDict a&#39; c</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>            <span class="fu">pure</span> <span class="op">$</span> mapDict entailment dictA</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>          _ <span class="ot">-&gt;</span> <span class="dt">Nothing</span>)</span></code></pre></div>
+<p>For future reference, you can see the latest implementation <a
+href="https://github.com/chrisdone/hell/blob/main/src/Hell.hs">in
+Hell.hs in the repo.</a></p>
+<p>What remains is adding support for
+e.g. <code>Ord a =&gt; Eq (Set a)</code>, but I don’t expect it’ll be
+too hard.</p>
+<h2 id="apis-added">APIs added</h2>
+<p>I added optparse-applicative, so the following code works exactly as
+it would in Haskell:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Includes example of Semigroup.</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Opts</span> <span class="ot">=</span> <span class="dt">Opts</span> {</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ot">  quiet ::</span> <span class="dt">Bool</span>,</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ot">  filePath ::</span> <span class="dt">Maybe</span> <span class="dt">Text</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a> }</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>options <span class="ot">=</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  (\quiet path <span class="ot">-&gt;</span> <span class="dt">Main.Opts</span> { quiet <span class="ot">=</span> quiet, filePath <span class="ot">=</span> path })</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>       <span class="op">&lt;$&gt;</span> Options.switch (Flag.long <span class="st">&quot;quiet&quot;</span> <span class="op">&lt;&gt;</span> Flag.help <span class="st">&quot;Be quiet?&quot;</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>       <span class="op">&lt;*&gt;</span> (Alternative.optional <span class="op">$</span> Options.strOption (Option.long <span class="st">&quot;path&quot;</span> <span class="op">&lt;&gt;</span> Option.help <span class="st">&quot;The filepath to export&quot;</span>))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  opts <span class="ot">&lt;-</span> Options.execParser (Options.info (Main.options <span class="op">&lt;**&gt;</span> Options.helper) Options.fullDesc)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="op">$</span> <span class="dt">Maybe</span><span class="op">.</span><span class="fu">maybe</span> <span class="st">&quot;No file path&quot;</span> Function.id (Record.get <span class="op">@</span><span class="st">&quot;filePath&quot;</span> opts)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="op">$</span> <span class="dt">Show</span><span class="op">.</span><span class="fu">show</span> <span class="op">@</span><span class="dt">Bool</span> <span class="op">$</span> Record.get <span class="op">@</span><span class="st">&quot;quiet&quot;</span> opts</span></code></pre></div>
+<p>It’s got date/time APIs:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  now <span class="ot">&lt;-</span> UTCTime.getCurrentTime</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="st">&quot;Current time:&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">IO</span><span class="op">.</span><span class="fu">print</span> now</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="st">&quot;ISO8601:&quot;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="op">$</span> UTCTime.iso8601Show now</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="st">&quot;Parsed:&quot;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Maybe</span><span class="op">.</span><span class="fu">maybe</span> (Error.error <span class="st">&quot;Impossible!&quot;</span>) <span class="dt">IO</span><span class="op">.</span><span class="fu">print</span> <span class="op">$</span> UTCTime.iso8601ParseM <span class="st">&quot;2025-05-30T11:18:26.195147084Z&quot;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="st">&quot;Increased:&quot;</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">IO</span><span class="op">.</span><span class="fu">print</span> <span class="op">$</span> UTCTime.addUTCTime (<span class="dt">Double</span><span class="op">.</span>mult <span class="fl">60.0</span> <span class="fl">60.0</span>) now</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="st">&quot;Parts:&quot;</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">IO</span><span class="op">.</span><span class="fu">print</span> <span class="op">$</span> TimeOfDay.timeToTimeOfDay <span class="op">$</span> UTCTime.utctDayTime now</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  <span class="dt">IO</span><span class="op">.</span><span class="fu">print</span> <span class="op">$</span> UTCTime.utctDay now</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="ot">  day1 ::</span> <span class="dt">Day</span> <span class="ot">&lt;-</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Maybe</span><span class="op">.</span><span class="fu">maybe</span> (Error.error <span class="st">&quot;Invalid&quot;</span>) <span class="dt">IO</span><span class="op">.</span><span class="fu">pure</span> <span class="op">$</span> Day.fromGregorianValid (<span class="dt">Int</span><span class="op">.</span><span class="fu">toInteger</span> <span class="dv">2025</span>) <span class="dv">08</span> <span class="dv">09</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>  day2 <span class="ot">&lt;-</span> <span class="dt">Maybe</span><span class="op">.</span><span class="fu">maybe</span> (Error.error <span class="st">&quot;Invalid&quot;</span>) <span class="dt">IO</span><span class="op">.</span><span class="fu">pure</span> <span class="op">$</span> Day.iso8601ParseM <span class="st">&quot;2025-08-09&quot;</span></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  <span class="dt">IO</span><span class="op">.</span><span class="fu">print</span> <span class="op">$</span> <span class="dt">Eq</span><span class="op">.</span>eq day1 day2 <span class="co">-- True</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>  Text.putStrLn <span class="op">$</span> Day.iso8601Show day1 <span class="co">-- 2025-08-09</span></span></code></pre></div>
+<p>I think Haskell has a really nice date/time API – compared to most
+other languages, anyway.</p>
+<p>I’ve been planning for my next thing to add to be Wai/Warp, so that
+it’s easy to write HTTP servers which comes up surprisingly often. The
+Wai/Warp API is very stable, so I can feel happy including it as a
+primitive.</p>
+<h2 id="syntactic-constructs-added">Syntactic constructs added</h2>
+<p>I added the ability to declare type sigs on top-levels like this:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Foo</span> <span class="ot">=</span> <span class="dt">Foo</span> { bar,<span class="ot"> mu ::</span> <span class="dt">Int</span> }</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> () <span class="ot">=</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  Main.foo</span></code></pre></div>
+<p>Also added applicative operators, and NamedFieldPuns. I think that’s
+about it.</p>
+<h2 id="remaining-work">Remaining work</h2>
+<p>I need to implement a faster unification—I have a work in progress
+unification-fd branch, which I may or may not proceed with, as the API
+doesn’t bring me much joy. Some speed up is needed, though, as my naive
+algorithm is slow.</p>
+<p>It still needs to be ported to the GHC parser, so we can get all the
+extra syntactic goodies like foo.bar, multi-line strings, etc. But
+that’s boring, labrious work, so I’ll get to it when I really, really
+want to.</p>
+<p>No LLMs have been used on any part of this project so far. It’s more
+of an art project at this point. My artisanal open source project.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>For which a lot of activity was driven by adding more
+library functions–because our team at work has been adopting Nushell
+alongside Hell. Nushell is in many ways is easier than Hell, for things
+like data munging and web requests and such out of the box, and it has a
+proper REPL. Hell doesn’t have a REPL and isn’t trying to be that kind
+of experience. It was debated whether we should just use Nushell for
+everything, but a couple people argued that Hell is particularly good at
+process orchestration due to its simple and easy concurrency primitives.
+So we’re using both for now.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2026-04-23 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Thu, 23 Apr 2026 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Proposal to extend JSON with sum types (variants)]]></title><link>https://chrisdone.com/posts/json-with-sum-types</link><guid>https://chrisdone.com/posts/json-with-sum-types</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Proposal to extend JSON with sum types (variants)</title>
+    <style>
+    h1 a, h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Proposal to extend JSON with sum types (variants)</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
+<p>A small syntactical addition that I propose to add to JSON is
+variants. It looks like this:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode lua"><code class="sourceCode lua"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">#</span><span class="st">&quot;succeeded&quot;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">#</span><span class="st">&quot;failed&quot;</span><span class="op">(</span><span class="st">&quot;Problem flerbing the fobnicator.&quot;</span><span class="op">)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">#</span><span class="st">&quot;loading&quot;</span><span class="op">({</span> <span class="st">&quot;remaining&quot;</span><span class="op">:</span> <span class="dv">3</span><span class="op">,</span> <span class="st">&quot;completed&quot;</span><span class="op">:</span> <span class="dv">7</span> <span class="op">})</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> <span class="op">#</span><span class="st">&quot;foo&quot;</span><span class="op">,</span> <span class="op">#</span><span class="st">&quot;bar&quot;</span><span class="op">(</span><span class="dv">1</span><span class="op">),</span> <span class="op">#</span><span class="st">&quot;boz&quot;</span><span class="op">(</span><span class="st">&quot;Ok!&quot;</span><span class="op">)</span> <span class="op">]</span></span></code></pre></div>
+<p>I trust that the syntax is intuitive and follows norms that a hashtag
+is a way of labelling something.</p>
+<p>The grammar is simply:</p>
+<pre class="bnf"><code>root ::= string | number | ... | object | variant
+variant ::= &quot;#&quot; string variant-arg?
+variant-arg ::= &quot;(&quot; root &quot;)&quot;</code></pre>
+<p>It would be more convenient without the quotes, but JSON is primarily
+a transfer format and secondarily a human readable format. The latter is
+what JSON5 is for. Additionally, it’s faster to crunch through JSON’s
+explicitly delimited string literals than more elaborate rules.</p>
+<p>I think this syntax gives a good balance of intention and
+practicality. Sum types exist nicely in XML and static languages (Rust,
+Haskell), and this is always covered by convention in JSON. It seems
+about the right time to make this concept first-class.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2026-02-02 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Mon, 02 Feb 2026 00:00:00 +0000
+</pubDate><dc:creator>Chris Done</dc:creator></item>
 <item><title><![CDATA[Laws]]></title><link>https://chrisdone.com/posts/laws</link><guid>https://chrisdone.com/posts/laws</guid><description><![CDATA[<!doctype html>
 <html>
   <head>
@@ -116,6 +834,7 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
@@ -123,10 +842,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <h1>Laws</h1>
 
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
 <p>Laws that apply to our industry (and others) are interesting to me,
 and I’m writing up here the ones that often come to mind. I usually
 forget the name, so writing them up might be helpful for remembering in
 future.</p>
+<h1 id="brookss-law">Brooks’s law</h1>
+<p>Adding manpower to a late software project makes it later.</p>
+<p>Ramp-up time, increased communication overhead are the causes.</p>
 <h1 id="parkinsons-law">Parkinson’s Law</h1>
 <p>C. Northcote Parkinson’s law: Work expands so as to fill the time
 available for its completion. Similarly, in computing, data expands to
@@ -300,12 +1024,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Argumentum ad colossum</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I’m coining a new phrase to use for discussion purposes:
 <em>argumentum ad colossum</em>.</p>
@@ -472,12 +1199,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Applicative-wired monad pattern</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>In Haskell API design, you sometimes want to model a computation that
 looks like a monad, i.e. some things depend on other things, and make
@@ -521,81 +1251,84 @@ parameter, and are specialized on a particular type. Sometimes the type
 isn’t actually an <code>Applicative</code>, but is similar in spirit
 (e.g. DB libraries often have <code>Expr a</code> returned by
 <code>Query a</code> monad).</p>
+<p>Thanks to Liam Goodacre for his suggestion to eliminate the earlier
+inlined Coyoneda in my example. Thanks to Jack Kelly for his suggestion
+to use a <code>Coyoneda</code> rather than free-Applicative, as this
+example doesn’t need it. Separately, Emeka Nkurumeh has noted that, if
+you squint, this is an implementation of relative monads, which I’ll
+likely write another post about because it’s very interesting!</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE KindSignatures, BlockArguments #-}</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# language GADTs, LambdaCase, GeneralizedNewtypeDeriving #-}</span></span>
+class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# language KindSignatures, BlockArguments, GADTs, LambdaCase, GeneralizedNewtypeDeriving #-}</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Functor.Coyoneda</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Kind</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Functor.Const</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad.Free</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Applicative.Free</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString</span> <span class="kw">as</span> <span class="dt">S</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Char8</span> <span class="kw">as</span> <span class="dt">S8</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Functor.Identity</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.ByteString</span> (<span class="dt">ByteString</span>)</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">Map</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Map</span> (<span class="dt">Map</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Set</span> <span class="kw">as</span> <span class="dt">Set</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Set</span> (<span class="dt">Set</span>)</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad.Trans.State.Strict</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">--------------------------------------------------------------------------------</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">-- The applicative-wired monad pattern</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Spec</span> f m a <span class="kw">where</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Spec</span><span class="ot"> ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> f (m a) <span class="ot">-&gt;</span> <span class="dt">Spec</span> f m (f a)</span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Action</span> f m a <span class="ot">=</span> <span class="dt">Action</span> {<span class="ot"> runAction ::</span> <span class="dt">Free</span> (<span class="dt">Ap</span> (<span class="dt">Spec</span> f m)) a }</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Functor</span>, <span class="dt">Applicative</span>, <span class="dt">Monad</span>)</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="ot">act ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> f (m a) <span class="ot">-&gt;</span> <span class="dt">Action</span> f m (f a)</span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>act l f <span class="ot">=</span> <span class="dt">Action</span> <span class="op">$</span> liftF <span class="op">$</span> liftAp <span class="op">$</span> <span class="dt">Spec</span> l f</span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">--------------------------------------------------------------------------------</span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co">-- An example</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="ot">example ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> <span class="dt">Action</span> f <span class="dt">IO</span> (f (<span class="dt">ByteString</span>, <span class="dt">ByteString</span>))</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>example <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  file1 <span class="ot">&lt;-</span> act <span class="st">&quot;read_file_1&quot;</span> (<span class="fu">pure</span> <span class="op">$</span> S.readFile <span class="st">&quot;file1.txt&quot;</span>)</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  file2 <span class="ot">&lt;-</span> act <span class="st">&quot;read_file_2&quot;</span> (S.readFile <span class="op">.</span>  <span class="fu">unwords</span> <span class="op">.</span> <span class="fu">words</span> <span class="op">.</span> S8.unpack <span class="op">&lt;$&gt;</span> file1)</span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pure</span> <span class="op">$</span> (,) <span class="op">&lt;$&gt;</span> file1 <span class="op">&lt;*&gt;</span> file2</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">--------------------------------------------------------------------------------</span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="co">-- IO interpretation</span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="ot">runIO ::</span> <span class="dt">Action</span> <span class="dt">Identity</span> <span class="dt">IO</span> a <span class="ot">-&gt;</span> <span class="dt">IO</span> a</span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>runIO <span class="ot">=</span> foldFree (runAp io) <span class="op">.</span> runAction <span class="kw">where</span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="ot">  io ::</span> <span class="dt">Spec</span> <span class="dt">Identity</span> <span class="dt">IO</span> x <span class="ot">-&gt;</span> <span class="dt">IO</span> x</span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>  io <span class="ot">=</span> \<span class="kw">case</span></span>
-<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Spec</span> name act&#39; <span class="ot">-&gt;</span> <span class="kw">do</span></span>
-<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>      <span class="fu">putStrLn</span> <span class="op">$</span> <span class="st">&quot;Running &quot;</span> <span class="op">++</span> name</span>
-<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>      out <span class="ot">&lt;-</span> runIdentity act&#39;</span>
-<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pure</span> <span class="op">$</span> <span class="dt">Identity</span> out</span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co">--------------------------------------------------------------------------------</span></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="co">-- Graphable interpretation</span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Value</span> (<span class="ot">a ::</span> <span class="dt">Type</span>) <span class="ot">=</span> <span class="dt">Value</span> {<span class="ot"> runValue ::</span> <span class="dt">Const</span> (<span class="dt">Set</span> <span class="dt">String</span>) a }</span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Functor</span>, <span class="dt">Applicative</span>)</span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> (<span class="dt">Value</span> a) <span class="kw">where</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">show</span> <span class="ot">=</span> <span class="fu">show</span> <span class="op">.</span> keys</span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="ot">runGraph ::</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> <span class="dt">Action</span> <span class="dt">Value</span> m (<span class="dt">Value</span> a) <span class="ot">-&gt;</span> (<span class="dt">Value</span> a, <span class="dt">Map</span> <span class="dt">String</span> (<span class="dt">Set</span> <span class="dt">String</span>))</span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>runGraph x <span class="ot">=</span> <span class="fu">flip</span> runState <span class="fu">mempty</span> <span class="op">$</span> graph <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> x</span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a>  act <span class="st">&quot;root&quot;</span> (<span class="fu">pure</span> <span class="op">&lt;$&gt;</span> v)</span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="ot">graph ::</span> <span class="dt">Action</span> <span class="dt">Value</span> m a <span class="ot">-&gt;</span> <span class="dt">State</span> (<span class="dt">Map</span> <span class="dt">String</span> (<span class="dt">Set</span> <span class="dt">String</span>)) a</span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">=</span> foldFree (runAp go) <span class="op">.</span> runAction <span class="kw">where</span></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="ot">  go ::</span> <span class="dt">Spec</span> <span class="dt">Value</span> m a <span class="ot">-&gt;</span> <span class="dt">State</span> (<span class="dt">Map</span> <span class="dt">String</span> (<span class="dt">Set</span> <span class="dt">String</span>)) a</span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>  go <span class="ot">=</span> \<span class="kw">case</span></span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>   <span class="dt">Spec</span> string i <span class="ot">-&gt;</span> <span class="kw">do</span></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    modify (Map.insert string (keys i))</span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pure</span> <span class="op">$</span> <span class="dt">Value</span> <span class="op">$</span> <span class="dt">Const</span> (Set.singleton string)</span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="ot">keys ::</span>  <span class="dt">Value</span> a <span class="ot">-&gt;</span> <span class="dt">Set</span> <span class="dt">String</span></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a>keys <span class="ot">=</span> getConst <span class="op">.</span> runValue</span></code></pre></div>
-<p>(Thanks to Liam Goodacre for his suggestion to eliminate the inlined
-Coyoneda.)</p>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString</span> <span class="kw">as</span> <span class="dt">S</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.ByteString.Char8</span> <span class="kw">as</span> <span class="dt">S8</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Functor.Identity</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.ByteString</span> (<span class="dt">ByteString</span>)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Map</span> <span class="kw">as</span> <span class="dt">Map</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Map</span> (<span class="dt">Map</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Set</span> <span class="kw">as</span> <span class="dt">Set</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Set</span> (<span class="dt">Set</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad.Trans.State.Strict</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co">--------------------------------------------------------------------------------</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">-- The applicative-wired monad pattern</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Spec</span> f m a <span class="kw">where</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="dt">Spec</span><span class="ot"> ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> f (m a) <span class="ot">-&gt;</span> <span class="dt">Spec</span> f m (f a)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Action</span> f m a <span class="ot">=</span> <span class="dt">Action</span> {<span class="ot"> runAction ::</span> <span class="dt">Free</span> (<span class="dt">Coyoneda</span> (<span class="dt">Spec</span> f m)) a }</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Functor</span>, <span class="dt">Applicative</span>, <span class="dt">Monad</span>)</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="ot">act ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> f (m a) <span class="ot">-&gt;</span> <span class="dt">Action</span> f m (f a)</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>act l f <span class="ot">=</span> <span class="dt">Action</span> <span class="op">$</span> liftF <span class="op">$</span> liftCoyoneda <span class="op">$</span> <span class="dt">Spec</span> l f</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co">--------------------------------------------------------------------------------</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co">-- An example</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="ot">example ::</span> <span class="dt">Applicative</span> f <span class="ot">=&gt;</span> <span class="dt">Action</span> f <span class="dt">IO</span> (f (<span class="dt">ByteString</span>, <span class="dt">ByteString</span>))</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>example <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  file1 <span class="ot">&lt;-</span> act <span class="st">&quot;read_file_1&quot;</span> (<span class="fu">pure</span> <span class="op">$</span> S.readFile <span class="st">&quot;file1.txt&quot;</span>)</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  file2 <span class="ot">&lt;-</span> act <span class="st">&quot;read_file_2&quot;</span> (S.readFile <span class="op">.</span>  <span class="fu">unwords</span> <span class="op">.</span> <span class="fu">words</span> <span class="op">.</span> S8.unpack <span class="op">&lt;$&gt;</span> file1)</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pure</span> <span class="op">$</span> (,) <span class="op">&lt;$&gt;</span> file1 <span class="op">&lt;*&gt;</span> file2</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">--------------------------------------------------------------------------------</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="co">-- IO interpretation</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="ot">runIO ::</span> <span class="dt">Action</span> <span class="dt">Identity</span> <span class="dt">IO</span> a <span class="ot">-&gt;</span> <span class="dt">IO</span> a</span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>runIO <span class="ot">=</span> foldFree (lowerCoyoneda <span class="op">.</span> hoistCoyoneda io) <span class="op">.</span> runAction <span class="kw">where</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="ot">  io ::</span> <span class="dt">Spec</span> <span class="dt">Identity</span> <span class="dt">IO</span> x <span class="ot">-&gt;</span> <span class="dt">IO</span> x</span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  io <span class="ot">=</span> \<span class="kw">case</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Spec</span> name act&#39; <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>      <span class="fu">putStrLn</span> <span class="op">$</span> <span class="st">&quot;Running &quot;</span> <span class="op">++</span> name</span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a>      out <span class="ot">&lt;-</span> runIdentity act&#39;</span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pure</span> <span class="op">$</span> <span class="dt">Identity</span> out</span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co">--------------------------------------------------------------------------------</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="co">-- Graphable interpretation</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Value</span> (<span class="ot">a ::</span> <span class="dt">Type</span>) <span class="ot">=</span> <span class="dt">Value</span> {<span class="ot"> runValue ::</span> <span class="dt">Const</span> (<span class="dt">Set</span> <span class="dt">String</span>) a }</span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Functor</span>, <span class="dt">Applicative</span>)</span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> (<span class="dt">Value</span> a) <span class="kw">where</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">show</span> <span class="ot">=</span> <span class="fu">show</span> <span class="op">.</span> keys</span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="ot">runGraph ::</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> <span class="dt">Action</span> <span class="dt">Value</span> m (<span class="dt">Value</span> a) <span class="ot">-&gt;</span> (<span class="dt">Value</span> a, <span class="dt">Map</span> <span class="dt">String</span> (<span class="dt">Set</span> <span class="dt">String</span>))</span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a>runGraph x <span class="ot">=</span> <span class="fu">flip</span> runState <span class="fu">mempty</span> <span class="op">$</span> graph <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a>  v <span class="ot">&lt;-</span> x</span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a>  act <span class="st">&quot;root&quot;</span> (<span class="fu">pure</span> <span class="op">&lt;$&gt;</span> v)</span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="ot">graph ::</span> <span class="dt">Action</span> <span class="dt">Value</span> m a <span class="ot">-&gt;</span> <span class="dt">State</span> (<span class="dt">Map</span> <span class="dt">String</span> (<span class="dt">Set</span> <span class="dt">String</span>)) a</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>graph <span class="ot">=</span> foldFree (lowerCoyoneda <span class="op">.</span> hoistCoyoneda go) <span class="op">.</span> runAction <span class="kw">where</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="ot">  go ::</span> <span class="dt">Spec</span> <span class="dt">Value</span> m a <span class="ot">-&gt;</span> <span class="dt">State</span> (<span class="dt">Map</span> <span class="dt">String</span> (<span class="dt">Set</span> <span class="dt">String</span>)) a</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>  go <span class="ot">=</span> \<span class="kw">case</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a>   <span class="dt">Spec</span> string i <span class="ot">-&gt;</span> <span class="kw">do</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a>    modify (Map.insert string (keys i))</span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pure</span> <span class="op">$</span> <span class="dt">Value</span> <span class="op">$</span> <span class="dt">Const</span> (Set.singleton string)</span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="ot">keys ::</span>  <span class="dt">Value</span> a <span class="ot">-&gt;</span> <span class="dt">Set</span> <span class="dt">String</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a>keys <span class="ot">=</span> getConst <span class="op">.</span> runValue</span></code></pre></div>
 <p>Example:</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Example:</span></span>
@@ -750,12 +1483,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>My blog now runs on a Raspberry Pi at home</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I discovered that my new house had <a
 href="https://www.ofnl.co.uk/">OFNL</a> internet, which is one of a
@@ -929,6 +1665,7 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
@@ -936,9 +1673,64 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <h1>LLMs</h1>
 
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
 <p>This page serves as my place to journal what are hopefully balanced
 thoughts on the current AI summer, driven by LLMs.</p>
-<h1 id="section">2025-12-20</h1>
+<h1 id="section">2026-03-12</h1>
+<p><em>The Medium is the Message</em> keeps coming to mind again and
+again, as people seem frequently surprised by the side-effects of the
+adoption of LLMs. The content (articles, code, images) produced by LLMs
+is not the higher order bit, but how they <em>change</em> the people and
+institutions that use them.</p>
+<p>No other changes in viewpoints to report this time.</p>
+<h1 id="section-1">2026-02-07</h1>
+<p>I shared a thought on a big dev call at work, when talking about
+agentic “skill” based workflows, that one problem is that you lose Flow,
+which is often one of the most enjoyable ways to work as a software dev
+(most of the rest is frankly frustration and toil, but valuable). Today
+I saw <a
+href="https://haskellforall.com/2026/02/beyond-agentic-coding">this
+post</a> by Gabriella Gonzalez about the same topic, with examples of
+interfaces that try to do a better job of that. I’m not as gung ho about
+LLMs as Gabriella is, but I’m enjoying these simple articles that
+discuss a particular technical point.</p>
+<p>This way of thinking has been on my mind for some time, as generally
+I am always working to reduce feedback loops in my work, never increase
+them. (This doesn’t follow from using Emacs, but Emacs can help with
+that: look at magit.) It’s why slow CI ruins my day, and why most cloud
+ops like Terraform are painful (e.g. Amazon resources aren’t content
+addressable, so checking for changes to apply is always
+O(n)–brutal!).</p>
+<p>Separately, but somewhat related; arguably, there’s a certain <a
+href="https://en.wikipedia.org/wiki/Psychogeography">psychogeography</a>
+to “walking around” a codebase when doing an update or refactor, taking
+the scenic route reminds you of the landscape and dark alley ways, it
+activates and gently tickles parts of your brain in a way that I imagine
+is valuable for the larger work, which is an experience removed by being
+teleported from A-Z.</p>
+<h1 id="section-2">2026-01-30</h1>
+<p>A <a href="https://arxiv.org/abs/2601.20245">paper</a> discusses a
+similar topic that I’ve addressed in this microblog, which is the
+negative relationship between skill and using GenAI.</p>
+<p>I haven’t generated anything since the last update. But I hand wrote
+a little <a
+href="https://github.com/chrisdone-artificial/llm-parse">experimental
+library that uses a free applicative to both declare a GBNF grammar and
+consume the output back into Haskell</a>. I didn’t add an
+<code>Alternative</code> instance (yet) to support disjunction in the
+grammar, but this direction appeals to me. I’ve been dabbling with the
+same llama3.2 (3b model) via llama.cpp’s server locally on the same
+MacBook Pro M4 Max. It’s quite easy to get reliable outputs. I intend to
+dabble more with this in coming weeks.</p>
+<p>I’ve been recently thinking that the whole phrasing around
+interacting with LLMs has become increasingly anthropomorphic, and
+thought of a clever mental hack to avoid it: instead of “talking to
+Claude,” say “talking to the computer,” (doesn’t that sound silly!) and
+instead of “AI generated” or “LLM generated,” simply say “computer
+generated.” (How dull!) I find it thoroughly cuts through the illusion
+that we are doing anything more. But YMMV.</p>
+<h1 id="section-3">2025-12-20</h1>
 <p>Another positive experience I’ve had with LLMs is finding an
 opportunity to redo the frontend of a fairly simple web app, which was
 previously a server-side app at work. It’s an internal tool, so it’s
@@ -955,7 +1747,7 @@ mainstream. That wouldn’t be so bad, as a good subset of programmers
 like formal thinking. Whether software, subject to market forces and
 competition, will get any better or worse objectively, I’m
 skeptical.</p>
-<h1 id="section-1">2025-12-03</h1>
+<h1 id="section-4">2025-12-03</h1>
 <p>My experience with LLMs since my last update has been both positive
 and negative.</p>
 <p>On the one hand, I’ve seen a quality and comprehension drop in some
@@ -977,7 +1769,7 @@ good.</li>
 <p>This has been quite effective for me as a means to speed up tasks
 which are doing what I’ve done elsewhere with small differences. I’m
 using it as glorified autocomplete.</p>
-<h1 id="section-2">2025-10-24</h1>
+<h1 id="section-5">2025-10-24</h1>
 <p>I’ve had what I’d describe as “hole in one” experience where I
 generated two Haskell packages, sse-conduit and llm-conduit, from a
 single Claude prompt, which both compiled and worked the first time when
@@ -996,7 +1788,7 @@ and atrophy. By contrast, if you only vibe things that you already
 understand fully, but do the hard work on everything else, you’ll
 continue growing, but will also get the accelerative edge of LLM
 vibing.</p>
-<h1 id="section-3">2025-09-23</h1>
+<h1 id="section-6">2025-09-23</h1>
 <p>Harvard published <a
 href="https://hbr.org/2025/09/ai-generated-workslop-is-destroying-productivity">this
 article defining “workslop”</a>, a new term for when someone substitutes
@@ -1017,7 +1809,7 @@ that organisations across the board are benefitting from LLMs. I read in
 the Economist that more small, boutique models, aka SLMs, are becoming
 preferred over the Big models provided by OpenAI, Anthropic, etc. which
 makes some sense.</p>
-<h1 id="section-4">2025-08-19</h1>
+<h1 id="section-7">2025-08-19</h1>
 <p>Since the last update, I’ve experimented with local LLM models on my
 MacBookPro Max M4, which can run 3b parameter models. I wanted to
 approach the whole LLM hype as a tool, like grep or awk, and see whether
@@ -1054,7 +1846,7 @@ LLMs. But that passed and my interest came back.</p>
 <p>Overall, present outlook is: tinkering with mild interest, local
 first, so-so performance for job-related tasks, using as a Google++,
 avoiding delegating thinking, renewed interest in learning theory.</p>
-<h1 id="section-5">2025-06-04</h1>
+<h1 id="section-8">2025-06-04</h1>
 <p>Small update: I’d presently describe my outlook as sceptical. I go in
 cycles, of long troughs of scepticism, with very, very, brief (one-day),
 widely spread out, spikes of FOMO and belief that AI is an existential
@@ -1066,7 +1858,7 @@ from sheer disinterest, and digital devices in the evening entirely, I
 am also serene and a little bored by the whole thing. But it still does
 play on the minds of some friends.</p>
 <p>I might change my mind on the next update, we’ll see.</p>
-<h1 id="section-6">2025-04-18</h1>
+<h1 id="section-9">2025-04-18</h1>
 <p>I’ve been collecting thoughts on LLMs in a peacemeal way. I add to
 this document from time to time. It’s not an article as such.</p>
 <ul>
@@ -1296,12 +2088,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>The LLM Curse</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I encountered a package, and 99.9% of the Haskell code of that
 package was–proudly!–written using Claude. I took a browse through the
@@ -1488,12 +2283,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Less-Than Estimation</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <h2 id="mechanics">Mechanics</h2>
 <p>A method of estimation I’ve used successfully on a bunch of projects
@@ -1686,12 +2484,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Registers of code authoring</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I’ve recently been thinking about the fact that there are very
 distinct <a
@@ -1860,12 +2661,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Hell (Haskell shell): Year in Review</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><a href="https://chrisdone.github.io/hell/">Hell</a> is my little
 shell scripting language which is a thin layer<a href="#fn1"
@@ -2201,12 +3005,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Adding sum types (variants) to Hell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><a href="https://chrisdone.github.io/hell/">Hell</a> is my little
 shell scripting language that’s a thin layer over Haskell’s own standard
@@ -2450,12 +3257,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>A modest critique of Htmx</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>At work, we really like the basic simple idea of Htmx. Based on using
 Htmx in a non-trivial user interface, across a team, we’ve found that
@@ -2721,12 +3531,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Naming sum types is often hard</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>After doing quite a lot of software design in systems which encourage
 use of enumeration types, I’ve noticed that there’s a common challenge
@@ -2895,12 +3708,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Portals in Emacs</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I’ve been working on a new way to launch and manage processes in
 Emacs in <a
@@ -3113,12 +3929,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>All my projects (2008-2023)</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>It might be a “getting old[-er]” thing, but I’ve recently started
 feeling like documenting the complete set of software projects I’ve
@@ -4237,12 +5056,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Halogen is better than React at everything</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I wrote these notes in 2022, but found that they still hold up in
 2024.</p>
@@ -4425,12 +5247,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Reports of RSS/Atom’s death are greatly exaggerated</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I’m not old, but I remember when people said “my web log.” That then
 became “blog.”<a href="#fn1" class="footnote-ref" id="fnref1"
@@ -4638,12 +5463,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Hell: Shell scripting Haskell dialect</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><a href="https://github.com/chrisdone/hell">Hell</a> is a shell
 scripting language that is a tiny dialect of Haskell that I wrote for my
@@ -4915,12 +5743,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Codebases and love</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Returning to <a
 href="https://pages.cs.wisc.edu/~remzi/Naur.pdf">Theory Building (by
@@ -5070,12 +5901,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>A spectrum of web dev abstraction</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>There’s a spectrum of web dev with two sides:</p>
 <ol type="1">
@@ -5240,12 +6074,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>AI and Machine Thinking</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>AI might take our jobs, that’s bad for us, just like it was for the
 Luddites.</p>
@@ -5406,6 +6243,7 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
@@ -5413,6 +6251,8 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <h1>Pickling: The really obvious missing feature of all web
 browsers</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Browsers already provide an excellent delivery mechanism for single
 page apps. Web apps already have a security model around accessing local
@@ -5567,12 +6407,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Reasoning violently</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>The old bash.org joke goes, “XML is like violence, if it doesn’t
 solve the problem, just use more.”</p>
@@ -5728,12 +6571,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Tamagotchi tooling</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Remember those tamagotchis that were popular in the early 2000s?
 Little devices with a screen showing a pet that needed constant
@@ -5890,12 +6736,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Three questions of language design</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>There seem to be three interesting questions when I look at a new
 (mainstream/practical) programming language:</p>
@@ -6046,12 +6895,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Things I’ve changed my mind about</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Here’s a small blog post to end 2022. I’ve put together a list of
 things I’ve changed my mind about over the past few years, since the
@@ -6243,12 +7095,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Inflex</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1306.039 389.638">
 <path d="M245.695 48.91L198.18 1.393a4.746 4.746 0 00-6.72 0L1.394 191.46a4.746 4.746 0 000 6.719L191.46 388.246a4.739 4.739 0 003.36 1.392 4.739 4.739 0 003.359-1.392l47.516-47.517a4.746 4.746 0 000-6.719l-44.157-44.157 44.157-44.157a4.746 4.746 0 000-6.72l-44.157-44.157 44.157-44.157a4.746 4.746 0 000-6.719l-44.157-44.157 44.157-44.157a4.746 4.746 0 000-6.719zM194.82 378.167l-84.75-84.75h81.595l43.953 43.952zm-3.155-91.878h-88.723l-40.389-40.39h169.501zm-136.24-47.517l-40.389-40.389h176.63l40.388 40.39zm136.24-47.516H15.035l40.39-40.39h176.628zM62.552 143.739l40.39-40.39h88.722l40.39 40.39zm129.112-47.517H110.07l84.75-84.75 40.798 40.797z" fill="#fff"/><path d="M428.992 323.774v-182.38h11.594v182.38zm5.621-230.172q-4.567 0-8.08-3.339-3.514-3.338-3.514-7.906 0-4.92 3.337-8.258 3.338-3.339 8.257-3.339 4.568 0 8.082 3.339 3.513 3.338 3.513 7.906 0 4.569-3.513 8.083-3.514 3.514-8.082 3.514zm170.057 46.385q34.082 0 53.758 19.855 19.676 19.855 19.676 56.752v107.18h-11.595V217.297q0-32.33-16.338-49.373t-46.555-17.043q-34.081 0-53.757 20.206-19.676 20.206-19.676 54.293v98.394h-11.595v-182.38h11.243v44.628q8.784-21.436 28.284-33.735 19.5-12.3 46.555-12.3zm315.168 206.628l1.054 9.84q-8.784 3.865-19.325 3.865-21.784 0-33.379-12.65-11.595-12.651-11.595-34.087V124.877q0-26.707-11.243-39.71-11.243-13.001-32.676-13.001t-32.676 13.002q-11.244 13.002-11.244 39.709v16.516h60.082v10.19h-60.082v172.19H757.16v-172.19h-34.433v-10.19h34.433V125.58q0-31.627 14.582-47.616 14.581-15.989 40.933-15.989 26.703 0 41.109 15.813 14.405 15.814 14.405 47.792v185.894q0 38.304 33.73 38.304 10.19 0 17.92-3.163zm110.326-32.33q18.622 0 34.433-6.852t26.352-20.206l7.027 7.731q-11.946 14.76-29.69 22.315-17.743 7.555-38.473 7.555-26.352 0-47.434-11.772-21.081-11.772-33.027-32.857-11.946-21.084-11.946-47.791 0-26.707 11.243-47.792 11.244-21.084 31.095-32.856 19.852-11.773 45.15-11.773 23.19 0 41.811 11.07 18.622 11.07 29.69 30.045 11.068 18.976 12.473 41.818L951.46 254.195q6.676 27.41 27.757 43.75 21.082 16.34 50.947 16.34zm-5.27-163.755q-22.136 0-39.352 10.366-17.217 10.367-27.055 28.816-9.838 18.449-9.838 41.641 0 4.92.703 13.354l147.57-28.815q-2.46-17.57-11.946-32.506-9.487-14.935-24.947-23.895-15.46-8.961-35.135-8.961zm266.329 173.244h-14.406l-66.055-85.744-66.055 85.744h-13.703l73.082-94.178-69.217-88.203h13.702l62.19 79.77 61.84-79.77h13.351l-68.514 88.203z" fill="#fff"/><path d="M333.375-.027v389.665" fill="none" stroke="#fff" stroke-width="11.54"/>
@@ -6430,12 +7285,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Immutable Publishing Policy</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <h2 id="summary">Summary</h2>
 <p>This is a policy for publishing Haskell packages. It was published in
@@ -6755,12 +7613,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>A plain English description of monads without Haskell code</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <blockquote>
 <p>“That’s actually the first time I read an explanation about monads
@@ -7004,12 +7865,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Thoughts on type class implementation</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>While designing and implementing Inflex, I discovered that there’s a
 lot of space in design decisions around type classes. Haskell’s
@@ -7196,12 +8060,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>My negative views on Rust</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><strong>2023-10-13:</strong> Edited based on feedback, but preserves
 the same opinions.</p>
@@ -7528,12 +8395,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Inflex Bibliography</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <h2 id="direct-influences">Direct influences</h2>
 <ul>
@@ -7793,12 +8663,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>The Movement Principle</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>A language design principle I wanted to highlight in a page of its
 own is what I’m calling the movement principle.</p>
@@ -8039,12 +8912,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>What’s wrong with ImplicitParams</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Implicit parameters, enabled by the <code>ImplicitParams</code>
 extension in GHC, often come up in Haskell discussions,<a href="#fn1"
@@ -8268,12 +9144,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>How exactly ExceptT differs to EarlyDo</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>After publishing my <a
 href="https://github.com/inflex-io/early">early</a> GHC plugin, I saw a
@@ -8620,12 +9499,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Haskell doesn’t have macros</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I wanted to underscore a specific point about Haskell’s
 metaprogramming capabilities. It doesn’t have a macro system, the kind
@@ -8992,12 +9874,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Is it Try.do that is dangerous?</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I wrote the post <a href="https://chrisdone.com/posts/try-do/">Try.do
 for recoverable errors in Haskell</a> and someone has written <a
@@ -9339,12 +10224,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Try.do for recoverable errors in Haskell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><strong>UPDATE 2021-01-02</strong>: I have since written <a
 href="https://github.com/inflex-io/early">a GHC compiler plugin to
@@ -9574,12 +10462,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Recoverable errors in Haskell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>In Haskell, I sometimes have IO-based actions that may produce
 failures. The IO aspect is usually incidental; because I need logging or
@@ -9825,12 +10716,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Use import aliases to easily access fields</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>This post demonstrates using imports as a quick and easy way to
 disambiguate record field names. You can still put all your types in one
@@ -10023,12 +10917,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>The language of spreadsheets is bad</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>The user interface in a spreadsheet is modal. There are two
 modes:</p>
@@ -10317,12 +11214,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>What’s wrong with the grid?</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>The grid system in spreadsheets is very simple. It’s also very
 powerful, and it’s powerful because it’s simple. As a user you can
@@ -10579,12 +11479,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Defaulting fields in a record</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Do you have 20+ fields of configuration for your kitchen sink API?
 This approach might be for you.</p>
@@ -10812,12 +11715,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Ghosts of Departed Proofs Convenience</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Following on from <a href="https://kataskeue.com/gdp.pdf"><em>Ghosts
 of Departed Proofs</em></a> with a <code>Named</code> type as defined in
@@ -11121,12 +12027,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Statically Checked Overloaded Strings</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>This page demonstrates a trick I came up with which is defining
 <code>IsString</code> for <code>Q (TExp a)</code>, where <code>a</code>
@@ -11360,12 +12269,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Static Smart Constructors with Double Splices</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I plan on using this technique in at least one library, and so
 thought it would be worth giving a name and a page dedicated to it, so
@@ -11590,12 +12502,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Client-side web programming in Haskell: A retrospective</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>At the beginning of this decade (2010), a few of us Haskellers were
 exploring how best to do client-side web programming. We didn’t want to
@@ -11938,12 +12853,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>German Naming Convention</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <h2 id="introduction">Introduction</h2>
 <p>As a software consultant, mostly contributing code to other company’s
@@ -12212,12 +13130,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Dynamically typed Haskell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>For a while I’ve been intending to make a package that provides a
 dynamic type and a trivial means to read/write that type to/from
@@ -12400,12 +13321,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Web engines in Haskell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <h2 id="vado">Vado</h2>
 <p><a href="https://github.com/chrisdone/vado">Vado</a> is a Haskell web
@@ -12672,12 +13596,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Lazy list length</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>To get the length of a list like</p>
 <div class="sourceCode" id="cb1"><pre
@@ -12856,12 +13783,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Type inequality operator</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Here’s a fun trick. If you want to define a function that accepts
 everything but one type, you can make a type family like this. If the
@@ -13024,12 +13954,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Fast Haskell: Competing with C at parsing XML</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>In this post we’re going to look at parsing XML in Haskell, how it
 compares with an efficient C parser, and steps you can take in Haskell
@@ -13826,12 +14759,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>hindent 5: One style to rule them all</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <h2 id="reminder-of-the-past">Reminder of the past</h2>
 <p>In 2014, in <a href="http://chrisdone.com/posts/hindent">my last
@@ -14097,12 +15033,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>A philosophical difference between Haskell and Lisp</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><strong>UPDATE 2020-08-03</strong>: I no longer stand by the content
 in this post. I think the overall sentiment is marginally accurate;
@@ -14359,12 +15298,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Use the REPL, Luke</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>There was an online discussion about iteration times in Haskell and
 whether and why they are slow. For me, it’s not slow. I do all my
@@ -14588,12 +15530,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>The path package</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Here I’d like to announce and explain the motivations behind my <a
 href="http://hackage.haskell.org/package/path">path</a> package.</p>
@@ -15108,12 +16053,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Existentials and the heterogenous list fallacy</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>An oft-stated argument against static typing is that heterogenous
 lists are unreasonably difficult to model. Why is static typing being so
@@ -15352,12 +16300,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>The constraint trick for instances</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Ever seen this in a library,</p>
 <div class="sourceCode" id="cb1"><pre
@@ -15608,6 +16559,7 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
@@ -15615,6 +16567,8 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <h1>Stream fusion and composability (Java 8 and Haskell) for
 newbies</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>In an online discussion, when Java 8 released their stream API,
 written about <a
@@ -15852,12 +16806,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>My Haskell tooling wishlist</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I spend a lot of my time on Haskell tooling, both for my hobbies and
 my job. Almost every project I work on sparks a desire for another piece
@@ -16259,12 +17216,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Measuring duration in Haskell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Happy new year, everyone. It’s a new year and time for new
 resolutions. Let’s talk about time. Specifically, measuring it in
@@ -16532,12 +17492,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Lucid 2.0: clearer than before</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Since <a href="http://chrisdone.com/posts/lucid">my last post</a>
 about Lucid, I’ve <a
@@ -16880,12 +17843,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Lucid: templating DSL for HTML</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I’m not big on custom templating languages, for reasons I’ll write
 about another time. I prefer EDSLs. I preferred the <a
@@ -17416,12 +18382,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Fast pagination on PostgreSQL</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><strong>UPDATE: 2014-11-19:</strong> Some people asked me how much
 creating an index on <code>event(channel,id)</code> helps. Answer: not
@@ -17674,12 +18643,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>shell-conduit: Write shell scripts in Haskell with Conduit</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>As part of my series of write-about-personal-projects, my latest
 obsession is writing shell scripts with Michael Snoyman’s <a
@@ -18130,12 +19102,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>hindent: A Haskell indenter</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <h2 id="a-question-of-style">A question of style</h2>
 <p>In this post I’m going to use the word “style” to refer to the way
@@ -18702,12 +19677,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Formatting in Haskell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>This post is about the <a
 href="http://hackage.haskell.org/package/formatting">formatting</a>
@@ -19040,12 +20018,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Teaching: A good (and bad) example</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Rather than write a bunch of prose about how I think teaching should
 be done, this time I’ll simply comment an existing example. Needless to
@@ -19556,12 +20537,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>An alternative Haskell home page</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <h2 id="update-2020-05-24">Update 2020-05-24</h2>
 <p>The web site has since been through various iterations and changes,
@@ -20013,12 +20997,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Presentations update</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Just a small update. I took 15 mins and updated the haskell-mode
 printer a bit so that everything is indented by default, and lists are
@@ -20199,12 +21186,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>The Identity monad trick</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><em><strong>Update:</strong> Got the link! <a
 href="http://blog.sigfpe.com/2007/04/trivial-monad.html">The Trivial
@@ -20405,12 +21395,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>The printer Haskell deserves</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Friday night project ahoy!</p>
 <h2 id="problem">Problem</h2>
@@ -20629,12 +21622,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Typeable and Data in Haskell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><a
 href="https://hackage.haskell.org/package/base-4.6.0.1/docs/Data-Typeable.html">Data.Typeable</a>
@@ -21169,12 +22165,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Haskell structured diffs</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Project-request: someone please implement a program that will diff
 Haskell in a cleverer way than lines.</p>
@@ -21554,12 +22553,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Reloading running code in GHCi</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Something I’ve been using over the past couple weeks in a personal
 Yesod web site is a way to reload the code while the server is still
@@ -21758,12 +22760,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Attempto Controlled English</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><a
 href="http://en.wikipedia.org/wiki/Attempto_Controlled_English">Attempto
@@ -22113,12 +23118,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Emacs, Notmuch and Offlineimap</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I kind of hate writing in anything other than Emacs. Especially
 email. Writing email in Emacs with <code>message-mode</code> is lovely.
@@ -22389,12 +23397,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Pure IO monad and Try Haskell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><strong>tl;dr: <a href="http://tryhaskell.org/">Try Haskell</a> now
 has simple I/O built on a pure IO monad.</strong></p>
@@ -22669,12 +23680,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Dijkstra on Haskell and Java</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>In 2001, Edsger W. Dijkstra wrote a letter to the Budget Council of
 The University of Texas. A <a
@@ -22894,12 +23908,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Emacs users are like Terry Pratchett’s Igors</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Within the constraints of the Emacs environment, there are no limits.
 Emacs is built upon this principle; the Lisp principle. Make some small
@@ -23132,12 +24149,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>structured-haskell-mode</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>For about 2 months I’ve been working on and off on an Emacs package
 called <a
@@ -23373,12 +24393,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Recording simple GIFs for demos</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Sometimes you might like to record little GIF animations of your
 screen to demonstrate an Emacs feature you did (hey, some of you
@@ -23544,12 +24567,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Making GHCi scale better and faster</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>A common complaint with GHCi is that it doesn’t scale well when the
 size of the project gets bigger. Once you hit 20, 30, 50, or 150
@@ -23719,12 +24745,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Twitter waterflow problem and loeb</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <style>
 .g b{background:#888;color:#eee}
@@ -24329,12 +25358,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>God-mode for Emacs</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>A month ago I blogged about ways to reduce strenuous key presses in
 my Emacs use. I <a href="/posts/emacs-key-analysis">analyzed my runs of
@@ -24591,12 +25623,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Functional Programming is Hard?</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Just a reminder to those who think imperative object oriented style
 is inherently easier to understand for humans, and that functional
@@ -24754,12 +25789,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>CamelCase vs under_scores vs hyphenated-words</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <h2 id="snake-case-do_and_go">Snake-case: <code>do_and_go</code></h2>
 <ul>
@@ -24923,12 +25961,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Analysis of Emacs keys pressed</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Here’s the deal: Emacs keybindings make my fingers hurt. I don’t
 think I ever experienced RSI before I started using Emacs. I guess I’ve
@@ -25173,12 +26214,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Haskell News</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>As a consumer of Haskell content I neither have the time nor
 inclination to follow haskell-cafe and other various mailing lists, the
@@ -25379,12 +26423,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>IRC Browse</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Haven’t blogged in a while, had some time to write now.</p>
 <p>Since I last blogged, I made <a href="http://ircbrowse.net/">IRC
@@ -25615,12 +26662,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Fay, JavaScript, etc.</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>A couple months back I released Fay in a preliminary stage, with a <a
 href="http://fay-lang.org/">little web site of its own</a>. I haven’t
@@ -25850,12 +26900,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Making HaskellDB slightly more type-safe</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I was just discussing HaskellDB’s major flaws with Oliver Charles and
 I noted that one <em>huge</em> problem is that the type of
@@ -26048,12 +27101,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Comments on my blog</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Comments are unsupported on my blog for the same reason as <a
 href="http://www.scripting.com/2007/01/01.html#theUneditedVoiceOfAPerson">Dave
@@ -26227,12 +27283,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Ji, a little library for controlling a web browser from Haskell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><strong>UPDATE</strong>: This project was forked into <a
 href="https://github.com/HeinrichApfelmus/threepenny-gui">Threepenny-gui</a>
@@ -26422,12 +27481,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>A concept for editing code as an AST rather than text</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><a href="http://www.youtube.com/watch?v=v2ypDcUM06U">Here is a demo
 video</a>.</p>
@@ -26611,12 +27673,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>A map generic upon the value thanks to typeable</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Not sure why I never tried this before.</p>
 <pre><code>{-# LANGUAGE ExistentialQuantification #-}
@@ -26790,12 +27855,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>HaskellDB: A long tutorial</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I’ve been using HaskellDB in production for about two years. I
 decided that I’d write a proper, up-to-date description, or tutorial,
@@ -27570,12 +28638,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Common Lisp/Haskell syntactic comparison</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>This is a little reminder/documentation for myself to explain that,
 despite having nice regular s-expression syntax, Common Lisp actually
@@ -27822,12 +28893,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Deprecate Prelude.head and partial functions</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Please boycott <a
 href="http://haskell.org/ghc/docs/latest/html/libraries/base/Prelude.html#v:head">Prelude.head</a>
@@ -28026,12 +29100,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Rank-N types, a simple DB example</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>This is a very simple example of rank-N types to demonstrate to
 non-Haskellers/newbies.</p>
@@ -28225,12 +29302,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>“Value polymorphism”, simple explanation with examples</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>A concept in Haskell which is particularly novel is that polymorphism
 works at the value level rather than function-parameter or
@@ -28507,12 +29587,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Experimenting with GHCJS, the Haskell→JavaScript compiler</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <!-- Part 1: Explain what's wrong with JavaScript -->
 <p>JavaScript <em>per se</em> is insufficient. The depths to which
@@ -28935,6 +30018,7 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
@@ -28942,6 +30026,8 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <h1>Some insights from The Mythical Man Month starting from Chapter
 11</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I recently read <a
 href="http://en.wikipedia.org/wiki/The_Mythical_Man-Month">The Mythical
@@ -29339,12 +30425,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>‘amb’ operator and the list monad</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>A friend was <a
 href="http://mihai.bazon.net/blog/amb-in-javascript/take-two">messing
@@ -29555,12 +30644,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Hulk: A Haskell IRC server</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Hulk is an working-and-work-in-progress IRC server. <a
 href="https://github.com/chrisdone/hulk/">Github repo.</a></p>
@@ -30084,12 +31176,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Lisk - Lisp and Haskell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>In my spare time I’m working on a project called Lisk. Using the
 <code>-pgmF</code> option for GHC, you can provide GHC a program name
@@ -30259,12 +31354,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Duck typing in Haskell</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>This is a simple Literate Haskell file demonstrating <a
 href="http://en.wikipedia.org/wiki/Duck_typing">duck typing</a> in
@@ -30554,12 +31652,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Applicative and ConfigFile, HSQL</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I’ve been noticing some totally sweet uses of Applicative cropping up
 in my day to day coding. I figured I’d show off some neat uses of it I
@@ -30861,12 +31962,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Lojbot</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I don’t think I have blogged at all about lojbot. Lojbot, or
 {lojbot}<a href="#fn1" class="footnote-ref" id="fnref1"
@@ -31374,12 +32478,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Kibro on Shared Hosting</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>Right now I am doing work with PHP on a shared host with MySQL.
 Wasn’t my choice, of course. Maybe I can use Haskell and MySQL for this
@@ -31556,6 +32663,7 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
@@ -31563,6 +32671,8 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <h1>Haskell Formlets: Composable web form construction and
 validation</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p><strong>Note</strong>: This is an archive of an old 2008 post from an
 old blog.</p>
@@ -32290,12 +33400,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Kibro: Haskell, Lighttpd and FastCGI</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>This is a follow-up from the previous post about Haskell, lighttpd
 and fastcgi. Hence forth I will call this kind of project an fcgi
@@ -32590,12 +33703,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>New Kibro</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>The latest Kibro release is 0.3. The version is 0.3, but it’s really
 still unstable/Alpha. If it works on your computer it’s generally a
@@ -32780,12 +33896,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>Kibro refactoring</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>I am refactoring Kibro, my web development “framework”. The release
 on Hackage does bare bones things, and Jinjing Wang, what a legend,
@@ -33138,12 +34257,15 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
     <div class="page-wrap">
 
 <h1>GHCi on Acid</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
 <p>GHCi on Acid is an extension to GHCi (Interactive GHC) for adding
 useful lambdabot features. This post details how to use it.</p>
