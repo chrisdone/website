@@ -5,13 +5,13 @@
 -- hell-2026-04-28
 -- pandoc-3.1.11.1
 
-data Post = Post {
- post :: Text,
- date :: Text,
- title :: Text,
- markdown :: Text,
- html :: Text
-}
+data Post = Post
+  { post :: Text,
+    date :: Text,
+    title :: Text,
+    markdown :: Text,
+    html :: Text
+  }
 
 -- Main entry point just generates the complete blog every time.
 --
@@ -42,9 +42,10 @@ generatePosts = do
     markdown <- Text.readFile $ Text.concat ["posts/", post]
     Maybe.maybe
       (Error.error "Couldn't parse the article!")
-      (\(date, title) -> do
-        html <- Main.render post
-        Monad.return Main.Post { post, date, title, html, markdown})
+      ( \(date, title) -> do
+          html <- Main.render post
+          Monad.return Main.Post {post, date, title, html, markdown}
+      )
       $ Main.parse markdown
 
 -- Generate the /posts/ page.
@@ -53,51 +54,55 @@ generateArchive = \posts0 -> do
   Text.putStrLn "Generating archive ..."
   let year = Text.take 4 . Record.get @"date" @Text
   let years =
-        List.groupBy (\x y -> Eq.eq (year x) (year y))
-        $ List.reverse
-        $ List.sortOn (Record.get @"date" @Text)
-        posts0
+        List.groupBy (\x y -> Eq.eq (year x) (year y)) $
+          List.reverse $
+            List.sortOn
+              (Record.get @"date" @Text)
+              posts0
   let rows = \posts ->
         Text.concat
           $ List.map
-            (\post ->
-              Text.concat [
-                 "<tr><td><a href='",
-                 Main.filename (Record.get @"post" post),
-                 "/'>",
-                 Main.strip (Record.get @"title" post),
-                 "</td><td class='date'>",
-                 (Record.get @"date" post),
-                 "</td></tr>"
-               ])
-            $ List.reverse
-            $ List.sortOn (Record.get @"date" @Text)
-            $ posts
+            ( \post ->
+                Text.concat
+                  [ "<tr><td><a href='",
+                    Main.filename (Record.get @"post" post),
+                    "/'>",
+                    Main.strip (Record.get @"title" post),
+                    "</td><td class='date'>",
+                    (Record.get @"date" post),
+                    "</td></tr>"
+                  ]
+            )
+          $ List.reverse
+          $ List.sortOn (Record.get @"date" @Text)
+          $ posts
   let tablesByYear =
         List.map
-          (\(i, posts) -> do
-           let yr = Text.concat $ List.take 1 $ List.map year posts
-           let nth = if Eq.eq 0 i then "" else "year-latter"
-           Text.concat [
-             "<tr><td colspan=2 class='year-heading " <> nth <> "'>" <> yr <> "</td></tr>",
-             rows posts
-
-            ]
-           )
-                 (List.zip (List.iterate' (Int.plus 1) 0)
-                           years)
-  let table = Text.concat [
-        "---\n",
-        "title: Archive\n",
-        "---\n",
-        "<table id='archive' style='line-height:2em'>",
-        Text.concat tablesByYear,
-        "</table>"
-        ]
+          ( \(i, posts) -> do
+              let yr = Text.concat $ List.take 1 $ List.map year posts
+              let nth = if Eq.eq 0 i then "" else "year-latter"
+              Text.concat
+                [ "<tr><td colspan=2 class='year-heading " <> nth <> "'>" <> yr <> "</td></tr>",
+                  rows posts
+                ]
+          )
+          ( List.zip
+              (List.iterate' (Int.plus 1) 0)
+              years
+          )
+  let table =
+        Text.concat
+          [ "---\n",
+            "title: Archive\n",
+            "---\n",
+            "<table id='archive' style='line-height:2em'>",
+            Text.concat tablesByYear,
+            "</table>"
+          ]
   (out, err) <-
-    Text.readProcess_
-      $ Text.setStdin table
-      $ Process.proc "pandoc" ["--standalone","--template","templates/posts.html"]
+    Text.readProcess_ $
+      Text.setStdin table $
+        Process.proc "pandoc" ["--standalone", "--template", "templates/posts.html"]
   Text.writeFile "webroot/posts/index.html" out
 
 -- Contents of an article looks like this:
@@ -114,9 +119,13 @@ parse = \article -> do
   sansPrefix <- Text.stripPrefix "---" article
   let (preamble, _content) = Text.breakOn "---" sansPrefix
   let lines = Text.splitOn "\n" preamble
-  let pairs = List.map (\line -> do let (key, value) = Text.breakOn ":" line
-                                    (key, Text.strip (Text.drop 1 value)))
-                       lines
+  let pairs =
+        List.map
+          ( \line -> do
+              let (key, value) = Text.breakOn ":" line
+              (key, Text.strip (Text.drop 1 value))
+          )
+          lines
   date <- List.lookup "date" pairs
   title <- List.lookup "title" pairs
   Monad.return (date, title)
@@ -128,7 +137,7 @@ render = \post -> do
   let targetDir =
         Text.concat ["webroot/posts/", Main.filename post]
   let targetFile = Text.concat [targetDir, "/index.html"]
-  (out, err) <- Text.readProcess_ (Process.proc "pandoc" ["--standalone","--template","templates/post.html",Text.concat ["posts/", post]])
+  (out, err) <- Text.readProcess_ (Process.proc "pandoc" ["--standalone", "--template", "templates/post.html", Text.concat ["posts/", post]])
   Directory.createDirectoryIfMissing Bool.True targetDir
   Text.writeFile targetFile out
   Monad.return out
@@ -147,40 +156,54 @@ strip = \title ->
 generateRSS = \posts0 -> do
   let posts1 = List.reverse $ List.sortOn (Record.get @"date" @Text) posts0
   posts <- Async.pooledForConcurrently posts1 \p -> do
-    date' <- Text.readProcessStdout_ $ Text.setStdin (Record.get @"date" p)
-      $ Process.proc "date" ["-R", "-f", "/dev/stdin"]
+    date' <-
+      Text.readProcessStdout_ $
+        Text.setStdin (Record.get @"date" p) $
+          Process.proc "date" ["-R", "-f", "/dev/stdin"]
     Monad.return $ Record.set @"date" date' p
   Text.putStrLn "Generating rss.xml ..."
   let items =
-        Text.unlines
-          $ List.map
-            (\p -> do
-              let post = Record.get @"post" p
-              let title = Record.get @"title" p
-              let date = Record.get @"date" p
-              let content = Record.get @"html" p
-              Text.concat [
-                 "<item>",
-                 "<title><![CDATA[", Main.strip title, "]]></title>",
-                 "<link>https://chrisdone.com/posts/", Main.filename post, "</link>",
-                 "<guid>https://chrisdone.com/posts/", Main.filename post, "</guid>",
-                 "<description><![CDATA[", content, "]]></description>",
-                 "<pubDate>", date, "</pubDate>",
-                 "<dc:creator>Chris Done</dc:creator>",
-                 "</item>"
-               ])
+        Text.unlines $
+          List.map
+            ( \p -> do
+                let post = Record.get @"post" p
+                let title = Record.get @"title" p
+                let date = Record.get @"date" p
+                let content = Record.get @"html" p
+                Text.concat
+                  [ "<item>",
+                    "<title><![CDATA[",
+                    Main.strip title,
+                    "]]></title>",
+                    "<link>https://chrisdone.com/posts/",
+                    Main.filename post,
+                    "</link>",
+                    "<guid>https://chrisdone.com/posts/",
+                    Main.filename post,
+                    "</guid>",
+                    "<description><![CDATA[",
+                    content,
+                    "]]></description>",
+                    "<pubDate>",
+                    date,
+                    "</pubDate>",
+                    "<dc:creator>Chris Done</dc:creator>",
+                    "</item>"
+                  ]
+            )
             posts
-  let xml = Text.unlines [
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
-        "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">",
-        "<channel>",
-        "<title>Chris Done's Blog</title>",
-        "<link>https://chrisdone.com</link>",
-        "<description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>",
-        "<atom:link href=\"https://chrisdone.com/rss.xml\" rel=\"self\" type=\"application/rss+xml\" />",
-        "<lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>",
-        items,
-        "</channel>",
-        "</rss>"
-        ]
+  let xml =
+        Text.unlines
+          [ "<?xml version=\"1.0\" encoding=\"utf-8\"?>",
+            "<rss version=\"2.0\" xmlns:atom=\"http://www.w3.org/2005/Atom\" xmlns:dc=\"http://purl.org/dc/elements/1.1/\">",
+            "<channel>",
+            "<title>Chris Done's Blog</title>",
+            "<link>https://chrisdone.com</link>",
+            "<description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>",
+            "<atom:link href=\"https://chrisdone.com/rss.xml\" rel=\"self\" type=\"application/rss+xml\" />",
+            "<lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>",
+            items,
+            "</channel>",
+            "</rss>"
+          ]
   Text.writeFile "webroot/rss.xml" xml
