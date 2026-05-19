@@ -108,6 +108,7 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
       }
       .footnote-ref { text-decoration: none; }
     li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
     </style>
   </head>
   <body>
@@ -115,9 +116,64 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <h1>LLMs</h1>
 
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
 <p>This page serves as my place to journal what are hopefully balanced
 thoughts on the current AI summer, driven by LLMs.</p>
-<h1 id="section">2025-12-20</h1>
+<h1 id="section">2026-03-12</h1>
+<p><em>The Medium is the Message</em> keeps coming to mind again and
+again, as people seem frequently surprised by the side-effects of the
+adoption of LLMs. The content (articles, code, images) produced by LLMs
+is not the higher order bit, but how they <em>change</em> the people and
+institutions that use them.</p>
+<p>No other changes in viewpoints to report this time.</p>
+<h1 id="section-1">2026-02-07</h1>
+<p>I shared a thought on a big dev call at work, when talking about
+agentic “skill” based workflows, that one problem is that you lose Flow,
+which is often one of the most enjoyable ways to work as a software dev
+(most of the rest is frankly frustration and toil, but valuable). Today
+I saw <a
+href="https://haskellforall.com/2026/02/beyond-agentic-coding">this
+post</a> by Gabriella Gonzalez about the same topic, with examples of
+interfaces that try to do a better job of that. I’m not as gung ho about
+LLMs as Gabriella is, but I’m enjoying these simple articles that
+discuss a particular technical point.</p>
+<p>This way of thinking has been on my mind for some time, as generally
+I am always working to reduce feedback loops in my work, never increase
+them. (This doesn’t follow from using Emacs, but Emacs can help with
+that: look at magit.) It’s why slow CI ruins my day, and why most cloud
+ops like Terraform are painful (e.g. Amazon resources aren’t content
+addressable, so checking for changes to apply is always
+O(n)–brutal!).</p>
+<p>Separately, but somewhat related; arguably, there’s a certain <a
+href="https://en.wikipedia.org/wiki/Psychogeography">psychogeography</a>
+to “walking around” a codebase when doing an update or refactor, taking
+the scenic route reminds you of the landscape and dark alley ways, it
+activates and gently tickles parts of your brain in a way that I imagine
+is valuable for the larger work, which is an experience removed by being
+teleported from A-Z.</p>
+<h1 id="section-2">2026-01-30</h1>
+<p>A <a href="https://arxiv.org/abs/2601.20245">paper</a> discusses a
+similar topic that I’ve addressed in this microblog, which is the
+negative relationship between skill and using GenAI.</p>
+<p>I haven’t generated anything since the last update. But I hand wrote
+a little <a
+href="https://github.com/chrisdone-artificial/llm-parse">experimental
+library that uses a free applicative to both declare a GBNF grammar and
+consume the output back into Haskell</a>. I didn’t add an
+<code>Alternative</code> instance (yet) to support disjunction in the
+grammar, but this direction appeals to me. I’ve been dabbling with the
+same llama3.2 (3b model) via llama.cpp’s server locally on the same
+MacBook Pro M4 Max. It’s quite easy to get reliable outputs. I intend to
+dabble more with this in coming weeks.</p>
+<p>I’ve been recently thinking that the whole phrasing around
+interacting with LLMs has become increasingly anthropomorphic, and
+thought of a clever mental hack to avoid it: instead of “talking to
+Claude,” say “talking to the computer,” (doesn’t that sound silly!) and
+instead of “AI generated” or “LLM generated,” simply say “computer
+generated.” (How dull!) I find it thoroughly cuts through the illusion
+that we are doing anything more. But YMMV.</p>
+<h1 id="section-3">2025-12-20</h1>
 <p>Another positive experience I’ve had with LLMs is finding an
 opportunity to redo the frontend of a fairly simple web app, which was
 previously a server-side app at work. It’s an internal tool, so it’s
@@ -134,7 +190,7 @@ mainstream. That wouldn’t be so bad, as a good subset of programmers
 like formal thinking. Whether software, subject to market forces and
 competition, will get any better or worse objectively, I’m
 skeptical.</p>
-<h1 id="section-1">2025-12-03</h1>
+<h1 id="section-4">2025-12-03</h1>
 <p>My experience with LLMs since my last update has been both positive
 and negative.</p>
 <p>On the one hand, I’ve seen a quality and comprehension drop in some
@@ -156,7 +212,7 @@ good.</li>
 <p>This has been quite effective for me as a means to speed up tasks
 which are doing what I’ve done elsewhere with small differences. I’m
 using it as glorified autocomplete.</p>
-<h1 id="section-2">2025-10-24</h1>
+<h1 id="section-5">2025-10-24</h1>
 <p>I’ve had what I’d describe as “hole in one” experience where I
 generated two Haskell packages, sse-conduit and llm-conduit, from a
 single Claude prompt, which both compiled and worked the first time when
@@ -175,7 +231,7 @@ and atrophy. By contrast, if you only vibe things that you already
 understand fully, but do the hard work on everything else, you’ll
 continue growing, but will also get the accelerative edge of LLM
 vibing.</p>
-<h1 id="section-3">2025-09-23</h1>
+<h1 id="section-6">2025-09-23</h1>
 <p>Harvard published <a
 href="https://hbr.org/2025/09/ai-generated-workslop-is-destroying-productivity">this
 article defining “workslop”</a>, a new term for when someone substitutes
@@ -196,7 +252,7 @@ that organisations across the board are benefitting from LLMs. I read in
 the Economist that more small, boutique models, aka SLMs, are becoming
 preferred over the Big models provided by OpenAI, Anthropic, etc. which
 makes some sense.</p>
-<h1 id="section-4">2025-08-19</h1>
+<h1 id="section-7">2025-08-19</h1>
 <p>Since the last update, I’ve experimented with local LLM models on my
 MacBookPro Max M4, which can run 3b parameter models. I wanted to
 approach the whole LLM hype as a tool, like grep or awk, and see whether
@@ -233,7 +289,7 @@ LLMs. But that passed and my interest came back.</p>
 <p>Overall, present outlook is: tinkering with mild interest, local
 first, so-so performance for job-related tasks, using as a Google++,
 avoiding delegating thinking, renewed interest in learning theory.</p>
-<h1 id="section-5">2025-06-04</h1>
+<h1 id="section-8">2025-06-04</h1>
 <p>Small update: I’d presently describe my outlook as sceptical. I go in
 cycles, of long troughs of scepticism, with very, very, brief (one-day),
 widely spread out, spikes of FOMO and belief that AI is an existential
@@ -245,7 +301,7 @@ from sheer disinterest, and digital devices in the evening entirely, I
 am also serene and a little bored by the whole thing. But it still does
 play on the minds of some friends.</p>
 <p>I might change my mind on the next update, we’ll see.</p>
-<h1 id="section-6">2025-04-18</h1>
+<h1 id="section-9">2025-04-18</h1>
 <p>I’ve been collecting thoughts on LLMs in a peacemeal way. I add to
 this document from time to time. It’s not an article as such.</p>
 <ul>
