@@ -105,9 +105,6 @@ generateArchive = \posts0 -> do
 -- ---
 -- date: 2011-04-10
 -- title: ‘amb’ operator and the list monad
--- description: ‘amb’ operator and the list monad
--- author: Chris Done
--- tags: haskell, designs
 -- ---
 --
 -- We're only interested in the date and the title. The rest is
