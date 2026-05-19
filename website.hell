@@ -29,7 +29,7 @@ main = Main.generate
 generate = do
   Process.runProcess_ $ Process.proc "pandoc" ["--version"]
   posts <- Main.generatePosts
-  Main.generateArchive posts
+  Main.generateArchive $ List.map Main.t2p posts
   Main.generateRSS $ List.map Main.t2p $ posts
 
 -- Write out posts/$post/index.html per $post.
@@ -48,41 +48,37 @@ generatePosts = do
 
 -- Generate the /posts/ page.
 --
-generateArchive = \posts -> do
+generateArchive = \posts0 -> do
   Text.putStrLn "Generating archive ..."
-  let year = Text.take 4
+  let year = Text.take 4 . Record.get @"date" @Text
   let years =
-        List.groupBy (\(_p, d1, _t, _c)
-                         (_p, d2, _t, _c)
-                         -> Eq.eq (year d1) (year d2))
+        List.groupBy (\x y -> Eq.eq (year x) (year y))
         $ List.reverse
-        $ List.sortOn (\(post, date, title, content) -> date)
-        posts
+        $ List.sortOn (Record.get @"date" @Text)
+        posts0
   let rows = \posts ->
         Text.concat
           $ List.map
-            (\(post, date, title, content) ->
+            (\post ->
               Text.concat [
                  "<tr><td><a href='",
-                 Main.filename post,
+                 Main.filename (Record.get @"post" post),
                  "/'>",
-                 Main.strip title,
+                 Main.strip (Record.get @"title" post),
                  "</td><td class='date'>",
-                 date,
+                 (Record.get @"date" post),
                  "</td></tr>"
                ])
             $ List.reverse
-            $ List.sortOn (\(post, date, title, content) -> date)
+            $ List.sortOn (Record.get @"date" @Text)
             $ posts
   let tablesByYear =
         List.map
           (\(i, posts) -> do
-           let yr = Text.concat $ List.take 1 $ List.map
-                  (\(post, date, title, content) -> date)
-                  posts
+           let yr = Text.concat $ List.take 1 $ List.map year posts
            let nth = if Eq.eq 0 i then "" else "year-latter"
            Text.concat [
-             "<tr><td colspan=2 class='year-heading " <> nth <> "'>" <> year yr <> "</td></tr>",
+             "<tr><td colspan=2 class='year-heading " <> nth <> "'>" <> yr <> "</td></tr>",
              rows posts
 
             ]
@@ -187,6 +183,10 @@ generateRSS = \posts00 -> do
         ]
   Text.writeFile "webroot/rss.xml" xml
 
-p2t = \p -> (Record.get @"post" p, Record.get @"date" p, Record.get @"title" p, Record.get @"content" p)
+p2t :: Main.Post -> (Text,Text,Text,Text) = \p ->
+  (Record.get @"post" @Text p,
+   Record.get @"date" @Text p,
+   Record.get @"title" @Text p,
+   Record.get @"content" @Text p)
 
 t2p = \(post,date,title,content) -> Main.Post{post,date,title,content}
