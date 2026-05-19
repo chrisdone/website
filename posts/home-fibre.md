@@ -5,7 +5,7 @@ title: Home fibre
 
 > I’ll write up my home fibre setup later. 
 > I thought it’d be neat to document it here. 
-> Still waiting for parts to arrive.
+> Still waiting for parts to arrive. Tomorrow.
 
 When a Cat6 cable does the job, but I want fibre optic anyway.
 
