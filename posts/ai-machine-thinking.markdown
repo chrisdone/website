@@ -3,10 +3,9 @@ date: 2023-09-23
 title: AI and Machine Thinking
 description: AI and Machine Thinking
 author: Chris Done
-tags: ai
 ---
 
-AI might take our jobs, that's bad for us, just like it was for the Luddites. 
+AI might take our jobs. That's bad for us, just like it was for the Luddites. 
 
 But I think Herbert had it right when he, through his Dune books, proposed that 
 the problem with "machine minds" is not the machine itself, it's "machine thinking" 
