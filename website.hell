@@ -147,17 +147,21 @@ strip = \title ->
 
 -- Generate the /rss.xml page.
 --
-generateRSS = \posts00 -> do
-  let posts0 = List.map Main.p2t posts00
-  let posts1 = List.reverse $ List.sortOn (\(post, date, title, content) -> date) posts0
-  posts <- Async.pooledForConcurrently posts1 \(post, date, title, content) -> do
-    date' <- Text.readProcessStdout_ $ Text.setStdin date $ Process.proc "date" ["-R", "-f", "/dev/stdin"]
-    Monad.return (post, date', title, content)
+generateRSS = \posts0 -> do
+  let posts1 = List.reverse $ List.sortOn (Record.get @"date" @Text) posts0
+  posts <- Async.pooledForConcurrently posts1 \p -> do
+    date' <- Text.readProcessStdout_ $ Text.setStdin (Record.get @"date" p)
+      $ Process.proc "date" ["-R", "-f", "/dev/stdin"]
+    Monad.return $ Record.set @"date" date' p
   Text.putStrLn "Generating rss.xml ..."
   let items =
         Text.unlines
           $ List.map
-            (\(post, date, title, content) ->
+            (\p -> do
+              let post = Record.get @"post" p
+              let title = Record.get @"title" p
+              let date = Record.get @"date" p
+              let content = Record.get @"html" p
               Text.concat [
                  "<item>",
                  "<title><![CDATA[", Main.strip title, "]]></title>",
@@ -183,9 +187,3 @@ generateRSS = \posts00 -> do
         "</rss>"
         ]
   Text.writeFile "webroot/rss.xml" xml
-
-p2t :: Main.Post -> (Text,Text,Text,Text) = \p ->
-  (Record.get @"post" @Text p,
-   Record.get @"date" @Text p,
-   Record.get @"title" @Text p,
-   Record.get @"html" @Text p)
