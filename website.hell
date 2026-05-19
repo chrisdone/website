@@ -5,6 +5,13 @@
 -- hell-2024-02-20
 -- pandoc-3.1.11.1
 
+data Post = Post {
+ post :: Text,
+ date :: Text,
+ title :: Text,
+ content :: Text
+}
+
 -- Main entry point just generates the complete blog every time.
 --
 --
@@ -23,7 +30,7 @@ generate = do
   Process.runProcess_ $ Process.proc "pandoc" ["--version"]
   posts <- Main.generatePosts
   Main.generateArchive posts
-  Main.generateRSS posts
+  Main.generateRSS $ List.map Main.t2p $ posts
 
 -- Write out posts/$post/index.html per $post.
 --
@@ -143,7 +150,8 @@ strip = \title ->
 
 -- Generate the /rss.xml page.
 --
-generateRSS = \posts0 -> do
+generateRSS = \posts00 -> do
+  let posts0 = List.map Main.p2t posts00
   let posts1 = List.reverse $ List.sortOn (\(post, date, title, content) -> date) posts0
   posts <- Async.pooledForConcurrently posts1 \(post, date, title, content) -> do
     date' <- Text.readProcessStdout_ $ Text.setStdin date $ Process.proc "date" ["-R", "-f", "/dev/stdin"]
@@ -178,3 +186,7 @@ generateRSS = \posts0 -> do
         "</rss>"
         ]
   Text.writeFile "webroot/rss.xml" xml
+
+p2t = \p -> (Record.get @"post" p, Record.get @"date" p, Record.get @"title" p, Record.get @"content" p)
+
+t2p = \(post,date,title,content) -> Main.Post{post,date,title,content}
