@@ -7,6 +7,26 @@ tags: ai
 This page serves as my place to journal what are hopefully balanced thoughts on the current 
 AI summer, driven by LLMs.
 
+# 2026-05-25
+
+A recently recurring thought is that many people criticise LLMs/"AI" on the wrong terms.
+I may be accidentally coming back to McLuhan, arguing that people should be looking at
+the medium and not the message, but I see arguments like "LLMs aren't good at X",
+or "good but not human level good", etc. at e.g. writing code or reasoning.
+There's usually an anecdote involved.
+
+The questions should, in my view, *assume* that LLMs will attain fully realised potential,
+after presumably a protracted boom/bust iteration,
+and then ask whether and how that would affect how we enjoy life and conduct business.
+
+Reading/blogroll:
+
+* https://jola.dev/posts/the-social-contract-of-writing
+* https://www.seangoedecke.com/steering-vectors/
+* https://ratfactor.com/ascetic-computing
+* https://jacobharr.is/personal/i-dont-vibe-code
+* https://purplesyringa.moe/blog/programming-used-to-be-free/
+
 # 2026-03-12
 
 _The Medium is the Message_ keeps coming to mind again and again,
