@@ -19,6 +19,7 @@ The questions should, in my view, *assume* that LLMs will attain fully realised 
 after presumably a protracted boom/bust iteration,
 and then ask whether and how that would affect how we enjoy life and conduct business.
 
+<!--
 Reading/blogroll:
 
 * https://jola.dev/posts/the-social-contract-of-writing
@@ -26,6 +27,7 @@ Reading/blogroll:
 * https://ratfactor.com/ascetic-computing
 * https://jacobharr.is/personal/i-dont-vibe-code
 * https://purplesyringa.moe/blog/programming-used-to-be-free/
+-->
 
 # 2026-03-12
 
