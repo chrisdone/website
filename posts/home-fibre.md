@@ -31,7 +31,8 @@ The setup comprises the following components:
   * TP-Link Gigabit WDM Media Converter, Auto-negotiation, TL-FC311A-20
     * ~~Delayed, from Amazon. Cancelled.~~
     * ~~Ordered from Scan. Delayed.~~
-    * Ordered from Converge Technology Solutions. Awaiting.
+    * ~~Ordered from Converge Technology Solutions. They cancelled due to no stock despite claiming a few in stock.~~
+    * This unit is apparently impossible to source. Considering other options.
 
 * Belkin USB-C to 2.5Gb Ethernet Adapter - White
   * For the MacBook, which doesn't have an RJ45 port
