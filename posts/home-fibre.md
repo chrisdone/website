@@ -32,7 +32,11 @@ The setup comprises the following components:
     * ~~Delayed, from Amazon. Cancelled.~~
     * ~~Ordered from Scan. Delayed.~~
     * ~~Ordered from Converge Technology Solutions. They cancelled due to no stock despite claiming a few in stock.~~
-    * This unit is apparently impossible to source. Considering other options.
+    * This unit is apparently impossible to source. Abandoning in favor of below.
+  * FS media converter, SFP module, LC/UPC patch cable. Awaiting arrival.
+    * 1000BASE-BX-D SFP BiDi 1550nm-TX/1310nm-RX 20km Simplex LC/UPC SMF Transceiver Module for FS Switches
+    * Mini Unmanaged 1x 10/100/1000Base-T RJ45 to 1x 1000Base-X SFP Gigabit Ethernet Media Converter, British Plug Standard
+    * 1m (3ft) Fiber Patch Cable, 1 Fiber, LC UPC Simplex to SC APC Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered, Yellow
 
 * Belkin USB-C to 2.5Gb Ethernet Adapter - White
   * For the MacBook, which doesn't have an RJ45 port
