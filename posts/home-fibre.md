@@ -28,7 +28,7 @@ The setup comprises the following components:
 * Media converters:
   * TP-Link Gigabit WDM Media Converter, Auto-negotiation, TL-FC311B-20
     * Arrived, from Amazon.
-  * TP-Link Gigabit WDM Media Converter, Auto-negotiation, TL-FC311A-20
+  * ~~TP-Link Gigabit WDM Media Converter, Auto-negotiation, TL-FC311A-20~~
     * ~~Delayed, from Amazon. Cancelled.~~
     * ~~Ordered from Scan. Delayed.~~
     * ~~Ordered from Converge Technology Solutions. They cancelled due to no stock despite claiming a few in stock.~~
