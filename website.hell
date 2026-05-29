@@ -7,9 +7,16 @@
 
 data Post = Post
   { post :: Text,
-    date :: Text,
+    date :: Day,
     title :: Text,
     markdown :: Text,
+    html :: Text
+  }
+
+data RssPost = RssPost
+  { post :: Text,
+    dateRFC2822 :: Text,
+    title :: Text,
     html :: Text
   }
 
@@ -52,12 +59,12 @@ generatePosts = do
 --
 generateArchive = \posts0 -> do
   Text.putStrLn "Generating archive ..."
-  let year = Text.take 4 . Record.get @"date" @Text
+  let year = (\(y, _m, _d) -> y) . Day.toGregorian . Record.get @"date" @Day
   let years =
         List.groupBy (\x y -> Eq.eq (year x) (year y)) $
           List.reverse $
             List.sortOn
-              (Record.get @"date" @Text)
+              (Record.get @"date" @Day)
               posts0
   let rows = \posts ->
         Text.concat
@@ -69,17 +76,17 @@ generateArchive = \posts0 -> do
                     "/'>",
                     Main.strip (Record.get @"title" post),
                     "</td><td class='date'>",
-                    (Record.get @"date" post),
+                    Day.iso8601Show (Record.get @"date" post),
                     "</td></tr>"
                   ]
             )
           $ List.reverse
-          $ List.sortOn (Record.get @"date" @Text)
+          $ List.sortOn (Record.get @"date" @Day)
           $ posts
   let tablesByYear =
         List.map
           ( \(i, posts) -> do
-              let yr = Text.concat $ List.take 1 $ List.map year posts
+              let yr = Text.concat $ List.take 1 $ List.map (Show.show . year) posts
               let nth = if Eq.eq 0 i then "" else "year-latter"
               Text.concat
                 [ "<tr><td colspan=2 class='year-heading " <> nth <> "'>" <> yr <> "</td></tr>",
@@ -126,7 +133,8 @@ parse = \article -> do
               (key, Text.strip (Text.drop 1 value))
           )
           lines
-  date <- List.lookup "date" pairs
+  date0 <- List.lookup "date" pairs
+  date <- Day.iso8601ParseM date0
   title <- List.lookup "title" pairs
   Monad.return (date, title)
 
@@ -154,13 +162,16 @@ strip = \title ->
 -- Generate the /rss.xml page.
 --
 generateRSS = \posts0 -> do
-  let posts1 = List.reverse $ List.sortOn (Record.get @"date" @Text) posts0
+  let posts1 = List.reverse $ List.sortOn (Record.get @"date" @Day) posts0
   posts <- Async.pooledForConcurrently posts1 \p -> do
     date' <-
       Text.readProcessStdout_ $
-        Text.setStdin (Record.get @"date" p) $
+        Text.setStdin (Day.iso8601Show $ Record.get @"date" @Day p) $
           Process.proc "date" ["-R", "-f", "/dev/stdin"]
-    Monad.return $ Record.set @"date" date' p
+    Monad.return $ Main.RssPost { post = Record.get @"post" p,
+                                  dateRFC2822 = date',
+                                  title = Record.get @"title" p,
+                                  html = Record.get @"html" p}
   Text.putStrLn "Generating rss.xml ..."
   let items =
         Text.unlines $
@@ -168,7 +179,7 @@ generateRSS = \posts0 -> do
             ( \p -> do
                 let post = Record.get @"post" p
                 let title = Record.get @"title" p
-                let date = Record.get @"date" p
+                let dateRFC2822 = Record.get @"dateRFC2822" p
                 let content = Record.get @"html" p
                 Text.concat
                   [ "<item>",
@@ -185,7 +196,7 @@ generateRSS = \posts0 -> do
                     content,
                     "]]></description>",
                     "<pubDate>",
-                    date,
+                    dateRFC2822,
                     "</pubDate>",
                     "<dc:creator>Chris Done</dc:creator>",
                     "</item>"
