@@ -59,7 +59,7 @@ generatePosts = do
 --
 generateArchive = \posts0 -> do
   Text.putStrLn "Generating archive ..."
-  let year = Text.take 4 . Day.iso8601Show . Record.get @"date" @Day
+  let year = (\(y, _m, _d) -> y) . Day.toGregorian . Record.get @"date" @Day
   let years =
         List.groupBy (\x y -> Eq.eq (year x) (year y)) $
           List.reverse $
@@ -86,7 +86,7 @@ generateArchive = \posts0 -> do
   let tablesByYear =
         List.map
           ( \(i, posts) -> do
-              let yr = Text.concat $ List.take 1 $ List.map year posts
+              let yr = Text.concat $ List.take 1 $ List.map (Show.show . year) posts
               let nth = if Eq.eq 0 i then "" else "year-latter"
               Text.concat
                 [ "<tr><td colspan=2 class='year-heading " <> nth <> "'>" <> yr <> "</td></tr>",
