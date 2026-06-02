@@ -54,7 +54,7 @@ arrive, but I've done a test with the rest of the setup.
 You need to understand this if you're buying.
 
 1. Fibre optic has modes (which comes from optical modes):
-   * **Single-mode** means means the glass tube through which light is
+   * **Single-mode** means the glass tube through which light is
      emitted is very tiny. Something like 8-10μm. It requires a laser,
      it's more expensive, and the alignment has to be very
      precise. Its distances before attenuation are measured in
