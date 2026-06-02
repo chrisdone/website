@@ -186,8 +186,11 @@ pictures of all the parts, see further down.
 ![](/images/home-fibre/fs-power.png)
 
 ### TP-Link media converter
+
 ![](/images/home-fibre/tp-link-media-converter.png)
+
 ### TP-Link power lead
+
 ![](/images/home-fibre/tp-link-power.png)
 
 ### LC UPC to AC APC patch cable
