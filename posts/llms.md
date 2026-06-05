@@ -7,6 +7,34 @@ tags: ai
 This page serves as my place to journal what are hopefully balanced thoughts on the current 
 AI summer, driven by LLMs.
 
+# 2026-06-05
+
+I'm connecting a few areas of thought together in the context of LLMs.
+
+* The Mythical Man Month
+* Worse is Better
+* Moloch
+
+Firstly, some Fred Brooks [comments](https://chrisdone.com/posts/the-mythical-man-month-insights/) that seems relevant to whether LLMs may fundamentally change sofware development:
+  
+> I believe the hard part of building software to be the specification, design and testing of this conceptual construct, not the labour of representing it and testing the fidelity of the representation. […] If this is true, building software will always be hard. There is inherently no silver bullet.
+
+> More seriously, even perfect program verification can only establish that a program meets its specification. The hardest part of the software task is arriving at a complete and consistent specification, and much of the essence of building a program is in fact the debugging of the specification.
+
+Separately, [commentary](https://dreamsongs.com/WorseIsBetter.html) by Richard P. Gabriel indicating that this may not matter for industry, and so LLM adoption may be inevitable:
+
+> The essay argues simple, hacked-together software that makes it to market first will often outcompete better and more elegant designs.
+>
+> Gabriel offers the examples of the adoption of C over Lisp, Unix over Lisp machines and VMS, and x86 over reduced instruction set computers as examples of technically worse solutions defeating more elegant ones by arriving to market first.
+
+Finally, [a deeper meditation on why this happens generally by Nick Land](https://slatestarcodex.com/2014/07/30/meditations-on-moloch/):
+
+> Moloch is exactly what the history books say he is. He is the god of child sacrifice, the fiery furnace into which you can toss your babies in exchange for victory in war.
+> 
+> He always and everywhere offers the same deal: throw what you love most into the flames, and I can grant you power.
+> 
+> As long as the offer’s open, it will be irresistible.
+
 # 2026-05-25
 
 A recently recurring thought is that many people criticise LLMs/"AI" on the wrong terms.
