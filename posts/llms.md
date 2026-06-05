@@ -15,7 +15,7 @@ I'm connecting a few areas of thought together in the context of LLMs.
 * Worse is Better
 * Moloch
 
-Firstly, some Fred Brooks [comments](https://chrisdone.com/posts/the-mythical-man-month-insights/) that seems relevant to whether LLMs may fundamentally change sofware development:
+Firstly, some Fred Brooks [comments](https://chrisdone.com/posts/the-mythical-man-month-insights/) that seem relevant to whether LLMs may fundamentally change sofware development:
   
 > I believe the hard part of building software to be the specification, design and testing of this conceptual construct, not the labour of representing it and testing the fidelity of the representation. […] If this is true, building software will always be hard. There is inherently no silver bullet.
 
