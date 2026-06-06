@@ -27,9 +27,9 @@ Separately, [commentary](https://dreamsongs.com/WorseIsBetter.html) by Richard P
 >
 > Gabriel offers the examples of the adoption of C over Lisp, Unix over Lisp machines and VMS, and x86 over reduced instruction set computers as examples of technically worse solutions defeating more elegant ones by arriving to market first.
 
-Finally, [a deeper meditation on why this happens generally by Nick Land](https://slatestarcodex.com/2014/07/30/meditations-on-moloch/):
+Finally, [a deeper meditation on why this happens generally by Nick Land](https://slatestarcodex.com/2014/07/30/meditations-on-moloch/), which touches on failed collective action, race to the bottom, etc.
 
-> Moloch is exactly what the history books say he is. He is the god of child sacrifice, the fiery furnace into which you can toss your babies in exchange for victory in war.
+> Moloch is exactly what the history books say he is. [...]
 > 
 > He always and everywhere offers the same deal: throw what you love most into the flames, and I can grant you power.
 > 
