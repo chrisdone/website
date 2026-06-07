@@ -41,3 +41,5 @@ systemd services, so the effort was very minimal.
 There's no particular technical advantage of you reading this page
 from my home, over the Digital Ocean server I've had for years, 
 which only cost me about $10/mo. But it was a fun little project!
+
+As of June 7th 2026 it lives in a little stainless steel Japanese box.
