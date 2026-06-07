@@ -1,13 +1,16 @@
 ---
 date: 2025-04-18
 title: LLMs
-tags: ai
+micro: true
 ---
 
-This page serves as my place to journal what are hopefully balanced thoughts on the current 
+This page serves as my place to journal what are hopefully balanced thoughts on the current
 AI summer, driven by LLMs.
 
-# 2026-06-05
+
+---
+date: 2026-06-05
+---
 
 I'm connecting a few areas of thought together in the context of LLMs.
 
@@ -16,7 +19,7 @@ I'm connecting a few areas of thought together in the context of LLMs.
 * Moloch
 
 Firstly, some Fred Brooks [comments](https://chrisdone.com/posts/the-mythical-man-month-insights/) that seem relevant to whether LLMs may fundamentally change sofware development:
-  
+
 > I believe the hard part of building software to be the specification, design and testing of this conceptual construct, not the labour of representing it and testing the fidelity of the representation. […] If this is true, building software will always be hard. There is inherently no silver bullet.
 
 > More seriously, even perfect program verification can only establish that a program meets its specification. The hardest part of the software task is arriving at a complete and consistent specification, and much of the essence of building a program is in fact the debugging of the specification.
@@ -30,12 +33,15 @@ Separately, [commentary](https://dreamsongs.com/WorseIsBetter.html) by Richard P
 Finally, [a deeper meditation on why this happens generally by Nick Land](https://slatestarcodex.com/2014/07/30/meditations-on-moloch/), which touches on failed collective action, race to the bottom, etc.
 
 > Moloch is exactly what the history books say he is. [...]
-> 
+>
 > He always and everywhere offers the same deal: throw what you love most into the flames, and I can grant you power.
-> 
+>
 > As long as the offer’s open, it will be irresistible.
 
-# 2026-05-25
+
+---
+date: 2026-05-25
+---
 
 A recently recurring thought is that many people criticise LLMs/"AI" on the wrong terms.
 I may be accidentally coming back to McLuhan, arguing that people should be looking at
@@ -57,20 +63,26 @@ Reading/blogroll:
 * https://purplesyringa.moe/blog/programming-used-to-be-free/
 -->
 
-# 2026-03-12
+
+---
+date: 2026-03-12
+---
 
 _The Medium is the Message_ keeps coming to mind again and again,
-as people seem frequently surprised by the side-effects of the adoption of LLMs. 
-The content (articles, code, images) produced by LLMs is not the higher order bit, 
+as people seem frequently surprised by the side-effects of the adoption of LLMs.
+The content (articles, code, images) produced by LLMs is not the higher order bit,
 but how they *change* the people and institutions that use them.
 
 No other changes in viewpoints to report this time.
 
-# 2026-02-07
+
+---
+date: 2026-02-07
+---
 
 I shared a thought on a big dev call at work, when talking about agentic "skill" based workflows, that one problem is that you
 lose Flow, which is often one of the most enjoyable ways to work as a software dev (most of the rest is frankly frustration and toil, but valuable).
-Today I saw [this post](https://haskellforall.com/2026/02/beyond-agentic-coding) by Gabriella Gonzalez about the same topic, with examples of interfaces that try to do a better job of that. I'm not as gung ho about LLMs as Gabriella is, but I'm enjoying these simple articles that discuss a particular technical point. 
+Today I saw [this post](https://haskellforall.com/2026/02/beyond-agentic-coding) by Gabriella Gonzalez about the same topic, with examples of interfaces that try to do a better job of that. I'm not as gung ho about LLMs as Gabriella is, but I'm enjoying these simple articles that discuss a particular technical point.
 
 This way of thinking has been on my mind for some time, as generally I am always working to reduce
 feedback loops in my work, never increase them. (This doesn't follow from using Emacs, but Emacs can help with that: look at magit.)
@@ -81,14 +93,17 @@ Separately, but somewhat related; arguably, there's a certain [psychogeography](
 taking the scenic route reminds you of the landscape and dark alley ways, it activates and gently tickles parts of your brain in a way
 that I imagine is valuable for the larger work, which is an experience removed by being teleported from A-Z.
 
-# 2026-01-30
+
+---
+date: 2026-01-30
+---
 
 A [paper](https://arxiv.org/abs/2601.20245) discusses a similar topic that I've addressed in this microblog, which is the negative relationship between skill and using GenAI.
 
 I haven't generated anything since the last update. But I hand wrote a little [experimental library that uses a free applicative to both declare a GBNF grammar and consume the output back into Haskell](https://github.com/chrisdone-artificial/llm-parse).
 I didn’t add an `Alternative` instance (yet) to support disjunction in the grammar, but this direction appeals to me.
-I’ve been dabbling with the same llama3.2 (3b model) via llama.cpp’s server locally on the same MacBook Pro M4 Max. 
-It's quite easy to get reliable outputs. 
+I’ve been dabbling with the same llama3.2 (3b model) via llama.cpp’s server locally on the same MacBook Pro M4 Max.
+It's quite easy to get reliable outputs.
 I intend to dabble more with this in coming weeks.
 
 I've been recently thinking that the whole phrasing around interacting with LLMs has become increasingly anthropomorphic,
@@ -96,28 +111,34 @@ and thought of a clever mental hack to avoid it: instead of "talking to Claude,"
 and instead of "AI generated" or "LLM generated," simply say "computer generated." (How dull!)
 I find it thoroughly cuts through the illusion that we are doing anything more. But YMMV.
 
-# 2025-12-20
+
+---
+date: 2025-12-20
+---
 
-Another positive experience I've had with LLMs is finding an opportunity to redo the frontend of a fairly simple web app, 
+Another positive experience I've had with LLMs is finding an opportunity to redo the frontend of a fairly simple web app,
 which was previously a server-side app at work. It's an internal tool, so it's highly suited to this kind of mode of working.
 
 I remain uncomfortable shelling out my cognition for load-bearing code, especially on the backend, and
-I'm increasingly sure in my determination that one should only genAI things they could do readily themselves 
+I'm increasingly sure in my determination that one should only genAI things they could do readily themselves
 for work that they back and own.
 
-Elsewhere, I'm poking at formal methods. If, indeed, the trajectory of software development--in industry--is 
+Elsewhere, I'm poking at formal methods. If, indeed, the trajectory of software development--in industry--is
 away from the labor of implementation,
-there may perhaps be space for verification. The feeling might pass, but it feels possible 
+there may perhaps be space for verification. The feeling might pass, but it feels possible
 that LLMs may make formal methods mainstream. That wouldn't
 be so bad, as a good subset of programmers like formal thinking. Whether software,
 subject to market forces and competition, will get any better
-or worse objectively, I'm skeptical. 
+or worse objectively, I'm skeptical.
 
-# 2025-12-03
+
+---
+date: 2025-12-03
+---
 
-My experience with LLMs since my last update has been both positive and negative. 
+My experience with LLMs since my last update has been both positive and negative.
 
-On the one hand, I've seen a quality and comprehension drop in some programmers. 
+On the one hand, I've seen a quality and comprehension drop in some programmers.
 "I vibed it" is becoming a familiar explanation for both. I'm increasingly concerned.
 
 On the other hand, I have found a workflow with LLMs that works for me. For those things that
@@ -129,10 +150,13 @@ I could write myself and practically see in my head, this flow makes me happy:
 4. Edit almost everything, rewrite some things, leave others that are good.
 6. Continue myself by hand as normal.
 
-This has been quite effective for me as a means to speed up tasks which are doing what I've done elsewhere with small differences. 
+This has been quite effective for me as a means to speed up tasks which are doing what I've done elsewhere with small differences.
 I'm using it as glorified autocomplete.
 
-# 2025-10-24
+
+---
+date: 2025-10-24
+---
 
 I've had what I'd describe as "hole in one" experience where I generated two Haskell packages, sse-conduit and llm-conduit, from a single Claude prompt, which both compiled and worked
 the first time when pointing it at llama.cpp's server. This gave me pause as in the past I would enjoyed sitting down
@@ -141,32 +165,38 @@ to write these and publishing them. Given that the whole thing took about 10 min
 I call this a funny name like "hole in one" because it's not a normal experience. I had a few weeks prior implemented the same thing
 manually with Emacs Lisp, so I wasn't entirely robbed of the experience. I believe I'm arriving at a new standpoint which is
 that one may "vibe" projects, but only those things they could do themselves readily. The exercise of writing is often as valuable
-as the written thing. 
+as the written thing.
 
 The more things that you vibe that you do not understand, the more your knowledge will stand still and that muscle will not be exercised, and atrophy.
 By contrast, if you only vibe things that you already understand fully, but do the hard work on everything else, you'll continue growing,
 but will also get the accelerative edge of LLM vibing.
 
-# 2025-09-23
+
+---
+date: 2025-09-23
+---
 
 Harvard published [this article defining "workslop"](https://hbr.org/2025/09/ai-generated-workslop-is-destroying-productivity), a new term for when someone substitutes hard thinking for
-LLM generated slop. I had been thinking about this recently, 
-having witnessed it at work, but hadn't articulated it yet, 
+LLM generated slop. I had been thinking about this recently,
+having witnessed it at work, but hadn't articulated it yet,
 so I'm glad for the new term.
 
 I accidentally discovered [this article](https://jacobin.com/2024/02/holly-herndon-ai-music-composition) while looking up Holly Herndon,
 I enjoyed the reframing of LLMs from "artificial intelligence" to "collective intelligence", which more accurately describes what a large
 language model is, and sounds a bit more positive and inclusive.
 
-I got llama.cpp working from Emacs for both regular queries and GBNF-constrained outputs. 
+I got llama.cpp working from Emacs for both regular queries and GBNF-constrained outputs.
 I'm happy with the outputs, though I've not been using it for a couple weeks. Will come back to it.
 
-Current mood: still interested to dabble more. 
-Currently sceptical that organisations across the board are benefitting from LLMs. 
-I read in the Economist that more small, boutique models, aka SLMs, are becoming preferred over the Big models provided by OpenAI, 
-Anthropic, etc. which makes some sense. 
+Current mood: still interested to dabble more.
+Currently sceptical that organisations across the board are benefitting from LLMs.
+I read in the Economist that more small, boutique models, aka SLMs, are becoming preferred over the Big models provided by OpenAI,
+Anthropic, etc. which makes some sense.
 
-# 2025-08-19
+
+---
+date: 2025-08-19
+---
 
 Since the last update, I've experimented with local LLM models on my MacBookPro Max M4, which
 can run 3b parameter models. I wanted to approach the whole LLM hype as a tool, like grep or awk,
@@ -176,8 +206,8 @@ Emacs that could stream responses from Ollama.
 
 Those models are very unpredictable as an individual observer. I tried out
 Ollama's "tool use", which is when a model will reply with a specific format to call a function
-when given a prompt of the right schema. That's also unreliable (to the extent I discount 
-its viability for my own purposes), because the mechnism is the same as normal 
+when given a prompt of the right schema. That's also unreliable (to the extent I discount
+its viability for my own purposes), because the mechnism is the same as normal
 prompting and generation.
 
 A tool that might be viable is GBNF, which is a BNF grammar format that llama.cpp supports;
@@ -187,17 +217,17 @@ rely on the output syntax if not the meaning. It also works well on small models
 is expensive on larger models. Ollama are not planning to support it, but llama.cpp does,
 so I will abandon the former in favor of the latter.
 
-In code generation, I've experimented with fully agentic "make a PR to do x", to a 
+In code generation, I've experimented with fully agentic "make a PR to do x", to a
 50% success rate. Code review bots are hit and miss at the moment. Failure meaning,
 it would have been easier and mentally more nourishing to do a task myself
 than to deal with the failed interaction.
 
 I've found that cloud LLMs are quite good replacements for Google search, to discover
 direct sources. I've in contrast found that exploring ideas like architectures and such
-to be unhelpful. It has ironically renewed my interest in theory (TLA+, Liquid Haskell), 
+to be unhelpful. It has ironically renewed my interest in theory (TLA+, Liquid Haskell),
 tools that make me think better, rather than delegating my thinking.
 
-I had a month of apathy for working on my open source scripting language, Hell, 
+I had a month of apathy for working on my open source scripting language, Hell,
 due to a fairly bleak outlook for niche languages due to LLMs. But that passed and
 my interest came back.
 
@@ -207,7 +237,10 @@ Overall, present outlook is: tinkering with mild interest, local first,
 so-so performance for job-related tasks, using as a Google++, avoiding delegating
 thinking, renewed interest in learning theory.
 
-# 2025-06-04
+
+---
+date: 2025-06-04
+---
 
 Small update: I'd presently describe my outlook as sceptical. I go in
 cycles, of long troughs of scepticism, with very, very, brief
@@ -223,7 +256,10 @@ does play on the minds of some friends.
 
 I might change my mind on the next update, we'll see.
 
-# 2025-04-18
+
+---
+date: 2025-04-18
+---
 
 I've been collecting thoughts on LLMs in a peacemeal way. I add to this document from time to time. It's not an article as such.
 
