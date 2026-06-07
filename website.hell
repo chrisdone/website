@@ -10,7 +10,8 @@ data Post = Post
     date :: Day,
     title :: Text,
     markdown :: Text,
-    html :: Text
+    html :: Text,
+    micro :: Bool
   }
 
 data RssPost = RssPost
@@ -49,9 +50,11 @@ generatePosts = do
     markdown <- Text.readFile $ Text.concat ["posts/", post]
     Maybe.maybe
       (Error.error "Couldn't parse the article!")
-      ( \(date, title) -> do
-          html <- Main.render post
-          Monad.return Main.Post {post, date, title, html, markdown}
+      ( \(date, title, micro, remainder) -> do
+          html <- Main.render post markdown
+          let p = Main.Post {post, date, title, html, markdown, micro}
+          p <- Main.renderMicros p remainder
+          Monad.return p
       )
       $ Main.parse markdown
 
@@ -117,6 +120,7 @@ generateArchive = \posts0 -> do
 -- ---
 -- date: 2011-04-10
 -- title: ‘amb’ operator and the list monad
+-- micro: true
 -- ---
 --
 -- We're only interested in the date and the title. The rest is
@@ -124,7 +128,8 @@ generateArchive = \posts0 -> do
 --
 parse = \article -> do
   sansPrefix <- Text.stripPrefix "---" article
-  let (preamble, _content) = Text.breakOn "---" sansPrefix
+  let (preamble, rest0) = Text.breakOn "---" sansPrefix
+  let rest = Text.drop 3 rest0
   let lines = Text.splitOn "\n" preamble
   let pairs =
         List.map
@@ -136,22 +141,105 @@ parse = \article -> do
   date0 <- List.lookup "date" pairs
   date <- Day.iso8601ParseM date0
   title <- List.lookup "title" pairs
-  Monad.return (date, title)
+  let micro = List.lookup "micro" pairs
+  Monad.return (date, title, Eq.eq micro (Maybe.Just "true"), rest)
+
+parseMicro = \article -> do
+  sansPrefix <- Text.stripPrefix "---" $ Text.strip article
+  let (preamble, rest0) = Text.breakOn "---" sansPrefix
+  let rest = Text.drop 3 rest0
+  let lines = Text.splitOn "\n" preamble
+  let pairs =
+        List.map
+          ( \line -> do
+              let (key, value) = Text.breakOn ":" line
+              (key, Text.strip (Text.drop 1 value))
+          )
+          lines
+  date0 <- List.lookup "date" pairs
+  date <- Day.iso8601ParseM date0
+  Monad.return (date, rest)
 
 -- A post consists of a date, title and markdown.
 --
 -- Rendering them is easy, just run pandoc and apply an HTML template.
-render = \post -> do
+render = \post markdown -> do
   let targetDir =
         Text.concat ["webroot/posts/", Main.filename post]
   let targetFile = Text.concat [targetDir, "/index.html"]
-  (out, err) <- Text.readProcess_ (Process.proc "pandoc" ["--standalone", "--template", "templates/post.html", Text.concat ["posts/", post]])
+  (out, err) <- Text.readProcess_ $ Text.setStdin markdown $
+      Process.proc "pandoc" ["--standalone", "--template", "templates/post.html"]
   Directory.createDirectoryIfMissing Bool.True targetDir
   Text.writeFile targetFile out
   Monad.return out
 
+-- An entry of a microblog consists of a date.
+--
+-- Rendering them is easy, just run pandoc and apply an HTML template,
+-- put it in a directory under the parent post's name.
+renderMicros = \p remainder -> do
+  let entries = List.drop 1 $ Text.splitOn "" remainder
+  if Eq.eq (List.length entries) 1
+     then IO.pure p
+     else do
+       let parsed = List.map (\(day,y) -> day) $
+             Maybe.mapMaybe Main.parseMicro entries
+       let prev = \d -> Maybe.listToMaybe $ List.takeWhile (Ord.lt d) parsed
+       let next = \d -> Maybe.listToMaybe $
+              List.dropWhile (\x -> List.or [Ord.lt x d, Eq.eq d x]) parsed
+       es <- Async.pooledForConcurrently entries \entry -> do
+         case Main.parseMicro entry of
+           Maybe.Nothing ->
+             Error.error $ "Bad parse of entry from " <> Record.get @"post" p
+           Maybe.Just micro -> do
+             let (day, rest) = micro
+             let suburl = "/posts/" <> Main.filenameMicro (Record.get @"post" p) day
+             Main.renderMicro p day rest (prev day) (next day)
+             IO.pure $
+               "\n\n<h1><a href='" <> suburl <> "'>"
+                <> Day.iso8601Show day <> "</a></h1>\n\n" <> rest
+       let preamble = Text.concat $ List.take 1 $
+             Text.splitOn "" $ Record.get @"markdown" p
+       let markdown = preamble <>
+             Text.unlines es
+       html <- Main.render (Record.get @"post" p) markdown
+       IO.pure $
+         Record.set @"html" @Text html $
+         Record.set @"markdown" @Text markdown $
+         p
+
+-- A post consists of a date.
+--
+-- Rendering them is easy, just run pandoc and apply an HTML template.
+renderMicro = \p day content mprev mnext -> do
+  let post = (Record.get @"post" p)
+  let targetDir =
+        Text.concat ["webroot/posts/", Main.filenameMicro post day]
+  Text.putStrLn $ "Rendering " <> targetDir <> " ..."
+  let targetFile = Text.concat [targetDir, "/index.html"]
+  let title = Record.get @"title" p
+  let url = "/posts/" <> Main.filename post
+  let props = [ ("date", Day.iso8601Show day)
+              , ("title", title)
+              , ("url", url)
+              ]
+  let preamble = Text.unlines [
+        "---",
+        Text.unlines (List.map (\(k,v) -> k <> ": " <> v) props),
+        "---"
+        ]
+  (out, err) <- Text.readProcess_ $ Text.setStdin (preamble <> content) $
+     Process.proc "pandoc" ["--standalone", "--template", "templates/micro.html"]
+  Directory.createDirectoryIfMissing Bool.True targetDir
+  Text.writeFile targetFile out
+
 -- Filename stripped of .md/.markdown.
 filename = \post -> Text.replace ".md" "" (Text.replace ".markdown" "" post)
+
+-- Filename stripped of .md/.markdown.
+filenameMicro = \post day ->
+  Text.replace ".md" "" (Text.replace ".markdown" "" post) <>
+   "/" <> Day.iso8601Show day
 
 -- Strip out quotes from "foo".
 strip = \title ->
