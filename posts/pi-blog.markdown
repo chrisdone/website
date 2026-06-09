@@ -2,6 +2,14 @@
 date: 2025-05-09
 title: My blog now runs on a Raspberry Pi at home
 description: Running my blog on a raspberry pi
+micro: true
+---
+
+A mini microblog on Raspberry Pi at home.
+
+
+---
+date: 2025-05-09
 ---
 
 I discovered that my new house had [OFNL](https://www.ofnl.co.uk/)
@@ -39,7 +47,18 @@ service is [webhook](https://github.com/adnanh/webhook), both come as
 systemd services, so the effort was very minimal.
 
 There's no particular technical advantage of you reading this page
-from my home, over the Digital Ocean server I've had for years, 
+from my home, over the Digital Ocean server I've had for years,
 which only cost me about $10/mo. But it was a fun little project!
 
-As of June 7th 2026 it lives in a little stainless steel Japanese box.
+
+---
+date: 2026-05-09
+---
+
+It now lives in a little stainless steel T-190 Japanese box.
+
+![](/images/rasp/IMG_7743.png)
+
+![](/images/rasp/IMG_7744.png)
+
+![](/images/rasp/IMG_7748.png)
