@@ -17,3 +17,4 @@ Small, quirky, intimate. Proper blogs.
 Big, well known, somewhat performative. Post-blogging blogs. 
 
 * https://danluu.com/
+* https://prog21.dadgum.com/
