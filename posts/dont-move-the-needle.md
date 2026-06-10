@@ -55,7 +55,7 @@ and say wow, this is perfection. As you can imagine, or not imagine, there was a
 garbage, a lot of mess. Many of these companies are gone or still around. But no one
 particular technology, methodology or system would have moved the needle.
 Haskell/Rust doesn't save you, microservices/monoliths don't save you, AI
-doesn't save you. Politics, the market, bad luck,
+doesn't save you. Politics, the market, culture, bad luck,
 not enough money/people, or too much, are the tide that we swim in. Companies are  "wicked problems" 
 (if you look it up on Wikipedia, even Harvard Business review has an article on this).
 
