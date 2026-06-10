@@ -1,6 +1,6 @@
 ---
 title: It doesn't move the needle
-date: 2026-06-09
+date: 2026-06-10
 ---
 
 In a tweet (before Musk bought it and everyone left), during Covid,
