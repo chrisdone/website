@@ -27,6 +27,7 @@ All these things, people build businesses upon writing about, giving talks about
 and engineers are enthralled by. Sometimes managers and C-levels are worried about falling
 behind if you don't adopt that thing, or aren't doing it enough.
 
+<!--
 I programmed with Visual Basic 6 back in the late 90s when I was 12, 
 I was writing chat apps (an instant messaging app, over the internet), 
 calendars/planners, an XML parser, all with GUIs. I made an app
@@ -45,11 +46,13 @@ to remember. It still hasn't recovered. The fact that smart designers felt unemp
 to make web apps until LLMs came along puts the abject failure into stark relief.
 
 Go forward another ten years and I worked at a few companies and
-then I did consulting for about 35 different companies, who were all
+then
+-->
+
+I did consulting for about 35 different companies, who were all
 using Haskell. Not one time did I look at a codebase or management structure
 and say wow, this is perfection. As you can imagine, or not imagine, there was a lot of
-garbage, a lot of mess, often done by "rockstars" others had to clean
-up after. Many of these companies are gone or still around. But no one
+garbage, a lot of mess. Many of these companies are gone or still around. But no one
 particular technology, methodology or system would have moved the needle.
 Haskell/Rust doesn't save you, microservices/monoliths don't save you, AI
 doesn't save you. Politics, the market, bad luck,
