@@ -12,7 +12,7 @@ AI summer, driven by LLMs.
 date: 2026-06-13
 ---
 
-This is a good phrasing:  [if you want human attention show human effort](https://tombedor.dev/human-attention-and-human-effort/).
+This is a good phrasing:  [If you are requesting human attention, demonstrate human effort.](https://tombedor.dev/human-attention-and-human-effort/)
 
 
 ---
