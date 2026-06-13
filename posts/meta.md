@@ -4,12 +4,7 @@ title: Meta
 micro: true
 ---
 
-Commentary and updates about my blog, its software, features, etc. 
-
-
----
-date: 2026-06-13
----
+Commentary and updates about my blog, its software, features, etc.
 
 I added a "microblog" feature to my blog.
 
@@ -19,6 +14,5 @@ It's a nice way to organise updates to a topic and avoid them necessarily hittin
 
 Examples are
 
-* This page
 * [LLMs](https://chrisdone.com/posts/llms/)
 * [My raspberry pi](https://chrisdone.com/posts/pi-blog/)
