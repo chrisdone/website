@@ -9,6 +9,13 @@ AI summer, driven by LLMs.
 
 
 ---
+date: 2026-06-24
+---
+
+I love the phrase ["adversarial communication"](https://blog.glyph.im/2026/06/adversarial-communication.html), great article.
+
+
+---
 date: 2026-06-13
 ---
 
