@@ -9,6 +9,23 @@ AI summer, driven by LLMs.
 
 
 ---
+date: 2026-07-03
+---
+
+I enjoyed these quotes by Jaron Lanier on the topic of AI:
+
+>  “A lot of modern enlightenment thinkers and technical people feel that there is something old-fashioned about believing that people are special – for instance that consciousness is a thing. They tend to think there is an equivalence between what a computer could be and what a human brain could be.” Lanier has no truck with this. “We have to say consciousness is a real thing and there is a mystical interiority to people that’s different from other stuff because if we don’t say people are special, how can we make a society or make technologies that serve people?”
+
+In a refreshing twist, his position on LLMs is nuanced. For example, he seems quite positive about the randomness:
+
+> For Lanier, the classic example of restricted choice is Wikipedia, which has effectively become the world’s encyclopedia. “Wikipedia is run by super-nice people who are my friends. But the thing is it’s like one encyclopedia. Some of us might remember when on paper there was both an Encyclopedia Britannica and Encyclopedia Americana and they provided different perspectives. The notion of having the perfect encyclopedia is just weird.”
+> 
+> So could the new chatbots challenge this? “Right. That’s my point. If you go to a chatbot and say: ‘Please can you summarise the state of the London tube?’ you’ll get different answers each time. And then you have to choose.” This programmed-in randomness, he says, is progress. “All of a sudden this idea of trying to make the computer seem humanlike has gone far enough in this iteration that we might have naturally outgrown this illusion of the monolithic truth of the internet or AI. It means there is a bit more choice and discernment and humanity back with the person who’s interacting with the thing.”
+
+This is an interesting perspective. Though I'm not sure how well it holds up to scrutiny due to bias easily put into models via reinforcement learning, which is discussed in [_AI models’ values are very different from most people’s_](https://www.economist.com/briefing/2026/06/25/ai-models-values-are-very-different-from-most-peoples).
+
+
+---
 date: 2026-06-24
 ---
 
