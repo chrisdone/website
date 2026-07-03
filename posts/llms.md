@@ -12,7 +12,7 @@ AI summer, driven by LLMs.
 date: 2026-07-03
 ---
 
-I enjoyed these quotes by Jaron Lanier on the topic of AI:
+I enjoyed these quotes by [Jaron Lanier on the topic of AI](https://www.theguardian.com/technology/2023/mar/23/tech-guru-jaron-lanier-the-danger-isnt-that-ai-destroys-us-its-that-it-drives-us-insane):
 
 >  “A lot of modern enlightenment thinkers and technical people feel that there is something old-fashioned about believing that people are special – for instance that consciousness is a thing. They tend to think there is an equivalence between what a computer could be and what a human brain could be.” Lanier has no truck with this. “We have to say consciousness is a real thing and there is a mystical interiority to people that’s different from other stuff because if we don’t say people are special, how can we make a society or make technologies that serve people?”
 
