@@ -22,7 +22,8 @@ In a refreshing twist, his position on LLMs is nuanced. For example, he seems qu
 > 
 > So could the new chatbots challenge this? “Right. That’s my point. If you go to a chatbot and say: ‘Please can you summarise the state of the London tube?’ you’ll get different answers each time. And then you have to choose.” This programmed-in randomness, he says, is progress. “All of a sudden this idea of trying to make the computer seem humanlike has gone far enough in this iteration that we might have naturally outgrown this illusion of the monolithic truth of the internet or AI. It means there is a bit more choice and discernment and humanity back with the person who’s interacting with the thing.”
 
-This is an interesting perspective. Though I'm not sure how well it holds up to scrutiny due to bias easily put into models via reinforcement learning, which is discussed in [_AI models’ values are very different from most people’s_](https://www.economist.com/briefing/2026/06/25/ai-models-values-are-very-different-from-most-peoples).
+This is an interesting perspective. Though I'm not sure how well it holds up to scrutiny due to bias easily put into models via reinforcement learning, which is discussed in [_AI models’ values are very different from most people’s_](https://www.economist.com/briefing/2026/06/25/ai-models-values-are-very-different-from-most-peoples). I'm also not sure how this squares with [his criticism of Wikipedia](https://en.wikipedia.org/wiki/Digital_Maoism) the bulk of which do apply to LLM models (mainstream voice, sterile style, abuse by states to manipulate). 
+
 
 
 ---
