@@ -30,14 +30,10 @@ This is an interesting perspective. Though I'm not sure how well it holds up to 
 date: 2026-06-24
 ---
 
-I love the phrase ["adversarial communication"](https://blog.glyph.im/2026/06/adversarial-communication.html), great article.
+Two articles on the same topic about or encompassing workslop, which I thought were good and helpful:
 
-
----
-date: 2026-06-13
----
-
-This is a good phrasing:  [If you are requesting human attention, demonstrate human effort.](https://tombedor.dev/human-attention-and-human-effort/)
+* ["Adversarial communication"](https://blog.glyph.im/2026/06/adversarial-communication.html), great article.
+* [If you are requesting human attention, demonstrate human effort.](https://tombedor.dev/human-attention-and-human-effort/)
 
 
 ---
