@@ -313,7 +313,7 @@ I've been collecting thoughts on LLMs in a peacemeal way. I add to this document
 * Objective limitation: As implemented,
   we know that LLMs are capable within their probabilistic transformers to estimate answers to questions, but,
   for example, cannot count the individual letters in a word or do basic arithmetic.
-  (At the time of writing; these leaks will be plugged eventually by postprocessing and tools, I'm sure.)
+  (At the time of writing; these leaks will be plugged eventually by postprocessing and tools, I'm sure.) Update: see [Tokenization counts: the impact of tokenization on arithmetic in frontier LLMs](https://arxiv.org/pdf/2402.14903).
 * Speculation on anthropomorphism: I think the reason that LLMs appeared to reason is that the base model,
  which is essentially a snapshot of the Internet, is then of course trained on millions of conversations in
   which a question is posed and an answer is generated,
