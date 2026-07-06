@@ -12,6 +12,7 @@ Small, quirky, intimate. Proper blogs.
 * http://static.v25media.com/edw519_mod.html
 * https://lr0.org/blog/
 * https://ratfactor.com/
+* https://caolan.uk/ 
 
 ## Big blogs
 
