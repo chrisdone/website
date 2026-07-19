@@ -16,6 +16,6 @@ or changed my mind on something.
 
 ## General
 
-* [Psychogeography by Will Self, 2007](https://www.youtube.com/watch?v=zVEgOiB7Bo8)
-* [Nonviolent Communication by Marshall Rosenberg, 2000](https://www.youtube.com/watch?v=l7TONauJGfc)
-* [Language, Writing and Magic by Alan Moore, https](2011://www.youtube.com/watch?v=vw1Sv04YQS4)
+* ["Psychogeography" by Will Self, 2007](https://www.youtube.com/watch?v=zVEgOiB7Bo8)
+* ["Nonviolent Communication" by Marshall Rosenberg, 2000](https://www.youtube.com/watch?v=l7TONauJGfc)
+* ["Language, Writing and Magic" by Alan Moore, 2011](https://www.youtube.com/watch?v=vw1Sv04YQS4)
