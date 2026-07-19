@@ -12,7 +12,7 @@ or changed my mind on something.
 * ["We Really Don't Know How to Compute!" by Gerald Sussman, 2011](https://www.youtube.com/watch?v=HB5TrK7A4pI)
 * ["Performance Matters" by Emery Berger, 2019](https://www.youtube.com/watch?v=r-TLSBdHe1A)
 * ["Simple Made Easy" by Rich Hickey, 2011](https://www.youtube.com/watch?v=SxdOUGdseq4)
-* ["Spec-ulation" by Rich Hickey, 2026](https://www.youtube.com/watch?v=oyLBGkS5ICk)
+* ["Spec-ulation" by Rich Hickey, 2016](https://www.youtube.com/watch?v=oyLBGkS5ICk)
 
 ## General
 
