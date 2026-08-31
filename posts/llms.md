@@ -7,6 +7,26 @@ micro: true
 This page serves as my place to journal what are hopefully balanced thoughts on the current
 AI summer, driven by LLMs.
 
+
+
+---
+date: 2026-08-31
+---
+
+I experimented a little more with the /infill endpoint on llama.cpp for simple code filling with a local LLM. It works as expected.
+I’m not a prepper (about the bubble bursting or so), but I believe it’s worth having first-hand manual knowledge in the stack,
+to be informed on the technical side. I am regularly using Gemini to lookup things that I used to use google and Wikipedia for. 
+I am debating setting up a closed, local instance of this.
+
+A topic on my mind a lot recently is [the Spectacle](https://en.wikipedia.org/wiki/Situationist_International), in particular, the mediation 
+aspect of mediums (previously raised on this diary under McLuhan topic), which is summarised well here:
+
+> experiences, or the first-hand fulfillment of authentic desires, to individual expression by proxy through the exchange or consumption of commodities, or passive second-hand alienation, inflicted significant and far-reaching damage to the quality of human life for both individuals and society.
+
+“AI” (generative LLM as of this year), is often replacing authentic interactions with people (writing reports, sending automated messages, 
+meeting notes, “pick a gift for my nephew”, generating code, opening legal cases, etc.), work colleagues ask their AI of choice rather than their colleagues, for help or brainstorming. I read somewhere, though I can’t recall at the moment, the joke that some are using 
+LLMs to “eat ice cream for them.” Funny summation.
+
 
 ---
 date: 2026-07-03
