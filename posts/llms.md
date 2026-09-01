@@ -27,6 +27,8 @@ aspect of mediums (previously raised on this diary under McLuhan topic), which i
 meeting notes, “pick a gift for my nephew”, generating code, opening legal cases, etc.), work colleagues ask their AI of choice rather than their colleagues, for help or brainstorming. I read somewhere, though I can’t recall at the moment, the joke that some are using 
 LLMs to “eat ice cream for them.” Funny summation.
 
+Other reading: [On not becoming a cyborg](https://nolanlawson.com/2026/08/31/on-not-becoming-a-cyborg)
+
 
 ---
 date: 2026-07-03
