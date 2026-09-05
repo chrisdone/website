@@ -29,8 +29,6 @@ LLMs to “eat ice cream for them.” Funny summation.
 
 Other reading: [On not becoming a cyborg](https://nolanlawson.com/2026/08/31/on-not-becoming-a-cyborg)
 
-<!—- https://wiki.toki.la/ai/flt/ —->
-
 
 ---
 date: 2026-07-03
