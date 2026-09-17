@@ -7,6 +7,29 @@ micro: true
 This page serves as my place to journal what are hopefully balanced thoughts on the current
 AI summer, driven by LLMs.
 
+
+---
+date: 2026-09-17
+---
+
+Not a thought entry, more of a data and notional thoughts for reformulation later.
+
+News:
+
+* Mathematicians are having their [AI disillusionment moment, Terrence Tao leads](https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/), Lisp Curse overlap? See also [LLM Curse.](https://chrisdone.com/posts/the-llm-curse/)
+
+Germinating thoughts:
+
+* Boilerplate redefined as that which can be produced without much thought, and therefore all LLM output is inherently boilerplate. Discuss implications against historical programming conventional wisdom with regards to boilerplate.
+  * Hint: the ratio of prompt to code could be a measure of language power. The Next 700 Programming Languages - perhaps different?
+* Barefoot shoes vs “supportive” shoes - the supportive ones alter the wearer until the wearer can’t walk unassisted.
+
+Links:
+
+* [Solomonoff's theory of inductive inference](https://en.wikipedia.org/wiki/Solomonoff%27s_theory_of_inductive_inference)
+* [No one actually wants simplicity](https://lukeplant.me.uk/blog/posts/no-one-actually-wants-simplicity/)
+* [Hydrating pizza](https://www.youtube.com/watch?app=desktop&v=K-IMqM_J_W8&ra=m)
+
 
 
 ---
