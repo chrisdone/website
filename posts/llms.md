@@ -22,14 +22,14 @@ Germinating thoughts:
 
 * Boilerplate redefined as that which can be produced without much thought, and therefore all LLM output is inherently boilerplate. Discuss implications against historical programming conventional wisdom with regards to boilerplate.
   * Hint: the ratio of prompt to code could be a measure of language power. The Next 700 Programming Languages - perhaps different?
-* Barefoot shoes vs “supportive” shoes - the supportive ones alter the wearer until the wearer can’t walk unassisted.
+* Barefoot shoes vs “supportive” shoes: the supportive ones alter the wearer until the wearer can’t walk unassisted.
 
 Links:
 
 * [Solomonoff's theory of inductive inference](https://en.wikipedia.org/wiki/Solomonoff%27s_theory_of_inductive_inference)
 * [No one actually wants simplicity](https://lukeplant.me.uk/blog/posts/no-one-actually-wants-simplicity/)
 * [Hydrating pizza](https://www.youtube.com/watch?app=desktop&v=K-IMqM_J_W8&ra=m)
-
+* [Claude is your insider threat now - Dan Tentler - Security Fest 2026 - YouTube](https://www.youtube.com/watch?v=yvJYw2gR0cU) — good grief.
 
 
 ---
