@@ -56,3 +56,8 @@ Patrick Hutber: Improvement means deterioration.
 If a company tells you it is improving a service it provides,
 it almost always means it will do less for you, charge you more, or both.
 
+# Abilene paradox
+
+Wikipedia:
+
+> The Abilene paradox is a collective fallacy, in which a group of people collectively decide on a course of action that is counter to the preferences of most or all individuals in the group, while each individual believes it to be aligned with the preferences of most of the others.
