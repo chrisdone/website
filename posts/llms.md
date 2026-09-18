@@ -17,7 +17,7 @@ Not a thought entry, more of a data and notional thoughts for reformulation late
 News:
 
 * Mathematicians are having their [AI disillusionment moment, Terrence Tao leads](https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/), Lisp Curse overlap? See also [LLM Curse.](https://chrisdone.com/posts/the-llm-curse/)
-* Martin Fowler is also having [his doubts](https://martinfowler.com/articles/2026-dont-like-llms.html), but the reasoning is immature, lacking any insight. 
+* Martin Fowler is also having [his doubts](https://martinfowler.com/articles/2026-dont-like-llms.html), but the reasoning is immature, lacking any insight. Odd.
 
 Germinating thoughts:
 
