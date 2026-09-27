@@ -118,41 +118,217 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
-<blockquote>
-<p>I’ll write up my home fibre setup later. I thought it’d be neat to
-document it here. Still waiting for parts to arrive.</p>
-</blockquote>
-<p>When a Cat6 cable does the job, but I want fibre optic anyway.</p>
-<p>Components:</p>
+<p><em>When a Cat6 cable does the job, but I want fibre optic
+anyway</em></p>
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+<p><strong>Table of Contents</strong></p>
 <ul>
-<li><p>InvisiLight® EZ-Bend™ Indoor Jumpers, 20m, SC APC, white</p>
+<li><a href="#why">Why</a></li>
+<li><a href="#things-i-learned">Things I learned</a></li>
+<li><a href="#components">Components</a>
+<ul>
+<li><a href="#the-fibre-optic-patch-cable">The fibre optic patch
+cable</a></li>
+<li><a href="#side-b">Side B</a></li>
+<li><a href="#side-a">Side A</a></li>
+<li><a href="#computer-side">Computer side</a></li>
+</ul></li>
+<li><a href="#the-final-result">The final result</a>
+<ul>
+<li><a href="#whole-setup">Whole setup</a></li>
+<li><a href="#the-fs-media-converter-in-action">The FS media converter
+in action</a></li>
+<li><a href="#tp-link-media-converter-in-action">TP-link media converter
+in action</a></li>
+</ul></li>
+<li><a href="#pictures-of-the-parts">Pictures of the parts</a>
+<ul>
+<li><a href="#sc-apc-test-patch-cable">SC-APC test patch cable</a></li>
+<li><a href="#fs-media-converter">FS media converter</a></li>
+<li><a href="#fs-power-lead">FS power lead</a></li>
+<li><a href="#tp-link-media-converter">TP-Link media converter</a></li>
+<li><a href="#tp-link-power-lead">TP-Link power lead</a></li>
+<li><a href="#lc-upc-to-ac-apc-patch-cable">LC UPC to AC APC patch
+cable</a></li>
+<li><a href="#sc-ac-connectors">SC-AC connectors</a></li>
+<li><a href="#sc-upc-to-sc-apc">SC-UPC to SC-APC</a></li>
+<li><a href="#gigabit-ethernet-to-usb-c">Gigabit ethernet to
+USB-C</a></li>
+</ul></li>
+</ul>
+<!-- markdown-toc end -->
+<h2 id="why">Why</h2>
+<p>I’ve got an ethernet port by my TV, and my desk is on the other side
+of the room. WiFi is fine, but I want to be cabled to take full
+advantage of my gigabit internet.</p>
+<p>My home is a newbuild, so I don’t feel like fishing through stud
+walls. I discovered that these days fibre optic is well within hobby
+price range, and you can get a magical InvisiLight EZ-Bend fibre cable
+that can bend around sharp corners and lose no signal. They look
+invisible to a casual glance when ran on the edges of walls. I took it
+as an opportunity to have fun with simple hardware!</p>
+<p>As of June 2nd 2026, I’m still waiting for the EZ-Bend cable to
+arrive, but I’ve done a test with the rest of the setup.</p>
+<h2 id="things-i-learned">Things I learned</h2>
+<p>You need to understand this if you’re buying.</p>
+<ol type="1">
+<li>Fibre optic has modes (which comes from optical modes):
+<ul>
+<li><strong>Single-mode</strong> means the glass tube through which
+light is emitted is very tiny. Something like 8-10μm. It requires a
+laser, it’s more expensive, and the alignment has to be very precise.
+Its distances before attenuation are measured in kilometers.</li>
+<li><strong>Multi-mode</strong> has a really big core diameter. You can
+use LED or other emitters, the light attenuates quicker (under half a
+km), but it’s cheaper. The wavelengths used are also different.</li>
+</ul></li>
+<li>A patch cable may contain one or two or more fibres.
+<ul>
+<li>Single fibre, you’ll need two of these cables then if you’re
+emitting only in one direction.</li>
+<li>Duplex cable, contains two fibres, one for TX, one for RX.</li>
+<li>And media converters accept either TX/RX (transmit/receive) ports,
+where you might have one TX fibre and one RX fibre.</li>
+</ul></li>
+<li>Scenarios: Duplex vs half-duplex vs simplex:
+<ul>
+<li>Full duplex: two fibres, one TX, one RX.</li>
+<li>Half duplex: you have one fibre, but take turns TX’ing and
+RX’ing.</li>
+<li>Simplex: one fibre, but sending concurrently via BiDi (separate
+TX/RX wavelengths via <a
+href="https://en.wikipedia.org/wiki/Wavelength-division_multiplexing">WDM</a>).</li>
+</ul></li>
+<li>Fibre cables have a variety of connectors:
+<ul>
+<li>SC (standard connector), it’s bigger.
+<ul>
+<li>SC UPC - domed glass.</li>
+<li>SC APC - angled glass.</li>
+</ul></li>
+<li>LC APC/UPC - it’s smaller, and has a different clasp like an RJ45
+connector.</li>
+<li>None of these are compatible, but you can buy all the combinations
+of patch cables that have X on one end and Y on the other end, which is
+what I did.</li>
+<li>See the pictures!</li>
+</ul></li>
+</ol>
+<p>My setup is: a single mode, single fibre, simplex, bidirectional
+(WDM). The main fibre is SC APC, but my media converters are on LC UPC
+and SC UPC. One media converter transmits data at 1310 nm wavelength and
+receives data at 1550 nm wavelength, and the other media converter has
+the transmit/receive flipped.</p>
+<h2 id="components">Components</h2>
+<p>The setup comprises the following components.</p>
+<h3 id="the-fibre-optic-patch-cable">The fibre optic patch cable</h3>
+<p>I ordered the real InvisiLight EZ-Bend and a 1m yellow test
+cable.</p>
+<ul>
+<li><strong>The real thing:</strong> InvisiLight® EZ-Bend™ Indoor
+Jumpers, 20m, SC APC, white, Single Mode
 <ul>
 <li>This 3mm cable is capable of 2.5mm bend radius, is easy to run along
 a wall and around corners.</li>
+<li>Still waiting for delivery, estimated 4 weeks.</li>
 </ul></li>
-<li><p>1m (3ft) Fiber Patch Cable, 1 Fiber, SC APC Simplex to SC APC
-Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered,
-Yellow</p>
+<li><strong>The test cable</strong>: 1m (3ft) Fiber Patch Cable, 1
+Fiber, SC APC Simplex to SC APC Simplex, Single Mode (OS2), Riser
+(OFNR), 2.0mm, Tight-Buffered, Yellow
 <ul>
 <li>For testing, equivalent to the EZ-Bend one.</li>
-</ul></li>
-<li><p>2x: 1m (3ft) Fiber Patch Cable, 1 Fiber, SC UPC Simplex to SC APC
-Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered,
-Yellow</p></li>
-<li><p>2x: SC/APC to SC/APC Simplex Single Mode Fiber Keystone
-Jack</p></li>
-<li><p>Media converters:</p>
-<ul>
-<li>TP-Link Gigabit WDM Media Converter, Auto-negotiation,
-TL-FC311B-20</li>
-<li>TP-Link Gigabit WDM Media Converter, Auto-negotiation,
-TL-FC311A-20</li>
-</ul></li>
-<li><p>Belkin USB-C to 2.5Gb Ethernet Adapter - White</p>
-<ul>
-<li>For the MacBook, which doesn’t have an RJ45 port</li>
+<li>Arrived, delivered promptly by fs.com.</li>
 </ul></li>
 </ul>
+<h3 id="side-b">Side B</h3>
+<p>This was my first choice for simplicity; grab an off the shelf TP
+Link that has fibre in and eth in and you’re good.</p>
+<ul>
+<li>TP-Link Gigabit WDM Media Converter, Auto-negotiation, TL-FC311B-20
+<ul>
+<li>transmits data at 1310 nm wavelength and receives data at 1550 nm
+wavelength</li>
+<li>Arrived, from Amazon.</li>
+</ul></li>
+<li>1x: 1m (3ft) Fiber Patch Cable, 1 Fiber, SC UPC Simplex to SC APC
+Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered, Yellow
+<ul>
+<li>Arrived, delivered promptly by fs.com.</li>
+</ul></li>
+<li>1x: SC/APC to SC/APC Simplex Single Mode Fiber Keystone Jack
+<ul>
+<li>Arrived, delivered promptly by fs.com.</li>
+</ul></li>
+</ul>
+<p>I attempted to order the corresponding TL-FC311A-20 (note the ‘A’)
+unit, but:</p>
+<ul>
+<li>Ordered from Amazon. Delayed. Amazon. I cancelled.</li>
+<li>Ordered from Scan. Delayed. I cancelled.</li>
+<li>Ordered from Converge Technology Solutions. They cancelled due to no
+stock despite claiming a few in stock.</li>
+</ul>
+<p>These suppliers are a bit fast and loose with their stock
+inventory.</p>
+<h3 id="side-a">Side A</h3>
+<p>After my experience trying to source the ‘A’ part for the TP Link
+media converter, I decided that since I had such a good experience with
+fs.com, that I’d just ordered everything from there.</p>
+<p>I got an SFP media converter and module.</p>
+<ul>
+<li><p>1000BASE-BX-D SFP BiDi 1550nm-TX/1310nm-RX 20km Simplex LC/UPC
+SMF Transceiver Module for FS Switches</p></li>
+<li><p>Mini Unmanaged 1x 10/100/1000Base-T RJ45 to 1x 1000Base-X SFP
+Gigabit Ethernet Media Converter, British Plug Standard</p></li>
+<li><p>1m (3ft) Fiber Patch Cable, 1 Fiber, LC UPC Simplex to SC APC
+Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered,
+Yellow</p></li>
+<li><p>1x: SC/APC to SC/APC Simplex Single Mode Fiber Keystone Jack</p>
+<ul>
+<li>Arrived, delivered promptly by fs.com.</li>
+</ul></li>
+</ul>
+<h3 id="computer-side">Computer side</h3>
+<p>MacBooks don’t have ethernet (so brave), so I needed an adapter for
+it.</p>
+<ul>
+<li>Belkin USB-C to 2.5Gb Ethernet Adapter - White
+<ul>
+<li>Bought from Apple.</li>
+</ul></li>
+</ul>
+<h2 id="the-final-result">The final result</h2>
+<p>If you just want to see the final test result, here it is. For
+pictures of all the parts, see further down.</p>
+<h3 id="whole-setup">Whole setup</h3>
+<p><img src="/images/home-fibre/full-thing.png" /></p>
+<h3 id="the-fs-media-converter-in-action">The FS media converter in
+action</h3>
+<p><img src="/images/home-fibre/fs-media-converter-in-action.png" /></p>
+<h3 id="tp-link-media-converter-in-action">TP-link media converter in
+action</h3>
+<p><img
+src="/images/home-fibre/tp-link-media-converter-in-action.png" /></p>
+<h2 id="pictures-of-the-parts">Pictures of the parts</h2>
+<h3 id="sc-apc-test-patch-cable">SC-APC test patch cable</h3>
+<p><img src="/images/home-fibre/ac-apc-test-patch-cable.png" /></p>
+<h3 id="fs-media-converter">FS media converter</h3>
+<p><img src="/images/home-fibre/fs-media-converter.png" /></p>
+<h3 id="fs-power-lead">FS power lead</h3>
+<p><img src="/images/home-fibre/fs-power.png" /></p>
+<h3 id="tp-link-media-converter">TP-Link media converter</h3>
+<p><img src="/images/home-fibre/tp-link-media-converter.png" /></p>
+<h3 id="tp-link-power-lead">TP-Link power lead</h3>
+<p><img src="/images/home-fibre/tp-link-power.png" /></p>
+<h3 id="lc-upc-to-ac-apc-patch-cable">LC UPC to AC APC patch cable</h3>
+<p><img src="/images/home-fibre/lc-upc-to-ac-apc.png" /></p>
+<h3 id="sc-ac-connectors">SC-AC connectors</h3>
+<p><img src="/images/home-fibre/sc-apc-connectors.png" /></p>
+<h3 id="sc-upc-to-sc-apc">SC-UPC to SC-APC</h3>
+<p>Both SC, but the polish differs.</p>
+<p><img src="/images/home-fibre/sc-upc-to-sc-apc.png" /></p>
+<h3 id="gigabit-ethernet-to-usb-c">Gigabit ethernet to USB-C</h3>
+<p><img src="/images/home-fibre/gigabit-eth-to-usbc.png" /></p>
 
 
 <footer>

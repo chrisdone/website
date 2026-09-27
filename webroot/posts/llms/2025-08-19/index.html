@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LLMs</title>
+    <style>
+    h1 a, h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+      <h1>LLMs / 2025-08-19</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this
+    microblog entry.</small></p>
+
+      <p><em>This entry is part of a microblog series called <a href='/posts/llms'>LLMs</a></em></h1>
+<hr>
+
+
+<p>Since the last update, I’ve experimented with local LLM models on my
+MacBookPro Max M4, which can run 3b parameter models. I wanted to
+approach the whole LLM hype as a tool, like grep or awk, and see whether
+there was a niche for it as a way of making free text tractable, rather
+than as some kind of sci-fi oracle, as many people seem to treat it. I
+wrote a module for Emacs that could stream responses from Ollama.</p>
+<p>Those models are very unpredictable as an individual observer. I
+tried out Ollama’s “tool use”, which is when a model will reply with a
+specific format to call a function when given a prompt of the right
+schema. That’s also unreliable (to the extent I discount its viability
+for my own purposes), because the mechnism is the same as normal
+prompting and generation.</p>
+<p>A tool that might be viable is GBNF, which is a BNF grammar format
+that llama.cpp supports; it is a filter function that sits very close to
+the generation of tokens, and discards tokens that do not match the GBNF
+grammar. This is promising because you can at least rely on the output
+syntax if not the meaning. It also works well on small models, and is
+expensive on larger models. Ollama are not planning to support it, but
+llama.cpp does, so I will abandon the former in favor of the latter.</p>
+<p>In code generation, I’ve experimented with fully agentic “make a PR
+to do x”, to a 50% success rate. Code review bots are hit and miss at
+the moment. Failure meaning, it would have been easier and mentally more
+nourishing to do a task myself than to deal with the failed
+interaction.</p>
+<p>I’ve found that cloud LLMs are quite good replacements for Google
+search, to discover direct sources. I’ve in contrast found that
+exploring ideas like architectures and such to be unhelpful. It has
+ironically renewed my interest in theory (TLA+, Liquid Haskell), tools
+that make me think better, rather than delegating my thinking.</p>
+<p>I had a month of apathy for working on my open source scripting
+language, Hell, due to a fairly bleak outlook for niche languages due to
+LLMs. But that passed and my interest came back.</p>
+<p>I’m not an economist, but hopefully no winter or crash is coming.</p>
+<p>Overall, present outlook is: tinkering with mild interest, local
+first, so-so performance for job-related tasks, using as a Google++,
+avoiding delegating thinking, renewed interest in learning theory.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2025-08-19 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+  </body>
+</html>

@@ -114,14 +114,16 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
   <body>
     <div class="page-wrap">
 
-<h1>My blog now runs on a Raspberry Pi at home</h1>
+      <h1>My blog now runs on a Raspberry Pi at home / 2025-05-09</h1>
 
-<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+<p><small class='human'>Note: An LLM was not used in writing this
+    microblog entry.</small></p>
 
-<p>A mini microblog on Raspberry Pi at home.</p>
-<h1>
-<a href='/posts/pi-blog/2025-05-09'>2025-05-09</a>
-</h1>
+      <p><em>This entry is part of a microblog series called <a href='/posts/pi-blog'>My
+blog now runs on a Raspberry Pi at home</a></em></h1>
+<hr>
+
+
 <p>I discovered that my new house had <a
 href="https://www.ofnl.co.uk/">OFNL</a> internet, which is one of a
 handful competing fibre providers in England (others: BT OpenReach,
@@ -155,13 +157,6 @@ systemd services, so the effort was very minimal.</p>
 <p>There’s no particular technical advantage of you reading this page
 from my home, over the Digital Ocean server I’ve had for years, which
 only cost me about $10/mo. But it was a fun little project!</p>
-<h1>
-<a href='/posts/pi-blog/2026-05-09'>2026-05-09</a>
-</h1>
-<p>It now lives in a little stainless steel T-190 Japanese box.</p>
-<p><img src="/images/rasp/IMG_7743.png" /></p>
-<p><img src="/images/rasp/IMG_7744.png" /></p>
-<p><img src="/images/rasp/IMG_7748.png" /></p>
 
 
 <footer>
@@ -174,18 +169,5 @@ only cost me about $10/mo. But it was a fun little project!</p>
 </footer>
 
     </div>
-    <script>
-      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
-    headers.forEach(function(header) {
-        var headerId = header.id;
-        if (headerId) {
-            var anchor = document.createElement('a');
-            anchor.href = '#' + headerId;
-            anchor.textContent = header.textContent;
-            header.textContent = '';
-            header.appendChild(anchor);
-        }
-    });
-    </script>
   </body>
 </html>

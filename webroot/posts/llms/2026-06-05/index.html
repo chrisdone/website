@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AI and Machine Thinking</title>
+    <title>LLMs</title>
     <style>
     h1 a, h2 a,h3 a,h4 a,h5 a {
       text-decoration: none;
@@ -114,53 +114,73 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
   <body>
     <div class="page-wrap">
 
-<h1>AI and Machine Thinking</h1>
+      <h1>LLMs / 2026-06-05</h1>
 
-<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+<p><small class='human'>Note: An LLM was not used in writing this
+    microblog entry.</small></p>
 
-<p>AI might take our jobs. That’s bad for us, just like it was for the
-Luddites.</p>
-<p>But I think Herbert had it right when he, through his Dune books,
-proposed that the problem with “machine minds” is not the machine
-itself, it’s “machine thinking” which humans are perfectly capable
-of.</p>
-<p>Related quotes from the books:</p>
+      <p><em>This entry is part of a microblog series called <a href='/posts/llms'>LLMs</a></em></h1>
+<hr>
+
+
+<p>I’m connecting a few areas of thought together in the context of
+LLMs.</p>
+<ul>
+<li>The Mythical Man Month</li>
+<li>Worse is Better</li>
+<li>Moloch</li>
+</ul>
+<p>Firstly, some Fred Brooks <a
+href="https://chrisdone.com/posts/the-mythical-man-month-insights/">comments</a>
+that seem relevant to whether LLMs may fundamentally change sofware
+development:</p>
 <blockquote>
-<p>What do such machines really do? They increase the number of things
-we can do without thinking. Things we do without thinking — there’s the
-real danger. (Leto Atreides II)</p>
+<p>I believe the hard part of building software to be the specification,
+design and testing of this conceptual construct, not the labour of
+representing it and testing the fidelity of the representation. […] If
+this is true, building software will always be hard. There is inherently
+no silver bullet.</p>
 </blockquote>
 <blockquote>
-<p>“The target of the Jihad was a machine-attitude as much as the
-machines,” Leto said.</p>
+<p>More seriously, even perfect program verification can only establish
+that a program meets its specification. The hardest part of the software
+task is arriving at a complete and consistent specification, and much of
+the essence of building a program is in fact the debugging of the
+specification.</p>
 </blockquote>
-<p>The brutal, uncompromising, inflexible, tyranny of, as Little Britain
-condensed it, “the computer says no.” I’m more afraid of the
-encroachment of this chilling effect in my life than losing my job.</p>
+<p>Separately, <a
+href="https://dreamsongs.com/WorseIsBetter.html">commentary</a> by
+Richard P. Gabriel indicating that this may not matter for industry, and
+so LLM adoption may be inevitable:</p>
+<blockquote>
+<p>The essay argues simple, hacked-together software that makes it to
+market first will often outcompete better and more elegant designs.</p>
+<p>Gabriel offers the examples of the adoption of C over Lisp, Unix over
+Lisp machines and VMS, and x86 over reduced instruction set computers as
+examples of technically worse solutions defeating more elegant ones by
+arriving to market first.</p>
+</blockquote>
+<p>Finally, <a
+href="https://slatestarcodex.com/2014/07/30/meditations-on-moloch/">a
+deeper meditation on why this happens generally by Nick Land</a>, which
+touches on failed collective action, race to the bottom, etc.</p>
+<blockquote>
+<p>Moloch is exactly what the history books say he is. […]</p>
+<p>He always and everywhere offers the same deal: throw what you love
+most into the flames, and I can grant you power.</p>
+<p>As long as the offer’s open, it will be irresistible.</p>
+</blockquote>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2023-09-23 <a href="/">Chris Done</a></td>
+      <td>© 2026-06-05 <a href="/">Chris Done</a></td>
       <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>
 
     </div>
-    <script>
-      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
-    headers.forEach(function(header) {
-        var headerId = header.id;
-        if (headerId) {
-            var anchor = document.createElement('a');
-            anchor.href = '#' + headerId;
-            anchor.textContent = header.textContent;
-            header.textContent = '';
-            header.appendChild(anchor);
-        }
-    });
-    </script>
   </body>
 </html>

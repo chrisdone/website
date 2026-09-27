@@ -6,6 +6,1186 @@
 <description><![CDATA[Blog all about programming, especially in Haskell since 2008!]]></description>
 <atom:link href="https://chrisdone.com/rss.xml" rel="self" type="application/rss+xml" />
 <lastBuildDate>Wed, 22 Dec 2021 00:00:00 UT</lastBuildDate>
+<item><title><![CDATA[LLM-Complete: The next 700 programming languages]]></title><link>https://chrisdone.com/posts/llm-complete</link><guid>https://chrisdone.com/posts/llm-complete</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LLM-Complete: The next 700 programming languages</title>
+    <style>
+    h1 a, h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>LLM-Complete: The next 700 programming languages</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
+<p>I was reading <a
+href="https://karpathy.github.io/2026/02/12/microgpt/">microgpt</a><a
+href="#fn1" class="footnote-ref" id="fnref1"
+role="doc-noteref"><sup>1</sup></a> and found myself brushing up on
+linear algebra and tensors, and then separately was reading articles du
+jour about how prompting will replace coding and so on,<a href="#fn2"
+class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> and
+thought: why might that be? That is, if we are to take all the bold
+claims of vibecoders at face value. Bear with me.</p>
+<p>Dijkstra comments, in various places, that language is important.
+LLMs by definition provide compelling evidence that language is
+profoundly important (or that we think it is<a href="#fn3"
+class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>).
+Dijkstra argues quite convincingly that the good thing about abstraction
+is to let us think clearer, say what’s needed unambiguously, and <em>no
+more than that</em>. Formal languages can’t say <em>a lot</em> by
+design, but what they do say is absolutely precise. I’ll add my own
+observation that this is a humble acknowledgement of the human mind’s
+limitations.</p>
+<p>There are examples of formal languages (notations, DSLs, etc.) that
+I’d prefer to think in than English (or substitute your own natural
+language) for certain problems:</p>
+<ul>
+<li>Type systems: <code>f (a -&gt; b) -&gt; f b -&gt; f a</code> (by
+people who grok them) tells me quite a lot about what can and cannot
+happen.</li>
+<li>Mathematical notation (any: pick one) is preferred over spoken
+language (e.g. English) by pretty much anyone. In the above post,
+Karpathy tried his best to write in plain, “approachable” English, and
+seemingly found it impossible: often formal notation is better for
+thinking.</li>
+<li>Regexes (by people who grok them) are a simple example;
+<code>[a-z-]{2,3}$</code> is both shorter to digest and more precise “a
+suffix consisting of alphabetical letters or a hyphen of length between
+2 and 3.”</li>
+<li>Some would argue TLA+, but I’ve only read the book, I haven’t really
+gone deep on it yet.</li>
+</ul>
+<p>That makes me think, for any piece of code in a “high-level”
+language, if for whatever reason we’d prefer to express that in plain
+English to an LLM and have the LLM be the “compiler” into some other
+“lower-level” language (C, Rust, TypeScript), then might we consider
+that to be a genuine failing of the language, or our abstractions within
+the language. At least as far as the declarative, “high-level”
+aspiration and conventional thinking goes.</p>
+<p>I’ve been using the term “LLM-Complete”<a href="#fn4"
+class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> for
+this property: If a language, or certain task within a language, is LLM
+complete, then it’s easier, more convenient and preferable to simply
+<em>use the formal language</em> than to ask an LLM to work with it. In
+this sense, it’s <strong>more powerful as a knowledge tool.</strong> If
+a language (this includes notations, DSLs) isn’t LLM complete, it will
+inevitably be (and is probably already) thought of as “low-level” by the
+LLM user. Fit only for generating and ingesting, a glorified
+boilerplate.</p>
+<p>Given that <a
+href="https://www.youtube.com/watch?v=HB5TrK7A4pI&amp;t=1507s">we really
+don’t know how to compute</a>, giants of the computer science field
+often acknowledge that the field is maturing (sort of<a href="#fn5"
+class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>),
+but still we have a lot of work left to do. There aren’t vocab or
+algorithms to describe a lot of types of problems, and behaviours we see
+in nature.</p>
+<p>Are the The Next 700 Programming Languages<a href="#fn6"
+class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>
+going to be about being LLM-Complete?</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document"
+role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Quite a good article on building a GPT from scratch in
+200 lines of plain Python. Sort of like Norvig’s <a
+href="https://www.norvig.com/lispy.html">Lisp in Python</a> in its
+brevity and implications.<a href="#fnref1" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>I believe that regardless of my oscillating mood around
+LLMs in the current moment, learning how these things work and how
+services and tools that drive them work, on a technical level, is worth
+doing. For other thoughts on LLMs, see <a href="/posts/llms">my diary on
+LLMs</a>.<a href="#fnref2" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Specifically, the absolute enraptured fascination with
+LLMs proves that people (informally) equate language capability with
+intelligence. Sorry, <a
+href="https://en.wikipedia.org/wiki/Portia_(spider)">Portia,</a> it’s
+bad news.<a href="#fnref3" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>As a stylistic (not technical) nod to Turing-Complete,
+this has also been applied in a more jocular way to eso-language
+capabilities, e.g. Tetris-Complete or Pac-Man-Complete.<a href="#fnref4"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p>As Alan Kay derides, in so many words, software culture
+is a pop culture; we don’t know our own history. Myself included. See
+also <a
+href="https://people.idsia.ch/~juergen/turing-oversold.html">Turing
+Oversold</a>.<a href="#fnref5" class="footnote-back"
+role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>As a reminder, Peter Landin’s paper <a
+href="https://www.cs.cmu.edu/~crary/819-f09/Landin66.pdf">The next 700
+programming languages</a> predicted a move towards a more compositional,
+denotational set of programming languages.<a href="#fnref6"
+class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2026-09-27 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Sun, 27 Sep 2026 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Lisp compilers that compile directly to assembly]]></title><link>https://chrisdone.com/posts/lisp-compilers</link><guid>https://chrisdone.com/posts/lisp-compilers</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lisp compilers that compile directly to assembly</title>
+    <style>
+    h1 a, h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Lisp compilers that compile directly to assembly</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
+<p>I’d like to point out one cool thing that some Lisp compilers, like
+SBCL, do. SBCL compiles functions and expressions directly to assembly.
+There aren’t other AST interpreter or byte-code interpreter modes, as
+seen in many other languages.</p>
+<p>Let’s turn on debugging up to the fullest:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>(<span class="kw">declaim</span> (<span class="kw">optimize</span> (<span class="kw">debug</span> <span class="dv">3</span>) (<span class="kw">safety</span> <span class="dv">3</span>) (<span class="kw">speed</span> <span class="dv">0</span>) (<span class="kw">compilation-speed</span> <span class="dv">3</span>)))</span></code></pre></div>
+<p>Declare a simple function:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="op">*</span> (<span class="kw">defun</span><span class="fu"> testfunc </span>(a b) (<span class="op">+</span> a b))</span></code></pre></div>
+<p>We can immediately ask for the assembly in the REPL:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="op">*</span> (<span class="kw">disassemble</span> <span class="dt">&#39;testfunc</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">; disassembly for TESTFUNC</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">; Size: 60 bytes. Origin: #x10020101B0                        ; TESTFUNC</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">; B0:       AA0A40F9         LDR R0, [THREAD, #16]            ; binding-stack-pointer</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">; B4:       4A0B00F9         STR R0, [CFP, #16]</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">; B8:       7A0300F9         STR CFP, [CSP]</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">; BC:       EA030EAA         MOV R0, R4</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">; C0:       EB030DAA         MOV R1, R3</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">; C4:       FA031BAA         MOV CFP, CSP</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">; C8:       3C9C80D2         MOVZ TMP, #1249</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co">; CC:       BE6B7CF8         LDR LR, [NULL, TMP]              ; SB-KERNEL:TWO-ARG-+</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co">; D0:       C0033FD6         BLR LR</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="co">; D4:       4EB741A9         LDP R4, R3, [CFP, #24]</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">; D8:       FB031AAA         MOV CSP, CFP</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">; DC:       5A7B40A9         LDP CFP, LR, [CFP]</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">; E0:       BF0300F1         CMP NULL, #0</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">; E4:       C0035FD6         RET</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">; E8:       E00120D4         BRK #15                          ; Invalid argument count trap</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>NIL</span></code></pre></div>
+<p>This assembly isn’t unsafe – it’ll handle dynamic typing, wrong
+arguments, all the usual stuff that dynamic languages like Lisp or
+Python deal with. It keeps the stack frame pointer around so you can
+debug it later.</p>
+<p>If we turn up optimisations up, turn the safety off, etc. Then the
+output is quite different:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="op">*</span> (<span class="kw">declaim</span> (<span class="kw">optimize</span> (<span class="kw">speed</span> <span class="dv">3</span>) (<span class="kw">safety</span> <span class="dv">0</span>) (<span class="kw">debug</span> <span class="dv">0</span>) (<span class="kw">compilation-speed</span> <span class="dv">0</span>)))</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>NIL</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">*</span> (<span class="kw">defun</span><span class="fu"> testfunc </span>(a b) (<span class="op">+</span> a b))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>WARNING: redefining COMMON-LISP-USER::TESTFUNC in DEFUN</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>TESTFUNC</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="op">*</span> (<span class="kw">disassemble</span> <span class="dt">&#39;testfunc</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">; disassembly for TESTFUNC</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">; Size: 16 bytes. Origin: #x1002010268                        ; TESTFUNC</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">; 68:       3C9C80D2         MOVZ TMP, #1249</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">; 6C:       BE6B7CF8         LDR LR, [NULL, TMP]              ; SB-KERNEL:TWO-ARG-+</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">; 70:       DE130091         ADD LR, LR, #4</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">; 74:       C0031FD6         BR LR</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>NIL</span></code></pre></div>
+<p>This is still calling the same internal SBCL adder, but doesn’t check
+for argument count, and doesn’t expect control back either. If we add
+fixnum declarations to the function, it gets a lot bigger because then
+it inlines the previously deferred SBCL adder.</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode lisp"><code class="sourceCode commonlisp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">*</span> (<span class="kw">defun</span><span class="fu"> testfunc </span>(a b) (<span class="kw">declare</span> (<span class="kw">type</span> <span class="kw">fixnum</span> a b)) (<span class="op">+</span> a b))</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>WARNING: redefining COMMON-LISP-USER::TESTFUNC in DEFUN</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>TESTFUNC</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="op">*</span> (<span class="kw">disassemble</span> <span class="dt">&#39;testfunc</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">; disassembly for TESTFUNC</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">; Size: 108 bytes. Origin: #x10020102E8                       ; TESTFUNC</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">; 2E8:       40FD4193         ASR NL0, R0, #1</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">; 2EC:       61FD4193         ASR NL1, R1, #1</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">; 2F0:       0000018B         ADD NL0, NL0, NL1</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">; 2F4:       0A0000AB         ADDS R0, NL0, NL0</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">; 2F8:       E7010054         BVC L1</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">; 2FC:       BD2A00B9         STR WNULL, [THREAD, #40]        ; pseudo-atomic-bits</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">; 300:       BC7A47A9         LDP TMP, LR, [THREAD, #112]     ; mixed-tlab.{free-pointer, end-addr}</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">; 304:       8A430091         ADD R0, TMP, #16</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">; 308:       5F011EEB         CMP R0, LR</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="co">; 30C:       C8010054         BHI L2</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co">; 310:       AA3A00F9         STR R0, [THREAD, #112]          ; mixed-tlab</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">; 314: L0:   8A3F0091         ADD R0, TMP, #15</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">; 318:       3E2280D2         MOVZ LR, #273</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">; 31C:       9E0300A9         STP LR, NL0, [TMP]</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="co">; 320:       BF3F03D5         DMB SY</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="co">; 324:       BF2A00B9         STR WZR, [THREAD, #40]          ; pseudo-atomic-bits</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co">; 328:       BE2E40B9         LDR WLR, [THREAD, #44]          ; pseudo-atomic-bits</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co">; 32C:       5E0000B4         CBZ LR, L1</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="co">; 330:       200120D4         BRK #9                          ; Pending interrupt trap</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="co">; 334: L1:   FB031AAA         MOV CSP, CFP</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="co">; 338:       5A7B40A9         LDP CFP, LR, [CFP]</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="co">; 33C:       BF0300F1         CMP NULL, #0</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="co">; 340:       C0035FD6         RET</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="co">; 344: L2:   1C0280D2         MOVZ TMP, #16</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="co">; 348:       0AFCFF58         LDR R0, #x10020102C8            ; SB-VM::ALLOC-TRAMP</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="co">; 34C:       40013FD6         BLR R0</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="co">; 350:       F1FFFF17         B L0</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>NIL</span></code></pre></div>
+<p>I’m not sharing these to demonstrate SBCL’s optimizer. The particular
+details don’t matter much. Rather, I think it’s really interesting to
+have a language implementation that compiles straight to assembly <em>in
+all cases</em>.</p>
+<p>I haven’t used Common Lisp in anger since 2007. But how SBCL creates
+this kind of mechanical sympathy and simplicity in having “one target”
+(sure – each architecture is different) is really interesting.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2026-07-19 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Sun, 19 Jul 2026 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Talks]]></title><link>https://chrisdone.com/posts/talks</link><guid>https://chrisdone.com/posts/talks</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Talks</title>
+    <style>
+    h1 a, h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Talks</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
+<p>Here’s a list of talks that I like, that I keep coming back to over
+the years, especially ones that have strongly influenced my thinking or
+changed my mind on something.</p>
+<h2 id="computing">Computing</h2>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=HB5TrK7A4pI">“We Really
+Don’t Know How to Compute!” by Gerald Sussman, 2011</a></li>
+<li><a href="https://www.youtube.com/watch?v=r-TLSBdHe1A">“Performance
+Matters” by Emery Berger, 2019</a></li>
+<li><a href="https://www.youtube.com/watch?v=SxdOUGdseq4">“Simple Made
+Easy” by Rich Hickey, 2011</a></li>
+<li><a href="https://www.youtube.com/watch?v=oyLBGkS5ICk">“Spec-ulation”
+by Rich Hickey, 2016</a></li>
+</ul>
+<h2 id="general">General</h2>
+<ul>
+<li><a
+href="https://www.youtube.com/watch?v=zVEgOiB7Bo8">“Psychogeography” by
+Will Self, 2007</a></li>
+<li><a href="https://www.youtube.com/watch?v=l7TONauJGfc">“Nonviolent
+Communication” by Marshall Rosenberg, 2000</a></li>
+<li><a href="https://www.youtube.com/watch?v=vw1Sv04YQS4">“Language,
+Writing and Magic” by Alan Moore, 2011</a></li>
+</ul>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2026-06-19 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Fri, 19 Jun 2026 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Meta]]></title><link>https://chrisdone.com/posts/meta</link><guid>https://chrisdone.com/posts/meta</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meta</title>
+    <style>
+    h1 a, h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Meta</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
+<p>Commentary and updates about my blog, its software, features,
+etc.</p>
+<p>I added a “microblog” feature to my blog. It lets me use the form
+feed character in a post to split it up into a series of sub posts,
+which have independent pages. It’s a nice way to organise updates to a
+topic and avoid them necessarily hitting my main RSS feed.</p>
+<p>Examples are</p>
+<ul>
+<li><a href="https://chrisdone.com/posts/llms/">LLMs</a></li>
+<li><a href="https://chrisdone.com/posts/pi-blog/">My raspberry
+pi</a></li>
+</ul>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2026-06-13 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Sat, 13 Jun 2026 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[Blogs]]></title><link>https://chrisdone.com/posts/blogs</link><guid>https://chrisdone.com/posts/blogs</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blogs</title>
+    <style>
+    h1 a, h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>Blogs</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
+<p>A list of blogs I like. I’ll add to this from time to time.</p>
+<h2 id="proper-blogs">Proper blogs</h2>
+<p>Small, quirky, intimate. Proper blogs.</p>
+<ul>
+<li>http://static.v25media.com/edw519_mod.html</li>
+<li>https://lr0.org/blog/</li>
+<li>https://ratfactor.com/</li>
+<li>https://caolan.uk/</li>
+</ul>
+<h2 id="big-blogs">Big blogs</h2>
+<p>Big, well known, somewhat performative. Post-blogging blogs.</p>
+<ul>
+<li>https://danluu.com/</li>
+<li>https://prog21.dadgum.com/</li>
+</ul>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2026-06-09 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Tue, 09 Jun 2026 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
+<item><title><![CDATA[System Colic]]></title><link>https://chrisdone.com/posts/system-colic</link><guid>https://chrisdone.com/posts/system-colic</guid><description><![CDATA[<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>System Colic</title>
+    <style>
+    h1 a, h2 a,h3 a,h4 a,h5 a {
+      text-decoration: none;
+}
+h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
+      text-decoration: underline;
+      color: #1a6e8e;
+}
+
+.footnote-back {
+  margin-left: 0.5em;
+}
+      #footnotes li:target {
+          background: #eeeeee;
+          border-radius: 0.5em;
+          padding: 1px 1em;
+      }
+      body {
+      max-width: 40em;
+      margin: .5in auto;
+      font-size: 18px;
+      font-family: serif;
+      line-height: 1.5;
+      }
+      pre, code {
+      font-size: 16px;
+      word-wrap: break-word;
+      }
+      pre {
+      padding-left: 1em;
+      line-height: 1.5em;
+      border-left: 5px solid #efefef;
+      }
+      a {
+      color: #1a6e8e
+      }
+      .menu a {
+      margin-right: 1em;
+      }
+      h1,h2,h3,h4,h5,h6 {
+      font-family: Helvetica;
+      }
+
+      h1 a,h2 a,h3 a,h4 a {
+      color: inherit;
+      }
+
+      .post-1,.post-2{
+      margin-bottom: 0.5em;
+      }
+
+      .author {
+      display: none;
+      }
+
+      footer {
+      margin-top: 1.5em;
+      padding-top: 1.5em;
+          border-top: 1px solid #ccc;
+      margin-bottom: 2em
+      }
+    hr {
+  border: 0.5px solid #ccc;
+}
+
+      footer span {
+      display: none;
+      }
+
+      img {
+      max-width: 100%
+      }
+      pre.sourceCode span.st {
+      color: #366354
+      }
+      pre.sourceCode span.kw {
+      color: #397460
+      }
+      pre.sourceCode span.fu {
+      color: #8f4e8b
+      }
+      pre.sourceCode span.ot {
+      color: #2e659c
+      }
+      pre.sourceCode span.dt {
+      color: #4F4371
+      }
+      pre.sourceCode span.co {
+      color: #666
+      }
+      @media(max-width:767px){
+      body { margin: 1px 4px; }
+      h1, h2, .menu { margin: 0; }
+      h1 { font-size: 1.5em; }
+      h2 { font-size: 1.125em; }
+      h3 { font-size: 1.0125em; }
+      .menu a { margin-right: 0.1em; }
+      #archive { margin-left: 1em; margin-top: 0; padding: 0}
+      #archive .post-1, #archive .post-2 {
+      margin-bottom: 0.1em;
+      }
+      }
+      .footnote-ref { text-decoration: none; }
+    li { margin-top: 0.5em; margin-bottom: 0.5em; }
+      .human {color: grey}
+    </style>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+<h1>System Colic</h1>
+
+<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+
+<p>Colic is a thing that some newborn babies go through. Your newborn
+baby cries for hours on end, every day, for weeks. And they’re by all
+measures healthy. Experts don’t know what causes it and they don’t have
+any remedies for it. As a parent, you and your partner pretty much lose
+your marbles and start questioning all your life choices that lead up to
+this moment. You will try all the remedies; massages, positions,
+“anti-colic drops”, whatever you can. The <a
+href="https://www.nhs.uk/conditions/colic/">NHS page on colic</a>
+suggests you ask for support from friends, family and their
+helpline.</p>
+<p>That’s an extreme case of the broader experience of having a baby,
+which is often just trying to figure out what’s wrong with them, with
+very little to go on, because they can’t talk to you, and actually they
+scream at you, making it harder to discuss nuanced hypotheses with your
+partner.</p>
+<p>Complex software systems aren’t babies. But they can be a bit like
+that. They’re going wrong, because they’re slow, or they’ve got bugs, or
+something, and there isn’t one obvious cause. The system is alerting but
+you’ve got nowhere to start from. You try out remedies that maybe have
+an affect and maybe don’t. Emery Berger did a great talk called <a
+href="https://thestrangeloop.com/2019/performance-matters.html">Performance
+Matters</a> at Strange Loop, showing how, especially in modern systems,
+everything from the hardware (think L* caches, branch prediction), the
+OS (swap, virtual memory, syscalls, memory layout), runtime (allocators,
+GC, etc), and your application code, and then in cloud times,
+distributed systems and all their failure modes, are all independent
+layers with their own affordances and tolerances that trigger at
+opposing intervals. You think you’ve got something performing reliably
+and then some threshold of the layer below is passed and suddenly
+performance goes up or down, and you aren’t wise as to why.</p>
+<p>I’m calling this <em>system colic</em> as a negative term for an
+undesirable state of affairs. We know we don’t have to accept the
+illegibility of a system, and can put work into exposing visibility into
+them, or choose better components that do better in this regard.</p>
+
+
+<footer>
+  <table style="width:100%">
+    <tr>
+      <td>© 2026-05-28 <a href="/">Chris Done</a></td>
+      <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
+    </tr>
+  </table>
+</footer>
+
+    </div>
+    <script>
+      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
+    headers.forEach(function(header) {
+        var headerId = header.id;
+        if (headerId) {
+            var anchor = document.createElement('a');
+            anchor.href = '#' + headerId;
+            anchor.textContent = header.textContent;
+            header.textContent = '';
+            header.appendChild(anchor);
+        }
+    });
+    </script>
+  </body>
+</html>
+]]></description><pubDate>Thu, 28 May 2026 00:00:00 +0100
+</pubDate><dc:creator>Chris Done</dc:creator></item>
 <item><title><![CDATA[Home fibre]]></title><link>https://chrisdone.com/posts/home-fibre</link><guid>https://chrisdone.com/posts/home-fibre</guid><description><![CDATA[<!doctype html>
 <html>
   <head>
@@ -126,41 +1306,217 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
-<blockquote>
-<p>I’ll write up my home fibre setup later. I thought it’d be neat to
-document it here. Still waiting for parts to arrive.</p>
-</blockquote>
-<p>When a Cat6 cable does the job, but I want fibre optic anyway.</p>
-<p>Components:</p>
+<p><em>When a Cat6 cable does the job, but I want fibre optic
+anyway</em></p>
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+<p><strong>Table of Contents</strong></p>
 <ul>
-<li><p>InvisiLight® EZ-Bend™ Indoor Jumpers, 20m, SC APC, white</p>
+<li><a href="#why">Why</a></li>
+<li><a href="#things-i-learned">Things I learned</a></li>
+<li><a href="#components">Components</a>
+<ul>
+<li><a href="#the-fibre-optic-patch-cable">The fibre optic patch
+cable</a></li>
+<li><a href="#side-b">Side B</a></li>
+<li><a href="#side-a">Side A</a></li>
+<li><a href="#computer-side">Computer side</a></li>
+</ul></li>
+<li><a href="#the-final-result">The final result</a>
+<ul>
+<li><a href="#whole-setup">Whole setup</a></li>
+<li><a href="#the-fs-media-converter-in-action">The FS media converter
+in action</a></li>
+<li><a href="#tp-link-media-converter-in-action">TP-link media converter
+in action</a></li>
+</ul></li>
+<li><a href="#pictures-of-the-parts">Pictures of the parts</a>
+<ul>
+<li><a href="#sc-apc-test-patch-cable">SC-APC test patch cable</a></li>
+<li><a href="#fs-media-converter">FS media converter</a></li>
+<li><a href="#fs-power-lead">FS power lead</a></li>
+<li><a href="#tp-link-media-converter">TP-Link media converter</a></li>
+<li><a href="#tp-link-power-lead">TP-Link power lead</a></li>
+<li><a href="#lc-upc-to-ac-apc-patch-cable">LC UPC to AC APC patch
+cable</a></li>
+<li><a href="#sc-ac-connectors">SC-AC connectors</a></li>
+<li><a href="#sc-upc-to-sc-apc">SC-UPC to SC-APC</a></li>
+<li><a href="#gigabit-ethernet-to-usb-c">Gigabit ethernet to
+USB-C</a></li>
+</ul></li>
+</ul>
+<!-- markdown-toc end -->
+<h2 id="why">Why</h2>
+<p>I’ve got an ethernet port by my TV, and my desk is on the other side
+of the room. WiFi is fine, but I want to be cabled to take full
+advantage of my gigabit internet.</p>
+<p>My home is a newbuild, so I don’t feel like fishing through stud
+walls. I discovered that these days fibre optic is well within hobby
+price range, and you can get a magical InvisiLight EZ-Bend fibre cable
+that can bend around sharp corners and lose no signal. They look
+invisible to a casual glance when ran on the edges of walls. I took it
+as an opportunity to have fun with simple hardware!</p>
+<p>As of June 2nd 2026, I’m still waiting for the EZ-Bend cable to
+arrive, but I’ve done a test with the rest of the setup.</p>
+<h2 id="things-i-learned">Things I learned</h2>
+<p>You need to understand this if you’re buying.</p>
+<ol type="1">
+<li>Fibre optic has modes (which comes from optical modes):
+<ul>
+<li><strong>Single-mode</strong> means the glass tube through which
+light is emitted is very tiny. Something like 8-10μm. It requires a
+laser, it’s more expensive, and the alignment has to be very precise.
+Its distances before attenuation are measured in kilometers.</li>
+<li><strong>Multi-mode</strong> has a really big core diameter. You can
+use LED or other emitters, the light attenuates quicker (under half a
+km), but it’s cheaper. The wavelengths used are also different.</li>
+</ul></li>
+<li>A patch cable may contain one or two or more fibres.
+<ul>
+<li>Single fibre, you’ll need two of these cables then if you’re
+emitting only in one direction.</li>
+<li>Duplex cable, contains two fibres, one for TX, one for RX.</li>
+<li>And media converters accept either TX/RX (transmit/receive) ports,
+where you might have one TX fibre and one RX fibre.</li>
+</ul></li>
+<li>Scenarios: Duplex vs half-duplex vs simplex:
+<ul>
+<li>Full duplex: two fibres, one TX, one RX.</li>
+<li>Half duplex: you have one fibre, but take turns TX’ing and
+RX’ing.</li>
+<li>Simplex: one fibre, but sending concurrently via BiDi (separate
+TX/RX wavelengths via <a
+href="https://en.wikipedia.org/wiki/Wavelength-division_multiplexing">WDM</a>).</li>
+</ul></li>
+<li>Fibre cables have a variety of connectors:
+<ul>
+<li>SC (standard connector), it’s bigger.
+<ul>
+<li>SC UPC - domed glass.</li>
+<li>SC APC - angled glass.</li>
+</ul></li>
+<li>LC APC/UPC - it’s smaller, and has a different clasp like an RJ45
+connector.</li>
+<li>None of these are compatible, but you can buy all the combinations
+of patch cables that have X on one end and Y on the other end, which is
+what I did.</li>
+<li>See the pictures!</li>
+</ul></li>
+</ol>
+<p>My setup is: a single mode, single fibre, simplex, bidirectional
+(WDM). The main fibre is SC APC, but my media converters are on LC UPC
+and SC UPC. One media converter transmits data at 1310 nm wavelength and
+receives data at 1550 nm wavelength, and the other media converter has
+the transmit/receive flipped.</p>
+<h2 id="components">Components</h2>
+<p>The setup comprises the following components.</p>
+<h3 id="the-fibre-optic-patch-cable">The fibre optic patch cable</h3>
+<p>I ordered the real InvisiLight EZ-Bend and a 1m yellow test
+cable.</p>
+<ul>
+<li><strong>The real thing:</strong> InvisiLight® EZ-Bend™ Indoor
+Jumpers, 20m, SC APC, white, Single Mode
 <ul>
 <li>This 3mm cable is capable of 2.5mm bend radius, is easy to run along
 a wall and around corners.</li>
+<li>Still waiting for delivery, estimated 4 weeks.</li>
 </ul></li>
-<li><p>1m (3ft) Fiber Patch Cable, 1 Fiber, SC APC Simplex to SC APC
-Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered,
-Yellow</p>
+<li><strong>The test cable</strong>: 1m (3ft) Fiber Patch Cable, 1
+Fiber, SC APC Simplex to SC APC Simplex, Single Mode (OS2), Riser
+(OFNR), 2.0mm, Tight-Buffered, Yellow
 <ul>
 <li>For testing, equivalent to the EZ-Bend one.</li>
-</ul></li>
-<li><p>2x: 1m (3ft) Fiber Patch Cable, 1 Fiber, SC UPC Simplex to SC APC
-Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered,
-Yellow</p></li>
-<li><p>2x: SC/APC to SC/APC Simplex Single Mode Fiber Keystone
-Jack</p></li>
-<li><p>Media converters:</p>
-<ul>
-<li>TP-Link Gigabit WDM Media Converter, Auto-negotiation,
-TL-FC311B-20</li>
-<li>TP-Link Gigabit WDM Media Converter, Auto-negotiation,
-TL-FC311A-20</li>
-</ul></li>
-<li><p>Belkin USB-C to 2.5Gb Ethernet Adapter - White</p>
-<ul>
-<li>For the MacBook, which doesn’t have an RJ45 port</li>
+<li>Arrived, delivered promptly by fs.com.</li>
 </ul></li>
 </ul>
+<h3 id="side-b">Side B</h3>
+<p>This was my first choice for simplicity; grab an off the shelf TP
+Link that has fibre in and eth in and you’re good.</p>
+<ul>
+<li>TP-Link Gigabit WDM Media Converter, Auto-negotiation, TL-FC311B-20
+<ul>
+<li>transmits data at 1310 nm wavelength and receives data at 1550 nm
+wavelength</li>
+<li>Arrived, from Amazon.</li>
+</ul></li>
+<li>1x: 1m (3ft) Fiber Patch Cable, 1 Fiber, SC UPC Simplex to SC APC
+Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered, Yellow
+<ul>
+<li>Arrived, delivered promptly by fs.com.</li>
+</ul></li>
+<li>1x: SC/APC to SC/APC Simplex Single Mode Fiber Keystone Jack
+<ul>
+<li>Arrived, delivered promptly by fs.com.</li>
+</ul></li>
+</ul>
+<p>I attempted to order the corresponding TL-FC311A-20 (note the ‘A’)
+unit, but:</p>
+<ul>
+<li>Ordered from Amazon. Delayed. Amazon. I cancelled.</li>
+<li>Ordered from Scan. Delayed. I cancelled.</li>
+<li>Ordered from Converge Technology Solutions. They cancelled due to no
+stock despite claiming a few in stock.</li>
+</ul>
+<p>These suppliers are a bit fast and loose with their stock
+inventory.</p>
+<h3 id="side-a">Side A</h3>
+<p>After my experience trying to source the ‘A’ part for the TP Link
+media converter, I decided that since I had such a good experience with
+fs.com, that I’d just ordered everything from there.</p>
+<p>I got an SFP media converter and module.</p>
+<ul>
+<li><p>1000BASE-BX-D SFP BiDi 1550nm-TX/1310nm-RX 20km Simplex LC/UPC
+SMF Transceiver Module for FS Switches</p></li>
+<li><p>Mini Unmanaged 1x 10/100/1000Base-T RJ45 to 1x 1000Base-X SFP
+Gigabit Ethernet Media Converter, British Plug Standard</p></li>
+<li><p>1m (3ft) Fiber Patch Cable, 1 Fiber, LC UPC Simplex to SC APC
+Simplex, Single Mode (OS2), Riser (OFNR), 2.0mm, Tight-Buffered,
+Yellow</p></li>
+<li><p>1x: SC/APC to SC/APC Simplex Single Mode Fiber Keystone Jack</p>
+<ul>
+<li>Arrived, delivered promptly by fs.com.</li>
+</ul></li>
+</ul>
+<h3 id="computer-side">Computer side</h3>
+<p>MacBooks don’t have ethernet (so brave), so I needed an adapter for
+it.</p>
+<ul>
+<li>Belkin USB-C to 2.5Gb Ethernet Adapter - White
+<ul>
+<li>Bought from Apple.</li>
+</ul></li>
+</ul>
+<h2 id="the-final-result">The final result</h2>
+<p>If you just want to see the final test result, here it is. For
+pictures of all the parts, see further down.</p>
+<h3 id="whole-setup">Whole setup</h3>
+<p><img src="/images/home-fibre/full-thing.png" /></p>
+<h3 id="the-fs-media-converter-in-action">The FS media converter in
+action</h3>
+<p><img src="/images/home-fibre/fs-media-converter-in-action.png" /></p>
+<h3 id="tp-link-media-converter-in-action">TP-link media converter in
+action</h3>
+<p><img
+src="/images/home-fibre/tp-link-media-converter-in-action.png" /></p>
+<h2 id="pictures-of-the-parts">Pictures of the parts</h2>
+<h3 id="sc-apc-test-patch-cable">SC-APC test patch cable</h3>
+<p><img src="/images/home-fibre/ac-apc-test-patch-cable.png" /></p>
+<h3 id="fs-media-converter">FS media converter</h3>
+<p><img src="/images/home-fibre/fs-media-converter.png" /></p>
+<h3 id="fs-power-lead">FS power lead</h3>
+<p><img src="/images/home-fibre/fs-power.png" /></p>
+<h3 id="tp-link-media-converter">TP-Link media converter</h3>
+<p><img src="/images/home-fibre/tp-link-media-converter.png" /></p>
+<h3 id="tp-link-power-lead">TP-Link power lead</h3>
+<p><img src="/images/home-fibre/tp-link-power.png" /></p>
+<h3 id="lc-upc-to-ac-apc-patch-cable">LC UPC to AC APC patch cable</h3>
+<p><img src="/images/home-fibre/lc-upc-to-ac-apc.png" /></p>
+<h3 id="sc-ac-connectors">SC-AC connectors</h3>
+<p><img src="/images/home-fibre/sc-apc-connectors.png" /></p>
+<h3 id="sc-upc-to-sc-apc">SC-UPC to SC-APC</h3>
+<p>Both SC, but the polish differs.</p>
+<p><img src="/images/home-fibre/sc-upc-to-sc-apc.png" /></p>
+<h3 id="gigabit-ethernet-to-usb-c">Gigabit ethernet to USB-C</h3>
+<p><img src="/images/home-fibre/gigabit-eth-to-usbc.png" /></p>
 
 
 <footer>
@@ -885,6 +2241,15 @@ ill-equipped to deal with the leak anyway.</p>
 <p>Patrick Hutber: Improvement means deterioration. If a company tells
 you it is improving a service it provides, it almost always means it
 will do less for you, charge you more, or both.</p>
+<h1 id="abilene-paradox">Abilene paradox</h1>
+<p>Wikipedia:</p>
+<blockquote>
+<p>The Abilene paradox is a collective fallacy, in which a group of
+people collectively decide on a course of action that is counter to the
+preferences of most or all individuals in the group, while each
+individual believes it to be aligned with the preferences of most of the
+others.</p>
+</blockquote>
 
 
 <footer>
@@ -1493,6 +2858,10 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
+<p>A mini microblog on Raspberry Pi at home.</p>
+<h1>
+<a href='/posts/pi-blog/2025-05-09'>2025-05-09</a>
+</h1>
 <p>I discovered that my new house had <a
 href="https://www.ofnl.co.uk/">OFNL</a> internet, which is one of a
 handful competing fibre providers in England (others: BT OpenReach,
@@ -1526,6 +2895,13 @@ systemd services, so the effort was very minimal.</p>
 <p>There’s no particular technical advantage of you reading this page
 from my home, over the Digital Ocean server I’ve had for years, which
 only cost me about $10/mo. But it was a fun little project!</p>
+<h1>
+<a href='/posts/pi-blog/2026-05-09'>2026-05-09</a>
+</h1>
+<p>It now lives in a little stainless steel T-190 Japanese box.</p>
+<p><img src="/images/rasp/IMG_7743.png" /></p>
+<p><img src="/images/rasp/IMG_7744.png" /></p>
+<p><img src="/images/rasp/IMG_7748.png" /></p>
 
 
 <footer>
@@ -1677,14 +3053,228 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <p>This page serves as my place to journal what are hopefully balanced
 thoughts on the current AI summer, driven by LLMs.</p>
-<h1 id="section">2026-03-12</h1>
+<h1>
+<a href='/posts/llms/2026-09-17'>2026-09-17</a>
+</h1>
+<p>Not a thought entry, more of a data and notional thoughts for
+reformulation later.</p>
+<p>News:</p>
+<ul>
+<li>Mathematicians are having their <a
+href="https://terrytao.wordpress.com/2026/09/11/a-severe-misalignment-of-ai-in-mathematics/">AI
+disillusionment moment, Terrence Tao leads</a>, Lisp Curse overlap? See
+also <a href="https://chrisdone.com/posts/the-llm-curse/">LLM
+Curse.</a></li>
+<li>Martin Fowler is also having <a
+href="https://martinfowler.com/articles/2026-dont-like-llms.html">his
+doubts</a>, but the reasoning is immature, lacking any insight.
+Odd.</li>
+<li>Dan Luu seems to be getting in on the action too, <a
+href="https://danluu.com/brain-off/">criticising the meat proxy</a>, on,
+as always, quantitative terms rather than qualitative terms.</li>
+</ul>
+<p>Germinating thoughts:</p>
+<ul>
+<li>Boilerplate redefined as that which can be produced without much
+thought, and therefore all LLM output is inherently boilerplate. Discuss
+implications against historical programming conventional wisdom with
+regards to boilerplate.
+<ul>
+<li>Hint: the ratio of prompt to code could be a measure of language
+power. The Next 700 Programming Languages - perhaps different?</li>
+</ul></li>
+<li>Barefoot shoes vs “supportive” shoes: the supportive ones alter the
+wearer until the wearer can’t walk unassisted.</li>
+</ul>
+<p>Links:</p>
+<ul>
+<li><a
+href="https://en.wikipedia.org/wiki/Solomonoff%27s_theory_of_inductive_inference">Solomonoff’s
+theory of inductive inference</a></li>
+<li><a
+href="https://lukeplant.me.uk/blog/posts/no-one-actually-wants-simplicity/">No
+one actually wants simplicity</a></li>
+<li><a
+href="https://www.youtube.com/watch?app=desktop&amp;v=K-IMqM_J_W8&amp;ra=m">Hydrating
+pizza</a></li>
+<li><a href="https://www.youtube.com/watch?v=yvJYw2gR0cU">Claude is your
+insider threat now - Dan Tentler - Security Fest 2026 - YouTube</a> —
+good grief.</li>
+</ul>
+<h1>
+<a href='/posts/llms/2026-08-31'>2026-08-31</a>
+</h1>
+<p>I experimented a little more with the /infill endpoint on llama.cpp
+for simple code filling with a local LLM. It works as expected. I’m not
+a prepper (about the bubble bursting or so), but I believe it’s worth
+having first-hand manual knowledge in the stack, to be informed on the
+technical side. I am regularly using Gemini to lookup things that I used
+to use google and Wikipedia for. I am debating setting up a closed,
+local instance of this.</p>
+<p>A topic on my mind a lot recently is <a
+href="https://en.wikipedia.org/wiki/Situationist_International">the
+Spectacle</a>, in particular, the mediation aspect of mediums
+(previously raised on this diary under McLuhan topic), which is
+summarised well here:</p>
+<blockquote>
+<p>experiences, or the first-hand fulfillment of authentic desires, to
+individual expression by proxy through the exchange or consumption of
+commodities, or passive second-hand alienation, inflicted significant
+and far-reaching damage to the quality of human life for both
+individuals and society.</p>
+</blockquote>
+<p>“AI” (generative LLM as of this year), is often replacing authentic
+interactions with people (writing reports, sending automated messages,
+meeting notes, “pick a gift for my nephew”, generating code, opening
+legal cases, etc.), work colleagues ask their AI of choice rather than
+their colleagues, for help or brainstorming. I read somewhere, though I
+can’t recall at the moment, the joke that some are using LLMs to “eat
+ice cream for them.” Funny summation.</p>
+<p>Other reading: <a
+href="https://nolanlawson.com/2026/08/31/on-not-becoming-a-cyborg">On
+not becoming a cyborg</a></p>
+<h1>
+<a href='/posts/llms/2026-07-03'>2026-07-03</a>
+</h1>
+<p>I enjoyed these quotes by <a
+href="https://www.theguardian.com/technology/2023/mar/23/tech-guru-jaron-lanier-the-danger-isnt-that-ai-destroys-us-its-that-it-drives-us-insane">Jaron
+Lanier on the topic of AI</a>:</p>
+<blockquote>
+<p>“A lot of modern enlightenment thinkers and technical people feel
+that there is something old-fashioned about believing that people are
+special – for instance that consciousness is a thing. They tend to think
+there is an equivalence between what a computer could be and what a
+human brain could be.” Lanier has no truck with this. “We have to say
+consciousness is a real thing and there is a mystical interiority to
+people that’s different from other stuff because if we don’t say people
+are special, how can we make a society or make technologies that serve
+people?”</p>
+</blockquote>
+<p>In a refreshing twist, his position on LLMs is nuanced. For example,
+he seems quite positive about the randomness:</p>
+<blockquote>
+<p>For Lanier, the classic example of restricted choice is Wikipedia,
+which has effectively become the world’s encyclopedia. “Wikipedia is run
+by super-nice people who are my friends. But the thing is it’s like one
+encyclopedia. Some of us might remember when on paper there was both an
+Encyclopedia Britannica and Encyclopedia Americana and they provided
+different perspectives. The notion of having the perfect encyclopedia is
+just weird.”</p>
+<p>So could the new chatbots challenge this? “Right. That’s my point. If
+you go to a chatbot and say: ‘Please can you summarise the state of the
+London tube?’ you’ll get different answers each time. And then you have
+to choose.” This programmed-in randomness, he says, is progress. “All of
+a sudden this idea of trying to make the computer seem humanlike has
+gone far enough in this iteration that we might have naturally outgrown
+this illusion of the monolithic truth of the internet or AI. It means
+there is a bit more choice and discernment and humanity back with the
+person who’s interacting with the thing.”</p>
+</blockquote>
+<p>This is an interesting perspective. Though I’m not sure how well it
+holds up to scrutiny due to bias easily put into models via
+reinforcement learning, which is discussed in <a
+href="https://www.economist.com/briefing/2026/06/25/ai-models-values-are-very-different-from-most-peoples"><em>AI
+models’ values are very different from most people’s</em></a>. I’m also
+not sure how this squares with <a
+href="https://en.wikipedia.org/wiki/Digital_Maoism">his criticism of
+Wikipedia</a> the bulk of which do apply to LLM models (mainstream
+voice, sterile style, abuse by states to manipulate).</p>
+<h1>
+<a href='/posts/llms/2026-06-24'>2026-06-24</a>
+</h1>
+<p>Two articles on the same topic about or encompassing workslop, which
+I thought were good and helpful:</p>
+<ul>
+<li><a
+href="https://blog.glyph.im/2026/06/adversarial-communication.html">“Adversarial
+communication”</a>, great article.</li>
+<li><a href="https://tombedor.dev/human-attention-and-human-effort/">If
+you are requesting human attention, demonstrate human effort.</a></li>
+</ul>
+<h1>
+<a href='/posts/llms/2026-06-05'>2026-06-05</a>
+</h1>
+<p>I’m connecting a few areas of thought together in the context of
+LLMs.</p>
+<ul>
+<li>The Mythical Man Month</li>
+<li>Worse is Better</li>
+<li>Moloch</li>
+</ul>
+<p>Firstly, some Fred Brooks <a
+href="https://chrisdone.com/posts/the-mythical-man-month-insights/">comments</a>
+that seem relevant to whether LLMs may fundamentally change sofware
+development:</p>
+<blockquote>
+<p>I believe the hard part of building software to be the specification,
+design and testing of this conceptual construct, not the labour of
+representing it and testing the fidelity of the representation. […] If
+this is true, building software will always be hard. There is inherently
+no silver bullet.</p>
+</blockquote>
+<blockquote>
+<p>More seriously, even perfect program verification can only establish
+that a program meets its specification. The hardest part of the software
+task is arriving at a complete and consistent specification, and much of
+the essence of building a program is in fact the debugging of the
+specification.</p>
+</blockquote>
+<p>Separately, <a
+href="https://dreamsongs.com/WorseIsBetter.html">commentary</a> by
+Richard P. Gabriel indicating that this may not matter for industry, and
+so LLM adoption may be inevitable:</p>
+<blockquote>
+<p>The essay argues simple, hacked-together software that makes it to
+market first will often outcompete better and more elegant designs.</p>
+<p>Gabriel offers the examples of the adoption of C over Lisp, Unix over
+Lisp machines and VMS, and x86 over reduced instruction set computers as
+examples of technically worse solutions defeating more elegant ones by
+arriving to market first.</p>
+</blockquote>
+<p>Finally, <a
+href="https://slatestarcodex.com/2014/07/30/meditations-on-moloch/">a
+deeper meditation on why this happens generally by Nick Land</a>, which
+touches on failed collective action, race to the bottom, etc.</p>
+<blockquote>
+<p>Moloch is exactly what the history books say he is. […]</p>
+<p>He always and everywhere offers the same deal: throw what you love
+most into the flames, and I can grant you power.</p>
+<p>As long as the offer’s open, it will be irresistible.</p>
+</blockquote>
+<h1>
+<a href='/posts/llms/2026-05-25'>2026-05-25</a>
+</h1>
+<p>A recently recurring thought is that many people criticise LLMs/“AI”
+on the wrong terms. I may be accidentally coming back to McLuhan,
+arguing that people should be looking at the medium and not the message,
+but I see arguments like “LLMs aren’t good at X”, or “good but not human
+level good”, etc. at e.g. writing code or reasoning. There’s usually an
+anecdote involved.</p>
+<p>The questions should, in my view, <em>assume</em> that LLMs will
+attain fully realised potential, after presumably a protracted boom/bust
+iteration, and then ask whether and how that would affect how we enjoy
+life and conduct business.</p>
+<!--
+Reading/blogroll:
+
+* https://jola.dev/posts/the-social-contract-of-writing
+* https://www.seangoedecke.com/steering-vectors/
+* https://ratfactor.com/ascetic-computing
+* https://jacobharr.is/personal/i-dont-vibe-code
+* https://purplesyringa.moe/blog/programming-used-to-be-free/
+-->
+<h1>
+<a href='/posts/llms/2026-03-12'>2026-03-12</a>
+</h1>
 <p><em>The Medium is the Message</em> keeps coming to mind again and
 again, as people seem frequently surprised by the side-effects of the
 adoption of LLMs. The content (articles, code, images) produced by LLMs
 is not the higher order bit, but how they <em>change</em> the people and
 institutions that use them.</p>
 <p>No other changes in viewpoints to report this time.</p>
-<h1 id="section-1">2026-02-07</h1>
+<h1>
+<a href='/posts/llms/2026-02-07'>2026-02-07</a>
+</h1>
 <p>I shared a thought on a big dev call at work, when talking about
 agentic “skill” based workflows, that one problem is that you lose Flow,
 which is often one of the most enjoyable ways to work as a software dev
@@ -1709,7 +3299,9 @@ the scenic route reminds you of the landscape and dark alley ways, it
 activates and gently tickles parts of your brain in a way that I imagine
 is valuable for the larger work, which is an experience removed by being
 teleported from A-Z.</p>
-<h1 id="section-2">2026-01-30</h1>
+<h1>
+<a href='/posts/llms/2026-01-30'>2026-01-30</a>
+</h1>
 <p>A <a href="https://arxiv.org/abs/2601.20245">paper</a> discusses a
 similar topic that I’ve addressed in this microblog, which is the
 negative relationship between skill and using GenAI.</p>
@@ -1730,7 +3322,9 @@ Claude,” say “talking to the computer,” (doesn’t that sound silly!) and
 instead of “AI generated” or “LLM generated,” simply say “computer
 generated.” (How dull!) I find it thoroughly cuts through the illusion
 that we are doing anything more. But YMMV.</p>
-<h1 id="section-3">2025-12-20</h1>
+<h1>
+<a href='/posts/llms/2025-12-20'>2025-12-20</a>
+</h1>
 <p>Another positive experience I’ve had with LLMs is finding an
 opportunity to redo the frontend of a fairly simple web app, which was
 previously a server-side app at work. It’s an internal tool, so it’s
@@ -1747,7 +3341,9 @@ mainstream. That wouldn’t be so bad, as a good subset of programmers
 like formal thinking. Whether software, subject to market forces and
 competition, will get any better or worse objectively, I’m
 skeptical.</p>
-<h1 id="section-4">2025-12-03</h1>
+<h1>
+<a href='/posts/llms/2025-12-03'>2025-12-03</a>
+</h1>
 <p>My experience with LLMs since my last update has been both positive
 and negative.</p>
 <p>On the one hand, I’ve seen a quality and comprehension drop in some
@@ -1769,7 +3365,9 @@ good.</li>
 <p>This has been quite effective for me as a means to speed up tasks
 which are doing what I’ve done elsewhere with small differences. I’m
 using it as glorified autocomplete.</p>
-<h1 id="section-5">2025-10-24</h1>
+<h1>
+<a href='/posts/llms/2025-10-24'>2025-10-24</a>
+</h1>
 <p>I’ve had what I’d describe as “hole in one” experience where I
 generated two Haskell packages, sse-conduit and llm-conduit, from a
 single Claude prompt, which both compiled and worked the first time when
@@ -1788,7 +3386,9 @@ and atrophy. By contrast, if you only vibe things that you already
 understand fully, but do the hard work on everything else, you’ll
 continue growing, but will also get the accelerative edge of LLM
 vibing.</p>
-<h1 id="section-6">2025-09-23</h1>
+<h1>
+<a href='/posts/llms/2025-09-23'>2025-09-23</a>
+</h1>
 <p>Harvard published <a
 href="https://hbr.org/2025/09/ai-generated-workslop-is-destroying-productivity">this
 article defining “workslop”</a>, a new term for when someone substitutes
@@ -1809,7 +3409,9 @@ that organisations across the board are benefitting from LLMs. I read in
 the Economist that more small, boutique models, aka SLMs, are becoming
 preferred over the Big models provided by OpenAI, Anthropic, etc. which
 makes some sense.</p>
-<h1 id="section-7">2025-08-19</h1>
+<h1>
+<a href='/posts/llms/2025-08-19'>2025-08-19</a>
+</h1>
 <p>Since the last update, I’ve experimented with local LLM models on my
 MacBookPro Max M4, which can run 3b parameter models. I wanted to
 approach the whole LLM hype as a tool, like grep or awk, and see whether
@@ -1846,7 +3448,9 @@ LLMs. But that passed and my interest came back.</p>
 <p>Overall, present outlook is: tinkering with mild interest, local
 first, so-so performance for job-related tasks, using as a Google++,
 avoiding delegating thinking, renewed interest in learning theory.</p>
-<h1 id="section-8">2025-06-04</h1>
+<h1>
+<a href='/posts/llms/2025-06-04'>2025-06-04</a>
+</h1>
 <p>Small update: I’d presently describe my outlook as sceptical. I go in
 cycles, of long troughs of scepticism, with very, very, brief (one-day),
 widely spread out, spikes of FOMO and belief that AI is an existential
@@ -1858,7 +3462,9 @@ from sheer disinterest, and digital devices in the evening entirely, I
 am also serene and a little bored by the whole thing. But it still does
 play on the minds of some friends.</p>
 <p>I might change my mind on the next update, we’ll see.</p>
-<h1 id="section-9">2025-04-18</h1>
+<h1>
+<a href='/posts/llms/2025-04-18'>2025-04-18</a>
+</h1>
 <p>I’ve been collecting thoughts on LLMs in a peacemeal way. I add to
 this document from time to time. It’s not an article as such.</p>
 <ul>
@@ -1899,7 +3505,9 @@ nondeterminism.</li>
 within their probabilistic transformers to estimate answers to
 questions, but, for example, cannot count the individual letters in a
 word or do basic arithmetic. (At the time of writing; these leaks will
-be plugged eventually by postprocessing and tools, I’m sure.)</li>
+be plugged eventually by postprocessing and tools, I’m sure.) Update:
+see <a href="https://arxiv.org/pdf/2402.14903">Tokenization counts: the
+impact of tokenization on arithmetic in frontier LLMs</a>.</li>
 <li>Speculation on anthropomorphism: I think the reason that LLMs
 appeared to reason is that the base model, which is essentially a
 snapshot of the Internet, is then of course trained on millions of
@@ -6084,7 +7692,7 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
 
 <p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
 
-<p>AI might take our jobs, that’s bad for us, just like it was for the
+<p>AI might take our jobs. That’s bad for us, just like it was for the
 Luddites.</p>
 <p>But I think Herbert had it right when he, through his Dune books,
 proposed that the problem with “machine minds” is not the machine
