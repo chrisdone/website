@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AI and Machine Thinking</title>
+    <title>LLMs</title>
     <style>
     h1 a, h2 a,h3 a,h4 a,h5 a {
       text-decoration: none;
@@ -114,53 +114,50 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
   <body>
     <div class="page-wrap">
 
-<h1>AI and Machine Thinking</h1>
+      <h1>LLMs / 2026-02-07</h1>
 
-<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+<p><small class='human'>Note: An LLM was not used in writing this
+    microblog entry.</small></p>
 
-<p>AI might take our jobs. That’s bad for us, just like it was for the
-Luddites.</p>
-<p>But I think Herbert had it right when he, through his Dune books,
-proposed that the problem with “machine minds” is not the machine
-itself, it’s “machine thinking” which humans are perfectly capable
-of.</p>
-<p>Related quotes from the books:</p>
-<blockquote>
-<p>What do such machines really do? They increase the number of things
-we can do without thinking. Things we do without thinking — there’s the
-real danger. (Leto Atreides II)</p>
-</blockquote>
-<blockquote>
-<p>“The target of the Jihad was a machine-attitude as much as the
-machines,” Leto said.</p>
-</blockquote>
-<p>The brutal, uncompromising, inflexible, tyranny of, as Little Britain
-condensed it, “the computer says no.” I’m more afraid of the
-encroachment of this chilling effect in my life than losing my job.</p>
+      <p><em>This entry is part of a microblog series called <a href='/posts/llms'>LLMs</a></em></h1>
+<hr>
+
+
+<p>I shared a thought on a big dev call at work, when talking about
+agentic “skill” based workflows, that one problem is that you lose Flow,
+which is often one of the most enjoyable ways to work as a software dev
+(most of the rest is frankly frustration and toil, but valuable). Today
+I saw <a
+href="https://haskellforall.com/2026/02/beyond-agentic-coding">this
+post</a> by Gabriella Gonzalez about the same topic, with examples of
+interfaces that try to do a better job of that. I’m not as gung ho about
+LLMs as Gabriella is, but I’m enjoying these simple articles that
+discuss a particular technical point.</p>
+<p>This way of thinking has been on my mind for some time, as generally
+I am always working to reduce feedback loops in my work, never increase
+them. (This doesn’t follow from using Emacs, but Emacs can help with
+that: look at magit.) It’s why slow CI ruins my day, and why most cloud
+ops like Terraform are painful (e.g. Amazon resources aren’t content
+addressable, so checking for changes to apply is always
+O(n)–brutal!).</p>
+<p>Separately, but somewhat related; arguably, there’s a certain <a
+href="https://en.wikipedia.org/wiki/Psychogeography">psychogeography</a>
+to “walking around” a codebase when doing an update or refactor, taking
+the scenic route reminds you of the landscape and dark alley ways, it
+activates and gently tickles parts of your brain in a way that I imagine
+is valuable for the larger work, which is an experience removed by being
+teleported from A-Z.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2023-09-23 <a href="/">Chris Done</a></td>
+      <td>© 2026-02-07 <a href="/">Chris Done</a></td>
       <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>
 
     </div>
-    <script>
-      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
-    headers.forEach(function(header) {
-        var headerId = header.id;
-        if (headerId) {
-            var anchor = document.createElement('a');
-            anchor.href = '#' + headerId;
-            anchor.textContent = header.textContent;
-            header.textContent = '';
-            header.appendChild(anchor);
-        }
-    });
-    </script>
   </body>
 </html>

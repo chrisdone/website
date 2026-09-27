@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AI and Machine Thinking</title>
+    <title>LLMs</title>
     <style>
     h1 a, h2 a,h3 a,h4 a,h5 a {
       text-decoration: none;
@@ -114,53 +114,46 @@ h1 a:hover, h2 a:hover,h3 a:hover,h4 a:hover,h5 a:hover {
   <body>
     <div class="page-wrap">
 
-<h1>AI and Machine Thinking</h1>
+      <h1>LLMs / 2026-01-30</h1>
 
-<p><small class='human'>Note: An LLM was not used in writing this article.</small></p>
+<p><small class='human'>Note: An LLM was not used in writing this
+    microblog entry.</small></p>
 
-<p>AI might take our jobs. That’s bad for us, just like it was for the
-Luddites.</p>
-<p>But I think Herbert had it right when he, through his Dune books,
-proposed that the problem with “machine minds” is not the machine
-itself, it’s “machine thinking” which humans are perfectly capable
-of.</p>
-<p>Related quotes from the books:</p>
-<blockquote>
-<p>What do such machines really do? They increase the number of things
-we can do without thinking. Things we do without thinking — there’s the
-real danger. (Leto Atreides II)</p>
-</blockquote>
-<blockquote>
-<p>“The target of the Jihad was a machine-attitude as much as the
-machines,” Leto said.</p>
-</blockquote>
-<p>The brutal, uncompromising, inflexible, tyranny of, as Little Britain
-condensed it, “the computer says no.” I’m more afraid of the
-encroachment of this chilling effect in my life than losing my job.</p>
+      <p><em>This entry is part of a microblog series called <a href='/posts/llms'>LLMs</a></em></h1>
+<hr>
+
+
+<p>A <a href="https://arxiv.org/abs/2601.20245">paper</a> discusses a
+similar topic that I’ve addressed in this microblog, which is the
+negative relationship between skill and using GenAI.</p>
+<p>I haven’t generated anything since the last update. But I hand wrote
+a little <a
+href="https://github.com/chrisdone-artificial/llm-parse">experimental
+library that uses a free applicative to both declare a GBNF grammar and
+consume the output back into Haskell</a>. I didn’t add an
+<code>Alternative</code> instance (yet) to support disjunction in the
+grammar, but this direction appeals to me. I’ve been dabbling with the
+same llama3.2 (3b model) via llama.cpp’s server locally on the same
+MacBook Pro M4 Max. It’s quite easy to get reliable outputs. I intend to
+dabble more with this in coming weeks.</p>
+<p>I’ve been recently thinking that the whole phrasing around
+interacting with LLMs has become increasingly anthropomorphic, and
+thought of a clever mental hack to avoid it: instead of “talking to
+Claude,” say “talking to the computer,” (doesn’t that sound silly!) and
+instead of “AI generated” or “LLM generated,” simply say “computer
+generated.” (How dull!) I find it thoroughly cuts through the illusion
+that we are doing anything more. But YMMV.</p>
 
 
 <footer>
   <table style="width:100%">
     <tr>
-      <td>© 2023-09-23 <a href="/">Chris Done</a></td>
+      <td>© 2026-01-30 <a href="/">Chris Done</a></td>
       <td style="text-align:right"><a href="/posts">Read more posts →</a></td>
     </tr>
   </table>
 </footer>
 
     </div>
-    <script>
-      var headers = document.querySelectorAll('h1, h2, h3, h4, h5');
-    headers.forEach(function(header) {
-        var headerId = header.id;
-        if (headerId) {
-            var anchor = document.createElement('a');
-            anchor.href = '#' + headerId;
-            anchor.textContent = header.textContent;
-            header.textContent = '';
-            header.appendChild(anchor);
-        }
-    });
-    </script>
   </body>
 </html>
