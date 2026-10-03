@@ -9,6 +9,10 @@ and I'm writing up here the ones that often come to mind.
 I usually forget the name,
 so writing them up might be helpful for remembering in future.
 
+# Brandolini's law
+
+The amount of energy needed to refute bullshit is an order of magnitude bigger than that needed to produce it.
+
 # Brooks's law
 
 Adding manpower to a late software project makes it later.
